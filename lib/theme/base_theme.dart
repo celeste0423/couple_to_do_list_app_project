@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 ThemeData baseTheme() {
-  final ThemeData base = ThemeData.light();
+  final ThemeData base = ThemeData(fontFamily: 'Yoonwoo');
   return base.copyWith(
     scaffoldBackgroundColor: CustomColors.backgroundLightGrey,
     appBarTheme: AppBarTheme(
       backgroundColor: CustomColors.mainPink,
       elevation: 0,
+      titleTextStyle: TextStyle(
+        fontSize: 35,
+      ),
       systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarBrightness: Brightness.dark,
@@ -18,7 +21,7 @@ ThemeData baseTheme() {
       ),
     ),
     colorScheme: const ColorScheme(
-      brightness: Brightness.light,
+      brightness: Brightness.dark,
       primary: CustomColors.backgroundLightGrey,
       onPrimary: CustomColors.backgroundLightGrey,
       secondary: CustomColors.backgroundLightGrey,
