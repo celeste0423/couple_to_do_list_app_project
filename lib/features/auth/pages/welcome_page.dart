@@ -1,4 +1,4 @@
-import 'package:couple_to_do_list_app/features/auth/pages/user_registration.dart';
+import 'package:couple_to_do_list_app/features/auth/pages/user_registration_page.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,9 @@ class WelcomePage extends StatelessWidget {
         backgroundColor: CustomColors.mainPink,
         body: Column(
           children: [
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Expanded(
               flex: 1,
               child: Container(
@@ -67,50 +69,61 @@ class WelcomePage extends StatelessWidget {
                         ),
                       ),
                       GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             print('로그인 계시-일단은 다음페이지로');
-                          Get.to(User_registrationPage());
+                            Get.to(UserRegistrationPage());
                           },
-                          child: Image.asset('assets/images/kakao_login_medium_narrow.png')),
+                          child: Image.asset(
+                              'assets/images/kakao_login_medium_narrow.png')),
                       Column(
                         children: [
                           RichText(
-                              text: TextSpan(
-                                  style: TextStyle(
-                                    color: CustomColors.darkGrey,
-                                    fontFamily: 'Yoonwoo',
-                                    fontSize: 20,
-                                  ),
-                                  children: [
+                            text: TextSpan(
+                              style: TextStyle(
+                                color: CustomColors.darkGrey,
+                                fontFamily: 'Yoonwoo',
+                                fontSize: 20,
+                              ),
+                              children: [
                                 TextSpan(text: '회원가입 시 '),
                                 TextSpan(
-                                    text: '약관 ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        Get.snackbar(
-                                          '약관 올라가게',
-                                          'this is a snackbar',
-                                        );
-                                      }),
-                                TextSpan(text: '및 '),
+                                  text: '약관 ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Get.snackbar(
+                                        '약관 올라가게',
+                                        'this is a snackbar',
+                                      );
+                                    },
+                                ),
                                 TextSpan(
-                                    text: '공지사항',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        Get.snackbar(
-                                          '공지사항 올라가게',
-                                          'this is a snackbar',
-                                        );
-                                      }),
+                                  text: '및 ',
+                                ),
+                                TextSpan(
+                                  text: '공지사항',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Get.snackbar(
+                                        '공지사항 올라가게',
+                                        'this is a snackbar',
+                                      );
+                                    },
+                                ),
                                 TextSpan(text: '은 눌러서 확인하세요'),
-                              ])),
-                          SizedBox(height: 5,),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
                           Text(
                             'v 1.0.0',
                             style: TextStyle(
@@ -119,7 +132,7 @@ class WelcomePage extends StatelessWidget {
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
