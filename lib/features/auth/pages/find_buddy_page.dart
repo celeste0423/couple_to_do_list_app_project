@@ -1,6 +1,8 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/wait_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -13,6 +15,8 @@ class FindBuddyPage extends StatefulWidget {
 }
 
 class _FindBuddyPageState extends State<FindBuddyPage> {
+  final AuthController authController = AuthController();
+
   TextEditingController email = TextEditingController();
 
   @override
@@ -28,13 +32,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                 SizedBox(
                   height: 20,
                 ),
-                Text(
-                  '짝꿍 찾기',
-                  style: TextStyle(
-                    color: CustomColors.darkGrey,
-                    fontSize: 50,
-                  ),
-                ),
+                titleText('짝꿍 찾기'),
                 SizedBox(
                   height: 15,
                 ),
@@ -61,7 +59,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                       children: [
                         ElevatedButton(
                             onPressed: () {
-                              Get.to(WaitBuddyPage());
+                              authController.changeRegisterProgressIndex(3);
                             },
                             child: Text(
                               '임시 버튼',
@@ -74,8 +72,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                         TextButton(
                           onPressed: () {
                             Clipboard.setData(
-                                    ClipboardData(text: 'ddosy99@naver.com'))
-                                .then(
+                              ClipboardData(text: 'ddosy99@naver.com'),
+                            ).then(
                               (_) {
                                 Get.snackbar('이메일', '복사 완료',
                                     icon: Icon(Icons.email),
@@ -92,22 +90,16 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                                 style: TextStyle(
                                     fontSize: 30, color: Colors.white),
                               ),
-                              SizedBox(
-                                width: 10,
-                              ),
+                              SizedBox(width: 10),
                               Icon(
                                 Icons.copy,
                                 size: 30,
                               ),
-                              SizedBox(
-                                width: 10,
-                              ),
+                              SizedBox(width: 10),
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: 50,
-                        )
+                        SizedBox(height: 50),
                       ],
                     ),
                   ),
@@ -120,8 +112,9 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                 margin: EdgeInsets.all(20),
                 height: 250,
                 decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(30.0)),
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -157,13 +150,11 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 40,
-                    )
+                    SizedBox(height: 40),
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

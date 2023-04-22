@@ -1,5 +1,6 @@
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -20,13 +21,7 @@ class WaitBuddyPage extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                Text(
-                  '짝꿍을 기다리는 중...',
-                  style: TextStyle(
-                    color: CustomColors.darkGrey,
-                    fontSize: 50,
-                  ),
-                ),
+                titleText('짝꿍을 기다리는 중...'),
                 SizedBox(
                   height: 15,
                 ),
@@ -71,7 +66,11 @@ class WaitBuddyPage extends StatelessWidget {
                         children: const [
                           Text(
                             'ddosy99@naver.com',
-                            style: TextStyle(fontSize: 30, color: Colors.red),
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontFamily: '',
+                              color: Colors.red,
+                            ),
                           ),
                           SizedBox(
                             width: 10,
@@ -93,7 +92,7 @@ class WaitBuddyPage extends StatelessWidget {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

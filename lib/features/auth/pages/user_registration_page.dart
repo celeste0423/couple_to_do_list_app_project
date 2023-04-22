@@ -1,6 +1,9 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/main_button.dart';
+import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,13 +11,90 @@ class UserRegistrationPage extends StatefulWidget {
   const UserRegistrationPage({Key? key}) : super(key: key);
 
   @override
-  State<UserRegistrationPage> createState() => _UserRegistrationPageState();
+  State<UserRegistrationPage> createState() => UserRegistrationPageState();
 }
 
-class _UserRegistrationPageState extends State<UserRegistrationPage> {
+class UserRegistrationPageState extends State<UserRegistrationPage> {
   final List<bool> isSelected = <bool>[false, false];
+
+  final AuthController authController = AuthController();
+
   TextEditingController nickname = TextEditingController();
   TextEditingController birthday = TextEditingController();
+
+  Widget registerText(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 35,
+      ),
+    );
+  }
+
+  Widget genderSelector() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      height: 50,
+      child: ToggleButtons(
+        onPressed: (int index) {
+          setState(
+            () {
+              for (int i = 0; i < isSelected.length; i++) {
+                isSelected[i] = i == index;
+              }
+            },
+          );
+        },
+        disabledColor: Colors.black,
+        selectedColor: CustomColors.lightPink,
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        // selectedBorderColor: CustomColors.lightPink,
+        fillColor: CustomColors.lightPink,
+        constraints: const BoxConstraints(minWidth: 80),
+        isSelected: isSelected,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Image.asset('assets/images/boy.png'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Image.asset('assets/images/girl.png'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget registerTextField(
+    String text,
+    TextEditingController controller,
+    Function onPressed,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+      ),
+      height: 50,
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: text,
+          prefixIcon: Icon(Icons.account_circle),
+          suffixIcon: IconButton(
+            icon: Icon(Icons.close, size: 20),
+            onPressed: onPressed != null ? () => onPressed!() : null,
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +109,7 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
                 SizedBox(
                   height: 20,
                 ),
-                Text(
-                  '신규 등록',
-                  style: TextStyle(
-                    color: CustomColors.darkGrey,
-                    fontSize: 50,
-                  ),
-                ),
+                titleText('신규 등록'),
                 SizedBox(
                   height: 15,
                 ),
@@ -76,28 +150,10 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children: const [
-                                  Text(
-                                    '닉네임',
-                                    style: TextStyle(
-                                      color: CustomColors.darkGrey,
-                                      fontSize: 35,
-                                    ),
-                                  ),
-                                  Text(
-                                    '성별',
-                                    style: TextStyle(
-                                      color: CustomColors.darkGrey,
-                                      fontSize: 35,
-                                    ),
-                                  ),
-                                  Text(
-                                    '생일',
-                                    style: TextStyle(
-                                      color: CustomColors.darkGrey,
-                                      fontSize: 35,
-                                    ),
-                                  ),
+                                children: [
+                                  registerText('닉네임'),
+                                  registerText('성별'),
+                                  registerText('생일'),
                                 ],
                               ),
                             ),
@@ -108,113 +164,32 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
-                                    ),
-                                    height: 50,
-                                    child: TextField(
-                                      controller: nickname,
-                                      decoration: InputDecoration(
-                                        labelText: 'ex) 돼지길동',
-                                        prefixIcon: Icon(Icons.account_circle),
-                                        suffixIcon: IconButton(
-                                          icon: Icon(Icons.close, size: 20),
-                                          onPressed: () {
-                                            return nickname.clear();
-                                          },
-                                        ),
-                                      ),
-                                    ),
+                                  registerTextField(
+                                    'ex) 돼지길동',
+                                    nickname,
+                                    () {
+                                      return nickname.clear();
+                                    },
                                   ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0))),
-                                    height: 50,
-                                    child: ToggleButtons(
-                                      onPressed: (int index) {
-                                        setState(
-                                          () {
-                                            for (int i = 0;
-                                                i < isSelected.length;
-                                                i++) {
-                                              isSelected[i] = i == index;
-                                            }
-                                          },
-                                        );
-                                      },
-                                      disabledColor: Colors.black,
-                                      selectedColor: CustomColors.lightPink,
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(20)),
-                                      // selectedBorderColor: CustomColors.lightPink,
-                                      fillColor: CustomColors.lightPink,
-                                      constraints:
-                                          const BoxConstraints(minWidth: 80),
-                                      isSelected: isSelected,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: Image.asset(
-                                              'assets/images/boy.png'),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: Image.asset(
-                                              'assets/images/girl.png'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20))),
-                                    height: 50,
-                                    child: TextField(
-                                      controller: birthday,
-                                      decoration: InputDecoration(
-                                          labelText: 'ex) 960102',
-                                          prefixIcon:
-                                              Icon(Icons.account_circle),
-                                          suffixIcon: IconButton(
-                                              icon: Icon(Icons.close, size: 20),
-                                              onPressed: () {
-                                                return birthday.clear();
-                                              })),
-                                    ),
+                                  genderSelector(),
+                                  registerTextField(
+                                    'ex) 960102',
+                                    birthday,
+                                    () {
+                                      return birthday.clear();
+                                    },
                                   ),
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
-                      SizedBox(
-                        height: 50,
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            backgroundColor:
-                                CustomColors.lightPink, // Background color
-                          ),
-                          onPressed: () {
-                            Get.to(FindBuddyPage());
-                          },
-                          child: Text(
-                            '등록하기',
-                            style: TextStyle(fontSize: 35, color: Colors.white),
-                          ),
-                        ),
+                      mainButton(
+                        '등록하기',
+                        () {
+                          authController.changeRegisterProgressIndex(2);
+                        },
                       ),
                       SizedBox(height: 60),
                     ],

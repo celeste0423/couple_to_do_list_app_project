@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/user_registration_page.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/gestures.dart';
@@ -5,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({Key? key}) : super(key: key);
+  WelcomePage({Key? key}) : super(key: key);
+
+  final AuthController authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +74,7 @@ class WelcomePage extends StatelessWidget {
                       GestureDetector(
                           onTap: () {
                             print('로그인 계시-일단은 다음페이지로');
-                            Get.to(UserRegistrationPage());
+                            authController.changeRegisterProgressIndex(1);
                           },
                           child: Image.asset(
                               'assets/images/kakao_login_medium_narrow.png')),
@@ -87,7 +90,7 @@ class WelcomePage extends StatelessWidget {
                               children: [
                                 TextSpan(text: '회원가입 시 '),
                                 TextSpan(
-                                  text: '약관 ',
+                                  text: '이용약관 ',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.blue,
@@ -95,7 +98,7 @@ class WelcomePage extends StatelessWidget {
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Get.snackbar(
-                                        '약관 올라가게',
+                                        '이용약관 올라가게',
                                         'this is a snackbar',
                                       );
                                     },
@@ -125,7 +128,7 @@ class WelcomePage extends StatelessWidget {
                             height: 5,
                           ),
                           Text(
-                            'v 1.0.0',
+                            'v 0.0.0',
                             style: TextStyle(
                               color: CustomColors.darkGrey,
                               fontSize: 20,
