@@ -3,9 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 ThemeData baseTheme() {
-  final ThemeData base = ThemeData(fontFamily: 'Yoonwoo');
+  final ThemeData base = ThemeData();
   return base.copyWith(
     scaffoldBackgroundColor: CustomColors.backgroundLightGrey,
+    textTheme: TextTheme(
+      bodySmall: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      bodyLarge: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      bodyMedium: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+    ),
     appBarTheme: AppBarTheme(
       backgroundColor: CustomColors.backgroundLightGrey,
       elevation: 0,

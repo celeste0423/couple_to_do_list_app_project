@@ -44,16 +44,16 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           child: TabBar(
-              indicatorWeight: 4,
-              splashFactory: NoSplash.splashFactory,
-              tabs: [
-                //아이콘은 잠깐 다 임시로
-                //Todo: 아이콘 파일 svg로 뽑아서 전부 교체할 것
-                InkWell(child: Tab(icon: Image.asset('assets/icons/home.png'))),
-                Tab(icon: Image.asset('assets/icons/note.png')),
-                Tab(icon: Image.asset('assets/icons/pets.png')),
-                Tab(icon: Image.asset('assets/icons/person.png')),
-              ]),
+            indicatorWeight: 4,
+            splashFactory: NoSplash.splashFactory,
+            tabs: [
+              //Todo: tabbar indicator 위치 수정이 필요한데 기술적 한계로 고민중
+              InkWell(child: Tab(icon: Image.asset('assets/icons/home.png'))),
+              Tab(icon: Image.asset('assets/icons/note.png')),
+              Tab(icon: Image.asset('assets/icons/pets.png')),
+              Tab(icon: Image.asset('assets/icons/person.png')),
+            ],
+          ),
         ),
       ),
     );
