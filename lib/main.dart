@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
       title: 'Bukkung List',
       theme: baseTheme(),
       home: HomePage(),
+      // home: WelcomePage(),
     );
   }
 }

@@ -6,8 +6,7 @@ Widget titleText(String text) {
     text,
     style: TextStyle(
       color: CustomColors.darkGrey,
-      fontSize: 50,
-      letterSpacing: 2,
+      fontSize: 40,
     ),
   );
 }

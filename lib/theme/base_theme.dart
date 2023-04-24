@@ -7,9 +7,14 @@ ThemeData baseTheme() {
   return base.copyWith(
     scaffoldBackgroundColor: CustomColors.backgroundLightGrey,
     appBarTheme: AppBarTheme(
-      backgroundColor: CustomColors.mainPink,
+      backgroundColor: CustomColors.backgroundLightGrey,
       elevation: 0,
-      titleTextStyle: TextStyle(fontSize: 35, fontFamily: 'Yoonwoo'),
+      titleTextStyle: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 35,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 2,
+      ),
       centerTitle: true,
       iconTheme: IconThemeData(
         color: Colors.black.withOpacity(0.5),
@@ -44,11 +49,16 @@ ThemeData baseTheme() {
       size: 40,
     ),
     tabBarTheme: TabBarTheme(
-      indicator: BoxDecoration(
-        shape: BoxShape.circle,
-        color: CustomColors.backgroundLightGrey,
+      labelColor: Colors.white,
+      unselectedLabelColor: Colors.white.withOpacity(0.5),
+      indicator: UnderlineTabIndicator(
+        insets: EdgeInsets.only(top: 50, left: 39, right: 39),
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide(
+          width: 15,
+          color: CustomColors.backgroundLightGrey,
+        ),
       ),
-      indicatorSize: TabBarIndicatorSize.tab,
     ),
   );
 }

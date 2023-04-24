@@ -19,18 +19,6 @@ class _HomePageState extends State<HomePage> {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: CustomColors.backgroundLightGrey,
-          title: titleText('버꿍리스트'),
-          actions: [
-            IconButton(
-              onPressed: () {
-                print('설정');
-              },
-              icon: Icon(Icons.settings),
-            ),
-          ],
-        ),
         body: const TabBarView(
           children: [
             BukkungListPage(),
@@ -42,16 +30,16 @@ class _HomePageState extends State<HomePage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Container(
           margin: EdgeInsets.symmetric(horizontal: 20),
-          height: 60,
+          height: 75,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: CustomColors.mainPink,
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.grey.withOpacity(0.7),
                 spreadRadius: 1,
                 blurRadius: 3,
-                offset: Offset(0, 2), // Offset(수평, 수직)
+                offset: Offset(0, -3), // Offset(수평, 수직)
               ),
             ],
           ),
@@ -61,30 +49,10 @@ class _HomePageState extends State<HomePage> {
               tabs: [
                 //아이콘은 잠깐 다 임시로
                 //Todo: 아이콘 파일 svg로 뽑아서 전부 교체할 것
-                Tab(
-                  icon: Icon(
-                    Icons.home_filled,
-                    color: Colors.white,
-                  ),
-                ),
-                Tab(
-                  icon: Icon(
-                    Icons.document_scanner,
-                    color: Colors.white,
-                  ),
-                ),
-                Tab(
-                  icon: Icon(
-                    Icons.pets,
-                    color: Colors.white,
-                  ),
-                ),
-                Tab(
-                  icon: Icon(
-                    Icons.person,
-                    color: Colors.white,
-                  ),
-                ),
+                InkWell(child: Tab(icon: Image.asset('assets/icons/home.png'))),
+                Tab(icon: Image.asset('assets/icons/note.png')),
+                Tab(icon: Image.asset('assets/icons/pets.png')),
+                Tab(icon: Image.asset('assets/icons/person.png')),
               ]),
         ),
       ),
