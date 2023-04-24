@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
@@ -6,14 +7,15 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class WaitBuddyPage extends StatelessWidget {
-  const WaitBuddyPage({Key? key}) : super(key: key);
+  WaitBuddyPage({Key? key}) : super(key: key);
+  final AuthController authController = AuthController();
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: CustomColors.mainPink,
-        body: Stack(
+    return Scaffold(
+      backgroundColor: CustomColors.mainPink,
+      body: SafeArea(
+        child: Stack(
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -21,7 +23,26 @@ class WaitBuddyPage extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                titleText('짝꿍을 기다리는 중...'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      padding: EdgeInsets.only(left: 20),
+                      onPressed: () {
+                        authController.changeRegisterProgressIndex('findBuddy');
+                      },
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                    ),
+                    titleText('짝꿍을 기다리는 중'),
+                    SizedBox(
+                      width: 50,
+                    ),
+                  ],
+                ),
                 SizedBox(
                   height: 15,
                 ),

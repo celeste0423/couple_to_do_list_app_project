@@ -1,11 +1,9 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/main_button.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class UserRegistrationPage extends StatefulWidget {
   const UserRegistrationPage({Key? key}) : super(key: key);
@@ -19,8 +17,8 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
 
   final AuthController authController = AuthController();
 
-  TextEditingController nickname = TextEditingController();
-  TextEditingController birthday = TextEditingController();
+  TextEditingController nicknameController = TextEditingController();
+  TextEditingController birthdayController = TextEditingController();
 
   Widget registerText(String text) {
     return Text(
@@ -86,6 +84,9 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
         controller: controller,
         decoration: InputDecoration(
           hintText: text,
+          hintStyle: TextStyle(
+            fontSize: 20,
+          ),
           prefixIcon: Icon(Icons.account_circle),
           suffixIcon: IconButton(
             icon: Icon(Icons.close, size: 20),
@@ -98,106 +99,113 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: CustomColors.mainPink,
-        body: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                titleText('신규 등록'),
-                SizedBox(
-                  height: 15,
-                ),
-                RegistrationStage(1),
-                SizedBox(
-                  height: 15,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 50),
-                  child: Image.asset('assets/images/handshake.png'),
-                ),
-              ],
-            ),
-            Positioned(
-              bottom: 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.9),
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(45),
-                    topLeft: Radius.circular(45),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 9 / 16,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  registerText('닉네임'),
-                                  registerText('성별'),
-                                  registerText('생일'),
-                                ],
+                  titleText('신규 등록'),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  RegistrationStage(1),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    child: Image.asset('assets/images/handshake.png'),
+                  ),
+                ],
+              ),
+              Positioned(
+                bottom: 0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.9),
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(45),
+                      topLeft: Radius.circular(45),
+                    ),
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 9 / 16,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    registerText('닉네임'),
+                                    registerText('성별'),
+                                    registerText('생일'),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  registerTextField(
-                                    'ex) 돼지길동',
-                                    nickname,
-                                    () {
-                                      return nickname.clear();
-                                    },
-                                  ),
-                                  genderSelector(),
-                                  registerTextField(
-                                    'ex) 960102',
-                                    birthday,
-                                    () {
-                                      return birthday.clear();
-                                    },
-                                  ),
-                                ],
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    registerTextField(
+                                      'ex) 돼지길동',
+                                      nicknameController,
+                                      () {
+                                        return nicknameController.clear();
+                                      },
+                                    ),
+                                    genderSelector(),
+                                    registerTextField(
+                                      'ex) 960102',
+                                      birthdayController,
+                                      () {
+                                        return birthdayController.clear();
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      mainButton(
-                        '등록하기',
-                        () {
-                          authController.changeRegisterProgressIndex(2);
-                        },
-                      ),
-                      SizedBox(height: 60),
-                    ],
+                        mainButton(
+                          '등록하기',
+                          () {
+                            authController
+                                .changeRegisterProgressIndex('findBuddy');
+                          },
+                        ),
+                        SizedBox(height: 60),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

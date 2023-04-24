@@ -9,13 +9,8 @@ ThemeData baseTheme() {
     appBarTheme: AppBarTheme(
       backgroundColor: CustomColors.mainPink,
       elevation: 0,
-      titleTextStyle: TextStyle(
-        fontSize: 35,
-      ),
-      systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarBrightness: Brightness.dark,
-      ),
+      titleTextStyle: TextStyle(fontSize: 35, fontFamily: 'Yoonwoo'),
+      centerTitle: true,
       iconTheme: IconThemeData(
         color: Colors.black.withOpacity(0.5),
       ),
@@ -32,6 +27,28 @@ ThemeData baseTheme() {
       onBackground: CustomColors.backgroundLightGrey,
       surface: CustomColors.backgroundLightGrey,
       onSurface: CustomColors.backgroundLightGrey,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        backgroundColor: CustomColors.mainPink,
+        foregroundColor: CustomColors.lightPink,
+        splashFactory: NoSplash.splashFactory,
+        elevation: 0,
+        shadowColor: Colors.transparent,
+      ),
+    ),
+    iconTheme: IconThemeData(
+      size: 40,
+    ),
+    tabBarTheme: TabBarTheme(
+      indicator: BoxDecoration(
+        shape: BoxShape.circle,
+        color: CustomColors.backgroundLightGrey,
+      ),
+      indicatorSize: TabBarIndicatorSize.tab,
     ),
   );
 }

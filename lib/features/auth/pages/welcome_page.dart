@@ -12,10 +12,10 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: CustomColors.mainPink,
-        body: Column(
+    return Scaffold(
+      backgroundColor: CustomColors.mainPink,
+      body: SafeArea(
+        child: Column(
           children: [
             SizedBox(
               height: 20,
@@ -74,7 +74,8 @@ class WelcomePage extends StatelessWidget {
                       GestureDetector(
                           onTap: () {
                             print('로그인 계시-일단은 다음페이지로');
-                            authController.changeRegisterProgressIndex(1);
+                            authController.changeRegisterProgressIndex(
+                                'userRegistration');
                           },
                           child: Image.asset(
                               'assets/images/kakao_login_medium_narrow.png')),

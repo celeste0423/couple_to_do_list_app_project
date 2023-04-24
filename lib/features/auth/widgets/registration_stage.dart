@@ -9,8 +9,13 @@ Widget RegistrationStage(int n) {
         Align(
           alignment: Alignment.center,
           child: LinearProgressIndicator(
-            color: CustomColors.lightPink,
-            backgroundColor: Colors.white,
+            color: Colors.white,
+            backgroundColor: Colors.white.withOpacity(0.5),
+            value: n == 1
+                ? 1 / 3
+                : n == 2
+                    ? 1 / 2
+                    : 1,
           ),
         ),
         Row(
