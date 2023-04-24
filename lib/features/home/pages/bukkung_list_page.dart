@@ -83,6 +83,7 @@ class _BukkungListPageState extends State<BukkungListPage> {
                 style: TextStyle(
                   fontSize: 20,
                   fontFamily: 'Yoonwoo',
+                  letterSpacing: 1.5,
                   color: CustomColors.darkGrey,
                 ),
               ),
@@ -94,6 +95,7 @@ class _BukkungListPageState extends State<BukkungListPage> {
                 style: TextStyle(
                   fontSize: 20,
                   fontFamily: 'Yoonwoo',
+                  letterSpacing: 1.5,
                   color: CustomColors.darkGrey,
                 ),
               ),
@@ -105,6 +107,7 @@ class _BukkungListPageState extends State<BukkungListPage> {
                 style: TextStyle(
                   fontSize: 20,
                   fontFamily: 'Yoonwoo',
+                  letterSpacing: 1.5,
                   color: CustomColors.darkGrey,
                 ),
               ),
