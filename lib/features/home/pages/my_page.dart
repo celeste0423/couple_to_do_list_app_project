@@ -6,7 +6,7 @@ class MyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('버꿍리스트 페이지'),
+      child: Text('내 정보 페이지'),
     );
   }
 }

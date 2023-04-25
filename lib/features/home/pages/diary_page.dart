@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/widgets/type_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +12,11 @@ class DiaryPage extends StatefulWidget {
 
 class _DiaryPageState extends State<DiaryPage>
     with SingleTickerProviderStateMixin {
-  late final TabController _tabSmallController =
+  late final TabController _tabDiaryController =
       TabController(length: 6, vsync: this);
 
   //ToDo: 파이어베이스에서 가져온 정보로 채워 넣을 것
-  Widget _Diary() {
+  Widget _diary() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 30),
       child: Stack(
@@ -119,7 +120,7 @@ class _DiaryPageState extends State<DiaryPage>
     );
   }
 
-  Widget _DiaryList() {
+  Widget _diaryList() {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
@@ -133,26 +134,11 @@ class _DiaryPageState extends State<DiaryPage>
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-              child: TabBar(
-                isScrollable: true,
-                controller: _tabSmallController,
-                labelColor: CustomColors.darkGrey,
-                labelStyle: TextStyle(fontFamily: 'YoonWoo', fontSize: 20),
-                unselectedLabelColor: CustomColors.grey.withOpacity(0.5),
-                indicator: UnderlineTabIndicator(
-                    insets: EdgeInsets.only(left: 20, right: 20, bottom: 5),
-                    borderSide: BorderSide(
-                      width: 3,
-                      color: CustomColors.darkGrey,
-                    )),
-                tabs: [
-                  Tab(text: '전체'),
-                  Tab(text: '여행'),
-                  Tab(text: '액티비티'),
-                  Tab(text: '식사'),
-                  Tab(text: '문화활동'),
-                  Tab(text: '기타'),
-                ],
+              //Todo: 색상 입력 안해도 되도록 기본값 넣어뒀는데도 오류가 발생하는 이유..?
+              child: typeSelectTabBar(
+                _tabDiaryController,
+                CustomColors.darkGrey,
+                CustomColors.grey.withOpacity(0.5),
               ),
             ),
             // TabBarView(
@@ -201,8 +187,8 @@ class _DiaryPageState extends State<DiaryPage>
       ),
       body: Column(
         children: [
-          _Diary(),
-          _DiaryList(),
+          _diary(),
+          _diaryList(),
         ],
       ),
     );
