@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage>
   late final TabController _tabController =
       TabController(length: 4, vsync: this);
 
-  Widget CustomTabBar() {
+  Widget _CustomTabBar() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       height: 75,
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage>
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: CustomTabBar(),
+      floatingActionButton: _CustomTabBar(),
     );
   }
 }
