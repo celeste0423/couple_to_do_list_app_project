@@ -1,12 +1,210 @@
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
 
-class DiaryPage extends StatelessWidget {
+class DiaryPage extends StatefulWidget {
   const DiaryPage({Key? key}) : super(key: key);
 
   @override
+  State<DiaryPage> createState() => _DiaryPageState();
+}
+
+class _DiaryPageState extends State<DiaryPage>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabSmallController =
+      TabController(length: 6, vsync: this);
+
+  //ToDo: 파이어베이스에서 가져온 정보로 채워 넣을 것
+  Widget _Diary() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 30),
+      child: Stack(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RotatedBox(
+                quarterTurns: 135,
+                child: Text(
+                  '돼지길동🤍꼬물꼬물 다이어리',
+                  style: TextStyle(
+                      color: Colors.black.withOpacity(0.4), fontSize: 25),
+                ),
+              ),
+              Container(
+                width: 230,
+                height: 300,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 3,
+                      blurRadius: 10,
+                      offset: Offset(15, 15), // Offset(수평, 수직)
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      '제주도 여행',
+                      style: TextStyle(fontSize: 35),
+                    ),
+                    Container(
+                      width: 170,
+                      height: 170,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            'https://post-phinf.pstatic.net/MjAxNzEwMjBfNjYg/MDAxNTA4NDY0NzkxMDc3.BXMDJ0jGbaunHr6TRI6N4NOBiGOXAlXbzlmgaZYHMkQg.P6Rbnq9YTv9CCqH5Vgu6JCSEGZC_wOZ25onOnoT4AAAg.PNG/11.png?type=w1200',
+                          ),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+
+                      //사진이 없을경우 기본 이미지 꼬물이로
+                      // child: Image.asset(
+                      //   'assets/images/ggomool.png',
+                      //   width: 170,
+                      //   height: 170,
+                      // ),
+                    ),
+                    Text(
+                      '2023.04.05 ~ 2023.04.08',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 130,
+            right: 50,
+            child: GestureDetector(
+              onTap: () {
+                showAlertDialog(context: context, message: '아직 다이어리 페이지 없음 ㅎ');
+              },
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: CustomColors.mainPink,
+                  borderRadius: BorderRadius.circular(50),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 3,
+                      blurRadius: 10,
+                      offset: Offset(15, 0), // Offset(수평, 수직)
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.play_arrow_rounded,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _DiaryList() {
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color: CustomColors.backgroundLightGrey,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(50),
+            topLeft: Radius.circular(50),
+          ),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+              child: TabBar(
+                isScrollable: true,
+                controller: _tabSmallController,
+                labelColor: CustomColors.darkGrey,
+                labelStyle: TextStyle(fontFamily: 'YoonWoo', fontSize: 20),
+                unselectedLabelColor: CustomColors.grey.withOpacity(0.5),
+                indicator: UnderlineTabIndicator(
+                    insets: EdgeInsets.only(left: 20, right: 20, bottom: 5),
+                    borderSide: BorderSide(
+                      width: 3,
+                      color: CustomColors.darkGrey,
+                    )),
+                tabs: [
+                  Tab(text: '전체'),
+                  Tab(text: '여행'),
+                  Tab(text: '액티비티'),
+                  Tab(text: '식사'),
+                  Tab(text: '문화활동'),
+                  Tab(text: '기타'),
+                ],
+              ),
+            ),
+            // TabBarView(
+            //   controller: _tabSmallController,
+            //   children: [
+            //     Center(child: Text('전체')),
+            //     Center(child: Text('여행')),
+            //     Center(child: Text('액티비티')),
+            //     Center(child: Text('식사')),
+            //     Center(child: Text('문화활동')),
+            //     Center(child: Text('기타')),
+            //   ],
+            // ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('다이어리 페이지'),
+    return Scaffold(
+      backgroundColor: CustomColors.lightPink,
+      appBar: AppBar(
+        backgroundColor: CustomColors.lightPink,
+        title: Text(
+          '다이어리',
+          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: IconButton(
+              onPressed: () {
+                showAlertDialog(context: context, message: '아직 추가 페이지 없음');
+              },
+              icon: Image.asset(
+                'assets/icons/plus.png',
+                color: CustomColors.darkGrey.withOpacity(0.7),
+                colorBlendMode: BlendMode.modulate,
+                width: 35,
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          _Diary(),
+          _DiaryList(),
+        ],
+      ),
     );
   }
 }

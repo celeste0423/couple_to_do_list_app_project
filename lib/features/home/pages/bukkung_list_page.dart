@@ -60,69 +60,72 @@ class _BukkungListPageState extends State<BukkungListPage> {
   }
 
   Widget _ListTypeSelector() {
-    return Container(
-      width: 150,
-      child: PopupMenuButton<String>(
-        offset: Offset(0, 40),
-        shape: ShapeBorder.lerp(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          1,
-        ),
-        onSelected: (String type) {
-          setState(() {
-            currentType = type;
-          });
-        },
-        itemBuilder: (BuildContext context) {
-          return [
-            PopupMenuItem(
-              value: "icon",
-              child: Text(
-                "유형별로 보기",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'Yoonwoo',
-                  letterSpacing: 1.5,
-                  color: CustomColors.darkGrey,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: SizedBox(
+        width: 150,
+        child: PopupMenuButton<String>(
+          offset: Offset(0, 40),
+          shape: ShapeBorder.lerp(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            1,
+          ),
+          onSelected: (String type) {
+            setState(() {
+              currentType = type;
+            });
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem(
+                value: "icon",
+                child: Text(
+                  "유형별로 보기",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Yoonwoo',
+                    letterSpacing: 1.5,
+                    color: CustomColors.darkGrey,
+                  ),
                 ),
               ),
-            ),
-            PopupMenuItem(
-              value: "date",
-              child: Text(
-                "날짜 순으로 보기",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'Yoonwoo',
-                  letterSpacing: 1.5,
-                  color: CustomColors.darkGrey,
+              PopupMenuItem(
+                value: "date",
+                child: Text(
+                  "날짜 순으로 보기",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Yoonwoo',
+                    letterSpacing: 1.5,
+                    color: CustomColors.darkGrey,
+                  ),
                 ),
               ),
-            ),
-            PopupMenuItem(
-              value: "like",
-              child: Text(
-                "좋아요 순으로 보기",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'Yoonwoo',
-                  letterSpacing: 1.5,
-                  color: CustomColors.darkGrey,
+              PopupMenuItem(
+                value: "like",
+                child: Text(
+                  "좋아요 순으로 보기",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Yoonwoo',
+                    letterSpacing: 1.5,
+                    color: CustomColors.darkGrey,
+                  ),
                 ),
               ),
-            ),
-          ];
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(TypetoString[currentType] ?? ""),
-            Icon(
-              Icons.arrow_drop_down,
-              color: CustomColors.mainPink,
-            ),
-          ],
+            ];
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(TypetoString[currentType] ?? ""),
+              Icon(
+                Icons.arrow_drop_down,
+                color: CustomColors.mainPink,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -157,7 +160,7 @@ class _BukkungListPageState extends State<BukkungListPage> {
           _ListAddButton(),
           _ListTypeSelector(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Divider(
               thickness: 2,
               color: CustomColors.mainPink,

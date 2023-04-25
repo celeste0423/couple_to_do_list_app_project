@@ -3,7 +3,6 @@ import 'package:couple_to_do_list_app/features/home/pages/diary_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/kkomul_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/my_page.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
-import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,49 +12,96 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController =
+      TabController(length: 4, vsync: this);
+
+  Widget _tabBar() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      height: 75,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: CustomColors.mainPink,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.7),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: Offset(0, -3), // Offset(수평, 수직)
+          ),
+        ],
+      ),
+      child: TabBar(
+        controller: _tabController,
+        indicatorWeight: 4,
+        splashFactory: NoSplash.splashFactory,
+        tabs: [
+          //Todo: tabbar indicator 위치를 조금더 아래로 이동이 필요한데 기술적 한계로 고민중
+          Tab(
+            child: Image.asset(
+              'assets/icons/home.png',
+              width: 50,
+              color: _tabController.index == 0
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.7),
+              colorBlendMode: BlendMode.modulate,
+            ),
+          ),
+          Tab(
+            child: Image.asset(
+              'assets/icons/note.png',
+              width: 50,
+              color: _tabController.index == 1
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.7),
+              colorBlendMode: BlendMode.modulate,
+            ),
+          ),
+          Tab(
+            child: Image.asset(
+              'assets/icons/pets.png',
+              width: 50,
+              color: _tabController.index == 2
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.7),
+              colorBlendMode: BlendMode.modulate,
+            ),
+          ),
+          Tab(
+            child: Image.asset(
+              'assets/icons/person.png',
+              width: 50,
+              color: _tabController.index == 3
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.7),
+              colorBlendMode: BlendMode.modulate,
+            ),
+          ),
+        ],
+        onTap: (index) {
+          setState(() {});
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        body: const TabBarView(
-          children: [
-            BukkungListPage(),
-            DiaryPage(),
-            KkomulPage(),
-            MyPage(),
-          ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
-          height: 75,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: CustomColors.mainPink,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.7),
-                spreadRadius: 1,
-                blurRadius: 3,
-                offset: Offset(0, -3), // Offset(수평, 수직)
-              ),
-            ],
-          ),
-          child: TabBar(
-            indicatorWeight: 4,
-            splashFactory: NoSplash.splashFactory,
-            tabs: [
-              //Todo: tabbar indicator 위치 수정이 필요한데 기술적 한계로 고민중
-              InkWell(child: Tab(icon: Image.asset('assets/icons/home.png'))),
-              Tab(icon: Image.asset('assets/icons/note.png')),
-              Tab(icon: Image.asset('assets/icons/pets.png')),
-              Tab(icon: Image.asset('assets/icons/person.png')),
-            ],
-          ),
-        ),
+    return Scaffold(
+      body: TabBarView(
+        controller: _tabController,
+        physics: NeverScrollableScrollPhysics(),
+        children: const [
+          BukkungListPage(),
+          DiaryPage(),
+          KkomulPage(),
+          MyPage(),
+        ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: _tabBar(),
     );
   }
 }

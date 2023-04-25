@@ -15,7 +15,7 @@ showAlertDialog({
           message,
           style: TextStyle(
             color: CustomColors.darkGrey,
-            fontSize: 20,
+            fontSize: 15,
           ),
         ),
         contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 0),

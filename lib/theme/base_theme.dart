@@ -31,7 +31,7 @@ ThemeData baseTheme() {
       elevation: 0,
       titleTextStyle: TextStyle(
         color: CustomColors.darkGrey,
-        fontSize: 35,
+        fontSize: 40,
         fontFamily: 'Yoonwoo',
         letterSpacing: 2,
       ),
