@@ -80,5 +80,11 @@ ThemeData baseTheme() {
         ),
       ),
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      hintStyle: TextStyle(
+        fontSize: 20,
+        fontFamily: 'YoonWoo',
+      ),
+    ),
   );
 }
