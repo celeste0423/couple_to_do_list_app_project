@@ -36,6 +36,17 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   get: ^4.6.5
+  firebase_core: ^2.10.0
+  firebase: ^9.0.3
+  flutter_native_splash: ^2.2.19
+
+flutter_native_splash:
+  color: "#FAA7A7"
+  image: assets/images/bukkung_list_icon.png
+  android_12:
+    color: "#FAA7A7"
+    image: assets/images/bukkung_list_icon.png
+    icon_background_color: "#FAA7A7"
 
 dev_dependencies:
   flutter_test:

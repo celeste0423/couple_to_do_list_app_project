@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="couple_to_do_list_app"
+        android:label="버꿍리스트"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
