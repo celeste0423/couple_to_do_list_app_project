@@ -118,6 +118,7 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
 
   Widget _selectedImage() {
     return Container(
+      margin: const EdgeInsets.symmetric(vertical: 20),
       width: 330,
       height: 270,
       decoration: BoxDecoration(
@@ -142,11 +143,18 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
 
   Widget _listPlayButton() {
     return Positioned(
-      top: 250,
+      top: 390,
+      left: Get.width / 2 - 35,
       child: CustomIconButton(
         onTap: () {
           showAlertDialog(context: context, message: '아직 추천 페이지 없음');
         },
+        size: 70,
+        icon: Icon(
+          Icons.play_arrow_rounded,
+          size: 70,
+          color: Colors.white,
+        ),
         shadowOffset: Offset(5, 5),
         shadowBlurRadius: 5,
       ),
@@ -160,6 +168,12 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
   Widget _listAddButton() {
     return ElevatedButton(
       onPressed: () {},
+      style: ElevatedButton.styleFrom(
+        fixedSize: Size(260, 60),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50.0),
+        ),
+      ),
       child: Row(
         children: [
           Image.asset(
@@ -168,8 +182,13 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
             color: Colors.black.withOpacity(0.5),
             colorBlendMode: BlendMode.modulate,
           ),
+          SizedBox(width: 10),
           Text(
-            '버꿍 리스트 만들기',
+            '리스트 새로 만들기',
+            style: TextStyle(
+              color: Colors.black.withOpacity(0.5),
+              fontSize: 30,
+            ),
           ),
         ],
       ),
@@ -196,7 +215,7 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
             ),
           ),
           title: Text(
-            '추천 버꿍리스트',
+            '추천 리스트',
             style: TextStyle(
               color: Colors.white,
             ),
