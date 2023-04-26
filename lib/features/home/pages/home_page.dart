@@ -2,7 +2,7 @@ import 'package:couple_to_do_list_app/features/home/pages/bukkung_list_page.dart
 import 'package:couple_to_do_list_app/features/home/pages/diary_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/kkomul_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/my_page.dart';
-import 'package:couple_to_do_list_app/features/home/widgets/CircleTabIndicator.dart';
+import 'package:couple_to_do_list_app/features/home/widgets/circle_tab_indicator.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
 
@@ -35,12 +35,14 @@ class _HomePageState extends State<HomePage>
         ],
       ),
       child: TabBar(
-        indicator: CircleTabIndicator(color: Colors.white, radius: 5),
+        indicator: CircleTabIndicator(
+          color: CustomColors.backgroundLightGrey,
+          radius: 12,
+        ),
         controller: _tabController,
         indicatorWeight: 4,
         splashFactory: NoSplash.splashFactory,
         tabs: [
-          //Todo: tabbar indicator 위치를 조금더 아래로 이동이 필요한데 기술적 한계로 고민중- 이거 수정 좀 해봤는데 싫으면 말해줘
           Tab(
             child: Image.asset(
               'assets/icons/home.png',

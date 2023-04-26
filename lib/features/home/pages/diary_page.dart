@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/type_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -87,34 +88,14 @@ class _DiaryPageState extends State<DiaryPage>
             ],
           ),
           Positioned(
-            top: 130,
-            right: 50,
-            child: GestureDetector(
-              onTap: () {
-                showAlertDialog(context: context, message: '아직 다이어리 페이지 없음 ㅎ');
-              },
-              child: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: CustomColors.mainPink,
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      spreadRadius: 3,
-                      blurRadius: 10,
-                      offset: Offset(15, 0), // Offset(수평, 수직)
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.play_arrow_rounded,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
+              top: 130,
+              right: 50,
+              child: CustomIconButton(
+                onTap: () {
+                  showAlertDialog(
+                      context: context, message: '아직 다이어리 페이지 없음 ㅎ');
+                },
+              )),
         ],
       ),
     );

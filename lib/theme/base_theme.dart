@@ -6,7 +6,80 @@ ThemeData baseTheme() {
   final ThemeData base = ThemeData();
   return base.copyWith(
     scaffoldBackgroundColor: CustomColors.backgroundLightGrey,
+    //텍스트 기본 설정
     textTheme: TextTheme(
+      labelLarge: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      labelMedium: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      labelSmall: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      titleLarge: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      titleMedium: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      titleSmall: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      headlineLarge: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      headlineMedium: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      headlineSmall: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      displayLarge: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      displayMedium: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
+      displaySmall: TextStyle(
+        color: CustomColors.darkGrey,
+        fontSize: 20,
+        fontFamily: 'Yoonwoo',
+        letterSpacing: 1.5,
+      ),
       bodySmall: TextStyle(
         color: CustomColors.darkGrey,
         fontSize: 20,

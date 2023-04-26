@@ -1,4 +1,5 @@
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/type_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
@@ -116,11 +117,63 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
   }
 
   Widget _selectedImage() {
-    return Container();
+    return Container(
+      width: 330,
+      height: 270,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 3,
+            blurRadius: 10,
+            offset: Offset(5, 5), // Offset(수평, 수직)
+          ),
+        ],
+        image: DecorationImage(
+          image: NetworkImage(
+            'https://post-phinf.pstatic.net/MjAxNzEwMjBfNjYg/MDAxNTA4NDY0NzkxMDc3.BXMDJ0jGbaunHr6TRI6N4NOBiGOXAlXbzlmgaZYHMkQg.P6Rbnq9YTv9CCqH5Vgu6JCSEGZC_wOZ25onOnoT4AAAg.PNG/11.png?type=w1200',
+          ),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  Widget _listPlayButton() {
+    return Positioned(
+      top: 250,
+      child: CustomIconButton(
+        onTap: () {
+          showAlertDialog(context: context, message: '아직 추천 페이지 없음');
+        },
+        shadowOffset: Offset(5, 5),
+        shadowBlurRadius: 5,
+      ),
+    );
   }
 
   Widget _suggestionList() {
     return Container();
+  }
+
+  Widget _listAddButton() {
+    return ElevatedButton(
+      onPressed: () {},
+      child: Row(
+        children: [
+          Image.asset(
+            'assets/icons/plus.png',
+            width: 30,
+            color: Colors.black.withOpacity(0.5),
+            colorBlendMode: BlendMode.modulate,
+          ),
+          Text(
+            '버꿍 리스트 만들기',
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -163,9 +216,12 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
                 _selectedImage(),
                 _suggestionList(),
               ],
-            )
+            ),
+            _listPlayButton(),
           ],
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: _listAddButton(),
       ),
     );
   }

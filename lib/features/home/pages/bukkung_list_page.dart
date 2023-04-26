@@ -31,35 +31,32 @@ class _BukkungListPageState extends State<BukkungListPage> {
         //Todo: route로 파일 뽑아낼 것
         Get.to(() => ListSuggestionPage());
       },
-      child: Hero(
-        tag: 'addList',
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25),
-            color: Colors.white,
-          ),
-          height: 50,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Image.asset(
-                'assets/icons/plus.png',
-                width: 30,
-                color: Colors.white.withOpacity(0.7),
-                colorBlendMode: BlendMode.modulate,
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: Colors.white,
+        ),
+        height: 50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.asset(
+              'assets/icons/plus.png',
+              width: 30,
+              color: Colors.white.withOpacity(0.7),
+              colorBlendMode: BlendMode.modulate,
+            ),
+            SizedBox(width: 20),
+            Text(
+              '여기를 눌러 버꿍리스트를 추가하세요',
+              style: TextStyle(
+                color: CustomColors.grey.withOpacity(0.5),
+                fontSize: 20,
               ),
-              SizedBox(width: 20),
-              Text(
-                '여기를 눌러 버꿍리스트를 추가하세요',
-                style: TextStyle(
-                  color: CustomColors.grey.withOpacity(0.5),
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -167,9 +164,12 @@ class _BukkungListPageState extends State<BukkungListPage> {
           _listTypeSelector(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Divider(
-              thickness: 2,
-              color: CustomColors.mainPink,
+            child: Hero(
+              tag: 'addList',
+              child: Divider(
+                thickness: 2,
+                color: CustomColors.mainPink,
+              ),
             ),
           ),
           _bukkungListView(),
