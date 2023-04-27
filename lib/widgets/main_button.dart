@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 
 Widget mainButton(
   String text,
-  Function onPressed,
+  Function()? onPressed,
+    [double? x, Color? color]
 ) {
   return SizedBox(
     height: 50,
-    width: double.infinity,
+    width: x ?? double.infinity,
     child: ElevatedButton(
-      onPressed: onPressed != null ? () => onPressed!() : null,
+      style: ElevatedButton.styleFrom(
+        primary: color, // Background color
+      ),
+      onPressed: onPressed,
       child: Text(
         text,
         style: TextStyle(fontSize: 35, color: Colors.white),

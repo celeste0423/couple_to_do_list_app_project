@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../../widgets/main_button.dart';
+
 class FindBuddyPage extends StatefulWidget {
   FindBuddyPage({Key? key}) : super(key: key);
 
@@ -81,15 +83,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          ElevatedButton(
-                              onPressed: () {
-                                authController
-                                    .changeRegisterProgressIndex('waitBuddy');
-                              },
-                              child: Text(
-                                '임시 버튼',
-                                style: TextStyle(color: Colors.red),
-                              )),
+
                           Text(
                             '내 이메일',
                             style: TextStyle(fontSize: 30, color: Colors.white),
@@ -133,52 +127,61 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
               ),
               Align(
                 alignment: Alignment.center,
-                child: Container(
-                  margin: EdgeInsets.all(20),
-                  height: 250,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Image.asset(
-                        'assets/images/email.png',
-                        color: CustomColors.grey,
-                        height: 70,
-                      ),
-                      Text(
-                        '짝꿍의 이메일을 입력하세요',
-                        style:
-                            TextStyle(fontSize: 30, color: CustomColors.grey),
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 30),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
+                child: Stack(
+                  children: [Container(
+                    margin: EdgeInsets.all(20),
+                    height: 250,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Image.asset(
+                          'assets/images/email.png',
+                          color: CustomColors.grey,
+                          height: 70,
                         ),
-                        height: 40,
-                        child: TextField(
-                          controller: emailController,
-                          decoration: InputDecoration(
-                            labelText: 'ddosy99@naver.com',
-                            prefixIcon: Icon(Icons.email),
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.clear, size: 20),
-                              onPressed: () {
-                                return emailController.clear();
-                              },
+                        Text(
+                          '짝꿍의 이메일을 입력하세요',
+                          style:
+                          TextStyle(fontSize: 30, color: CustomColors.grey),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 30),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
+                          height: 40,
+                          child: TextField(
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              labelText: 'ddosy99@naver.com',
+                              prefixIcon: Icon(Icons.email),
+                              suffixIcon: IconButton(
+                                icon: Icon(Icons.clear, size: 20),
+                                onPressed: () {
+                                  return emailController.clear();
+                                },
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 40),
-                    ],
+                        SizedBox(height: 40),
+                      ],
+                    ),
                   ),
+                    Positioned(
+                      bottom: 0,
+                      right: MediaQuery.of(context).size.width*1/2-75,
+                      child: mainButton('다음으로', (){authController
+                          .changeRegisterProgressIndex('waitBuddy');},150, CustomColors.redbrown)
+                    ),
+                  ]
                 ),
               ),
             ],

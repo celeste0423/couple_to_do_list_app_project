@@ -90,7 +90,9 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
           prefixIcon: Icon(Icons.account_circle),
           suffixIcon: IconButton(
             icon: Icon(Icons.close, size: 20),
-            onPressed: onPressed != null ? () => onPressed!() : null,
+            onPressed: () {
+              onPressed;
+            },
           ),
         ),
       ),
@@ -192,12 +194,16 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
                           ),
                         ),
                         mainButton(
-                          '등록하기',
-                          () {
-                            authController
-                                .changeRegisterProgressIndex('findBuddy');
-                          },
-                        ),
+                            '등록하기',(){
+                          await kakaoviewModel.login();
+                          if(kakaoviewModel.isLogined){
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>LoadingScreen(kakaoviewModel, 0)));
+                            _sendAnalyticsEvent();
+                          }
+
+                              authController
+                            .changeRegisterProgressIndex('findBuddy');}
+                            ),
                         SizedBox(height: 60),
                       ],
                     ),
