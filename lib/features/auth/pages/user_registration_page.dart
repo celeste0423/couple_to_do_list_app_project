@@ -193,17 +193,10 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
                             ],
                           ),
                         ),
-                        mainButton(
-                            '등록하기',(){
-                          await kakaoviewModel.login();
-                          if(kakaoviewModel.isLogined){
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>LoadingScreen(kakaoviewModel, 0)));
-                            _sendAnalyticsEvent();
-                          }
-
-                              authController
-                            .changeRegisterProgressIndex('findBuddy');}
-                            ),
+                        mainButton('등록하기', () {
+                          authController
+                              .changeRegisterProgressIndex('findBuddy');
+                        }),
                         SizedBox(height: 60),
                       ],
                     ),

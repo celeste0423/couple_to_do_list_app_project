@@ -1,6 +1,5 @@
+import 'package:couple_to_do_list_app/features/auth/controller/login.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:to_do_list/login.dart';
-
 
 class MainViewModel{
   final KakaoLogin _socialLogin;

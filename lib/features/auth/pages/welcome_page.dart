@@ -1,4 +1,6 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/auth/controller/login.dart';
+import 'package:couple_to_do_list_app/features/auth/controller/viewmodel.dart';
 
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/gestures.dart';
@@ -9,6 +11,7 @@ class WelcomePage extends StatelessWidget {
   WelcomePage({Key? key}) : super(key: key);
 
   final AuthController authController = Get.put(AuthController());
+  final kakaoviewModel = MainViewModel(KakaoLogin());
 
   @override
   Widget build(BuildContext context) {
@@ -72,10 +75,14 @@ class WelcomePage extends StatelessWidget {
                         ),
                       ),
                       GestureDetector(
-                          onTap: () {
-                            print('로그인 계시-일단은 다음페이지로');
-                            authController.changeRegisterProgressIndex(
-                                'userRegistration');
+                          onTap: () async{
+                            print('버튼눌렀음');
+                            await kakaoviewModel.login();
+                            print('awaiting login finish');
+                            if(kakaoviewModel.isLogined){
+                              authController.changeRegisterProgressIndex(
+                                  'userRegistration');
+                            }
                           },
                           child: Image.asset(
                               'assets/images/kakao_login_medium_narrow.png')),
