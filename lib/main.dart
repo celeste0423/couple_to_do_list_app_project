@@ -8,6 +8,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
+import 'features/auth/pages/welcome_page.dart';
+
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Bukkung List',
       theme: baseTheme(),
-      home: UserRegistrationPage(),
+      home: WelcomePage(),
       // home: GetX<UserInfoAuthController>(
       //   init: UserInfoAuthController(),
       //   builer: (controller){

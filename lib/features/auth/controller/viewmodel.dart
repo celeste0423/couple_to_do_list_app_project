@@ -9,6 +9,7 @@ class MainViewModel{
   User? user; //user import
 
   Future login()async{
+    print('로그인 시작');
     isLogined = await _socialLogin.login();
     if(isLogined){
       user = await UserApi.instance.me();// 현재 접속한 유저정보를 가져옴

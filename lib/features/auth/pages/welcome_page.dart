@@ -79,6 +79,7 @@ class WelcomePage extends StatelessWidget {
                             print('버튼눌렀음');
                             await kakaoviewModel.login();
                             print('awaiting login finish');
+                            print(kakaoviewModel.user!);
                             if(kakaoviewModel.isLogined){
                               authController.changeRegisterProgressIndex(
                                   'userRegistration');
