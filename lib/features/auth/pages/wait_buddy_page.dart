@@ -80,7 +80,7 @@ class WaitBuddyPage extends StatelessWidget {
                           Clipboard.setData(
                               ClipboardData(text: 'ddosy99@naver.com'))
                               .then((_) {
-                            Get.snackbar('이메일 복사 완료', '',
+                            Get.snackbar('이메일', '복사 완료',
                                 icon: Icon(Icons.email),
                                 snackPosition: SnackPosition.BOTTOM,
                                 backgroundColor: Colors.white);
@@ -120,7 +120,7 @@ class WaitBuddyPage extends StatelessWidget {
                   Positioned(
                       bottom: 0,
                       right: MediaQuery.of(context).size.width*1/2-75,
-                      child: mainButton('다음으로', (){authController
+                      child: mainButton('새로고침', (){authController
                           .changeRegisterProgressIndex('waitBuddy');},150, CustomColors.redbrown)
                   ),
                 ]

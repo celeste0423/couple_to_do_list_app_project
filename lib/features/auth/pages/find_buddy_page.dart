@@ -5,8 +5,9 @@ import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
 import '../../../widgets/main_button.dart';
+
+//Todo: 친구 찾기 완료하면 authcontroller 없애야 하나
 
 class FindBuddyPage extends StatefulWidget {
   FindBuddyPage({Key? key}) : super(key: key);
@@ -179,7 +180,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                       bottom: 0,
                       right: MediaQuery.of(context).size.width*1/2-75,
                       child: mainButton('다음으로', (){authController
-                          .changeRegisterProgressIndex('waitBuddy');},150, CustomColors.redbrown)
+                          .changeRegisterProgressIndex('waitBuddy');},150,CustomColors.lightPink)
                     ),
                   ]
                 ),

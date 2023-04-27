@@ -1,5 +1,4 @@
-import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
-
+import 'package:couple_to_do_list_app/features/auth/pages/user_registration_page.dart';
 import 'package:couple_to_do_list_app/firebase_options.dart';
 import 'package:couple_to_do_list_app/theme/base_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -36,7 +35,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Bukkung List',
       theme: baseTheme(),
-      home: WelcomePage(),
+      home: UserRegistrationPage(),
       // home: GetX<UserInfoAuthController>(
       //   init: UserInfoAuthController(),
       //   builer: (controller){
