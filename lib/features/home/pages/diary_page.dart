@@ -93,7 +93,9 @@ class _DiaryPageState extends State<DiaryPage>
               child: CustomIconButton(
                 onTap: () {
                   showAlertDialog(
-                      context: context, message: '아직 다이어리 페이지 없음 ㅎ');
+                    context: context,
+                    message: '아직 다이어리 페이지 없음 ㅎ',
+                  );
                 },
               )),
         ],

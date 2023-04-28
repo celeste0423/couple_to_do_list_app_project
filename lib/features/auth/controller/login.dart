@@ -9,6 +9,7 @@ class KakaoLogin {
           await UserApi.instance.loginWithKakaoTalk();
           return true;
         } catch (e) {
+          // showAlertDialog(context: context, message: e.toString());
           return false;
         }
       } else {

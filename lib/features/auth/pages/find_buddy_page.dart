@@ -21,6 +21,182 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
 
   TextEditingController emailController = TextEditingController();
 
+  Widget _appBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            padding: EdgeInsets.only(left: 20),
+            onPressed: () {
+              authController.changeRegisterProgressIndex('userRegistration');
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 30,
+              color: Colors.white,
+            ),
+          ),
+          titleText('짝꿍 찾기'),
+          SizedBox(
+            width: 50,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _backgroundHandShakeImage() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 50),
+      child: Image.asset('assets/images/handshake.png'),
+    );
+  }
+
+  Widget _backgroundBottom() {
+    return Expanded(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+          color: CustomColors.redbrown,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(45),
+            topLeft: Radius.circular(45),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              '내 이메일',
+              style: TextStyle(fontSize: 30, color: Colors.white),
+            ),
+            _emailCopyButton(),
+            _inviteButton(),
+            SizedBox(height: 50),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _emailCopyButton() {
+    return TextButton(
+      onPressed: () {
+        Clipboard.setData(
+          ClipboardData(text: 'ddosy99@naver.com'),
+        ).then(
+          (_) {
+            Get.snackbar(
+              '이메일',
+              '복사 완료',
+              icon: Icon(Icons.email),
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.white,
+            );
+          },
+        );
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Text(
+            'ddosy99@naver.com',
+            style: TextStyle(fontSize: 30, color: Colors.white),
+          ),
+          SizedBox(width: 10),
+          Icon(
+            Icons.copy,
+            size: 30,
+          ),
+          SizedBox(width: 10),
+        ],
+      ),
+    );
+  }
+
+  Widget _inviteButton() {
+    return TextButton(onPressed: () {}, child: Text('초대 메시지 보내기'));
+  }
+
+  Widget _floatingContainer() {
+    return Align(
+      alignment: Alignment.center,
+      child: Stack(
+        children: [
+          Container(
+            margin: EdgeInsets.all(20),
+            height: 250,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.9),
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Image.asset(
+                  'assets/images/email.png',
+                  color: CustomColors.grey,
+                  height: 70,
+                ),
+                Text(
+                  '짝꿍의 이메일을 입력하세요',
+                  style: TextStyle(fontSize: 30, color: CustomColors.grey),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 30),
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                  ),
+                  child: _emailTextField(),
+                ),
+                SizedBox(height: 40),
+              ],
+            ),
+          ),
+          _nextButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _emailTextField() {
+    return TextField(
+      controller: emailController,
+      decoration: InputDecoration(
+        hintText: 'ddosy99@naver.com',
+        prefixIcon: Icon(Icons.email),
+        suffixIcon: IconButton(
+          icon: Icon(Icons.clear, size: 20),
+          onPressed: () {
+            return emailController.clear();
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _nextButton() {
+    return Positioned(
+      bottom: 0,
+      right: MediaQuery.of(context).size.width * 1 / 2 - 75,
+      child: mainButton(
+        '다음으로',
+        () {
+          authController.changeRegisterProgressIndex('waitBuddy');
+        },
+        150,
+        CustomColors.lightPink,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -36,155 +212,14 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        padding: EdgeInsets.only(left: 20),
-                        onPressed: () {
-                          authController
-                              .changeRegisterProgressIndex('userRegistration');
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          size: 30,
-                          color: Colors.white,
-                        ),
-                      ),
-                      titleText('짝꿍 찾기'),
-                      SizedBox(
-                        width: 50,
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
+                  _appBar(),
                   RegistrationStage(2),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 50),
-                      child: Image.asset('assets/images/handshake.png')),
-                  Expanded(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                        color: CustomColors.redbrown,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(45),
-                          topLeft: Radius.circular(45),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-
-                          Text(
-                            '내 이메일',
-                            style: TextStyle(fontSize: 30, color: Colors.white),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Clipboard.setData(
-                                ClipboardData(text: 'ddosy99@naver.com'),
-                              ).then(
-                                (_) {
-                                  Get.snackbar('이메일', '복사 완료',
-                                      icon: Icon(Icons.email),
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Colors.white);
-                                },
-                              );
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Text(
-                                  'ddosy99@naver.com',
-                                  style: TextStyle(
-                                      fontSize: 30, color: Colors.white),
-                                ),
-                                SizedBox(width: 10),
-                                Icon(
-                                  Icons.copy,
-                                  size: 30,
-                                ),
-                                SizedBox(width: 10),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 50),
-                        ],
-                      ),
-                    ),
-                  ),
+                  SizedBox(height: 15),
+                  _backgroundHandShakeImage(),
+                  _backgroundBottom(),
                 ],
               ),
-              Align(
-                alignment: Alignment.center,
-                child: Stack(
-                  children: [Container(
-                    margin: EdgeInsets.all(20),
-                    height: 250,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Image.asset(
-                          'assets/images/email.png',
-                          color: CustomColors.grey,
-                          height: 70,
-                        ),
-                        Text(
-                          '짝꿍의 이메일을 입력하세요',
-                          style:
-                          TextStyle(fontSize: 30, color: CustomColors.grey),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 30),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(20),
-                            ),
-                          ),
-                          height: 40,
-                          child: TextField(
-                            controller: emailController,
-                            decoration: InputDecoration(
-                              labelText: 'ddosy99@naver.com',
-                              prefixIcon: Icon(Icons.email),
-                              suffixIcon: IconButton(
-                                icon: Icon(Icons.clear, size: 20),
-                                onPressed: () {
-                                  return emailController.clear();
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 40),
-                      ],
-                    ),
-                  ),
-                    Positioned(
-                      bottom: 0,
-                      right: MediaQuery.of(context).size.width*1/2-75,
-                      child: mainButton('다음으로', (){authController
-                          .changeRegisterProgressIndex('waitBuddy');},150,CustomColors.lightPink)
-                    ),
-                  ]
-                ),
-              ),
+              _floatingContainer(),
             ],
           ),
         ),

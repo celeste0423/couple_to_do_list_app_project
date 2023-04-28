@@ -16,14 +16,16 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  runApp(const MyApp());
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle.dark.copyWith(
-      statusBarIconBrightness: Brightness.light,
-      statusBarColor: Colors.transparent,
-    ),
-  );
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(const MyApp());
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle.dark.copyWith(
+        statusBarIconBrightness: Brightness.light,
+        statusBarColor: Colors.transparent,
+      ),
+    );
+  });
 }
 
 class MyApp extends StatelessWidget {

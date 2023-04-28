@@ -2,7 +2,7 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
 
 class CustomIconButton extends StatelessWidget {
-  final Function onTap;
+  final VoidCallback onTap;
   final Icon? icon;
   final Color? backgroundColor;
   final double? size;
@@ -22,9 +22,7 @@ class CustomIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        onTap;
-      },
+      onTap: onTap,
       child: Container(
         width: size ?? 50,
         height: size ?? 50,
