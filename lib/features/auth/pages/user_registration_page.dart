@@ -20,6 +20,12 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
   TextEditingController nicknameController = TextEditingController();
   TextEditingController birthdayController = TextEditingController();
 
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //nicknameController.text =
+  }
   Widget registerText(String text) {
     return Text(
       text,
@@ -70,7 +76,8 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
   Widget registerTextField(
     String text,
     TextEditingController controller,
-    Function onPressed,
+    Function()? onPressed,
+      [TextInputType? numberinput]
   ) {
     return Container(
       decoration: BoxDecoration(
@@ -81,6 +88,7 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
       ),
       height: 50,
       child: TextField(
+        keyboardType: numberinput,
         controller: controller,
         decoration: InputDecoration(
           hintText: text,
@@ -90,9 +98,7 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
           prefixIcon: Icon(Icons.account_circle),
           suffixIcon: IconButton(
             icon: Icon(Icons.close, size: 20),
-            onPressed: () {
-              onPressed;
-            },
+            onPressed: onPressed
           ),
         ),
       ),
@@ -173,7 +179,7 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     registerTextField(
-                                      'ex) 돼지길동',
+                                      nicknameController.text,
                                       nicknameController,
                                       () {
                                         return nicknameController.clear();
@@ -181,11 +187,12 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
                                     ),
                                     genderSelector(),
                                     registerTextField(
-                                      'ex) 960102',
+                                      birthdayController.text,
                                       birthdayController,
                                       () {
                                         return birthdayController.clear();
                                       },
+                                        TextInputType.number
                                     ),
                                   ],
                                 ),

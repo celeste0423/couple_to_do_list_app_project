@@ -38,6 +38,7 @@ dependencies:
   get: ^4.6.5
   firebase_core: ^2.10.0
   firebase: ^9.0.3
+  firebase_auth: ^4.4.2
   flutter_native_splash: ^2.2.19
   kakao_flutter_sdk_user: ^1.4.1
 

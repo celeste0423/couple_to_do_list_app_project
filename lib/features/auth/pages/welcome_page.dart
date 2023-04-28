@@ -13,6 +13,11 @@ class WelcomePage extends StatelessWidget {
   final AuthController authController = Get.put(AuthController());
   final kakaoviewModel = MainViewModel(KakaoLogin());
 
+  String? userid;
+  String? usersex;
+  String? userbirthday;
+  String? useremail;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,14 +81,24 @@ class WelcomePage extends StatelessWidget {
                       ),
                       GestureDetector(
                           onTap: () async{
+
                             print('버튼눌렀음');
+
                             await kakaoviewModel.login();
+
                             print('awaiting login finish');
                             print(kakaoviewModel.user!);
+
                             if(kakaoviewModel.isLogined){
+                              userid = kakaoviewModel.user!.id.toString();
+                              // usersex=kakaoviewModel.user!.
+                              // useremail=
+                              // userbirthday=
                               authController.changeRegisterProgressIndex(
                                   'userRegistration');
                             }
+
+
                           },
                           child: Image.asset(
                               'assets/images/kakao_login_medium_narrow.png')),

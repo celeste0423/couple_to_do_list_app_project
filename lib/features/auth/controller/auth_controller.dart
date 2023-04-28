@@ -2,6 +2,8 @@ import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/user_registration_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/wait_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
@@ -28,5 +30,54 @@ class AuthController extends GetxController {
       default:
         Get.to(() => WelcomePage());
     }
+  }
+
+
+//user registration
+
+  static AuthController instance = Get.find();
+  late Rx<User?> _user;
+  FirebaseAuth authentication = FirebaseAuth.instance;
+
+  @override
+  void onReady() {
+    super.onReady();
+    _user = Rx<User?>(authentication.currentUser);
+    _user.bindStream(authentication.userChanges());
+    ever(_user, _moveToPage);
+  }
+
+  _moveToPage(User? user) {
+    if (user == null) {
+      Get.offAll(() => WelcomePage());
+    } else {
+      Get.offAll(() => UserRegistrationPage());
+    }
+  }
+
+  void register(String email, password) async {
+    try {
+      await authentication.createUserWithEmailAndPassword(
+          email: email, password: password);
+    } catch (e) {
+      Get.snackbar(
+        "Error message",
+        "User message",
+        backgroundColor: Colors.red,
+        snackPosition: SnackPosition.BOTTOM,
+        titleText: Text(
+          "Registration is failed",
+          style: TextStyle(color: Colors.white),
+        ),
+        messageText: Text(
+          e.toString(),
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    }
+  }
+
+  void logout(){
+    authentication.signOut();
   }
 }
