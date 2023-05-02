@@ -27,6 +27,7 @@ class GoogleLoginButton extends StatelessWidget {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+      print('구글에 로그인(구글버튼)');
       return await _auth.signInWithCredential(credential);
     }
 
@@ -36,8 +37,8 @@ class GoogleLoginButton extends StatelessWidget {
         if (userCredential == null) {
           showAlertDialog(context: context, message: '로그인 실패');
         } else {
-          print('로그인 성공');
-          authController.changeRegisterProgressIndex('userRegistration');
+          print('로그인 진행(구글버튼)');
+          // authController.changeRegisterProgressIndex('userRegistration');
         }
       },
       child: Image.asset(

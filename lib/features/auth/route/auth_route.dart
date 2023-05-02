@@ -1,5 +1,5 @@
 // import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
-// import 'package:couple_to_do_list_app/features/auth/pages/user_registration_page.dart';
+// import 'package:couple_to_do_list_app/features/auth/pages/signup_page.dart';
 // import 'package:couple_to_do_list_app/features/auth/pages/wait_buddy_page.dart';
 // import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 // import 'package:get/get.dart';

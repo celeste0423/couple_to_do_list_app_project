@@ -1,31 +1,29 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/auth/model/user_model.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/main_button.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 
-class UserRegistrationPage extends StatefulWidget {
-  const UserRegistrationPage({Key? key}) : super(key: key);
+class SignupPage extends StatefulWidget {
+  const SignupPage({Key? key, required this.uid}) : super(key: key);
+  final String uid;
 
   @override
-  State<UserRegistrationPage> createState() => UserRegistrationPageState();
+  State<SignupPage> createState() => SignupPageState();
 }
 
-class UserRegistrationPageState extends State<UserRegistrationPage> {
+class SignupPageState extends State<SignupPage> {
   final List<bool> isSelected = <bool>[false, false];
+  String? gender = null;
 
   final AuthController authController = AuthController();
 
   TextEditingController nicknameController = TextEditingController();
   TextEditingController birthdayController = TextEditingController();
 
-@override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    //nicknameController.text =
-  }
   Widget registerText(String text) {
     return Text(
       text,
@@ -48,6 +46,11 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
             () {
               for (int i = 0; i < isSelected.length; i++) {
                 isSelected[i] = i == index;
+              }
+              if (index == 0) {
+                gender = 'male';
+              } else {
+                gender = 'female';
               }
             },
           );
@@ -77,9 +80,10 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
     String text,
     TextEditingController controller,
     Function()? onPressed,
-      [TextInputType? numberinput]
+    TextInputType? numberinput,
   ) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(
@@ -95,14 +99,31 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
           hintStyle: TextStyle(
             fontSize: 20,
           ),
-          prefixIcon: Icon(Icons.account_circle),
           suffixIcon: IconButton(
-            icon: Icon(Icons.close, size: 20),
-            onPressed: onPressed
-          ),
+              icon: Icon(Icons.close, size: 20), onPressed: onPressed),
         ),
       ),
     );
+  }
+
+  Widget _registerButton() {
+    return mainButton('등록하기', () async {
+      if (nicknameController == null || birthdayController.text.length != 8) {
+        showAlertDialog(context: context, message: '닉네임과 생일 모두 올바르게 작성해주세요');
+      } else {
+        DateTime birthdayDateTime = DateTime.parse(
+            '${birthdayController.text.substring(0, 4)}-${birthdayController.text.substring(4, 6)}-${birthdayController.text.substring(6, 8)}');
+
+        var signupUser = UserModel(
+          uid: widget.uid,
+          nickname: nicknameController.text,
+          gender: gender,
+          birthday: birthdayDateTime,
+        );
+        AuthController.to.signup(signupUser);
+        authController.changeRegisterProgressIndex('findBuddy');
+      }
+    });
   }
 
   @override
@@ -112,7 +133,6 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         backgroundColor: CustomColors.mainPink,
         body: SafeArea(
           child: Stack(
@@ -179,20 +199,21 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     registerTextField(
-                                      nicknameController.text,
+                                      'ex) 홍길동',
                                       nicknameController,
                                       () {
                                         return nicknameController.clear();
                                       },
+                                      TextInputType.text,
                                     ),
                                     genderSelector(),
                                     registerTextField(
-                                      birthdayController.text,
+                                      'ex) 20010102',
                                       birthdayController,
                                       () {
                                         return birthdayController.clear();
                                       },
-                                        TextInputType.number
+                                      TextInputType.number,
                                     ),
                                   ],
                                 ),
@@ -200,10 +221,7 @@ class UserRegistrationPageState extends State<UserRegistrationPage> {
                             ],
                           ),
                         ),
-                        mainButton('등록하기', () {
-                          authController
-                              .changeRegisterProgressIndex('findBuddy');
-                        }),
+                        _registerButton(),
                         SizedBox(height: 60),
                       ],
                     ),

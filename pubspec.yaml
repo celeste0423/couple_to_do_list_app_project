@@ -43,6 +43,7 @@ dependencies:
   kakao_flutter_sdk_share: ^1.4.2
   firebase_auth: ^4.4.2
   google_sign_in: ^6.1.0
+  cloud_firestore: ^4.5.3
 
 flutter_native_splash:
   color: "#FAA7A7"
