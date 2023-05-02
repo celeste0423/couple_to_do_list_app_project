@@ -18,6 +18,7 @@ class UserRepository {
       // Get.to(() => WelcomePage());
       return null;
     } else {
+      print('가입 이력 존재(repo)${data.docs.first.data().toString()}');
       return UserModel.fromJson(data.docs.first.data());
     }
   }

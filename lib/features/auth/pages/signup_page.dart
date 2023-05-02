@@ -8,8 +8,13 @@ import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({Key? key, required this.uid}) : super(key: key);
+  const SignupPage({
+    Key? key,
+    required this.uid,
+    required this.email,
+  }) : super(key: key);
   final String uid;
+  final String? email;
 
   @override
   State<SignupPage> createState() => SignupPageState();
@@ -116,6 +121,7 @@ class SignupPageState extends State<SignupPage> {
 
         var signupUser = UserModel(
           uid: widget.uid,
+          email: widget.email,
           nickname: nicknameController.text,
           gender: gender,
           birthday: birthdayDateTime,

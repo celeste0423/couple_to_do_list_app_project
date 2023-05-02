@@ -27,13 +27,17 @@ class Root extends GetView<AuthController> {
                 //future에 null값 반환받음
                 print('신규 유저임');
                 return Obx(() {
+                  print(controller.user.value.uid);
                   //controller Rx를 구독하고 있음
                   if (controller.user.value.uid != null) {
                     print('로그인 되어있음 홈으로');
                     return const HomePage();
                   } else {
                     print('회원가입하러');
-                    return SignupPage(uid: user.data!.uid);
+                    return SignupPage(
+                      uid: user.data!.uid,
+                      email: user.data!.email,
+                    );
                   }
                 });
               }

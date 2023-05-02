@@ -1,4 +1,5 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
@@ -31,6 +32,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           IconButton(
             padding: EdgeInsets.only(left: 20),
             onPressed: () {
+              UserRepository.googleAccountDeletion();
+              //만약 회원 가입 중간에 다시 되돌아갈 경우 구글 계정 다시 로그인하게 함
               authController.changeRegisterProgressIndex('userRegistration');
             },
             icon: Icon(
