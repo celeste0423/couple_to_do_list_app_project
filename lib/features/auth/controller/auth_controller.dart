@@ -5,7 +5,6 @@ import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 
 class AuthController extends GetxController {
   var registerProgressIndex = 'welcome'.obs;

@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
 import '../../../widgets/main_button.dart';
 
 //Todo: 친구 찾기 완료하면 authcontroller 없애야 하나
@@ -170,7 +171,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
     return TextField(
       controller: emailController,
       decoration: InputDecoration(
-        hintText: 'ddosy99@naver.com',
+        hintText: 'Bukkung@google.com',
         prefixIcon: Icon(Icons.email),
         suffixIcon: IconButton(
           icon: Icon(Icons.clear, size: 20),

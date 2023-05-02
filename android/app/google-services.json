@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "395268185816-d5bu2v3od3mr7c5uk3jglbkjt0vrojd7.apps.googleusercontent.com",
+          "client_id": "395268185816-vtm9b9n7d67hqr9rja6h5k1bfdgdi3g3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.couple_to_do_list_app",
+            "certificate_hash": "a24f74e9940df6e0c70deea62df9023479ae8bc0"
+          }
+        },
+        {
+          "client_id": "395268185816-rpua4hh1iv5pa0mc2i675iggjsuc3dt2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -29,6 +37,13 @@
             {
               "client_id": "395268185816-d5bu2v3od3mr7c5uk3jglbkjt0vrojd7.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "395268185816-oh3kqdh07vcahvg75t6fj5j4ial3gsn9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.coupleToDoListApp"
+              }
             }
           ]
         }
