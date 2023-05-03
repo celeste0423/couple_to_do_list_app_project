@@ -34,11 +34,11 @@ class GoogleLoginButton extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         UserCredential? userCredential = await _signInWithGoogle();
-        if (userCredential == null) {
+        if (null == userCredential) {
           showAlertDialog(context: context, message: '로그인 실패');
         } else {
           print('로그인 진행(구글버튼)');
-          // authController.changeRegisterProgressIndex('userRegistration');
+          authController.changeRegisterProgressIndex('userRegistration');
         }
       },
       child: Image.asset(

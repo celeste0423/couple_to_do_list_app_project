@@ -13,6 +13,7 @@ class Root extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
+    final firebaseauth = FirebaseAuth.instance;
     print('그룹 id ${controller.user.value.groupId}');
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
@@ -36,7 +37,7 @@ class Root extends GetView<AuthController> {
                 return Obx(() {
                   print('유저정보(root) ${controller.user.value.uid}');
                   //controller Rx를 구독하도록 수정
-                  if (controller.user.value?.uid != null) {
+                  if (controller.user.value.uid != null) {
                     print('로그인 되어있음 버꿍찾기로(root)');
                     return FindBuddyPage();
                   } else {
