@@ -1,5 +1,7 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/model/user_model.dart';
+import 'package:couple_to_do_list_app/features/auth/pages/wait_buddy_page.dart';
+import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -21,7 +23,6 @@ class FindBuddyPage extends StatefulWidget {
 
 class _FindBuddyPageState extends State<FindBuddyPage> {
   final AuthController authController = AuthController();
-
   TextEditingController emailController = TextEditingController();
 
   Widget _appBar() {
@@ -33,9 +34,10 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           IconButton(
             padding: EdgeInsets.only(left: 20),
             onPressed: () {
+              //
               UserRepository.googleAccountDeletion();
               //만약 회원 가입 중간에 다시 되돌아갈 경우 구글 계정 다시 로그인하게 함
-              authController.changeRegisterProgressIndex('userRegistration');
+              Get.to(WelcomePage());
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -90,10 +92,11 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
   Widget _emailCopyButton() {
     final AuthController authController = Get.find();
     final UserModel user = authController.user.value;
+    final String? useremail = user.email;
     return TextButton(
       onPressed: () {
         Clipboard.setData(
-          ClipboardData(text: user.email!),
+          ClipboardData(text: useremail ?? ''),
         ).then(
           (_) {
             Get.snackbar(
@@ -110,7 +113,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            user.email!,
+            useremail ?? '',
             style: TextStyle(fontSize: 30, color: Colors.white),
           ),
           SizedBox(width: 10),
@@ -196,7 +199,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       child: mainButton(
         '시작하기',
         () {
-          authController.changeRegisterProgressIndex('waitBuddy');
+
+         // Get.to(WaitBuddyPage());
         },
         150,
         CustomColors.lightPink,
@@ -211,7 +215,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false, //키보드로 인한 overflow방지
+        resizeToAvoidBottomInset: true,
         backgroundColor: CustomColors.mainPink,
         body: SafeArea(
           child: Stack(

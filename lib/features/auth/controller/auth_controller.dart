@@ -1,6 +1,5 @@
 import 'package:couple_to_do_list_app/features/auth/model/user_model.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
-import 'package:couple_to_do_list_app/features/auth/pages/signup_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/wait_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
@@ -23,9 +22,9 @@ class AuthController extends GetxController {
     }
     print('유저데이터(cont) ${userData.toString()}');
     return userData; //신규 유저일 경우 null반환
-  }
+}
 
-  void signup(UserModel signupUser) async {
+   Future signup(UserModel signupUser) async {
     //회원가입 버튼에 사용
     var result = await UserRepository.firestoreSignup(signupUser);
     if (result) {
@@ -44,11 +43,12 @@ class AuthController extends GetxController {
       case 'welcome':
         Get.to(() => WelcomePage());
         break;
-      case 'userRegistration':
-        Get.to(() => SignupPage(
-              uid: user.uid,
-            ));
-        break;
+      // case 'userRegistration':
+      //   Get.to(() => SignupPage(
+      //         uid: user.
+      //         email: user.data!.email,
+      //       ));
+      //   break;
       case 'findBuddy':
         Get.to(() => FindBuddyPage());
         break;

@@ -1,4 +1,3 @@
-import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/google_login_button.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/gestures.dart';
@@ -6,9 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class WelcomePage extends StatelessWidget {
-  WelcomePage({Key? key}) : super(key: key);
-
-  final AuthController authController = Get.put(AuthController());
 
   Widget _subTitle() {
     return Container(

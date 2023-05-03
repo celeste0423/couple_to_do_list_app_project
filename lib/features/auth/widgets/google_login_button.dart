@@ -1,15 +1,13 @@
-import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+//Todo: 이메일 받아와야 할 거 같음
 class GoogleLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final GoogleSignIn _googleSignIn = GoogleSignIn();
-    final AuthController authController = AuthController();
 
     Future<UserCredential> _signInWithGoogle() async {
       //구글 로그인 페이지 표시
@@ -27,6 +25,8 @@ class GoogleLoginButton extends StatelessWidget {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+      print(googleAuth.accessToken);
+      print(googleAuth.idToken);
       print('구글에 로그인(구글버튼)');
       return await _auth.signInWithCredential(credential);
     }
@@ -38,7 +38,8 @@ class GoogleLoginButton extends StatelessWidget {
           showAlertDialog(context: context, message: '로그인 실패');
         } else {
           print('로그인 진행(구글버튼)');
-          authController.changeRegisterProgressIndex('userRegistration');
+          // Get.to(SignupPage(uid: authController.user.value.uid!, email: authController.user.value.email));
+          //authController.changeRegisterProgressIndex('userRegistration');
         }
       },
       child: Image.asset(

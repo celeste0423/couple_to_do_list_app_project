@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       initialBinding: InitBinding(),
       title: 'Bukkung List',
       theme: baseTheme(),
-      home: const Root(),
+      home: Root(),
     );
   }
 }

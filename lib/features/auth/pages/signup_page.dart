@@ -6,6 +6,7 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/main_button.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({
@@ -96,7 +97,7 @@ class SignupPageState extends State<SignupPage> {
         ),
       ),
       height: 50,
-      child: TextField(
+      child: TextFormField(
         keyboardType: numberinput,
         controller: controller,
         decoration: InputDecoration(
@@ -112,9 +113,32 @@ class SignupPageState extends State<SignupPage> {
   }
 
   Widget _registerButton() {
+    bool birthvalidation() {
+      int birthyear = int.parse(birthdayController.text.substring(0, 4));
+      int birthmonth = int.parse(birthdayController.text.substring(4, 6));
+      int birthday = int.parse(birthdayController.text.substring(6));
+
+      if (birthdayController.text.length != 8 &&
+          birthyear >= 1900 &&
+          birthmonth >= 1 &&
+          birthmonth <= 12 &&
+          birthday >= 1 &&
+          birthday <= 32) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
     return mainButton('등록하기', () async {
-      if (nicknameController == null || birthdayController.text.length != 8) {
-        showAlertDialog(context: context, message: '닉네임과 생일 모두 올바르게 작성해주세요');
+      if (nicknameController == null) {
+        showAlertDialog(context: context, message: '닉네임을 올바르게 작성해주세요');
+      }
+      if (!birthvalidation()) {
+        showAlertDialog(context: context, message: '생일을 올바르게 작성해주세요');
+      }
+      if (gender == null) {
+        showAlertDialog(context: context, message: '성별을 기입해주세요');
       } else {
         DateTime birthdayDateTime = DateTime.parse(
             '${birthdayController.text.substring(0, 4)}-${birthdayController.text.substring(4, 6)}-${birthdayController.text.substring(6, 8)}');
@@ -126,8 +150,8 @@ class SignupPageState extends State<SignupPage> {
           gender: gender,
           birthday: birthdayDateTime,
         );
-        AuthController.to.signup(signupUser);
-        authController.changeRegisterProgressIndex('findBuddy');
+        await AuthController.to.signup(signupUser);
+        Get.to(SignupPage(uid: widget.uid, email: widget.email));
       }
     });
   }

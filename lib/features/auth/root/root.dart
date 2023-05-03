@@ -8,12 +8,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class Root extends GetView<AuthController> {
-  const Root({Key? key}) : super(key: key);
-
+class Root extends StatelessWidget {
+final controller = AuthController();
   @override
   Widget build(BuildContext context) {
-    final firebaseauth = FirebaseAuth.instance;
     print('그룹 id ${controller.user.value.groupId}');
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),

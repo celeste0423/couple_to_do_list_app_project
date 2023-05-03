@@ -31,7 +31,7 @@ class WaitBuddyPage extends StatelessWidget {
                     IconButton(
                       padding: EdgeInsets.only(left: 20),
                       onPressed: () {
-                        authController.changeRegisterProgressIndex('findBuddy');
+                        print('뒤로가기');
                       },
                       icon: Icon(
                         Icons.arrow_back_ios,
@@ -125,7 +125,7 @@ class WaitBuddyPage extends StatelessWidget {
                     child: mainButton(
                       '새로고침',
                       () {
-                        authController.changeRegisterProgressIndex('waitBuddy');
+                        print('새로고침');
                       },
                       150,
                       CustomColors.redbrown,
