@@ -177,7 +177,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
     return TextField(
       controller: emailController,
       decoration: InputDecoration(
-        hintText: 'Bukkung@google.com',
+        hintText: 'ex) Bukkung@google.com',
         prefixIcon: Icon(Icons.email),
         suffixIcon: IconButton(
           icon: Icon(Icons.clear, size: 20),
@@ -194,7 +194,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       bottom: 0,
       right: MediaQuery.of(context).size.width * 1 / 2 - 75,
       child: mainButton(
-        '다음으로',
+        '시작하기',
         () {
           authController.changeRegisterProgressIndex('waitBuddy');
         },

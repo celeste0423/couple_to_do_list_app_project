@@ -22,6 +22,7 @@ class UserRepository {
         return UserModel.fromJson(data.docs.first.data());
       }
     } catch (e) {
+      //예외처리를 잘하자..ㅎ
       print('loginUserByUid 에러: $e');
       return null;
     }

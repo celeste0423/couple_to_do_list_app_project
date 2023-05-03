@@ -21,14 +21,14 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      uid: json['uid'] == null ? '' : json['uid'] as String,
-      nickname: json['nickname'] == null ? '' : json['nickname'] as String,
-      email: json['email'] == null ? '' : json['email'] as String,
-      gender: json['gender'] == null ? '' : json['gender'] as String,
+      uid: json['uid'] == null ? null : json['uid'] as String,
+      nickname: json['nickname'] == null ? null : json['nickname'] as String,
+      email: json['email'] == null ? null : json['email'] as String,
+      gender: json['gender'] == null ? null : json['gender'] as String,
       birthday: json['birthday'] == null
           ? null
           : (json['birthday'] as Timestamp).toDate(),
-      groupId: json['groubId'] == null ? '' : json['groupId'] as String,
+      groupId: json['groubId'] == null ? null : json['groupId'] as String,
       dayMet: json['dayMet'] == null
           ? null
           : (json['dayMet'] as Timestamp).toDate(),
