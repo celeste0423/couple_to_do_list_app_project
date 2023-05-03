@@ -5,17 +5,16 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class UserRepository {
   static Future<UserModel?> loginUserByUid(String uid) async {
-    print('uid이거임 $uid');
+    print('uid이거임(repo) $uid');
     var data = await FirebaseFirestore.instance
         .collection('users')
         .where('uid', isEqualTo: uid)
         .get();
+    print('파이어베이스 탐색완료(repo)');
 
     if (data.size == 0) {
       //아직 회원가입이 안되었기 때문에 파이어스토어에 추가해야함
-      print('uid 일치 데이터 없음');
-      // UserRepository.googleAccountDeletion();
-      // Get.to(() => WelcomePage());
+      print('uid 일치 데이터 없음(repo)');
       return null;
     } else {
       print('가입 이력 존재(repo)${data.docs.first.data().toString()}');

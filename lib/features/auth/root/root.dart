@@ -14,26 +14,29 @@ class Root extends GetView<AuthController> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
+      //로그인, 로그아웃, 계정 생성 시 stream방출
       builder: (BuildContext _, AsyncSnapshot<User?> user) {
         if (user.hasData) {
+          print('streambuild(root)');
           return FutureBuilder<UserModel?>(
             //future로 리턴해준 값은 신규 유저여부 판별
             future: controller.loginUser(user.data!.uid),
             builder: (context, snapshot) {
+              print('futurebuild(root)');
               if (snapshot.hasData) {
-                print('데이터 존재, 홈으로 바로 감');
+                print('데이터 존재, 홈으로 바로 감(root)');
                 return const HomePage();
               } else {
-                //future에 null값 반환받음
-                print('신규 유저임');
+                //future가 완료되기 전 or 완료되었는데 정보가 없는 경우
+                print('신규 유저임(root)');
                 return Obx(() {
-                  print(controller.user.value.uid);
+                  print('유저정보(root) ${controller.user.value.uid}');
                   //controller Rx를 구독하고 있음
                   if (controller.user.value.uid != null) {
-                    print('로그인 되어있음 홈으로');
+                    print('로그인 되어있음 홈으로(root)');
                     return const HomePage();
                   } else {
-                    print('회원가입하러');
+                    print('회원가입하러(root)');
                     return SignupPage(
                       uid: user.data!.uid,
                       email: user.data!.email,
@@ -44,7 +47,7 @@ class Root extends GetView<AuthController> {
             },
           );
         } else {
-          print('아직 로그인 안됨');
+          print('firebase가 null반환');
           return WelcomePage();
         }
       },
