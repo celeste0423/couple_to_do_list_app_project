@@ -1,4 +1,3 @@
-import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/features/auth/model/user_model.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/wait_buddy_page.dart';
@@ -11,6 +10,7 @@ class AuthController extends GetxController {
   Rx<UserModel> user = UserModel().obs;
 
   Future<UserModel?> loginUser(String uid) async {
+    // print('loginuser함수(cont) ${await UserRepository.loginUserByUid(uid)}');
     print('loginuser함수(cont)');
     var userData = await UserRepository.loginUserByUid(uid);
     //신규 유저일 경우 userData에 null값 반환됨
@@ -18,7 +18,7 @@ class AuthController extends GetxController {
     if (userData != null) {
       print('유저 데이터 서버에서 들어옴(cont)');
       user(userData);
-      InitBinding.additionalBinding(); //Todo: 홈탭컨트롤러 initbinding 필요
+      // InitBinding.additionalBinding(); //Todo: 홈탭컨트롤러 initbinding 필요
     }
     print('유저데이터(cont) ${userData.toString()}');
     return userData; //신규 유저일 경우 null반환

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
   final String? uid;
   final String? nickname;
@@ -23,9 +25,13 @@ class UserModel {
       nickname: json['nickname'] == null ? '' : json['nickname'] as String,
       email: json['email'] == null ? '' : json['email'] as String,
       gender: json['gender'] == null ? '' : json['gender'] as String,
-      birthday: json['birthday'] == null ? '' : json['birthday'].toDate(),
+      birthday: json['birthday'] == null
+          ? null
+          : (json['birthday'] as Timestamp).toDate(),
       groupId: json['groubId'] == null ? '' : json['groupId'] as String,
-      dayMet: json['dayMet'] == null ? '' : json['dayMet'].toDate(),
+      dayMet: json['dayMet'] == null
+          ? null
+          : (json['dayMet'] as Timestamp).toDate(),
     );
   }
 
@@ -39,5 +45,25 @@ class UserModel {
       'groupId': groupId,
       'dayMet': dayMet,
     };
+  }
+
+  UserModel copyWith({
+    String? uid,
+    String? nickname,
+    String? email,
+    String? gender,
+    DateTime? birthday,
+    String? groupId,
+    DateTime? dayMet,
+  }) {
+    return UserModel(
+      uid: uid ?? this.uid,
+      nickname: nickname ?? this.nickname,
+      email: email ?? this.email,
+      gender: gender ?? this.gender,
+      birthday: birthday ?? this.birthday,
+      groupId: groupId ?? this.groupId,
+      dayMet: dayMet ?? this.dayMet,
+    );
   }
 }

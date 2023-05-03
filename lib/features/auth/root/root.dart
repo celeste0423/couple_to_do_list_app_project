@@ -14,9 +14,10 @@ class Root extends GetView<AuthController> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
-      //로그인, 로그아웃, 계정 생성 시 stream방출
       builder: (BuildContext _, AsyncSnapshot<User?> user) {
-        if (user.hasData) {
+        if (!user.hasData) {
+          return Center(child: CircularProgressIndicator());
+        } else if (user.hasData) {
           print('streambuild(root)');
           return FutureBuilder<UserModel?>(
             //future로 리턴해준 값은 신규 유저여부 판별
@@ -28,11 +29,11 @@ class Root extends GetView<AuthController> {
                 return const HomePage();
               } else {
                 //future가 완료되기 전 or 완료되었는데 정보가 없는 경우
-                print('신규 유저임(root)');
+                print('신규 유저임(root)${controller.user.value.email}');
                 return Obx(() {
                   print('유저정보(root) ${controller.user.value.uid}');
-                  //controller Rx를 구독하고 있음
-                  if (controller.user.value.uid != null) {
+                  //controller Rx를 구독하도록 수정
+                  if (controller.user.value?.uid != null) {
                     print('로그인 되어있음 홈으로(root)');
                     return const HomePage();
                   } else {

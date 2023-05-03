@@ -1,4 +1,5 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/auth/model/user_model.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -87,10 +88,12 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
   }
 
   Widget _emailCopyButton() {
+    final AuthController authController = Get.find();
+    final UserModel user = authController.user.value;
     return TextButton(
       onPressed: () {
         Clipboard.setData(
-          ClipboardData(text: 'ddosy99@naver.com'),
+          ClipboardData(text: user.email!),
         ).then(
           (_) {
             Get.snackbar(
@@ -105,9 +108,9 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Text(
-            'ddosy99@naver.com',
+            user.email!,
             style: TextStyle(fontSize: 30, color: Colors.white),
           ),
           SizedBox(width: 10),
