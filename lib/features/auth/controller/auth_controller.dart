@@ -14,7 +14,7 @@ class AuthController extends GetxController {
       var userData = await UserRepository.loginUserByEmail(email);
       //신규 유저일 경우 userData에 null값 반환됨
       if (userData != null) {
-        print('유저 데이터 서버에서 들어옴(cont)');
+        print('서버의 유저 데이터 (cont) ${userData.toJson()}');
         user(userData);
         // InitBinding.additionalBinding(); //Todo: 홈탭컨트롤러 initbinding 필요
       }
