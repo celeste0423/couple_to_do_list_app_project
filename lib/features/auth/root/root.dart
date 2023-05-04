@@ -1,4 +1,3 @@
-import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/model/user_model.dart';
@@ -10,10 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class Root extends GetView {
-  // final controller = AuthController();
-  final AuthController controller = Get.put(AuthController());
-
+class Root extends GetView<AuthController> {
   UserModel? _userModelFromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
     if (snapshot.exists) {
@@ -33,63 +29,76 @@ class Root extends GetView {
 
   @override
   Widget build(BuildContext context) {
-    Stream<User?> firebaseAuthStream = FirebaseAuth.instance.authStateChanges();
-    Stream<UserModel?> firestoreUsersStream = FirebaseFirestore.instance
-        .collection('users')
-        .doc(controller.user.value.uid)
-        .snapshots()
-        .map(_userModelFromSnapshot);
-
-    StreamZip combinedStream =
-        StreamZip([firebaseAuthStream, firestoreUsersStream]);
-
-    return StreamBuilder(
-        // stream: FirebaseFirestore.instance.collection(collectionPath),
-        stream: combinedStream,
-        builder: (BuildContext _, AsyncSnapshot<List<dynamic>> snapshot) {
-          if (snapshot.hasData) {
-            var user = snapshot.data![0]; //authStream
-            var userModel = snapshot.data![1].data; //firestoreStream
-            if (userModel != null) {
-              print('그룹 존재, 홈으로 바로 감(root)');
-              return HomePage();
-            } else if (user.hasData) {
-              return FutureBuilder<UserModel?>(
-                //future로 리턴해준 값은 신규 유저여부 판별
-                future: controller.loginUser(user.data!.email ?? ''),
-                //Todo: 복귀유저가 로그인 해서 분명 snapshot에 데이터가 있을 텐데 findbuddy로 안감
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    print('로그인 정보 존재(root)');
-                    return FindBuddyPage(email: user.data!.email ?? '');
-                  } else {
-                    //future가 완료되기 전 or 완료되었는데 정보가 없는 경우
-                    print('신규 유저임(root)${controller.user.value.email}');
-                    return Obx(() {
-                      print('유저정보(root) ${controller.user.value.uid}');
-                      //controller Rx를 구독하도록 수정
-                      if (controller.user.value.uid != null) {
-                        print('로그인 되어있음 버꿍찾기로(root)');
-                        return FindBuddyPage(email: user.data!.email ?? '');
+    print(controller.user.value.uid);
+    return StreamBuilder<UserModel?>(
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(controller.user.value.uid)
+          .snapshots()
+          .map(_userModelFromSnapshot),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          var userModel = snapshot.data!;
+          if (userModel.groupId != null) {
+            // groupId가 존재하는 경우 HomePage로 이동
+            return HomePage();
+          } else {
+            // groupId가 존재하지 않는 경우 FirebaseAuth의 변화를 감지하며 초기화면 실행
+            return StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  var user = snapshot.data!;
+                  return FutureBuilder<UserModel?>(
+                    future: controller.loginUser(user.email ?? ''),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return FindBuddyPage(email: user.email ?? '');
                       } else {
-                        print('회원가입하러(root)');
                         return SignupPage(
-                          uid: user.data!.uid,
-                          email: user.data!.email ?? '',
+                          uid: user.uid,
+                          email: user.email ?? '',
                         );
                       }
-                    });
-                  }
-                },
-              );
-            } else {
-              print('firebase가 null반환');
-              return WelcomePage();
-            }
+                    },
+                  );
+                } else {
+                  return WelcomePage();
+                }
+              },
+            );
+          }
+        } else {
+          // 사용자 정보가 로드되지 않은 경우, 로그인 되어있는지 확인하여 초기화면 실행
+          if (controller.user.value != null) {
+            return StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  var user = snapshot.data!;
+                  return FutureBuilder<UserModel?>(
+                    future: controller.loginUser(user.email ?? ''),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return FindBuddyPage(email: user.email ?? '');
+                      } else {
+                        return SignupPage(
+                          uid: user.uid,
+                          email: user.email ?? '',
+                        );
+                      }
+                    },
+                  );
+                } else {
+                  return WelcomePage();
+                }
+              },
+            );
           } else {
             return WelcomePage();
           }
-          ;
-        });
+        }
+      },
+    );
   }
 }
