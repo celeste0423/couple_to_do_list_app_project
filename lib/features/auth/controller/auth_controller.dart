@@ -1,35 +1,50 @@
 import 'package:couple_to_do_list_app/features/auth/model/user_model.dart';
-import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/wait_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
   Rx<UserModel> user = UserModel().obs;
 
-  Future<UserModel?> loginUser(String uid) async {
-    // print('loginuser함수(cont) ${await UserRepository.loginUserByUid(uid)}');
-    print('loginuser함수(cont)');
-    var userData = await UserRepository.loginUserByUid(uid);
-    //신규 유저일 경우 userData에 null값 반환됨
-    print('loginuserbyUid 불러옴(cont)');
-    if (userData != null) {
-      print('유저 데이터 서버에서 들어옴(cont)');
-      user(userData);
-      // InitBinding.additionalBinding(); //Todo: 홈탭컨트롤러 initbinding 필요
+  Future<UserModel?> loginUser(String email) async {
+    try {
+      var userData = await UserRepository.loginUserByEmail(email);
+      //신규 유저일 경우 userData에 null값 반환됨
+      if (userData != null) {
+        print('유저 데이터 서버에서 들어옴(cont)');
+        user(userData);
+        // InitBinding.additionalBinding(); //Todo: 홈탭컨트롤러 initbinding 필요
+      }
+      return userData; //신규 유저일 경우 null반환
+    } catch (e) {
+      print('loginUser 오류(cont)$e');
     }
-    print('유저데이터(cont) ${userData.toString()}');
-    return userData; //신규 유저일 경우 null반환
-}
+  }
 
-   Future signup(UserModel signupUser) async {
+  Future signup(UserModel signupUser) async {
     //회원가입 버튼에 사용
     var result = await UserRepository.firestoreSignup(signupUser);
     if (result) {
       loginUser(signupUser.uid!);
     }
+  }
+
+  Future<UserModel?> groupCreation(String myEmail, String kkungEmail) async {
+    var myData = await UserRepository.loginUserByEmail(myEmail);
+    var kkungData = await UserRepository.loginUserByEmail(kkungEmail);
+
+    var uuid = Uuid();
+
+    if (kkungData == null || myData == null) {
+      return null;
+    } else {
+      await UserRepository.updateGroupId(myData, uuid.toString());
+    }
+
+    return myData;
   }
 
   //페이지 이동 관련
@@ -49,9 +64,9 @@ class AuthController extends GetxController {
       //         email: user.data!.email,
       //       ));
       //   break;
-      case 'findBuddy':
-        Get.to(() => FindBuddyPage());
-        break;
+      // case 'findBuddy':
+      //   Get.to(() => FindBuddyPage());
+      //   break;
       case 'waitBuddy':
         Get.to(() => WaitBuddyPage());
         break;

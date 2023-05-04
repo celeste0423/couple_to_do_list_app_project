@@ -2,6 +2,7 @@ import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
 //Todo: 이메일 받아와야 할 거 같음
 class GoogleLoginButton extends StatelessWidget {
   @override
@@ -34,12 +35,12 @@ class GoogleLoginButton extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         UserCredential? userCredential = await _signInWithGoogle();
+
         if (null == userCredential) {
           showAlertDialog(context: context, message: '로그인 실패');
         } else {
           print('로그인 진행(구글버튼)');
           // Get.to(SignupPage(uid: authController.user.value.uid!, email: authController.user.value.email));
-          //authController.changeRegisterProgressIndex('userRegistration');
         }
       },
       child: Image.asset(

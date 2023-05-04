@@ -1,6 +1,4 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/auth/model/user_model.dart';
-import 'package:couple_to_do_list_app/features/auth/pages/wait_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
@@ -15,7 +13,8 @@ import '../../../widgets/main_button.dart';
 //Todo: 친구 찾기 완료하면 authcontroller 없애야 하나
 
 class FindBuddyPage extends StatefulWidget {
-  FindBuddyPage({Key? key}) : super(key: key);
+  FindBuddyPage({Key? key, required this.email}) : super(key: key);
+  final String email;
 
   @override
   State<FindBuddyPage> createState() => _FindBuddyPageState();
@@ -81,7 +80,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
               style: TextStyle(fontSize: 30, color: Colors.white),
             ),
             _emailCopyButton(),
-            _inviteButton(),
+            // _inviteButton(),
             SizedBox(height: 50),
           ],
         ),
@@ -90,9 +89,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
   }
 
   Widget _emailCopyButton() {
-    final AuthController authController = Get.find();
-    final UserModel user = authController.user.value;
-    final String? useremail = user.email;
+    final String useremail = widget.email;
     return TextButton(
       onPressed: () {
         Clipboard.setData(
@@ -170,7 +167,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
               ],
             ),
           ),
-          _nextButton(),
+          _startButton(),
         ],
       ),
     );
@@ -192,16 +189,13 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
     );
   }
 
-  Widget _nextButton() {
+  Widget _startButton() {
     return Positioned(
       bottom: 0,
       right: MediaQuery.of(context).size.width * 1 / 2 - 75,
       child: mainButton(
         '시작하기',
-        () {
-
-         // Get.to(WaitBuddyPage());
-        },
+        () {},
         150,
         CustomColors.lightPink,
       ),
