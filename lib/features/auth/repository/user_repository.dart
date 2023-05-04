@@ -50,7 +50,10 @@ class UserRepository {
 
   static Future<bool> firestoreSignup(UserModel user) async {
     try {
-      await FirebaseFirestore.instance.collection('users').add(user.toJson());
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set(user.toJson());
       return true;
     } catch (e) {
       return false;
@@ -63,6 +66,17 @@ class UserRepository {
   }
 
   static Future<void> updateGroupId(UserModel user, String groupId) async {
-    UserModel().copyWith(groupId: groupId);
+    FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: user.email)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(doc.id)
+            .update({'groupId': groupId});
+      });
+    });
   }
 }

@@ -2,6 +2,7 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
@@ -62,28 +63,31 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
 
   Widget _backgroundBottom() {
     return Expanded(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          color: CustomColors.redbrown,
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(45),
-            topLeft: Radius.circular(45),
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              '내 이메일',
-              style: TextStyle(fontSize: 30, color: Colors.white),
+      child: Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              color: CustomColors.redbrown,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(45),
+                topLeft: Radius.circular(45),
+              ),
             ),
-            _emailCopyButton(),
-            // _inviteButton(),
-            SizedBox(height: 50),
-          ],
-        ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  '내 이메일',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+                _emailCopyButton(),
+                // _inviteButton(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -195,7 +199,14 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       right: MediaQuery.of(context).size.width * 1 / 2 - 75,
       child: mainButton(
         '시작하기',
-        () {},
+        () async {
+          if (await authController.groupCreation(
+                  widget.email, emailController.text) ==
+              false) {
+            showAlertDialog(context: context, message: '올바른 메일주소를 입력해주세요');
+          }
+          ;
+        },
         150,
         CustomColors.lightPink,
       ),

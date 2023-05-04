@@ -32,19 +32,22 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<UserModel?> groupCreation(String myEmail, String kkungEmail) async {
+  Future<bool> groupCreation(String myEmail, String buddyEmail) async {
     var myData = await UserRepository.loginUserByEmail(myEmail);
-    var kkungData = await UserRepository.loginUserByEmail(kkungEmail);
+    var buddyData = await UserRepository.loginUserByEmail(buddyEmail);
 
     var uuid = Uuid();
+    String groupId = uuid.v1();
 
-    if (kkungData == null || myData == null) {
-      return null;
+    if (buddyData == null || myData == null) {
+      print('buddyData 없음(cont) ${buddyData}');
+      return false;
     } else {
-      await UserRepository.updateGroupId(myData, uuid.toString());
+      print('uuid로 가입 시작(cont) ${groupId}');
+      await UserRepository.updateGroupId(myData, groupId);
+      await UserRepository.updateGroupId(buddyData, groupId);
+      return true;
     }
-
-    return myData;
   }
 
   //페이지 이동 관련
