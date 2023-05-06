@@ -62,32 +62,15 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
   }
 
   Widget _backgroundBottom() {
-    return Expanded(
-      child: Stack(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-              color: CustomColors.redbrown,
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(45),
-                topLeft: Radius.circular(45),
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '내 이메일',
-                  style: TextStyle(fontSize: 30, color: Colors.white),
-                ),
-                _emailCopyButton(),
-                // _inviteButton(),
-              ],
-            ),
-          ),
-        ],
+    return Container(
+      height: MediaQuery.of(context).size.height *1/2 -MediaQuery.of(context).viewInsets.bottom *1/2,
+      width: MediaQuery.of(context).size.width,
+      decoration: const BoxDecoration(
+        color: CustomColors.redbrown,
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(45),
+          topLeft: Radius.circular(45),
+        ),
       ),
     );
   }
@@ -133,50 +116,64 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
   }
 
   Widget _floatingContainer() {
-    return Align(
+    return Stack(
       alignment: Alignment.center,
-      child: Stack(
-        children: [
-          Container(
-            margin: EdgeInsets.all(20),
-            height: 250,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Image.asset(
-                  'assets/images/email.png',
-                  color: CustomColors.grey,
-                  height: 70,
-                ),
-                Text(
-                  '짝꿍의 이메일을 입력하세요',
-                  style: TextStyle(fontSize: 30, color: CustomColors.grey),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 30),
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: _emailTextField(),
-                ),
-                SizedBox(height: 40),
-              ],
-            ),
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          margin: EdgeInsets.all(20),
+          height: 250,
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(30.0),
           ),
-          _startButton(),
-        ],
-      ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Image.asset(
+                'assets/images/email.png',
+                color: CustomColors.grey,
+                height: 70,
+              ),
+              Text(
+                '짝꿍의 이메일을 입력하세요',
+                style: TextStyle(fontSize: 30, color: CustomColors.grey),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 30),
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                ),
+                child: _emailTextField(),
+              ),
+              SizedBox(height: 40),
+            ],
+          ),
+        ),
+        _startButton(),
+        Positioned(bottom: -100,
+            child: _myEmail())
+      ],
     );
   }
-
+ Widget _myEmail(){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          '내 이메일',
+          style: TextStyle(fontSize: 30, color: Colors.white),
+        ),
+        _emailCopyButton(),
+        // _inviteButton(),
+      ],
+    );
+ }
   Widget _emailTextField() {
     return TextField(
       controller: emailController,
@@ -220,7 +217,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
+        // resizeToAvoidBottomInset: false,
         backgroundColor: CustomColors.mainPink,
         body: SafeArea(
           child: Stack(
@@ -232,10 +229,10 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                   RegistrationStage(2),
                   SizedBox(height: 15),
                   _backgroundHandShakeImage(),
-                  _backgroundBottom(),
                 ],
               ),
-              _floatingContainer(),
+              Align(alignment: Alignment.bottomCenter, child: _backgroundBottom()),
+              Align(alignment: Alignment.center, child: _floatingContainer()),
             ],
           ),
         ),

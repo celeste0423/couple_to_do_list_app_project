@@ -7,6 +7,7 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/main_button.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class SignupPage extends StatefulWidget {
@@ -184,6 +185,7 @@ class SignupPageState extends State<SignupPage> {
     TextEditingController controller,
     Function()? onPressed,
     TextInputType? numberinput,
+
   ) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -195,6 +197,7 @@ class SignupPageState extends State<SignupPage> {
       ),
       height: 50,
       child: TextFormField(
+        maxLengthEnforcement: MaxLengthEnforcement.enforced,
         keyboardType: numberinput,
         controller: controller,
         decoration: InputDecoration(
@@ -230,14 +233,11 @@ class SignupPageState extends State<SignupPage> {
     return mainButton('등록하기', () async {
       if (nicknameController == null) {
         showAlertDialog(context: context, message: '닉네임을 올바르게 작성해주세요');
-      }
-      if (!birthValidation()) {
+      } else if (!birthValidation()) {
         showAlertDialog(context: context, message: '생일을 올바르게 작성해주세요');
-      }
-      if (gender == null) {
+      } else if (gender == null) {
         showAlertDialog(context: context, message: '성별을 기입해주세요');
-      }
-      if (nicknameController != null && birthValidation() && gender != null) {
+      } else {
         DateTime birthdayDateTime = DateTime.parse(
             '${birthdayController.text.substring(0, 4)}-${birthdayController.text.substring(4, 6)}-${birthdayController.text.substring(6, 8)}');
 
