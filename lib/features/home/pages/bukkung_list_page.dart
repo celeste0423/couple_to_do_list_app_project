@@ -147,7 +147,7 @@ class _BukkungListPageState extends State<BukkungListPage> {
         actions: [
           IconButton(
             onPressed: () {
-              showAlertDialog(context: context, message: '아직 설정창이 없습니다');
+              openAlertDialog(message: '아직 설정창이 없습니다');
             },
             icon: Image.asset(
               'assets/icons/setting.png',

@@ -197,12 +197,16 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       child: mainButton(
         '시작하기',
         () async {
-          if (await authController.groupCreation(
-                  widget.email, emailController.text) ==
-              false) {
-            showAlertDialog(context: context, message: '올바른 메일주소를 입력해주세요');
+          GroupIdStatus groupIdStatus = await authController.groupCreation(
+              widget.email, emailController.text);
+          if (groupIdStatus==
+              GroupIdStatus.noData) {
+            openAlertDialog(message: '올바른 메일주소를 입력하였는지,\n짝꿍이 회원가입을 완료 하였는지 확인해주세요.');
           }
-          ;
+          else if(groupIdStatus==
+              GroupIdStatus.hasGroup){
+            openAlertDialog(message: '상대방이 이미 짝꿍이 있습니다.\n올바른 메일주소를 입력하였는지 확인해주세요.');
+          }
         },
         150,
         CustomColors.lightPink,

@@ -232,11 +232,11 @@ class SignupPageState extends State<SignupPage> {
 
     return mainButton('등록하기', () async {
       if (nicknameController == null) {
-        showAlertDialog(context: context, message: '닉네임을 올바르게 작성해주세요');
+        openAlertDialog(message: '닉네임을 올바르게 작성해주세요');
       } else if (!birthValidation()) {
-        showAlertDialog(context: context, message: '생일을 올바르게 작성해주세요');
+        openAlertDialog(message: '생일을 올바르게 작성해주세요');
       } else if (gender == null) {
-        showAlertDialog(context: context, message: '성별을 기입해주세요');
+        openAlertDialog(message: '성별을 기입해주세요');
       } else {
         DateTime birthdayDateTime = DateTime.parse(
             '${birthdayController.text.substring(0, 4)}-${birthdayController.text.substring(4, 6)}-${birthdayController.text.substring(6, 8)}');

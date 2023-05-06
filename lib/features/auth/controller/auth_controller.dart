@@ -5,6 +5,10 @@ import 'package:couple_to_do_list_app/features/auth/repository/user_repository.d
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
+enum GroupIdStatus {
+  noData, hasGroup, createdGroupId
+}
+
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
   Rx<UserModel> user = UserModel().obs;
@@ -21,6 +25,7 @@ class AuthController extends GetxController {
       return userData; //신규 유저일 경우 null반환
     } catch (e) {
       print('loginUser 오류(cont)$e');
+      return null;
     }
   }
 
@@ -32,7 +37,7 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<bool> groupCreation(String myEmail, String buddyEmail) async {
+  Future<GroupIdStatus> groupCreation(String myEmail, String buddyEmail) async {
     var myData = await UserRepository.loginUserByEmail(myEmail);
     var buddyData = await UserRepository.loginUserByEmail(buddyEmail);
 
@@ -41,12 +46,17 @@ class AuthController extends GetxController {
 
     if (buddyData == null || myData == null) {
       print('buddyData 없음(cont) ${buddyData}');
-      return false;
-    } else {
+      return GroupIdStatus.noData;
+    }
+    else if(buddyData.groupId!=null){
+      print('짝꿍이 이미 다른 짝이 있음');
+      return GroupIdStatus.hasGroup;
+    }
+    else {
       print('uuid로 가입 시작(cont) ${groupId}');
       await UserRepository.updateGroupId(myData, groupId);
       await UserRepository.updateGroupId(buddyData, groupId);
-      return true;
+      return GroupIdStatus.createdGroupId;
     }
   }
 

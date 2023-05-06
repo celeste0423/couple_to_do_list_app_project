@@ -147,7 +147,7 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
       left: Get.width / 2 - 35,
       child: CustomIconButton(
         onTap: () {
-          showAlertDialog(context: context, message: '아직 추천 페이지 없음');
+          openAlertDialog(message: '아직 추천 페이지 없음');
         },
         size: 70,
         icon: Icon(

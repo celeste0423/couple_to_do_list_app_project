@@ -15,7 +15,7 @@ class GoogleLoginButton extends StatelessWidget {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
-        return showAlertDialog(context: context, message: '로그인에 실패했습니다');
+        return openAlertDialog(message: '로그인에 실패했습니다');
       }
 
       //로그인 성공, 유저정보 가져오기
@@ -37,7 +37,7 @@ class GoogleLoginButton extends StatelessWidget {
         UserCredential? userCredential = await _signInWithGoogle();
 
         if (null == userCredential) {
-          showAlertDialog(context: context, message: '로그인 실패');
+          openAlertDialog(message: '로그인 실패');
         } else {
           print('로그인 진행(구글버튼)');
           // Get.to(SignupPage(uid: authController.user.value.uid!, email: authController.user.value.email));
