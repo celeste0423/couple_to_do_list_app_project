@@ -121,7 +121,7 @@ class WaitBuddyPage extends StatelessWidget {
                   ),
                   Positioned(
                     bottom: 0,
-                    right: MediaQuery.of(context).size.width * 1 / 2 - 75,
+                    right: Get.width * 1 / 2 - 75,
                     child: mainButton(
                       '새로고침',
                       () {

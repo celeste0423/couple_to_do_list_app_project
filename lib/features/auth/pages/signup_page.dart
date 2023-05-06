@@ -64,8 +64,8 @@ class SignupPageState extends State<SignupPage> {
           topLeft: Radius.circular(45),
         ),
       ),
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 9 / 16,
+      width: Get.width,
+      height: Get.height * 9 / 16,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 50.0),
         child: Column(

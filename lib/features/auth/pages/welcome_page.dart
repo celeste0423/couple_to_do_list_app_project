@@ -91,7 +91,7 @@ class WelcomePage extends StatelessWidget {
 
   Widget _buttomLoginTab(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: Get.width,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(

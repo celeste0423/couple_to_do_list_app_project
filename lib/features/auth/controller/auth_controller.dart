@@ -69,7 +69,7 @@ class AuthController extends GetxController {
 
     switch (registerProgressIndex.value) {
       case 'welcome':
-        Get.to(() => WelcomePage());
+        Get.to(WelcomePage());
         break;
       // case 'userRegistration':
       //   Get.to(() => SignupPage(
@@ -81,11 +81,11 @@ class AuthController extends GetxController {
       //   Get.to(() => FindBuddyPage());
       //   break;
       case 'waitBuddy':
-        Get.to(() => WaitBuddyPage());
+        Get.to(WaitBuddyPage());
         break;
 
       default:
-        Get.to(() => WelcomePage());
+        Get.to(WelcomePage());
     }
   }
 }

@@ -63,8 +63,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
 
   Widget _backgroundBottom() {
     return Container(
-      height: MediaQuery.of(context).size.height *1/2 -MediaQuery.of(context).viewInsets.bottom *1/2,
-      width: MediaQuery.of(context).size.width,
+      height: Get.height *1/2 -MediaQuery.of(context).viewInsets.bottom *1/2,
+      width: Get.width,
       decoration: const BoxDecoration(
         color: CustomColors.redbrown,
         borderRadius: BorderRadius.only(
@@ -193,7 +193,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
   Widget _startButton() {
     return Positioned(
       bottom: 0,
-      right: MediaQuery.of(context).size.width * 1 / 2 - 75,
+      right: Get.width * 1 / 2 - 75,
       child: mainButton(
         '시작하기',
         () async {
@@ -206,6 +206,9 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           else if(groupIdStatus==
               GroupIdStatus.hasGroup){
             openAlertDialog(message: '상대방이 이미 짝꿍이 있습니다.\n올바른 메일주소를 입력하였는지 확인해주세요.');
+          }
+          else{
+
           }
         },
         150,
