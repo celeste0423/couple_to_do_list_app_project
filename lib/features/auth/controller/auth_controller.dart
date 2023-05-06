@@ -56,6 +56,7 @@ class AuthController extends GetxController {
       print('uuid로 가입 시작(cont) ${groupId}');
       await UserRepository.updateGroupId(myData, groupId);
       await UserRepository.updateGroupId(buddyData, groupId);
+      print('created groupId');
       return GroupIdStatus.createdGroupId;
     }
   }

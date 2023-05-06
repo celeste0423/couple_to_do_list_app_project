@@ -208,6 +208,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
             openAlertDialog(message: '상대방이 이미 짝꿍이 있습니다.\n올바른 메일주소를 입력하였는지 확인해주세요.');
           }
           else{
+            Get.to()
 
           }
         },
