@@ -51,16 +51,16 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
   Widget _searchBar() {
     return Hero(
       tag: 'search_bar',
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: Colors.white,
-        ),
-        height: 50,
-        child: Material(
-          type: MaterialType.transparency,
+      child: Material(
+        type: MaterialType.transparency,
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: Colors.white,
+          ),
+          height: 50,
           child: TextField(
             controller: _searchBarController,
             style: TextStyle(
@@ -95,26 +95,26 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
                     ),
             ),
           ),
+          // child: Row(
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   children: [
+          //     Image.asset(
+          //       'assets/icons/search.png',
+          //       width: 30,
+          //       color: Colors.white.withOpacity(0.7),
+          //       colorBlendMode: BlendMode.modulate,
+          //     ),
+          //     SizedBox(width: 20),
+          //     Text(
+          //       '다양한 버꿍리스트를 찾아보세요',
+          //       style: TextStyle(
+          //         color: CustomColors.grey.withOpacity(0.5),
+          //         fontSize: 20,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ),
-        // child: Row(
-        //   mainAxisAlignment: MainAxisAlignment.start,
-        //   children: [
-        //     Image.asset(
-        //       'assets/icons/search.png',
-        //       width: 30,
-        //       color: Colors.white.withOpacity(0.7),
-        //       colorBlendMode: BlendMode.modulate,
-        //     ),
-        //     SizedBox(width: 20),
-        //     Text(
-        //       '다양한 버꿍리스트를 찾아보세요',
-        //       style: TextStyle(
-        //         color: CustomColors.grey.withOpacity(0.5),
-        //         fontSize: 20,
-        //       ),
-        //     ),
-        //   ],
-        // ),
       ),
     );
   }
@@ -148,18 +148,21 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
     return Positioned(
       top: 390,
       left: Get.width / 2 - 35,
-      child: CustomIconButton(
-        onTap: () {
-          openAlertDialog(message: '아직 추천 페이지 없음');
-        },
-        size: 70,
-        icon: Icon(
-          Icons.play_arrow_rounded,
+      child: Hero(
+        tag: 'background',
+        child: CustomIconButton(
+          onTap: () {
+            openAlertDialog(message: '아직 추천 페이지 없음');
+          },
           size: 70,
-          color: Colors.white,
+          icon: Icon(
+            Icons.play_arrow_rounded,
+            size: 70,
+            color: Colors.white,
+          ),
+          shadowOffset: Offset(5, 5),
+          shadowBlurRadius: 5,
         ),
-        shadowOffset: Offset(5, 5),
-        shadowBlurRadius: 5,
       ),
     );
   }

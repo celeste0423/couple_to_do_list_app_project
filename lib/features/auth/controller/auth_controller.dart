@@ -1,5 +1,6 @@
 import 'package:couple_to_do_list_app/features/auth/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
+import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
@@ -9,6 +10,7 @@ enum GroupIdStatus { noData, hasGroup, createdGroupId }
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
   Rx<UserModel> user = UserModel().obs;
+  Rx<GroupModel> group = GroupModel().obs;
 
   Future<UserModel?> loginUser(String email) async {
     try {
@@ -42,12 +44,18 @@ class AuthController extends GetxController {
     String groupId = uuid.v1();
 
     if (myData!.gender == 'male') {
-      await GroupRepository.groupSignup(groupId, myData, buddyData!);
+      var groupdata =
+          await GroupRepository.groupSignup(groupId, myData, buddyData!);
+      group(groupdata);
     } else if (myData!.gender == 'female') {
-      await GroupRepository.groupSignup(groupId, buddyData!, myData);
+      var groupdata =
+          await GroupRepository.groupSignup(groupId, buddyData!, myData);
+      group(groupdata);
     } else {
       //동성 커플고려는 아직은 하지 않는걸로
-      await GroupRepository.groupSignup(groupId, myData, buddyData!);
+      var groupdata =
+          await GroupRepository.groupSignup(groupId, myData, buddyData!);
+      group(groupdata);
     }
 
     if (buddyData == null || myData == null) {

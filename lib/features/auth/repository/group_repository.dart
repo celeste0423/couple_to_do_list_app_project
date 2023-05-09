@@ -3,7 +3,7 @@ import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 
 class GroupRepository {
-  static Future<void> groupSignup(
+  static Future<GroupModel> groupSignup(
     String uid,
     UserModel male,
     UserModel female,
@@ -25,5 +25,6 @@ class GroupRepository {
     } catch (e) {
       print(e.toString());
     }
+    return groupModel;
   }
 }

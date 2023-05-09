@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -77,9 +78,9 @@ class _BukkungListPageState extends State<BukkungListPage> {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             1,
           ),
-          onSelected: (String type) {
+          onSelected: (String listType) {
             setState(() {
-              currentType = type;
+              currentType = listType;
             });
           },
           itemBuilder: (BuildContext context) {
@@ -126,9 +127,12 @@ class _BukkungListPageState extends State<BukkungListPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(_typetoString[currentType] ?? ""),
-              Icon(
-                Icons.arrow_drop_down,
-                color: CustomColors.mainPink,
+              Hero(
+                tag: 'background',
+                child: Icon(
+                  Icons.arrow_drop_down,
+                  color: CustomColors.mainPink,
+                ),
               ),
             ],
           ),
@@ -138,7 +142,13 @@ class _BukkungListPageState extends State<BukkungListPage> {
   }
 
   Widget _bukkungListView() {
-    return Container();
+    return StreamBuilder(
+      stream: BukkungListController.to.getAllBukkungList(
+        currentType!,
+        groupModel, //Todo:obx로 연결할 것
+      ),
+      builder: (context, snapshot),
+    );
   }
 
   @override
