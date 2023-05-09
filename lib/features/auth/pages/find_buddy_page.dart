@@ -207,7 +207,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
             openAlertDialog(
                 message: '상대방이 이미 짝꿍이 있습니다.\n올바른 메일주소를 입력하였는지 확인해주세요.');
           } else {
-            Get.to(HomePage());
+            Get.to(() => HomePage());
           }
         },
         150,
@@ -226,7 +226,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
         onPressed: () async {
           print(AuthController().findGroupId(widget.email));
           if (await AuthController().findGroupId(widget.email)) {
-            Get.to(HomePage());
+            Get.to(() => HomePage());
           }
         },
         child: Icon(

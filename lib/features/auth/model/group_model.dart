@@ -1,23 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GroupModel {
-  final String? manUid;
-  final String? womanUid;
+  final String? maleUid;
+  final String? femaleUid;
   final String? uid;
+  final DateTime? createdAt;
   final DateTime? dayMet;
 
   GroupModel({
-    this.manUid,
-    this.womanUid,
+    this.maleUid,
+    this.femaleUid,
     this.uid,
+    this.createdAt,
     this.dayMet,
   });
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
     return GroupModel(
-      manUid: json['uid'] == null ? null : json['uid'] as String,
-      womanUid: json['nickname'] == null ? null : json['nickname'] as String,
-      uid: json['email'] == null ? null : json['email'] as String,
+      maleUid: json['maleUid'] == null ? null : json['mailUid'] as String,
+      femaleUid: json['femaleUid'] == null ? null : json['femaleUid'] as String,
+      uid: json['uid'] == null ? null : json['uid'] as String,
+      createdAt: json['createdAt'] == null
+          ? null
+          : (json['createdAt'] as Timestamp).toDate(),
       dayMet: json['dayMet'] == null
           ? null
           : (json['dayMet'] as Timestamp).toDate(),
@@ -26,9 +31,10 @@ class GroupModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'uid': manUid,
-      'nickname': womanUid,
-      'email': uid,
+      'maleUid': maleUid,
+      'femaleUid': femaleUid,
+      'uid': uid,
+      'createdAt': createdAt,
       'dayMet': dayMet,
     };
   }

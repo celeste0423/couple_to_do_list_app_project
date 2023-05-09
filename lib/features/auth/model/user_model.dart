@@ -7,7 +7,6 @@ class UserModel {
   final String? gender;
   final DateTime? birthday;
   final String? groupId;
-  final DateTime? dayMet;
 
   UserModel({
     this.uid,
@@ -16,7 +15,6 @@ class UserModel {
     this.gender,
     this.birthday,
     this.groupId,
-    this.dayMet,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -29,9 +27,6 @@ class UserModel {
           ? null
           : (json['birthday'] as Timestamp).toDate(),
       groupId: json['groupId'] == null ? null : json['groupId'] as String,
-      dayMet: json['dayMet'] == null
-          ? null
-          : (json['dayMet'] as Timestamp).toDate(),
     );
   }
 
@@ -43,7 +38,6 @@ class UserModel {
       'gender': gender,
       'birthday': birthday,
       'groupId': groupId,
-      'dayMet': dayMet,
     };
   }
 
@@ -63,7 +57,6 @@ class UserModel {
       gender: gender ?? this.gender,
       birthday: birthday ?? this.birthday,
       groupId: groupId ?? this.groupId,
-      dayMet: dayMet ?? this.dayMet,
     );
   }
 }

@@ -14,6 +14,7 @@ class Root extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //Todo: 사방팔방 if문들 로딩중에 들어갔다 나옴, 전부 로딩창으로 정리 필요
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext _, AsyncSnapshot<User?> user) {
@@ -44,7 +45,7 @@ class Root extends StatelessWidget {
                   }
                 });
               } else {
-                print('신규 유저임(root)${controller.user.value.email}');
+                print('신규 유저임(root)');
                 return Obx(() {
                   print('유저정보(root) ${controller.user.value.uid}');
                   if (controller.user.value.uid != null) {

@@ -1,6 +1,5 @@
 import 'package:couple_to_do_list_app/features/auth/model/user_model.dart';
-import 'package:couple_to_do_list_app/features/auth/pages/wait_buddy_page.dart';
-import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
+import 'package:couple_to_do_list_app/features/auth/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
@@ -42,6 +41,15 @@ class AuthController extends GetxController {
     var uuid = Uuid();
     String groupId = uuid.v1();
 
+    if (myData!.gender == 'male') {
+      await GroupRepository.groupSignup(groupId, myData, buddyData!);
+    } else if (myData!.gender == 'female') {
+      await GroupRepository.groupSignup(groupId, buddyData!, myData);
+    } else {
+      //동성 커플고려는 아직은 하지 않는걸로
+      await GroupRepository.groupSignup(groupId, myData, buddyData!);
+    }
+
     if (buddyData == null || myData == null) {
       print('buddyData 없음(cont) ${buddyData}');
       return GroupIdStatus.noData;
@@ -58,35 +66,6 @@ class AuthController extends GetxController {
 
   Future<bool> findGroupId(String email) async {
     return await UserRepository.findGroupId(email);
-  }
-
-  //페이지 이동 관련
-  var registerProgressIndex = 'welcome'.obs;
-
-  //정보를 다 입력한 후 짝꿍을 기다리다가 앱을 나갔을 경우 대비
-  void changeRegisterProgressIndex(String step) {
-    registerProgressIndex.value = step;
-
-    switch (registerProgressIndex.value) {
-      case 'welcome':
-        Get.to(WelcomePage());
-        break;
-      // case 'userRegistration':
-      //   Get.to(() => SignupPage(
-      //         uid: user.
-      //         email: user.data!.email,
-      //       ));
-      //   break;
-      // case 'findBuddy':
-      //   Get.to(() => FindBuddyPage());
-      //   break;
-      case 'waitBuddy':
-        Get.to(WaitBuddyPage());
-        break;
-
-      default:
-        Get.to(WelcomePage());
-    }
   }
 }
 
