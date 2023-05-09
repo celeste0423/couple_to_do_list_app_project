@@ -1,9 +1,9 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/auth/model/user_model.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/signup_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/home_page.dart';
+import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class Root extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //Todo: 사방팔방 if문들 로딩중에 들어갔다 나옴, 전부 로딩창으로 정리 필요
+    //Todo: 앱 실행시 if문들 들어갔다 나옴, 전부 로딩창으로 정리 필요
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext _, AsyncSnapshot<User?> user) {

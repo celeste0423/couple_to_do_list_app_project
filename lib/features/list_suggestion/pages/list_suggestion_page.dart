@@ -1,7 +1,7 @@
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/type_select_tab_bar.dart';
-import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -39,80 +39,83 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
   }
 
   Widget _background() {
-    return Hero(
-      tag: 'addList',
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(100)),
-          color: CustomColors.mainPink,
-        ),
-        height: 350,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(100)),
+        color: CustomColors.mainPink,
       ),
+      height: 350,
     );
   }
 
   Widget _searchBar() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        color: Colors.white,
-      ),
-      height: 50,
-      child: TextField(
-        controller: _searchBarController,
-        style: TextStyle(
-          color: CustomColors.darkGrey,
-          fontFamily: 'Yoonwoo',
-          fontSize: 20,
+    return Hero(
+      tag: 'search_bar',
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: Colors.white,
         ),
-        decoration: InputDecoration(
-          hintText: '다양한 버꿍리스트를 찾아보세요',
-          border: InputBorder.none,
-          prefixIcon: Icon(
-            Icons.search_rounded,
-            size: 35,
-            color: CustomColors.darkGrey,
+        height: 50,
+        child: Material(
+          type: MaterialType.transparency,
+          child: TextField(
+            controller: _searchBarController,
+            style: TextStyle(
+              color: CustomColors.darkGrey,
+              fontFamily: 'Yoonwoo',
+              fontSize: 20,
+            ),
+            decoration: InputDecoration(
+              hintText: '다양한 버꿍리스트를 찾아보세요',
+              border: InputBorder.none,
+              prefixIcon: Icon(
+                Icons.search_rounded,
+                size: 35,
+                color: CustomColors.darkGrey,
+              ),
+              // prefixIcon: Image.asset(
+              //   'assets/icons/search.png',
+              //   color: Colors.white.withOpacity(0.7),
+              //   colorBlendMode: BlendMode.modulate,
+              // ),
+              suffixIcon: _isTextEmpty
+                  ? null
+                  : IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        size: 20,
+                        color: CustomColors.darkGrey,
+                      ),
+                      onPressed: () {
+                        return _searchBarController.clear();
+                      },
+                    ),
+            ),
           ),
-          // prefixIcon: Image.asset(
-          //   'assets/icons/search.png',
-          //   color: Colors.white.withOpacity(0.7),
-          //   colorBlendMode: BlendMode.modulate,
-          // ),
-          suffixIcon: _isTextEmpty
-              ? null
-              : IconButton(
-                  icon: Icon(
-                    Icons.close,
-                    size: 20,
-                    color: CustomColors.darkGrey,
-                  ),
-                  onPressed: () {
-                    return _searchBarController.clear();
-                  },
-                ),
         ),
+        // child: Row(
+        //   mainAxisAlignment: MainAxisAlignment.start,
+        //   children: [
+        //     Image.asset(
+        //       'assets/icons/search.png',
+        //       width: 30,
+        //       color: Colors.white.withOpacity(0.7),
+        //       colorBlendMode: BlendMode.modulate,
+        //     ),
+        //     SizedBox(width: 20),
+        //     Text(
+        //       '다양한 버꿍리스트를 찾아보세요',
+        //       style: TextStyle(
+        //         color: CustomColors.grey.withOpacity(0.5),
+        //         fontSize: 20,
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ),
-      // child: Row(
-      //   mainAxisAlignment: MainAxisAlignment.start,
-      //   children: [
-      //     Image.asset(
-      //       'assets/icons/search.png',
-      //       width: 30,
-      //       color: Colors.white.withOpacity(0.7),
-      //       colorBlendMode: BlendMode.modulate,
-      //     ),
-      //     SizedBox(width: 20),
-      //     Text(
-      //       '다양한 버꿍리스트를 찾아보세요',
-      //       style: TextStyle(
-      //         color: CustomColors.grey.withOpacity(0.5),
-      //         fontSize: 20,
-      //       ),
-      //     ),
-      //   ],
-      // ),
     );
   }
 

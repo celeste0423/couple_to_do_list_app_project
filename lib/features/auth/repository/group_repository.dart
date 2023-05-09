@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:couple_to_do_list_app/features/auth/model/group_model.dart';
-import 'package:couple_to_do_list_app/features/auth/model/user_model.dart';
+import 'package:couple_to_do_list_app/models/group_model.dart';
+import 'package:couple_to_do_list_app/models/user_model.dart';
 
 class GroupRepository {
   static Future<void> groupSignup(

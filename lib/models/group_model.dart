@@ -38,4 +38,20 @@ class GroupModel {
       'dayMet': dayMet,
     };
   }
+
+  GroupModel copyWith({
+    String? maleUid,
+    String? femaleUid,
+    String? uid,
+    DateTime? createdAt,
+    DateTime? dayMet,
+  }) {
+    return GroupModel(
+      maleUid: maleUid ?? this.maleUid,
+      femaleUid: femaleUid ?? this.femaleUid,
+      uid: uid ?? this.uid,
+      createdAt: createdAt ?? this.createdAt,
+      dayMet: dayMet ?? this.dayMet,
+    );
+  }
 }

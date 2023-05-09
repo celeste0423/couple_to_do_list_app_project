@@ -1,4 +1,4 @@
-import 'package:couple_to_do_list_app/features/bukkung_list/pages/list_suggestion_page.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
@@ -49,11 +49,14 @@ class _BukkungListPageState extends State<BukkungListPage> {
               colorBlendMode: BlendMode.modulate,
             ),
             SizedBox(width: 20),
-            Text(
-              '여기를 눌러 버꿍리스트를 추가하세요',
-              style: TextStyle(
-                color: CustomColors.grey.withOpacity(0.5),
-                fontSize: 20,
+            Material(
+              type: MaterialType.transparency,
+              child: Text(
+                '여기를 눌러 버꿍리스트를 추가하세요',
+                style: TextStyle(
+                  color: CustomColors.grey.withOpacity(0.5),
+                  fontSize: 20,
+                ),
               ),
             ),
           ],
@@ -165,7 +168,7 @@ class _BukkungListPageState extends State<BukkungListPage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Hero(
-              tag: 'addList',
+              tag: 'search_bar',
               child: Divider(
                 thickness: 2,
                 color: CustomColors.mainPink,

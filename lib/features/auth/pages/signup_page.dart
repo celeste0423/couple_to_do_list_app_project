@@ -1,8 +1,8 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/auth/model/user_model.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/main_button.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
@@ -185,7 +185,6 @@ class SignupPageState extends State<SignupPage> {
     TextEditingController controller,
     Function()? onPressed,
     TextInputType? numberinput,
-
   ) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
