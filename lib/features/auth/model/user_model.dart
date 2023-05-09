@@ -28,7 +28,7 @@ class UserModel {
       birthday: json['birthday'] == null
           ? null
           : (json['birthday'] as Timestamp).toDate(),
-      groupId: json['groubId'] == null ? null : json['groupId'] as String,
+      groupId: json['groupId'] == null ? null : json['groupId'] as String,
       dayMet: json['dayMet'] == null
           ? null
           : (json['dayMet'] as Timestamp).toDate(),
