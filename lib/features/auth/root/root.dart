@@ -13,7 +13,6 @@ class Root extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('그룹 id ${controller.user.value.groupId}');
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext _, AsyncSnapshot<User?> user) {

@@ -5,9 +5,7 @@ import 'package:couple_to_do_list_app/features/auth/repository/user_repository.d
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
-enum GroupIdStatus {
-  noData, hasGroup, createdGroupId
-}
+enum GroupIdStatus { noData, hasGroup, createdGroupId }
 
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
@@ -18,7 +16,7 @@ class AuthController extends GetxController {
       var userData = await UserRepository.loginUserByEmail(email);
       //신규 유저일 경우 userData에 null값 반환됨
       if (userData != null) {
-        print('서버의 유저 데이터 (cont) ${userData.toJson()}');
+        // print('서버의 유저 데이터 (cont) ${userData.toJson()}');
         user(userData);
         // InitBinding.additionalBinding(); //Todo: 홈탭컨트롤러 initbinding 필요
       }
@@ -47,18 +45,19 @@ class AuthController extends GetxController {
     if (buddyData == null || myData == null) {
       print('buddyData 없음(cont) ${buddyData}');
       return GroupIdStatus.noData;
-    }
-    else if(buddyData.groupId!=null){
+    } else if (buddyData.groupId != null) {
       print('짝꿍이 이미 다른 짝이 있음');
       return GroupIdStatus.hasGroup;
-    }
-    else {
+    } else {
       print('uuid로 가입 시작(cont) ${groupId}');
       await UserRepository.updateGroupId(myData, groupId);
       await UserRepository.updateGroupId(buddyData, groupId);
-      print('created groupId');
       return GroupIdStatus.createdGroupId;
     }
+  }
+
+  Future<bool> findGroupId(String email) async {
+    return await UserRepository.findGroupId(email);
   }
 
   //페이지 이동 관련

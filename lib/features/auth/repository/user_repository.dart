@@ -15,7 +15,7 @@ class UserRepository {
         //아직 회원가입이 안되었기 때문에 파이어스토어에 추가해야함
         return null;
       } else {
-        print('가입 이력 존재(repo)${data.docs.first.data().toString()}');
+        // print('가입 이력 존재(repo)${data.docs.first.data().toString()}');
         return UserModel.fromJson(data.docs.first.data());
       }
     } catch (e) {
@@ -78,5 +78,26 @@ class UserRepository {
             .update({'groupId': groupId});
       });
     });
+  }
+
+  static Future<bool> findGroupId(String email) async {
+    try {
+      FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get()
+          .then((querySnapshot) {
+        var groupId = querySnapshot.docs[0].data()['groupId'];
+        if (groupId == null) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+      return false;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
   }
 }

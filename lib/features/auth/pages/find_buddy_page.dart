@@ -2,6 +2,7 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
+import 'package:couple_to_do_list_app/features/home/pages/home_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
@@ -63,7 +64,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
 
   Widget _backgroundBottom() {
     return Container(
-      height: Get.height *1/2 -MediaQuery.of(context).viewInsets.bottom *1/2,
+      height:
+          Get.height * 1 / 2 - MediaQuery.of(context).viewInsets.bottom * 1 / 2,
       width: Get.width,
       decoration: const BoxDecoration(
         color: CustomColors.redbrown,
@@ -155,12 +157,12 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           ),
         ),
         _startButton(),
-        Positioned(bottom: -100,
-            child: _myEmail())
+        Positioned(bottom: -100, child: _myEmail())
       ],
     );
   }
- Widget _myEmail(){
+
+  Widget _myEmail() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -173,7 +175,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
         // _inviteButton(),
       ],
     );
- }
+  }
+
   Widget _emailTextField() {
     return TextField(
       controller: emailController,
@@ -199,21 +202,40 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
         () async {
           GroupIdStatus groupIdStatus = await authController.groupCreation(
               widget.email, emailController.text);
-          if (groupIdStatus==
-              GroupIdStatus.noData) {
-            openAlertDialog(message: '올바른 메일주소를 입력하였는지,\n짝꿍이 회원가입을 완료 하였는지 확인해주세요.');
-          }
-          else if(groupIdStatus==
-              GroupIdStatus.hasGroup){
-            openAlertDialog(message: '상대방이 이미 짝꿍이 있습니다.\n올바른 메일주소를 입력하였는지 확인해주세요.');
-          }
-          else{
-            Get.to()
-
+          if (groupIdStatus == GroupIdStatus.noData) {
+            openAlertDialog(
+                message: '올바른 메일주소를 입력하였는지,\n짝꿍이 회원가입을 완료 하였는지 확인해주세요.');
+          } else if (groupIdStatus == GroupIdStatus.hasGroup) {
+            openAlertDialog(
+                message: '상대방이 이미 짝꿍이 있습니다.\n올바른 메일주소를 입력하였는지 확인해주세요.');
+          } else {
+            Get.to(HomePage());
           }
         },
         150,
         CustomColors.lightPink,
+      ),
+    );
+  }
+
+  Widget _refreshButton() {
+    return AnimatedOpacity(
+      //키보드 올라온 것에 따른 투명도 조절
+      opacity: MediaQuery.of(context).viewInsets.bottom == 0 ? 1.0 : 0.0,
+      duration: Duration(milliseconds: 200),
+      child: FloatingActionButton(
+        elevation: 0,
+        onPressed: () async {
+          print(AuthController().findGroupId(widget.email));
+          if (await AuthController().findGroupId(widget.email)) {
+            Get.to(HomePage());
+          }
+        },
+        child: Icon(
+          Icons.refresh,
+          color: CustomColors.mainPink,
+          size: 35,
+        ),
       ),
     );
   }
@@ -239,11 +261,15 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                   _backgroundHandShakeImage(),
                 ],
               ),
-              Align(alignment: Alignment.bottomCenter, child: _backgroundBottom()),
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: _backgroundBottom()),
               Align(alignment: Alignment.center, child: _floatingContainer()),
             ],
           ),
         ),
+        floatingActionButton: _refreshButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }
