@@ -12,8 +12,6 @@ import 'package:get/get.dart';
 
 import '../../../widgets/main_button.dart';
 
-//Todo: 친구 찾기 완료하면 authcontroller 없애야 하나
-
 class FindBuddyPage extends StatefulWidget {
   FindBuddyPage({Key? key, required this.email}) : super(key: key);
   final String email;

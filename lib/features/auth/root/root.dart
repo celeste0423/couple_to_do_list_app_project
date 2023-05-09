@@ -4,6 +4,7 @@ import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/signup_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/home_page.dart';
+import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,12 +24,23 @@ class Root extends StatelessWidget {
               if (snapshot.hasData) {
                 return Obx(() {
                   print('로그인 정보 ${controller.user.toJson()}');
-                  if (controller.user.value.groupId != null) {
-                    print('groupId 값이 존재함. HomePage로 이동합니다.');
-                    return HomePage();
+                  if (controller.user.value.uid == null) {
+                    return Container(
+                      color: Colors.white,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: CustomColors.mainPink,
+                        ),
+                      ),
+                    );
                   } else {
-                    print('groupId 값이 아직 존재하지 않습니다. FindBuddyPage로 이동합니다.');
-                    return FindBuddyPage(email: user.data!.email ?? '');
+                    if (controller.user.value.groupId != null) {
+                      print('groupId 값이 존재함. HomePage로 이동합니다.');
+                      return HomePage();
+                    } else {
+                      print('groupId 값이 아직 존재하지 않습니다. FindBuddyPage로 이동합니다.');
+                      return FindBuddyPage(email: user.data!.email ?? '');
+                    }
                   }
                 });
               } else {
