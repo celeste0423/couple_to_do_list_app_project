@@ -144,42 +144,49 @@ class _BukkungListPageState extends State<BukkungListPage> {
   }
 
   Widget _bukkungListView() {
+    final controller = AuthController();
     return Expanded(
-      child: Obx(() {
-        print('현재 타입 (buk page)${currentType!}');
-        print('현재 그룹 (buk page)${AuthController.to.group.value.uid}');
-        return StreamBuilder(
-          stream: BukkungListController.to.getAllBukkungList(
-            currentType!,
-            AuthController.to.group.value,
-          ),
-          builder: (BuildContext context,
-              AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
-            if (!bukkungLists.hasData) {
-              return Center(
-                child: CircularProgressIndicator(color: CustomColors.mainPink),
-              );
-            } else if (bukkungLists.hasError) {
-              openAlertDialog(message: '에러 발생');
-            } else {
-              final _list = bukkungLists.data!;
-              return ListView.builder(
-                itemCount: _list.length,
-                itemBuilder: (context, index) {
-                  final _bukkungList = _list[index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(_bukkungList.title!),
-                      subtitle: Text(_bukkungList.content!),
-                    ),
-                  );
+      child: FutureBuilder(
+          future: controller.loginUser('jyeob25@korea.ac.kr'),
+          builder: (context, snapshot) {
+            return Obx(() {
+              print('현재 타입 (buk page)${currentType!}');
+              print('현재 그룹 (buk page)${controller.group.value.uid}');
+              print('현재 유저 (buk page)${controller.user.value.uid}');
+              return StreamBuilder(
+                stream: BukkungListController.to.getAllBukkungList(
+                  currentType!,
+                  controller.group.value,
+                ),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+                  if (!bukkungLists.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                          color: CustomColors.mainPink),
+                    );
+                  } else if (bukkungLists.hasError) {
+                    openAlertDialog(message: '에러 발생');
+                  } else {
+                    final _list = bukkungLists.data!;
+                    return ListView.builder(
+                      itemCount: _list.length,
+                      itemBuilder: (context, index) {
+                        final _bukkungList = _list[index];
+                        return Card(
+                          child: ListTile(
+                            title: Text(_bukkungList.title!),
+                            subtitle: Text(_bukkungList.content!),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  return Center(child: Text('아직 버꿍리스트가 없습니다'));
                 },
               );
-            }
-            return Center(child: Text('아직 버꿍리스트가 없습니다'));
-          },
-        );
-      }),
+            });
+          }),
     );
   }
 
