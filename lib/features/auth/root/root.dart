@@ -19,6 +19,7 @@ class Root extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext _, AsyncSnapshot<User?> user) {
         if (user.hasData) {
+          print('유저 이메일(root)${user.data!.email}');
           return FutureBuilder<UserModel?>(
             future: controller.loginUser(user.data!.email ?? ''),
             builder: (context, snapshot) {

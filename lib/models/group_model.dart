@@ -17,7 +17,7 @@ class GroupModel {
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
     return GroupModel(
-      maleUid: json['maleUid'] == null ? null : json['mailUid'] as String,
+      maleUid: json['maleUid'] == null ? null : json['maleUid'] as String,
       femaleUid: json['femaleUid'] == null ? null : json['femaleUid'] as String,
       uid: json['uid'] == null ? null : json['uid'] as String,
       createdAt: json['createdAt'] == null

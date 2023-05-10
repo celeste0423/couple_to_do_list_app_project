@@ -1,6 +1,8 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -142,12 +144,42 @@ class _BukkungListPageState extends State<BukkungListPage> {
   }
 
   Widget _bukkungListView() {
-    return StreamBuilder(
-      stream: BukkungListController.to.getAllBukkungList(
-        currentType!,
-        groupModel, //Todo:obx로 연결할 것
-      ),
-      builder: (context, snapshot),
+    return Expanded(
+      child: Obx(() {
+        print('현재 타입 (buk page)${currentType!}');
+        print('현재 그룹 (buk page)${AuthController.to.group.value.uid}');
+        return StreamBuilder(
+          stream: BukkungListController.to.getAllBukkungList(
+            currentType!,
+            AuthController.to.group.value,
+          ),
+          builder: (BuildContext context,
+              AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+            if (!bukkungLists.hasData) {
+              return Center(
+                child: CircularProgressIndicator(color: CustomColors.mainPink),
+              );
+            } else if (bukkungLists.hasError) {
+              openAlertDialog(message: '에러 발생');
+            } else {
+              final _list = bukkungLists.data!;
+              return ListView.builder(
+                itemCount: _list.length,
+                itemBuilder: (context, index) {
+                  final _bukkungList = _list[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(_bukkungList.title!),
+                      subtitle: Text(_bukkungList.content!),
+                    ),
+                  );
+                },
+              );
+            }
+            return Center(child: Text('아직 버꿍리스트가 없습니다'));
+          },
+        );
+      }),
     );
   }
 

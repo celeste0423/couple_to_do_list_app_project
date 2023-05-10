@@ -20,7 +20,7 @@ class UserRepository {
       }
     } catch (e) {
       //예외처리를 잘하자..ㅎ
-      print('loginUserByUid 에러: $e');
+      print('loginUserByUid 에러(user repo): $e');
       return null;
     }
   }

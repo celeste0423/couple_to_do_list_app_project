@@ -13,9 +13,14 @@ class BukkungListController extends GetxController {
       case 'date':
         return BukkungListRepository(groupModel: groupModel)
             .getAllBukkungListByDate();
-
+      case 'icon':
+        return BukkungListRepository(groupModel: groupModel)
+            .getAllBukkungListByDate();
+      case 'like':
+        return BukkungListRepository(groupModel: groupModel)
+            .getAllBukkungListByDate();
       default:
-        print('에러: 분류 타입 지정 안됨');
+        print('에러: 분류 타입 지정 안됨(buk cont)');
         return BukkungListRepository(groupModel: groupModel)
             .getAllBukkungListByDate();
     }

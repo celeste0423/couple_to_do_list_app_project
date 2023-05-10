@@ -1,5 +1,7 @@
+import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:get/get.dart';
@@ -15,15 +17,22 @@ class AuthController extends GetxController {
   Future<UserModel?> loginUser(String email) async {
     try {
       var userData = await UserRepository.loginUserByEmail(email);
+      var groupData = await GroupRepository.groupLogin(userData!.groupId ?? '');
       //신규 유저일 경우 userData에 null값 반환됨
       if (userData != null) {
-        // print('서버의 유저 데이터 (cont) ${userData.toJson()}');
+        print('서버의 유저 데이터 (cont) ${userData.toJson()}');
         user(userData);
-        // InitBinding.additionalBinding(); //Todo: 홈탭컨트롤러 initbinding 필요
+        InitBinding.additionalBinding(); //bukkungListController 바인딩
       }
+      if (groupData != null) {
+        print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
+        group(groupData);
+      }
+      print('그룹 정보(auth cont)${group.value.uid}');
       return userData; //신규 유저일 경우 null반환
     } catch (e) {
       print('loginUser 오류(cont)$e');
+      openAlertDialog(message: '로그인 오류${e.toString()}');
       return null;
     }
   }
