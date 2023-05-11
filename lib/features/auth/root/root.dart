@@ -45,6 +45,15 @@ class Root extends GetView<AuthController> {
                     }
                   }
                 });
+              } else if (snapshot.hasError) {
+                return Container(
+                  color: Colors.white,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: CustomColors.mainPink,
+                    ),
+                  ),
+                );
               } else {
                 print('신규 유저임(root)');
                 return Obx(() {

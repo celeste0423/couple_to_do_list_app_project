@@ -14,25 +14,29 @@ enum GroupIdStatus { noData, hasGroup, createdGroupId }
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
   Rx<UserModel> user = UserModel().obs;
+  // Rx<UserModel> user = UserModel(uid: 'base').obs;
   Rx<GroupModel> group = GroupModel().obs;
 
   Future<UserModel?> loginUser(String email) async {
     try {
       var userData = await UserRepository.loginUserByEmail(email);
-      var groupData = await GroupRepository.groupLogin(userData!.groupId ?? '');
       //신규 유저일 경우 userData에 null값 반환됨
       if (userData != null) {
         print('서버의 유저 데이터 (cont) ${userData.toJson()}');
         user(userData);
-        // InitBinding.additionalBinding(); //bukkungListPageController 바인딩
+        var groupData = await GroupRepository.groupLogin(userData.groupId);
+        if (groupData != null) {
+          print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
+          group(groupData);
+          print('그룹 정보(auth cont)${group.value.uid}');
+          InitBinding.additionalBinding();
+        }
       }
-      if (groupData != null) {
-        print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
-        group(groupData);
-        print('그룹 정보(auth cont)${group.value.uid}');
-        InitBinding.additionalBinding();
-      }
-      return userData; //신규 유저일 경우 null반환
+      // if (user.value.uid == 'base') {
+      //   //신규 유저
+      //   return user.value;
+      // }
+      return userData; //로딩 중 경우 null반환
     } catch (e) {
       print('loginUser 오류(cont)$e');
       openAlertDialog(message: '로그인 오류${e.toString()}');
