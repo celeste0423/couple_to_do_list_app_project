@@ -1,5 +1,5 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_controller.dart';
+import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:get/get.dart';
 
 class InitBinding extends Bindings {
@@ -9,6 +9,6 @@ class InitBinding extends Bindings {
   }
 
   static additionalBinding() {
-    Get.put(BukkungListController(), permanent: true);
+    Get.put(BukkungListPageController(), permanent: true);
   }
 }

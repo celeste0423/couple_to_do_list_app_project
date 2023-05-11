@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
@@ -22,13 +24,14 @@ class AuthController extends GetxController {
       if (userData != null) {
         print('서버의 유저 데이터 (cont) ${userData.toJson()}');
         user(userData);
-        InitBinding.additionalBinding(); //bukkungListController 바인딩
+        // InitBinding.additionalBinding(); //bukkungListPageController 바인딩
       }
       if (groupData != null) {
         print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
         group(groupData);
+        print('그룹 정보(auth cont)${group.value.uid}');
+        InitBinding.additionalBinding();
       }
-      print('그룹 정보(auth cont)${group.value.uid}');
       return userData; //신규 유저일 경우 null반환
     } catch (e) {
       print('loginUser 오류(cont)$e');
@@ -41,7 +44,7 @@ class AuthController extends GetxController {
     //회원가입 버튼에 사용
     var result = await UserRepository.firestoreSignup(signupUser);
     if (result) {
-      loginUser(signupUser.uid!);
+      loginUser(signupUser.email!);
     }
   }
 
@@ -83,6 +86,15 @@ class AuthController extends GetxController {
 
   Future<bool> findGroupId(String email) async {
     return await UserRepository.findGroupId(email);
+  }
+
+  Future<GroupModel> saveGroupData() async {
+    print('받아온 유저 데이터(auth cont) ${user.value.groupId}');
+    var groupData = await GroupRepository.groupLogin(user.value.groupId ?? '');
+    print('그룹 데이터 (auth cont) ${groupData!.uid}');
+    group(groupData);
+    print('그룹 데이터 저장 (auth cont) ${group.value.uid}');
+    return group.value;
   }
 }
 

@@ -1,5 +1,4 @@
-import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_controller.dart';
+import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
@@ -7,26 +6,8 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class BukkungListPage extends StatefulWidget {
+class BukkungListPage extends GetView<BukkungListPageController> {
   const BukkungListPage({Key? key}) : super(key: key);
-
-  @override
-  State<BukkungListPage> createState() => _BukkungListPageState();
-}
-
-class _BukkungListPageState extends State<BukkungListPage> {
-  String? currentType;
-  final Map<String, String> _typetoString = {
-    "icon": "유형별로 보기",
-    "date": "날짜순으로 보기",
-    "like": "좋아요 순으로 보기",
-  };
-
-  @override
-  void initState() {
-    currentType = "icon";
-    super.initState();
-  }
 
   Widget _listAddButton() {
     return GestureDetector(
@@ -81,16 +62,14 @@ class _BukkungListPageState extends State<BukkungListPage> {
             1,
           ),
           onSelected: (String listType) {
-            setState(() {
-              currentType = listType;
-            });
+            controller.currentType.value = listType;
           },
           itemBuilder: (BuildContext context) {
             return [
               PopupMenuItem(
                 value: "icon",
                 child: Text(
-                  "유형별로 보기",
+                  "유형별",
                   style: TextStyle(
                     fontSize: 20,
                     fontFamily: 'Yoonwoo',
@@ -102,7 +81,7 @@ class _BukkungListPageState extends State<BukkungListPage> {
               PopupMenuItem(
                 value: "date",
                 child: Text(
-                  "날짜 순으로 보기",
+                  "날짜 순",
                   style: TextStyle(
                     fontSize: 20,
                     fontFamily: 'Yoonwoo',
@@ -114,7 +93,7 @@ class _BukkungListPageState extends State<BukkungListPage> {
               PopupMenuItem(
                 value: "like",
                 child: Text(
-                  "좋아요 순으로 보기",
+                  "좋아요 순",
                   style: TextStyle(
                     fontSize: 20,
                     fontFamily: 'Yoonwoo',
@@ -125,68 +104,60 @@ class _BukkungListPageState extends State<BukkungListPage> {
               ),
             ];
           },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(_typetoString[currentType] ?? ""),
-              Hero(
-                tag: 'background',
-                child: Icon(
-                  Icons.arrow_drop_down,
-                  color: CustomColors.mainPink,
+          child: Obx(() {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(controller.typetoString[controller.currentType.value] ??
+                    ""),
+                Hero(
+                  tag: 'background',
+                  child: Icon(
+                    Icons.arrow_drop_down,
+                    color: CustomColors.mainPink,
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            );
+          }),
         ),
       ),
     );
   }
 
   Widget _bukkungListView() {
-    final controller = AuthController();
+    print('현재 타입 (buk page)${controller.currentType!.value}');
     return Expanded(
       child: FutureBuilder(
-          future: controller.loginUser('jyeob25@korea.ac.kr'),
-          builder: (context, snapshot) {
-            return Obx(() {
-              print('현재 타입 (buk page)${currentType!}');
-              print('현재 그룹 (buk page)${controller.group.value.uid}');
-              print('현재 유저 (buk page)${controller.user.value.uid}');
-              return StreamBuilder(
-                stream: BukkungListController.to.getAllBukkungList(
-                  currentType!,
-                  controller.group.value,
-                ),
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
-                  if (!bukkungLists.hasData) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                          color: CustomColors.mainPink),
-                    );
-                  } else if (bukkungLists.hasError) {
-                    openAlertDialog(message: '에러 발생');
-                  } else {
-                    final _list = bukkungLists.data!;
-                    return ListView.builder(
-                      itemCount: _list.length,
-                      itemBuilder: (context, index) {
-                        final _bukkungList = _list[index];
-                        return Card(
-                          child: ListTile(
-                            title: Text(_bukkungList.title!),
-                            subtitle: Text(_bukkungList.content!),
-                          ),
-                        );
-                      },
-                    );
-                  }
-                  return Center(child: Text('아직 버꿍리스트가 없습니다'));
-                },
-              );
-            });
-          }),
+        future: BukkungListPageController.to.getAllBukkungList(
+          controller.currentType.value!,
+        ),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+          if (!bukkungLists.hasData) {
+            return Center(
+              child: CircularProgressIndicator(color: CustomColors.mainPink),
+            );
+          } else if (bukkungLists.hasError) {
+            openAlertDialog(message: '에러 발생');
+          } else {
+            final _list = bukkungLists.data!;
+            return ListView.builder(
+              itemCount: _list.length,
+              itemBuilder: (context, index) {
+                final _bukkungList = _list[index];
+                return Card(
+                  child: ListTile(
+                    title: Text(_bukkungList.title!),
+                    subtitle: Text(_bukkungList.content!),
+                  ),
+                );
+              },
+            );
+          }
+          return Center(child: Text('아직 버꿍리스트가 없습니다'));
+        },
+      ),
     );
   }
 

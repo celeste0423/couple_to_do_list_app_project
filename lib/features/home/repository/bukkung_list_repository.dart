@@ -7,19 +7,35 @@ class BukkungListRepository {
 
   BukkungListRepository({required this.groupModel});
 
-  Stream<List<BukkungListModel>> getAllBukkungListByDate() {
+  Future<List<BukkungListModel>> getAllBukkungListByDate() {
     return FirebaseFirestore.instance
         .collection('groups')
         .doc(groupModel.uid)
         .collection('bukkungLists')
         .orderBy('date')
-        .snapshots()
-        .map((event) {
+        .get()
+        .then((querySnapshot) {
       List<BukkungListModel> bukkungLists = [];
-      for (var bukkungList in event.docs) {
+      for (var bukkungList in querySnapshot.docs) {
         bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
       }
       return bukkungLists;
     });
   }
+
+  // Stream<List<BukkungListModel>> getAllBukkungListByDate() {
+  //   return FirebaseFirestore.instance
+  //       .collection('groups')
+  //       .doc(groupModel.uid)
+  //       .collection('bukkungLists')
+  //       .orderBy('date')
+  //       .snapshots()
+  //       .map((event) {
+  //     List<BukkungListModel> bukkungLists = [];
+  //     for (var bukkungList in event.docs) {
+  //       bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+  //     }
+  //     return bukkungLists;
+  //   });
+  // }
 }
