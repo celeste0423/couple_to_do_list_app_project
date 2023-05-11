@@ -88,14 +88,14 @@ class AuthController extends GetxController {
     return await UserRepository.findGroupId(email);
   }
 
-  Future<GroupModel> saveGroupData() async {
-    print('받아온 유저 데이터(auth cont) ${user.value.groupId}');
-    var groupData = await GroupRepository.groupLogin(user.value.groupId ?? '');
-    print('그룹 데이터 (auth cont) ${groupData!.uid}');
-    group(groupData);
-    print('그룹 데이터 저장 (auth cont) ${group.value.uid}');
-    return group.value;
-  }
+  // Future<GroupModel> saveGroupData() async {
+  //   print('받아온 유저 데이터(auth cont) ${user.value.groupId}');
+  //   var groupData = await GroupRepository.groupLogin(user.value.groupId ?? '');
+  //   print('그룹 데이터 (auth cont) ${groupData!.uid}');
+  //   group(groupData);
+  //   print('그룹 데이터 저장 (auth cont) ${group.value.uid}');
+  //   return group.value;
+  // }
 }
 
 //카카오 user registration

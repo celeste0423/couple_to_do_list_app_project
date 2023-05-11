@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 class BukkungListPageController extends GetxController {
   static BukkungListPageController get to => Get.find();
-  Rx<GroupModel> myGroup = GroupModel().obs;
+  // Rx<GroupModel> myGroup = GroupModel().obs;
   Rx<BukkungListModel> bukkungList = BukkungListModel().obs;
 
   Rx<String?> currentType = "icon".obs;
@@ -20,17 +20,14 @@ class BukkungListPageController extends GetxController {
   void onInit() {
     super.onInit();
     currentType.value = "icon";
-    AuthController.to.group.listen((value) {
-      print('init(bukk page cont)${AuthController.to.group.value.uid}');
-    });
-    myGroup(AuthController.to.group.value);
+    // myGroup(AuthController.to.group.value);
   }
 
-  Future<List<BukkungListModel>> getAllBukkungList(String type) async {
+  Stream<List<BukkungListModel>> getAllBukkungList(String type) {
     // AuthController.to.saveGroupData();
-    final GroupModel groupModel = myGroup.value;
+    final GroupModel groupModel = AuthController.to.group.value;
     // final GroupModel groupModel = await AuthController.to.group.value;
-    print('현재 그룹 (buk page cont)${myGroup.value.uid}');
+    print('현재 그룹 (buk page cont)${groupModel.uid}');
     // print('현재 유저 (buk page cont)${myGroup.value.uid}');
 
     switch (type) {

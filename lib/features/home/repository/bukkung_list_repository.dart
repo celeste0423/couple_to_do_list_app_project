@@ -7,32 +7,35 @@ class BukkungListRepository {
 
   BukkungListRepository({required this.groupModel});
 
-  Future<List<BukkungListModel>> getAllBukkungListByDate() {
+  Stream<List<BukkungListModel>> getAllBukkungListByDate() {
+    print('스트림 시작');
     return FirebaseFirestore.instance
         .collection('groups')
         .doc(groupModel.uid)
         .collection('bukkungLists')
         .orderBy('date')
-        .get()
-        .then((querySnapshot) {
+        .snapshots()
+        .map((event) {
       List<BukkungListModel> bukkungLists = [];
-      for (var bukkungList in querySnapshot.docs) {
+      for (var bukkungList in event.docs) {
         bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
       }
+      print('버꿍리스트(buk repo)${bukkungLists.length}');
       return bukkungLists;
     });
   }
 
-  // Stream<List<BukkungListModel>> getAllBukkungListByDate() {
+  // Future<List<BukkungListModel>> getAllBukkungListByDate() {
+  //   print('그룹모델(buk repo) ${groupModel.uid}');
   //   return FirebaseFirestore.instance
   //       .collection('groups')
   //       .doc(groupModel.uid)
   //       .collection('bukkungLists')
   //       .orderBy('date')
-  //       .snapshots()
-  //       .map((event) {
+  //       .get()
+  //       .then((querySnapshot) {
   //     List<BukkungListModel> bukkungLists = [];
-  //     for (var bukkungList in event.docs) {
+  //     for (var bukkungList in querySnapshot.docs) {
   //       bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
   //     }
   //     return bukkungLists;

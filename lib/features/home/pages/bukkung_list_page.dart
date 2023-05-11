@@ -128,13 +128,14 @@ class BukkungListPage extends GetView<BukkungListPageController> {
   Widget _bukkungListView() {
     print('현재 타입 (buk page)${controller.currentType!.value}');
     return Expanded(
-      child: FutureBuilder(
-        future: BukkungListPageController.to.getAllBukkungList(
+      child: StreamBuilder(
+        stream: BukkungListPageController.to.getAllBukkungList(
           controller.currentType.value!,
         ),
         builder: (BuildContext context,
             AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
           if (!bukkungLists.hasData) {
+            print('로딩중(buk page');
             return Center(
               child: CircularProgressIndicator(color: CustomColors.mainPink),
             );
@@ -142,10 +143,12 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             openAlertDialog(message: '에러 발생');
           } else {
             final _list = bukkungLists.data!;
+            print('리스트 출력(buk page)${_list.length}');
             return ListView.builder(
               itemCount: _list.length,
               itemBuilder: (context, index) {
                 final _bukkungList = _list[index];
+                print(_bukkungList.title);
                 return Card(
                   child: ListTile(
                     title: Text(_bukkungList.title!),
