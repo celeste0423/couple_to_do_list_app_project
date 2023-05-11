@@ -17,4 +17,11 @@ class CustomColors {
   static Color black = Color(0xFF000000).withOpacity(0.7);
 
   static const Color redbrown = Color(0xFF544141);
+
+  static const Color travel = Color(0xFFADE0E0);
+  static const Color meal = Color(0xFFACDDBD);
+  static const Color activity = Color(0xFFE2C2BF);
+  static const Color culture = Color(0xFFD7DA72);
+  static const Color study = Color(0xFF859EC9);
+  static const Color etc = Color(0xFFE1CDAE);
 }

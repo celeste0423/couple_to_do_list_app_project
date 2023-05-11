@@ -3,6 +3,7 @@ import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_sugges
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/utils/type_to_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -151,17 +152,53 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               itemBuilder: (context, index) {
                 final _bukkungList = _list[index];
                 print(_bukkungList.title);
-                return Card(
-                  child: ListTile(
-                    title: Text(_bukkungList.title!),
-                    subtitle: Text(_bukkungList.content!),
-                  ),
-                );
+                return _bukkungListCard(_bukkungList);
               },
             );
           }
           return Center(child: Text('아직 버꿍리스트가 없습니다'));
         },
+      ),
+    );
+  }
+
+  Widget _bukkungListCard(BukkungListModel bukkungListModel) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 9,
+            child: Container(
+              height: 150,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  bottomLeft: Radius.circular(25),
+                ),
+              ),
+              child: ListTile(
+                title: Text(bukkungListModel.title!),
+                subtitle: Text(bukkungListModel.content!),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              height: 150,
+              decoration: BoxDecoration(
+                color: TypeToColor.typeToColor(bukkungListModel.type),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(25),
+                  bottomRight: Radius.circular(25),
+                ),
+              ),
+              width: 30,
+            ),
+          )
+        ],
       ),
     );
   }
