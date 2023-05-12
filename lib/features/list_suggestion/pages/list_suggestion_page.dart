@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
@@ -173,7 +174,9 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
 
   Widget _listAddButton() {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        Get.to(() => UploadBukkungListPage());
+      },
       style: ElevatedButton.styleFrom(
         fixedSize: Size(260, 60),
         shape: RoundedRectangleBorder(

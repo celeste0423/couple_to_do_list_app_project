@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-//Todo: 이메일 받아와야 할 거 같음
 class GoogleLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -44,6 +43,7 @@ class GoogleLoginButton extends StatelessWidget {
         }
       },
       child: Image.asset(
+        //Todo: 이미지 해상도를 올려야 할듯
         'assets/images/google_login_btn.png',
       ),
     );
