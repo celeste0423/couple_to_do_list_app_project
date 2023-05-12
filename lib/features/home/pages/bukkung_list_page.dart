@@ -188,7 +188,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             child: Container(
               height: 150,
               decoration: BoxDecoration(
-                color: TypeToColor.typeToColor(bukkungListModel.type),
+                color: TypeToColor.typeToColor(bukkungListModel.category),
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(25),
                   bottomRight: Radius.circular(25),

@@ -40,7 +40,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         textAlign: TextAlign.center,
         style: TextStyle(
           color: CustomColors.blackText,
-          fontSize: 25,
+          fontSize: 30,
         ),
         decoration: const InputDecoration(
           border: InputBorder.none,
@@ -52,7 +52,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           hintText: '제목을 입력하세요',
           hintStyle: TextStyle(
             color: CustomColors.greyText,
-            fontSize: 25,
+            fontSize: 30,
           ),
         ),
       ),
@@ -60,15 +60,175 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
   }
 
   Widget _categorySelector() {
-    return Container();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: SizedBox(
+        width: 150,
+        child: PopupMenuButton<String>(
+          offset: Offset(0, 40),
+          shape: ShapeBorder.lerp(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            1,
+          ),
+          onSelected: (String listCategory) {
+            controller.listCategory.value = listCategory;
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem(
+                value: "icon",
+                child: Text(
+                  "유형별",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Yoonwoo',
+                    letterSpacing: 1.5,
+                    color: CustomColors.darkGrey,
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "date",
+                child: Text(
+                  "날짜 순",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Yoonwoo',
+                    letterSpacing: 1.5,
+                    color: CustomColors.darkGrey,
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "like",
+                child: Text(
+                  "좋아요 순",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Yoonwoo',
+                    letterSpacing: 1.5,
+                    color: CustomColors.darkGrey,
+                  ),
+                ),
+              ),
+            ];
+          },
+          child: Obx(() {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/icons/category.png',
+                    width: 35,
+                    color: Colors.black.withOpacity(0.6),
+                    colorBlendMode: BlendMode.modulate,
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        child: Text(
+                          controller.categoryToString[
+                                  controller.listCategory.value] ??
+                              '',
+                          style: TextStyle(
+                            color: CustomColors.greyText,
+                            fontSize: 25,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ),
+      ),
+    );
   }
 
   Widget _locationTextField() {
-    return Container();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      child: Row(
+        children: [
+          Image.asset(
+            'assets/icons/location-pin.png',
+            width: 35,
+            color: Colors.black.withOpacity(0.6),
+            colorBlendMode: BlendMode.modulate,
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Text(
+                  '장소',
+                  style: TextStyle(
+                    color: CustomColors.greyText,
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _datePicker() {
-    return Container();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      child: Row(
+        children: [
+          Image.asset(
+            'assets/icons/calendar.png',
+            width: 35,
+            color: Colors.black.withOpacity(0.6),
+            colorBlendMode: BlendMode.modulate,
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Text(
+                  '예상 날짜',
+                  style: TextStyle(
+                    color: CustomColors.greyText,
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _contentTextField() {
@@ -78,6 +238,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomColors.backgroundLightGrey,
       appBar: _appBar(),
       body: Stack(
         children: [
@@ -95,14 +256,16 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                 children: [
                   _titleTextField(),
                   customDivider(),
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        _categorySelector(),
-                        _locationTextField(),
-                        _datePicker(),
-                        _contentTextField(),
-                      ],
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _categorySelector(),
+                          _locationTextField(),
+                          _datePicker(),
+                          _contentTextField(),
+                        ],
+                      ),
                     ),
                   ),
                 ],

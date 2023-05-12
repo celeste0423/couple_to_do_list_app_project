@@ -9,9 +9,9 @@ class BukkungListPageController extends GetxController {
   // Rx<GroupModel> myGroup = GroupModel().obs;
   Rx<BukkungListModel> bukkungList = BukkungListModel().obs;
 
-  Rx<String?> currentType = "icon".obs;
+  Rx<String?> currentType = "category".obs;
   Map<String, String> typetoString = {
-    "icon": "유형별",
+    "category": "카테고리 별",
     "date": "날짜 순",
     "like": "좋아요 순",
   };
@@ -19,7 +19,7 @@ class BukkungListPageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    currentType.value = "icon";
+    currentType.value = "category";
     // myGroup(AuthController.to.group.value);
   }
 
@@ -31,10 +31,10 @@ class BukkungListPageController extends GetxController {
     // print('현재 유저 (buk page cont)${myGroup.value.uid}');
 
     switch (type) {
-      case 'date':
+      case 'category':
         return BukkungListRepository(groupModel: groupModel)
             .getAllBukkungListByDate();
-      case 'icon':
+      case 'date':
         return BukkungListRepository(groupModel: groupModel)
             .getAllBukkungListByDate();
       case 'like':
