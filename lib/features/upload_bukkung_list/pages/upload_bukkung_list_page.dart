@@ -61,98 +61,99 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
 
   Widget _categorySelector() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: SizedBox(
-        width: 150,
-        child: PopupMenuButton<String>(
-          offset: Offset(0, 40),
-          shape: ShapeBorder.lerp(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-            1,
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      child: Row(
+        children: [
+          Image.asset(
+            'assets/icons/category.png',
+            width: 35,
+            color: Colors.black.withOpacity(0.6),
+            colorBlendMode: BlendMode.modulate,
           ),
-          onSelected: (String listCategory) {
-            controller.listCategory.value = listCategory;
-          },
-          itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem(
-                value: "icon",
-                child: Text(
-                  "유형별",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Yoonwoo',
-                    letterSpacing: 1.5,
-                    color: CustomColors.darkGrey,
-                  ),
-                ),
+          SizedBox(width: 10),
+          Expanded(
+            child: PopupMenuButton<String>(
+              offset: Offset(0, 0),
+              shape: ShapeBorder.lerp(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0)),
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0)),
+                1,
               ),
-              PopupMenuItem(
-                value: "date",
-                child: Text(
-                  "날짜 순",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Yoonwoo',
-                    letterSpacing: 1.5,
-                    color: CustomColors.darkGrey,
-                  ),
-                ),
-              ),
-              PopupMenuItem(
-                value: "like",
-                child: Text(
-                  "좋아요 순",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Yoonwoo',
-                    letterSpacing: 1.5,
-                    color: CustomColors.darkGrey,
-                  ),
-                ),
-              ),
-            ];
-          },
-          child: Obx(() {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-              child: Row(
-                children: [
-                  Image.asset(
-                    'assets/icons/category.png',
-                    width: 35,
-                    color: Colors.black.withOpacity(0.6),
-                    colorBlendMode: BlendMode.modulate,
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
+              onSelected: (String listCategory) {
+                controller.listCategory.value = listCategory;
+              },
+              itemBuilder: (BuildContext context) {
+                return [
+                  PopupMenuItem(
+                    value: "icon",
                     child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        child: Text(
-                          controller.categoryToString[
-                                  controller.listCategory.value] ??
-                              '',
-                          style: TextStyle(
-                            color: CustomColors.greyText,
-                            fontSize: 25,
-                          ),
+                      width: 150,
+                      height: 150,
+                      color: CustomColors.travel,
+                      child: Text(
+                        "유형별",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: 'Yoonwoo',
+                          letterSpacing: 1.5,
+                          color: CustomColors.darkGrey,
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            );
-          }),
-        ),
+                  PopupMenuItem(
+                    value: "date",
+                    child: Text(
+                      "날짜 순",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Yoonwoo',
+                        letterSpacing: 1.5,
+                        color: CustomColors.darkGrey,
+                      ),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: "like",
+                    child: Text(
+                      "좋아요 순",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Yoonwoo',
+                        letterSpacing: 1.5,
+                        color: CustomColors.darkGrey,
+                      ),
+                    ),
+                  ),
+                ];
+              },
+              child: Obx(() {
+                return Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    child: Text(
+                      controller.categoryToString[
+                              controller.listCategory.value] ??
+                          '',
+                      style: TextStyle(
+                        color: CustomColors.greyText,
+                        fontSize: 25,
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+        ],
       ),
     );
   }
