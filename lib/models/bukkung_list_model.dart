@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BukkungListModel {
-  final String? type;
+  final String? category;
   final String? title;
   final String? content;
   final String? location;
@@ -10,7 +10,7 @@ class BukkungListModel {
   final DateTime? date;
 
   BukkungListModel({
-    this.type,
+    this.category,
     this.title,
     this.content,
     this.location,
@@ -21,7 +21,7 @@ class BukkungListModel {
 
   factory BukkungListModel.fromJson(Map<String, dynamic> json) {
     return BukkungListModel(
-      type: json['type'] == null ? null : json['type'] as String,
+      category: json['category'] == null ? null : json['category'] as String,
       title: json['title'] == null ? null : json['title'] as String,
       content: json['content'] == null ? null : json['content'] as String,
       location: json['location'] == null ? null : json['location'] as String,
@@ -35,7 +35,7 @@ class BukkungListModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'type': type,
+      'category': category,
       'title': title,
       'content': content,
       'location': location,
@@ -46,7 +46,7 @@ class BukkungListModel {
   }
 
   BukkungListModel copyWith({
-    String? type,
+    String? category,
     String? title,
     String? content,
     String? location,
@@ -55,7 +55,7 @@ class BukkungListModel {
     DateTime? date,
   }) {
     return BukkungListModel(
-      type: type ?? this.type,
+      category: category ?? this.category,
       title: title ?? this.title,
       content: content ?? this.content,
       location: location ?? this.location,

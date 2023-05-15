@@ -4,6 +4,7 @@ import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/utils/type_to_color.dart';
+import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -189,7 +190,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             child: Container(
               height: 150,
               decoration: BoxDecoration(
-                color: TypeToColor.typeToColor(bukkungListModel.type),
+                color: TypeToColor.typeToColor(bukkungListModel.category),
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(25),
                   bottomRight: Radius.circular(25),
@@ -229,15 +230,9 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         children: [
           _listAddButton(),
           _listTypeSelector(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Hero(
-              tag: 'search_bar',
-              child: Divider(
-                thickness: 2,
-                color: CustomColors.mainPink,
-              ),
-            ),
+          Hero(
+            tag: 'search_bar',
+            child: customDivider(),
           ),
           _bukkungListView(),
         ],

@@ -93,7 +93,7 @@ class Root extends StatelessWidget {
 //           return FutureBuilder<UserModel?>(
 //             //future로 리턴해준 값은 신규 유저여부 판별
 //             future: controller.loginUser(user.data!.email ?? ''),
-//             //Todo: 복귀유저가 로그인 해서 분명 snapshot에 데이터가 있을 텐데 findbuddy로 안감
+//
 //             builder: (context, snapshot) {
 //               if (snapshot.hasData) {
 //                 print('로그인 정보 존재(root)');

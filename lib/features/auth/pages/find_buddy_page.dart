@@ -180,9 +180,16 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       controller: emailController,
       decoration: InputDecoration(
         hintText: 'ex) Bukkung@google.com',
-        prefixIcon: Icon(Icons.email),
+        prefixIcon: Icon(
+          Icons.email,
+          color: CustomColors.greyText,
+        ),
         suffixIcon: IconButton(
-          icon: Icon(Icons.clear, size: 20),
+          icon: Icon(
+            Icons.clear,
+            size: 20,
+            color: CustomColors.greyText,
+          ),
           onPressed: () {
             return emailController.clear();
           },
