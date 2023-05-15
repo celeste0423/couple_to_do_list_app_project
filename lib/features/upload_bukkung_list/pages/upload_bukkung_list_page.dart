@@ -1,5 +1,6 @@
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -87,23 +88,29 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Obx(() {
                     print(
                         '선택한 카테고리(upl cont) ${controller.listCategory.value}');
-                    return Text(
-                      controller.categoryToString[
-                              controller.listCategory.value] ??
-                          '카테고리',
-                      style: TextStyle(
-                        color: controller.categoryToString[
-                                    controller.listCategory.value] ==
-                                null
-                            ? CustomColors.greyText
-                            : CustomColors.blackText,
-                        fontSize: 25,
-                      ),
+                    return Row(
+                      children: [
+                        CategoryIcon(
+                            category: controller.listCategory.value ?? ''),
+                        SizedBox(width: 10),
+                        Text(
+                          controller.categoryToString[
+                                  controller.listCategory.value] ??
+                              '카테고리',
+                          style: TextStyle(
+                            color: controller.categoryToString[
+                                        controller.listCategory.value] ==
+                                    null
+                                ? CustomColors.greyText
+                                : CustomColors.blackText,
+                            fontSize: 25,
+                          ),
+                        ),
+                      ],
                     );
                   }),
                 ),
