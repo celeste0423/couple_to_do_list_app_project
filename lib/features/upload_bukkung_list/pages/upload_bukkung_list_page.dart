@@ -59,7 +59,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
     );
   }
 
-  Widget _categorySelector() {
+  Widget _categorySelector(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Row(
@@ -72,74 +72,25 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           ),
           SizedBox(width: 10),
           Expanded(
-            child: PopupMenuButton<String>(
-              offset: Offset(0, 0),
-              shape: ShapeBorder.lerp(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.0)),
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.0)),
-                1,
-              ),
-              onSelected: (String listCategory) {
-                controller.listCategory.value = listCategory;
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return _categoryDialog();
+                    });
               },
-              itemBuilder: (BuildContext context) {
-                return [
-                  PopupMenuItem(
-                    value: "icon",
-                    child: Container(
-                      width: 150,
-                      height: 150,
-                      color: CustomColors.travel,
-                      child: Text(
-                        "유형별",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontFamily: 'Yoonwoo',
-                          letterSpacing: 1.5,
-                          color: CustomColors.darkGrey,
-                        ),
-                      ),
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: "date",
-                    child: Text(
-                      "날짜 순",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: 'Yoonwoo',
-                        letterSpacing: 1.5,
-                        color: CustomColors.darkGrey,
-                      ),
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: "like",
-                    child: Text(
-                      "좋아요 순",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: 'Yoonwoo',
-                        letterSpacing: 1.5,
-                        color: CustomColors.darkGrey,
-                      ),
-                    ),
-                  ),
-                ];
-              },
-              child: Obx(() {
-                return Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
-                    child: Text(
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: Obx(() {
+                    return Text(
                       controller.categoryToString[
                               controller.listCategory.value] ??
                           '',
@@ -147,11 +98,91 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                         color: CustomColors.greyText,
                         fontSize: 25,
                       ),
+                    );
+                  }),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _categoryDialog() {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Container(
+        height: 550,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '카테고리',
+                style: TextStyle(fontSize: 30),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 450,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _categoryCard('airplane', '여행', CustomColors.travel),
+                        _categoryCard('running', '액티비티', CustomColors.activity),
+                        _categoryCard('study', '자기계발', CustomColors.study),
+                      ],
                     ),
                   ),
-                );
-              }),
-            ),
+                  SizedBox(width: 20),
+                  Container(
+                    height: 450,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _categoryCard('food', '식사', CustomColors.meal),
+                        _categoryCard('singer', '문화활동', CustomColors.culture),
+                        _categoryCard('filter-file', '기타', CustomColors.etc),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _categoryCard(String icon, String text, Color color) {
+    return Container(
+      width: 130,
+      height: 130,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        color: color,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/icons/$icon.png',
+            width: 60,
+          ),
+          SizedBox(height: 10),
+          Text(
+            text,
+            style: TextStyle(fontSize: 25, color: CustomColors.blackText),
           ),
         ],
       ),
@@ -261,7 +292,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          _categorySelector(),
+                          _categorySelector(context),
                           _locationTextField(),
                           _datePicker(),
                           _contentTextField(),
