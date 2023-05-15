@@ -19,7 +19,7 @@ class CustomColors {
 
   //텍스트 컬러
   static const Color lightGreyText = Color(0xFF9B9B9B);
-  static const Color greyText = Color(0xFF8C8C8C);
+  static const Color greyText = Color(0xFF9F9F9F);
   static const Color blackText = Color(0xFF3B3B3B);
 
   //카테고리 색

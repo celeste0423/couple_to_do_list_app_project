@@ -90,12 +90,18 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: Obx(() {
+                    print(
+                        '선택한 카테고리(upl cont) ${controller.listCategory.value}');
                     return Text(
                       controller.categoryToString[
                               controller.listCategory.value] ??
-                          '',
+                          '카테고리',
                       style: TextStyle(
-                        color: CustomColors.greyText,
+                        color: controller.categoryToString[
+                                    controller.listCategory.value] ==
+                                null
+                            ? CustomColors.greyText
+                            : CustomColors.blackText,
                         fontSize: 25,
                       ),
                     );
@@ -136,9 +142,12 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _categoryCard('airplane', '여행', CustomColors.travel),
-                        _categoryCard('running', '액티비티', CustomColors.activity),
-                        _categoryCard('study', '자기계발', CustomColors.study),
+                        _categoryCard(
+                            'airplane', '여행', CustomColors.travel, 'travel'),
+                        _categoryCard('running', '액티비티', CustomColors.activity,
+                            'activity'),
+                        _categoryCard(
+                            'study', '자기계발', CustomColors.study, 'study'),
                       ],
                     ),
                   ),
@@ -149,9 +158,11 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _categoryCard('food', '식사', CustomColors.meal),
-                        _categoryCard('singer', '문화활동', CustomColors.culture),
-                        _categoryCard('filter-file', '기타', CustomColors.etc),
+                        _categoryCard('food', '식사', CustomColors.meal, 'meal'),
+                        _categoryCard(
+                            'singer', '문화활동', CustomColors.culture, 'culture'),
+                        _categoryCard(
+                            'filter-file', '기타', CustomColors.etc, 'etc'),
                       ],
                     ),
                   )
@@ -164,27 +175,33 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
     );
   }
 
-  Widget _categoryCard(String icon, String text, Color color) {
-    return Container(
-      width: 130,
-      height: 130,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        color: color,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            'assets/icons/$icon.png',
-            width: 60,
-          ),
-          SizedBox(height: 10),
-          Text(
-            text,
-            style: TextStyle(fontSize: 25, color: CustomColors.blackText),
-          ),
-        ],
+  Widget _categoryCard(String icon, String text, Color color, String category) {
+    return GestureDetector(
+      onTap: () {
+        controller.changeCategory(category);
+        Get.back();
+      },
+      child: Container(
+        width: 130,
+        height: 130,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: color,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/icons/$icon.png',
+              width: 60,
+            ),
+            SizedBox(height: 10),
+            Text(
+              text,
+              style: TextStyle(fontSize: 25, color: CustomColors.blackText),
+            ),
+          ],
+        ),
       ),
     );
   }
