@@ -16,6 +16,7 @@ class AuthController extends GetxController {
   Rx<UserModel> user = UserModel().obs;
   // Rx<UserModel> user = UserModel(uid: 'base').obs;
   Rx<GroupModel> group = GroupModel().obs;
+  final finishedLogin = false.obs;
 
   Future<UserModel?> loginUser(String email) async {
     try {
@@ -36,6 +37,7 @@ class AuthController extends GetxController {
       //   //신규 유저
       //   return user.value;
       // }
+      finishedLogin.value = true;
       return userData; //로딩 중 경우 null반환
     } catch (e) {
       print('loginUser 오류(cont)$e');
