@@ -1,5 +1,6 @@
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,7 +37,8 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
         controller: controller.titleController,
-        maxLines: null, //여러줄을 입력할 수 있게 됨
+        maxLines: null,
+        //여러줄을 입력할 수 있게 됨
         textAlign: TextAlign.center,
         style: TextStyle(
           color: CustomColors.blackText,
@@ -92,18 +94,27 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                   child: Obx(() {
                     print(
                         '선택한 카테고리(upl cont) ${controller.listCategory.value}');
-                    return Text(
-                      controller.categoryToString[
-                              controller.listCategory.value] ??
-                          '카테고리',
-                      style: TextStyle(
-                        color: controller.categoryToString[
-                                    controller.listCategory.value] ==
-                                null
-                            ? CustomColors.greyText
-                            : CustomColors.blackText,
-                        fontSize: 25,
-                      ),
+                    return Row(
+                      children: [
+                        CategoryIcon(
+                          category: controller.categoryToString[
+                                  controller.listCategory.value] ??
+                              '',
+                        ),
+                        Text(
+                          controller.categoryToString[
+                                  controller.listCategory.value] ??
+                              '카테고리',
+                          style: TextStyle(
+                            color: controller.categoryToString[
+                                        controller.listCategory.value] ==
+                                    null
+                                ? CustomColors.greyText
+                                : CustomColors.blackText,
+                            fontSize: 25,
+                          ),
+                        ),
+                      ],
                     );
                   }),
                 ),
@@ -143,11 +154,23 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _categoryCard(
-                            'airplane', '여행', CustomColors.travel, 'travel'),
-                        _categoryCard('running', '액티비티', CustomColors.activity,
-                            'activity'),
+                          'airplane',
+                          '여행',
+                          CustomColors.travel,
+                          'travel',
+                        ),
                         _categoryCard(
-                            'study', '자기계발', CustomColors.study, 'study'),
+                          'running',
+                          '액티비티',
+                          CustomColors.activity,
+                          'activity',
+                        ),
+                        _categoryCard(
+                          'study',
+                          '자기계발',
+                          CustomColors.study,
+                          'study',
+                        ),
                       ],
                     ),
                   ),
@@ -158,11 +181,24 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _categoryCard('food', '식사', CustomColors.meal, 'meal'),
                         _categoryCard(
-                            'singer', '문화활동', CustomColors.culture, 'culture'),
+                          'food',
+                          '식사',
+                          CustomColors.meal,
+                          'meal',
+                        ),
                         _categoryCard(
-                            'filter-file', '기타', CustomColors.etc, 'etc'),
+                          'singer',
+                          '문화활동',
+                          CustomColors.culture,
+                          'culture',
+                        ),
+                        _categoryCard(
+                          'filter-file',
+                          '기타',
+                          CustomColors.etc,
+                          'etc',
+                        ),
                       ],
                     ),
                   )
