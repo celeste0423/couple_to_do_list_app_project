@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/features/auth/root/testpage.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({Key? key}) : super(key: key);
@@ -16,8 +17,11 @@ class LoadingPage extends StatefulWidget {
 class _LoadingPageState extends State<LoadingPage> {
   final AuthController authController = AuthController();
 
+
   Future<UserModel?> getuserData() async {
     String? uid = authController.user.value.uid;
+
+
     if (uid==null){
       return null;
     }
@@ -28,22 +32,28 @@ class _LoadingPageState extends State<LoadingPage> {
         .get();
       return UserModel.fromJson(data.data()!);
     }
-
-
   }
 
   @override
   void initState() {
     super.initState();
-    final data = getuserData();
+    Future<UserModel?> data = getuserData();
     print('loading page: got the user data');
     print(data);
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>testpage(data)));
-    print('get to test');
+    //이 페이지 빌드가 끝나고 바로 다음페이지로 이동할 수 있게
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        Get.to(Root(data));
+      }
+    });
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return
+      ElevatedButton(onPressed: (){
+      }, child: Text('testpage 이동'));
+    ;
   }
 }
