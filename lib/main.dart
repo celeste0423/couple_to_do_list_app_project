@@ -1,4 +1,5 @@
 import 'package:couple_to_do_list_app/binding/init_binding.dart';
+import 'package:couple_to_do_list_app/features/auth/root/loading_page.dart';
 import 'package:couple_to_do_list_app/features/auth/root/root.dart';
 import 'package:couple_to_do_list_app/firebase_options.dart';
 import 'package:couple_to_do_list_app/theme/base_theme.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
       initialBinding: InitBinding(),
       title: 'Bukkung List',
       theme: baseTheme(),
-      home: Root(),
+      home: LoadingPage(),
     );
   }
 }

@@ -3,14 +3,15 @@ import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/signup_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/home_page.dart';
-import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class Root extends GetView<AuthController> {
-  const Root({Key? key}) : super(key: key);
+class Root extends StatelessWidget {
+  final controller = Get.find<AuthController>();
+  final userdata;
+  Root(this.userdata);
 
   @override
   Widget build(BuildContext context) {
@@ -20,32 +21,10 @@ class Root extends GetView<AuthController> {
       builder: (BuildContext _, AsyncSnapshot<User?> user) {
         if (user.hasData) {
           print('유저 이메일(root)${user.data!.email}');
-          return FutureBuilder<UserModel?>(
-            future: controller.loginUser(user.data!.email ?? ''),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Obx(() {
-                  print('로그인 정보 ${controller.user.toJson()}');
-                  if (controller.user.value.uid == null) {
-                    return Container(
-                      color: Colors.white,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: CustomColors.mainPink,
-                        ),
-                      ),
-                    );
-                  } else {
-                    if (controller.user.value.groupId != null) {
-                      print('groupId 값이 존재함. HomePage로 이동합니다.');
-                      return HomePage();
-                    } else {
-                      print('groupId 값이 아직 존재하지 않습니다. FindBuddyPage로 이동합니다.');
-                      return FindBuddyPage(email: user.data!.email ?? '');
-                    }
-                  }
-                });
-              } else if (snapshot.hasError) {
+          if (userdata!=null) {
+            return Obx(() {
+              print('로그인 정보 ${controller.user.toJson()}');
+              if (controller.user.value.uid == null) {
                 return Container(
                   color: Colors.white,
                   child: Center(
@@ -55,23 +34,43 @@ class Root extends GetView<AuthController> {
                   ),
                 );
               } else {
-                print('신규 유저임(root)');
-                return Obx(() {
-                  print('유저정보(root) ${controller.user.value.uid}');
-                  if (controller.user.value.uid != null) {
-                    print('로그인 되어있음 버꿍찾기로(root)');
-                    return FindBuddyPage(email: user.data!.email ?? '');
-                  } else {
-                    print('회원가입하러(root)');
-                    return SignupPage(
-                      uid: user.data!.uid,
-                      email: user.data!.email ?? '',
-                    );
-                  }
-                });
+                if (controller.user.value.groupId != null) {
+                  print('groupId 값이 존재함. HomePage로 이동합니다.');
+                  return HomePage();
+                } else {
+                  print('groupId 값이 아직 존재하지 않습니다. FindBuddyPage로 이동합니다.');
+                  return FindBuddyPage(email: user.data!.email ?? '');
+                }
               }
-            },
-          );
+            });
+          }
+          //Todo: 재엽이한테 이 코드 필수적으로 필요한건지 없애도 되는지 물어보기
+          // else if (snapshot.hasError) {
+          //   return Container(
+          //     color: Colors.white,
+          //     child: Center(
+          //       child: CircularProgressIndicator(
+          //         color: CustomColors.mainPink,
+          //       ),
+          //     ),
+          //   );
+          //
+          else {
+            print('신규 유저임(root)');
+            return Obx(() {
+              print('유저정보(root) ${controller.user.value.uid}');
+              if (controller.user.value.uid != null) {
+                print('로그인 되어있음 버꿍찾기로(root)');
+                return FindBuddyPage(email: user.data!.email ?? '');
+              } else {
+                print('회원가입하러(root)');
+                return SignupPage(
+                  uid: user.data!.uid,
+                  email: user.data!.email ?? '',
+                );
+              }
+            });
+          }
         } else {
           print('firebase가 null반환');
           return WelcomePage();

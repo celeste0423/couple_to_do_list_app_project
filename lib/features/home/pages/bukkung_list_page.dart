@@ -11,6 +11,8 @@ import 'package:get/get.dart';
 class BukkungListPage extends GetView<BukkungListPageController> {
   const BukkungListPage({Key? key}) : super(key: key);
 
+
+
   Widget _listAddButton() {
     return GestureDetector(
       onTap: () {
@@ -204,6 +206,8 @@ class BukkungListPage extends GetView<BukkungListPageController> {
 
   @override
   Widget build(BuildContext context) {
+
+    //Get.put(BukkungListPageController());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CustomColors.backgroundLightGrey,
