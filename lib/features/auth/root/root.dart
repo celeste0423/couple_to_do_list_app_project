@@ -32,7 +32,7 @@ class Root extends GetView<AuthController> {
                     color: CustomColors.mainPink,
                   ),
                 ),
-              );}
+              );} else{
               if (snapshot.hasData) {
                 return Obx(() {
                   print('로그인 정보 ${controller.user.toJson()}');
@@ -81,7 +81,7 @@ class Root extends GetView<AuthController> {
                     );
                   }
                 });
-              }
+              }}
             },
           );
         } else {
