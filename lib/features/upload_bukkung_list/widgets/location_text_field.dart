@@ -18,6 +18,7 @@ class _LocationTextFieldState extends State<LocationTextField> {
   @override
   void initState() {
     _focusNode.addListener(() {
+      print(_focusNode.hasFocus);
       if (_focusNode.hasFocus) {
         this._overlayEntry = this._createOverlayEntry();
         Overlay.of(context).insert(this._overlayEntry!);
@@ -94,8 +95,7 @@ class _LocationTextFieldState extends State<LocationTextField> {
           focusNode: _focusNode,
           maxLines: 1,
           onChanged: (value) {
-            this._overlayEntry = this._createOverlayEntry();
-            Overlay.of(context).insert(this._overlayEntry!);
+            _controller.placeAutocomplete(value);
           },
           textInputAction: TextInputAction.search,
           style: TextStyle(
