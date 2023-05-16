@@ -37,7 +37,8 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
         controller: controller.titleController,
-        maxLines: null, //여러줄을 입력할 수 있게 됨
+        maxLines: null,
+        //여러줄을 입력할 수 있게 됨
         textAlign: TextAlign.center,
         style: TextStyle(
           color: CustomColors.blackText,
@@ -213,7 +214,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
     );
   }
 
-  Widget _locationTextField() {
+  Widget _locationSelector(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Row(
@@ -233,20 +234,98 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                 borderRadius: BorderRadius.circular(25),
               ),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: Text(
-                  '장소',
-                  style: TextStyle(
-                    color: CustomColors.greyText,
-                    fontSize: 25,
-                  ),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(),
+                // child: Obx(() {
+                //   return Text(
+                //     controller.locationController.value ?? '위치',
+                //     style: TextStyle(
+                //       color: controller.locationController.value.text == null
+                //           ? CustomColors.greyText
+                //           : CustomColors.blackText,
+                //       fontSize: 25,
+                //     ),
+                //   );
+                // }),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _locationDialog() {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(25),
+          bottomRight: Radius.circular(25),
+        ),
+      ),
+      child: Container(
+        constraints: BoxConstraints(
+          maxHeight: 500,
+        ),
+        child: Column(
+          children: [
+            TextField(
+              controller: controller.locationController,
+              maxLines: 1,
+              onChanged: (value) {
+                controller.placeAutocomplete(value);
+              },
+              textInputAction: TextInputAction.search,
+              style: TextStyle(
+                color: CustomColors.blackText,
+                fontSize: 25,
+              ),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                hintText: '위치',
+                hintStyle: TextStyle(
+                  color: CustomColors.greyText,
+                  fontSize: 25,
+                ),
+              ),
+            ),
+            ListView.builder(
+              itemCount: controller.placePredictions.length,
+              itemBuilder: (context, index) {
+                return _locationListTile(
+                  controller.placePredictions[index].description,
+                  () {},
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _locationListTile(String? location, VoidCallback? onTap) {
+    return Column(
+      children: [
+        ListTile(
+          onTap: onTap,
+          horizontalTitleGap: 0,
+          title: Text(
+            location ?? '',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        const Divider(
+          height: 2,
+          thickness: 2,
+          color: CustomColors.grey,
+        )
+      ],
     );
   }
 
@@ -317,7 +396,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                       child: Column(
                         children: [
                           _categorySelector(context),
-                          _locationTextField(),
+                          _locationSelector(context),
                           _datePicker(),
                           _contentTextField(),
                         ],
