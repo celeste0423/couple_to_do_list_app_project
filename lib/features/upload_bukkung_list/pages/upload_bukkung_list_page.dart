@@ -1,4 +1,5 @@
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
+import 'package:couple_to_do_list_app/features/upload_bukkung_list/widgets/location_text_field.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
@@ -240,7 +241,10 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                   focusNode: controller.locationFocusNode,
                   maxLines: 1,
                   onChanged: (value) {
+                    OverlayEntry? overlayEntry;
                     controller.placeAutocomplete(value);
+                    overlayEntry = controller.createOverlayEntry(context!);
+                    Overlay.of(context!).insert(overlayEntry!);
                   },
                   textInputAction: TextInputAction.search,
                   style: TextStyle(
@@ -260,6 +264,36 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                     ),
                   ),
                 ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _locationTextfield2(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      child: Row(
+        children: [
+          Image.asset(
+            'assets/icons/location-pin.png',
+            width: 35,
+            color: Colors.black.withOpacity(0.6),
+            colorBlendMode: BlendMode.modulate,
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: LocationTextField(),
               ),
             ),
           ),
@@ -311,7 +345,8 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(UploadBukkungListController(context: context));
+    // Get.put(UploadBukkungListController(context: context));
+    Get.put(UploadBukkungListController());
     return Scaffold(
       backgroundColor: CustomColors.backgroundLightGrey,
       appBar: _appBar(),
@@ -337,6 +372,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                         children: [
                           _categorySelector(context),
                           _locationTextfield(context),
+                          _locationTextfield2(context),
                           _datePicker(),
                           _contentTextField(),
                         ],

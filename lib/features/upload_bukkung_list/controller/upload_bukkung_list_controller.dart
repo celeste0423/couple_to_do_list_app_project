@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UploadBukkungListController extends GetxController {
-  late BuildContext context;
-  UploadBukkungListController({required this.context});
+  // late BuildContext context;
+  // UploadBukkungListController({required this.context});
 
   TextEditingController titleController = TextEditingController();
   TextEditingController locationController = TextEditingController();
@@ -33,14 +33,14 @@ class UploadBukkungListController extends GetxController {
     super.onInit();
     listCategory.value = "";
 
-    locationFocusNode.addListener(() {
-      if (locationFocusNode.hasFocus) {
-        overlayEntry = createOverlayEntry(context!);
-        Overlay.of(context!).insert(overlayEntry!);
-      } else {
-        overlayEntry!.remove();
-      }
-    });
+    // locationFocusNode.addListener(() {
+    //   if (locationFocusNode.hasFocus) {
+    //     overlayEntry = createOverlayEntry(context!);
+    //     Overlay.of(context!).insert(overlayEntry!);
+    //   } else {
+    //     overlayEntry!.remove();
+    //   }
+    // });
   }
 
   void changeCategory(String category) {
@@ -73,9 +73,9 @@ class UploadBukkungListController extends GetxController {
     print('추천 검색어 길이 (upl cont)${placePredictions.length}');
     return OverlayEntry(
       builder: (context) => Positioned(
-        left: offset.dx,
-        top: offset.dy + size.height + 5,
-        width: size.width,
+        left: 0,
+        top: 500,
+        width: Get.width,
         child: Material(
           child: placePredictions.length == 0
               ? Container(
