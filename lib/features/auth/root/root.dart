@@ -33,7 +33,7 @@ class Root extends GetView<AuthController> {
                   ),
                 ),
               );}
-             else if (snapshot.hasData) {
+              if (snapshot.hasData) {
                 return Obx(() {
                   print('로그인 정보 ${controller.user.toJson()}');
                   if (controller.user.value.uid == null) {
@@ -51,6 +51,7 @@ class Root extends GetView<AuthController> {
                       return HomePage();
                     } else {
                       print('groupId 값이 아직 존재하지 않습니다. FindBuddyPage로 이동합니다.');
+                      print('finishedlogin : ${controller.finishedLogin.value}');
                       return FindBuddyPage(email: user.data!.email ?? '');
                     }
                   }
@@ -70,6 +71,7 @@ class Root extends GetView<AuthController> {
                   print('유저정보(root) ${controller.user.value.uid}');
                   if (controller.user.value.uid != null) {
                     print('로그인 되어있음 버꿍찾기로(root)');
+                    print('finishedlogin : ${controller.finishedLogin.value}');
                     return FindBuddyPage(email: user.data!.email ?? '');
                   } else {
                     print('회원가입하러(root)');
