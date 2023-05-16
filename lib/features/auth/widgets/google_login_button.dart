@@ -39,7 +39,7 @@ class GoogleLoginButton extends StatelessWidget {
           openAlertDialog(message: '로그인 실패');
         } else {
           print('로그인 진행(구글버튼)');
-          // Get.to(SignupPage(uid: authController.user.value.uid!, email: authController.user.value.email));
+
         }
       },
       child: Image.asset(

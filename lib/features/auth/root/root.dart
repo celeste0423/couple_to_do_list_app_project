@@ -12,6 +12,17 @@ import 'package:get/get.dart';
 class Root extends GetView<AuthController> {
   const Root({Key? key}) : super(key: key);
 
+  Widget LoadingContainer() {
+    return Container(
+      color: Colors.white,
+      child: Center(
+        child: CircularProgressIndicator(
+          color: CustomColors.mainPink,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     //Todo: 앱 실행시 if문들 들어갔다 나옴, 전부 로딩창으로 정리 필요
@@ -23,65 +34,31 @@ class Root extends GetView<AuthController> {
           return FutureBuilder<UserModel?>(
             future: controller.loginUser(user.data!.email ?? ''),
             builder: (context, snapshot) {
-              if(!controller.finishedLogin.value){
+              if (snapshot.hasError || !controller.finishedLogin.value) {
                 print('Root: waiting for Future loginUser');
-                return Container(
-                color: Colors.white,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: CustomColors.mainPink,
-                  ),
-                ),
-              );} else{
-              if (snapshot.hasData) {
-                return Obx(() {
-                  print('로그인 정보 ${controller.user.toJson()}');
-                  if (controller.user.value.uid == null) {
-                    return Container(
-                      color: Colors.white,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: CustomColors.mainPink,
-                        ),
-                      ),
-                    );
-                  } else {
-                    if (controller.user.value.groupId != null) {
-                      print('groupId 값이 존재함. HomePage로 이동합니다.');
-                      return HomePage();
-                    } else {
-                      print('groupId 값이 아직 존재하지 않습니다. FindBuddyPage로 이동합니다.');
-                      print('finishedlogin : ${controller.finishedLogin.value}');
-                      return FindBuddyPage(email: user.data!.email ?? '');
-                    }
-                  }
-                });
-              } else if (snapshot.hasError) {
-                return Container(
-                  color: Colors.white,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: CustomColors.mainPink,
-                    ),
-                  ),
-                );
+                return LoadingContainer();
               } else {
-                print('신규 유저임(root)');
-                return Obx(() {
-                  print('유저정보(root) ${controller.user.value.uid}');
-                  if (controller.user.value.uid != null) {
-                    print('로그인 되어있음 버꿍찾기로(root)');
-                    print('finishedlogin : ${controller.finishedLogin.value}');
-                    return FindBuddyPage(email: user.data!.email ?? '');
-                  } else {
+                if (!snapshot.hasData) {
+                  print('신규 유저임(root)');
+                    print('유저정보(root) ${controller.user.value.uid}');
                     print('회원가입하러(root)');
                     return SignupPage(
                       uid: user.data!.uid,
                       email: user.data!.email ?? '',
                     );
-                  }
-                });
-              }}
+                } else {
+                    print('로그인 정보 ${controller.user.toJson()}');
+                    // if (controller.user.value.uid == null) {
+                    //   return LoadingContainer();}
+                    if (controller.user.value.groupId == null) {
+                      print('groupId 값이 아직 존재하지 않습니다. FindBuddyPage로 이동합니다.');
+                      return FindBuddyPage(email: user.data!.email ?? '');
+                    } else {
+                      print('groupId 값이 존재함. HomePage로 이동합니다.');
+                      return HomePage();
+                    }
+                }
+              }
             },
           );
         } else {

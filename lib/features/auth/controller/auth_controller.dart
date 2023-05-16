@@ -12,6 +12,8 @@ import 'package:uuid/uuid.dart';
 enum GroupIdStatus { noData, hasGroup, createdGroupId }
 
 class AuthController extends GetxController {
+  @override
+
   static AuthController get to => Get.find();
   Rx<UserModel> user = UserModel().obs;
   // Rx<UserModel> user = UserModel(uid: 'base').obs;
@@ -20,9 +22,11 @@ class AuthController extends GetxController {
 
   Future<UserModel?> loginUser(String email) async {
     try {
+      //email과 맞는 유저 데이터를 firebase 에서 가져온다.
       var userData = await UserRepository.loginUserByEmail(email);
       //신규 유저일 경우 userData에 null값 반환됨
       if (userData != null) {
+        //컨트롤러에 유저정보를 전달해 놓는다
         print('서버의 유저 데이터 (cont) ${userData.toJson()}');
         user(userData);
         var groupData = await GroupRepository.groupLogin(userData.groupId);
