@@ -1,4 +1,3 @@
-import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -176,9 +175,9 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
   Widget _listAddButton() {
     return ElevatedButton(
       onPressed: () {
-        Get.lazyPut<UploadBukkungListController>(
-            () => UploadBukkungListController(),
-            fenix: true);
+        // Get.lazyPut<UploadBukkungListController>(
+        //     () => UploadBukkungListController(context: context),
+        //     fenix: true);
         Get.to(() => UploadBukkungListPage());
       },
       style: ElevatedButton.styleFrom(

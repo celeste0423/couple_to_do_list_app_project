@@ -311,6 +311,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(UploadBukkungListController(context: context));
     return Scaffold(
       backgroundColor: CustomColors.backgroundLightGrey,
       appBar: _appBar(),

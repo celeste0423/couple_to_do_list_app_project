@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UploadBukkungListController extends GetxController {
+  late BuildContext context;
+  UploadBukkungListController({required this.context});
+
   TextEditingController titleController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   final FocusNode locationFocusNode = FocusNode();
@@ -32,8 +35,8 @@ class UploadBukkungListController extends GetxController {
 
     locationFocusNode.addListener(() {
       if (locationFocusNode.hasFocus) {
-        overlayEntry = createOverlayEntry();
-        Overlay.of(Get.context!).insert(overlayEntry!);
+        overlayEntry = createOverlayEntry(context!);
+        Overlay.of(context!).insert(overlayEntry!);
       } else {
         overlayEntry!.remove();
       }
@@ -62,26 +65,33 @@ class UploadBukkungListController extends GetxController {
     }
   }
 
-  OverlayEntry createOverlayEntry() {
-    RenderBox renderBox = Get.context!.findRenderObject() as RenderBox;
+  OverlayEntry createOverlayEntry(BuildContext context) {
+    RenderBox renderBox = context.findRenderObject() as RenderBox;
     var size = renderBox.size;
     var offset = renderBox.localToGlobal(Offset.zero);
 
+    print('추천 검색어 길이 (upl cont)${placePredictions.length}');
     return OverlayEntry(
       builder: (context) => Positioned(
         left: offset.dx,
         top: offset.dy + size.height + 5,
         width: size.width,
         child: Material(
-          child: ListView.builder(
-            itemCount: placePredictions.length,
-            itemBuilder: (context, index) {
-              return _locationListTile(
-                placePredictions[index].description,
-                () {},
-              );
-            },
-          ),
+          child: placePredictions.length == 0
+              ? Container(
+                  color: Colors.red,
+                  height: 50,
+                  width: 50,
+                )
+              : ListView.builder(
+                  itemCount: placePredictions.length,
+                  itemBuilder: (context, index) {
+                    return _locationListTile(
+                      placePredictions[index].description,
+                      () {},
+                    );
+                  },
+                ),
         ),
       ),
     );
