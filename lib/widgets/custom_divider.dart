@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 Widget customDivider() {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 30),
+    padding: const EdgeInsets.symmetric(horizontal: 20),
     child: Divider(
       thickness: 2,
       color: CustomColors.mainPink,

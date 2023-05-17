@@ -35,47 +35,74 @@ class _LocationTextFieldState extends State<LocationTextField> {
     var offset = renderBox.localToGlobal(Offset.zero);
 
     return OverlayEntry(
-        builder: (context) => Positioned(
-              left: offset.dx,
-              top: offset.dy + size.height + 5.0,
-              width: size.width,
-              child: Material(
-                child: _controller.placePredictions.length == 0
-                    ? Container(
-                        color: Colors.red,
-                        height: 50,
-                        width: 50,
-                      )
-                    : ListView.builder(
+      builder: (context) => Positioned(
+        left: offset.dx,
+        top: offset.dy + size.height - 20,
+        width: size.width,
+        child: Material(
+          color: Colors.transparent,
+          child: _controller.placePredictions.isEmpty
+              ? Container()
+              : Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(width: 20, height: 20, color: Colors.white),
+                        Container(width: 20, height: 20, color: Colors.white),
+                      ],
+                    ),
+                    Container(
+                      height: 150,
+                      color: Colors.white,
+                      child: ListView.builder(
                         itemCount: _controller.placePredictions.length,
                         itemBuilder: (context, index) {
                           return _locationListTile(
                             _controller.placePredictions[index].description,
-                            () {},
+                            () {
+                              List<String> parts = _controller
+                                  .placePredictions[index].description!
+                                  .split(',');
+                              String shortLocation = parts.last.trim();
+                              _controller.locationController.text =
+                                  shortLocation;
+                              this._overlayEntry!.remove();
+                              FocusScope.of(context).unfocus();
+                            },
                           );
                         },
                       ),
-              ),
-            ));
+                    ),
+                  ],
+                ),
+        ),
+      ),
+    );
   }
 
   Widget _locationListTile(String? location, VoidCallback? onTap) {
+    List<String> _parts = location!.split(',');
+    String _shortLocation = _parts.last.trim();
     return Column(
       children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: const Divider(
+            height: 2,
+            thickness: 2,
+            color: CustomColors.lightGreyText,
+          ),
+        ),
         ListTile(
           onTap: onTap,
           horizontalTitleGap: 0,
           title: Text(
-            location ?? '',
+            _shortLocation ?? '',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        const Divider(
-          height: 2,
-          thickness: 2,
-          color: CustomColors.grey,
-        )
       ],
     );
   }
@@ -96,6 +123,9 @@ class _LocationTextFieldState extends State<LocationTextField> {
           maxLines: 1,
           onChanged: (value) {
             _controller.placeAutocomplete(value);
+            setState(() {
+              _overlayEntry?.markNeedsBuild();
+            });
           },
           textInputAction: TextInputAction.search,
           style: TextStyle(

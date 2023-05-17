@@ -1,7 +1,6 @@
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
-import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +12,7 @@ class UploadBukkungListController extends GetxController {
   TextEditingController locationController = TextEditingController();
   final FocusNode locationFocusNode = FocusNode();
   OverlayEntry? overlayEntry;
+  TextEditingController contentController = TextEditingController();
 
   static UploadBukkungListController get to => Get.find();
 
@@ -32,15 +32,6 @@ class UploadBukkungListController extends GetxController {
   void onInit() {
     super.onInit();
     listCategory.value = "";
-
-    // locationFocusNode.addListener(() {
-    //   if (locationFocusNode.hasFocus) {
-    //     overlayEntry = createOverlayEntry(context!);
-    //     Overlay.of(context!).insert(overlayEntry!);
-    //   } else {
-    //     overlayEntry!.remove();
-    //   }
-    // });
   }
 
   void changeCategory(String category) {
@@ -53,6 +44,8 @@ class UploadBukkungListController extends GetxController {
         Uri.https("maps.googleapis.com", 'maps/api/place/autocomplete/json', {
       "input": query,
       "key": apiKey,
+      "language": "ko",
+      "components": "country:kr",
     });
     String? response = await LocationNetworkUtil.fetchUrl(uri);
 
@@ -63,58 +56,5 @@ class UploadBukkungListController extends GetxController {
         placePredictions = result.predictions!;
       }
     }
-  }
-
-  OverlayEntry createOverlayEntry(BuildContext context) {
-    RenderBox renderBox = context.findRenderObject() as RenderBox;
-    var size = renderBox.size;
-    var offset = renderBox.localToGlobal(Offset.zero);
-
-    print('추천 검색어 길이 (upl cont)${placePredictions.length}');
-    return OverlayEntry(
-      builder: (context) => Positioned(
-        left: 0,
-        top: 500,
-        width: Get.width,
-        child: Material(
-          child: placePredictions.length == 0
-              ? Container(
-                  color: Colors.red,
-                  height: 50,
-                  width: 50,
-                )
-              : ListView.builder(
-                  itemCount: placePredictions.length,
-                  itemBuilder: (context, index) {
-                    return _locationListTile(
-                      placePredictions[index].description,
-                      () {},
-                    );
-                  },
-                ),
-        ),
-      ),
-    );
-  }
-
-  Widget _locationListTile(String? location, VoidCallback? onTap) {
-    return Column(
-      children: [
-        ListTile(
-          onTap: onTap,
-          horizontalTitleGap: 0,
-          title: Text(
-            location ?? '',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        const Divider(
-          height: 2,
-          thickness: 2,
-          color: CustomColors.grey,
-        )
-      ],
-    );
   }
 }

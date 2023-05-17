@@ -92,12 +92,11 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Obx(() {
-                    print(
-                        '선택한 카테고리(upl cont) ${controller.listCategory.value}');
                     return Row(
                       children: [
                         CategoryIcon(
-                            category: controller.listCategory.value ?? ''),
+                          category: controller.listCategory.value ?? '',
+                        ),
                         SizedBox(width: 10),
                         Text(
                           controller.categoryToString[
@@ -234,67 +233,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25),
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextField(
-                  controller: controller.locationController,
-                  focusNode: controller.locationFocusNode,
-                  maxLines: 1,
-                  onChanged: (value) {
-                    OverlayEntry? overlayEntry;
-                    controller.placeAutocomplete(value);
-                    overlayEntry = controller.createOverlayEntry(context!);
-                    Overlay.of(context!).insert(overlayEntry!);
-                  },
-                  textInputAction: TextInputAction.search,
-                  style: TextStyle(
-                    color: CustomColors.blackText,
-                    fontSize: 25,
-                  ),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    hintText: '위치',
-                    hintStyle: TextStyle(
-                      color: CustomColors.greyText,
-                      fontSize: 25,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _locationTextfield2(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-      child: Row(
-        children: [
-          Image.asset(
-            'assets/icons/location-pin.png',
-            width: 35,
-            color: Colors.black.withOpacity(0.6),
-            colorBlendMode: BlendMode.modulate,
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Container(
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: LocationTextField(),
-              ),
+              child: LocationTextField(),
             ),
           ),
         ],
@@ -340,7 +279,38 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
   }
 
   Widget _contentTextField() {
-    return Container();
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: Colors.white,
+        ),
+        child: TextField(
+          controller: controller.contentController,
+          maxLines: null,
+          onChanged: (value) {},
+          textInputAction: TextInputAction.search,
+          style: TextStyle(
+            color: CustomColors.blackText,
+            fontSize: 25,
+          ),
+          decoration: const InputDecoration(
+            border: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            errorBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
+            hintText: '세부 사항을 적어주세요',
+            hintStyle: TextStyle(
+              color: CustomColors.greyText,
+              fontSize: 25,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -348,6 +318,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
     // Get.put(UploadBukkungListController(context: context));
     Get.put(UploadBukkungListController());
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: CustomColors.backgroundLightGrey,
       appBar: _appBar(),
       body: Stack(
@@ -367,16 +338,13 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                   _titleTextField(),
                   customDivider(),
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          _categorySelector(context),
-                          _locationTextfield(context),
-                          _locationTextfield2(context),
-                          _datePicker(),
-                          _contentTextField(),
-                        ],
-                      ),
+                    child: Column(
+                      children: [
+                        _categorySelector(context),
+                        _locationTextfield(context),
+                        _datePicker(),
+                        _contentTextField(),
+                      ],
                     ),
                   ),
                 ],
@@ -388,125 +356,3 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
     );
   }
 }
-
-// Widget _locationSelector(BuildContext context) {
-//   return Padding(
-//     padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-//     child: Row(
-//       children: [
-//         Image.asset(
-//           'assets/icons/location-pin.png',
-//           width: 35,
-//           color: Colors.black.withOpacity(0.6),
-//           colorBlendMode: BlendMode.modulate,
-//         ),
-//         SizedBox(width: 10),
-//         Expanded(
-//           child: GestureDetector(
-//             onTap: () {
-//               showDialog(
-//                   context: context,
-//                   builder: (BuildContext context) {
-//                     return _locationDialog();
-//                   });
-//             },
-//             child: Container(
-//               height: 50,
-//               decoration: BoxDecoration(
-//                 color: Colors.white,
-//                 borderRadius: BorderRadius.circular(25),
-//               ),
-//               child: Padding(
-//                 padding:
-//                 const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-//                 child: Text(
-//                   controller.locationController.text ?? '위치',
-//                   style: TextStyle(
-//                     color: controller.locationController.value.text == null
-//                         ? CustomColors.greyText
-//                         : CustomColors.blackText,
-//                     fontSize: 25,
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ],
-//     ),
-//   );
-// }
-//
-// Widget _locationDialog() {
-//   return Dialog(
-//     shape: RoundedRectangleBorder(
-//       borderRadius: BorderRadius.circular(25),
-//     ),
-//     child: Container(
-//       color: Colors.white,
-//       height: 500,
-//       child: Column(
-//         children: [
-//           TextField(
-//             controller: controller.locationController,
-//             maxLines: 1,
-//             autofocus: true,
-//             onChanged: (value) {
-//               controller.placeAutocomplete(value);
-//             },
-//             style: TextStyle(
-//               color: CustomColors.blackText,
-//               fontSize: 25,
-//             ),
-//             decoration: const InputDecoration(
-//               border: InputBorder.none,
-//               focusedBorder: InputBorder.none,
-//               enabledBorder: InputBorder.none,
-//               errorBorder: InputBorder.none,
-//               disabledBorder: InputBorder.none,
-//               hintText: '위치',
-//               hintStyle: TextStyle(
-//                 color: CustomColors.greyText,
-//                 fontSize: 25,
-//               ),
-//             ),
-//           ),
-//           customDivider(),
-//           ListView.builder(
-//             itemCount: controller.placePredictions.length,
-//             itemBuilder: (context, index) {
-//               return _locationListTile(
-//                 controller.placePredictions[index].description,
-//                     () {},
-//               );
-//             },
-//           ),
-//         ],
-//       ),
-//     ),
-//   );
-// }
-//
-// Widget _locationListTile(String? location, VoidCallback? onTap) {
-//   return Column(
-//     children: [
-//       ListTile(
-//         onTap: onTap,
-//         horizontalTitleGap: 0,
-//         title: Text(
-//           location ?? '',
-//           maxLines: 2,
-//           overflow: TextOverflow.ellipsis,
-//         ),
-//       ),
-//       Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 20),
-//         child: const Divider(
-//           height: 2,
-//           thickness: 2,
-//           color: CustomColors.lightGreyText,
-//         ),
-//       )
-//     ],
-//   );
-// }
