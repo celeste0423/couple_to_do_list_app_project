@@ -23,10 +23,15 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
       actions: [
         TextButton(
           onPressed: () {},
-          child: Text(
-            '저장',
-            style: TextStyle(color: CustomColors.greyText),
-          ),
+          child: controller.locationController != null &&
+                  controller.listCategory.value != null &&
+                  controller.dateController != null &&
+                  controller.contentController != null
+              ? Text('저장', style: TextStyle(color: CustomColors.mainPink))
+              : Text(
+                  '저장',
+                  style: TextStyle(color: CustomColors.mainPink),
+                ),
         ),
       ],
     );
@@ -78,10 +83,11 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
             child: GestureDetector(
               onTap: () {
                 showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return _categoryDialog();
-                    });
+                  context: context,
+                  builder: (BuildContext context) {
+                    return _categoryDialog();
+                  },
+                );
               },
               child: Container(
                 height: 50,
@@ -241,7 +247,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
     );
   }
 
-  Widget _datePicker() {
+  Widget _datePicker(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Row(
@@ -254,20 +260,30 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           ),
           SizedBox(width: 10),
           Expanded(
-            child: Container(
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: Text(
-                  '예상 날짜',
-                  style: TextStyle(
-                    color: CustomColors.greyText,
-                    fontSize: 25,
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return _dateDialog();
+                  },
+                );
+              },
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: Text(
+                    '예상 날짜',
+                    style: TextStyle(
+                      color: CustomColors.greyText,
+                      fontSize: 25,
+                    ),
                   ),
                 ),
               ),
@@ -275,6 +291,14 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _dateDialog() {
+    return DatePickerDialog(
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
     );
   }
 
@@ -315,7 +339,6 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
 
   @override
   Widget build(BuildContext context) {
-    // Get.put(UploadBukkungListController(context: context));
     Get.put(UploadBukkungListController());
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -330,8 +353,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
             bottom: 0,
             child: GestureDetector(
               onTap: () {
-                //키보드 자동닫힘
-                FocusManager.instance.primaryFocus?.unfocus();
+                FocusManager.instance.primaryFocus?.unfocus(); //키보드 자동닫힘
               },
               child: Column(
                 children: [
@@ -342,7 +364,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                       children: [
                         _categorySelector(context),
                         _locationTextfield(context),
-                        _datePicker(),
+                        _datePicker(context),
                         _contentTextField(),
                       ],
                     ),

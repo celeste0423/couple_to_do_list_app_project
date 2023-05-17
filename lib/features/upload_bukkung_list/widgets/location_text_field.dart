@@ -65,7 +65,7 @@ class _LocationTextFieldState extends State<LocationTextField> {
                                   .placePredictions[index].description!
                                   .split(',');
                               String shortLocation = parts.last.trim();
-                              _controller.locationController.text =
+                              _controller.locationController!.text =
                                   shortLocation;
                               this._overlayEntry!.remove();
                               FocusScope.of(context).unfocus();
