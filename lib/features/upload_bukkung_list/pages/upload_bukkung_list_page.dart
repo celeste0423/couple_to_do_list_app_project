@@ -339,7 +339,6 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
 
   @override
   Widget build(BuildContext context) {
-    // Get.put(UploadBukkungListController(context: context));
     Get.put(UploadBukkungListController());
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -354,8 +353,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
             bottom: 0,
             child: GestureDetector(
               onTap: () {
-                //키보드 자동닫힘
-                FocusManager.instance.primaryFocus?.unfocus();
+                FocusManager.instance.primaryFocus?.unfocus(); //키보드 자동닫힘
               },
               child: Column(
                 children: [

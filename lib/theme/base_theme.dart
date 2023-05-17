@@ -160,7 +160,6 @@ ThemeData baseTheme() {
     ),
     datePickerTheme: DatePickerThemeData(
       backgroundColor: CustomColors.mainPink,
-      surfaceTintColor: Colors.yellow,
     ),
   );
 }

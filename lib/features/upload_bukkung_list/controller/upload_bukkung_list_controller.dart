@@ -5,9 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UploadBukkungListController extends GetxController {
-  // late BuildContext context;
-  // UploadBukkungListController({required this.context});
-
   TextEditingController? titleController = TextEditingController();
   TextEditingController? locationController = TextEditingController();
   final FocusNode locationFocusNode = FocusNode();
