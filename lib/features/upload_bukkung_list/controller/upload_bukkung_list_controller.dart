@@ -8,11 +8,12 @@ class UploadBukkungListController extends GetxController {
   // late BuildContext context;
   // UploadBukkungListController({required this.context});
 
-  TextEditingController titleController = TextEditingController();
-  TextEditingController locationController = TextEditingController();
+  TextEditingController? titleController = TextEditingController();
+  TextEditingController? locationController = TextEditingController();
   final FocusNode locationFocusNode = FocusNode();
   OverlayEntry? overlayEntry;
-  TextEditingController contentController = TextEditingController();
+  TextEditingController? dateController = TextEditingController();
+  TextEditingController? contentController = TextEditingController();
 
   static UploadBukkungListController get to => Get.find();
 
@@ -32,6 +33,10 @@ class UploadBukkungListController extends GetxController {
   void onInit() {
     super.onInit();
     listCategory.value = "";
+    titleController = null;
+    locationController = null;
+    dateController = null;
+    contentController = null;
   }
 
   void changeCategory(String category) {

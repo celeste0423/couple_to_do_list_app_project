@@ -1,6 +1,5 @@
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 ThemeData baseTheme() {
   final ThemeData base = ThemeData();
@@ -158,6 +157,10 @@ ThemeData baseTheme() {
         fontSize: 20,
         fontFamily: 'YoonWoo',
       ),
+    ),
+    datePickerTheme: DatePickerThemeData(
+      backgroundColor: CustomColors.mainPink,
+      surfaceTintColor: Colors.yellow,
     ),
   );
 }
