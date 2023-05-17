@@ -21,10 +21,10 @@ class _HomePageState extends State<HomePage>
 
 @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     InitBinding.additionalBinding();
   }
+
   Widget _CustomTabBar() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),

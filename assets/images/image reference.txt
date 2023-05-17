@@ -11,3 +11,24 @@ girl
 
 email
 <a href="https://www.flaticon.com/free-icons/email" title="email icons">Email icons created by lakonicon - Flaticon</a>
+
+google
+<a href="https://www.flaticon.com/free-icons/google" title="google icons">Google icons created by Freepik - Flaticon</a>
+
+공유하기
+<a href="https://www.flaticon.com/free-icons/share" title="share icons">Share icons created by Freepik - Flaticon</a>
+
+로그아웃
+<a href="https://www.flaticon.com/free-icons/logout" title="logout icons">Logout icons created by SumberRejeki - Flaticon</a>
+
+버전정보
+<a href="https://www.flaticon.com/free-icons/information" title="information icons">Information icons created by Daniela Paim - Flaticon</a>
+
+확성기
+<a href="https://www.flaticon.com/free-icons/announcement" title="announcement icons">Announcement icons created by Freepik - Flaticon</a>
+
+후기
+<a href="https://www.flaticon.com/free-icons/positive-review" title="positive review icons">Positive review icons created by IwitoStudio - Flaticon</a>
+
+bell
+<a href="https://www.flaticon.com/free-icons/alert" title="alert icons">Alert icons created by Pixel perfect - Flaticon</a>
