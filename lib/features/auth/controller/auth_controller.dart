@@ -34,7 +34,7 @@ class AuthController extends GetxController {
           print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
           group(groupData);
           print('그룹 정보(auth cont)${group.value.uid}');
-          InitBinding.additionalBinding();
+          //InitBinding.additionalBinding();
         }
       }
       // if (user.value.uid == 'base') {

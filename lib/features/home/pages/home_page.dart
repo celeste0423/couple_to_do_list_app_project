@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/features/home/pages/bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/diary_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/kkomul_page.dart';
@@ -18,7 +19,12 @@ class _HomePageState extends State<HomePage>
   late final TabController _tabController =
       TabController(length: 4, vsync: this);
 
-
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    InitBinding.additionalBinding();
+  }
   Widget _CustomTabBar() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
