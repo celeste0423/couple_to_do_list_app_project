@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';

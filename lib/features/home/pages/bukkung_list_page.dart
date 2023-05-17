@@ -1,4 +1,5 @@
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
+import 'package:couple_to_do_list_app/features/home/pages/setting_page.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
@@ -10,8 +11,6 @@ import 'package:get/get.dart';
 
 class BukkungListPage extends GetView<BukkungListPageController> {
   const BukkungListPage({Key? key}) : super(key: key);
-
-
 
   Widget _listAddButton() {
     return GestureDetector(
@@ -215,7 +214,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         actions: [
           IconButton(
             onPressed: () {
-              openAlertDialog(message: '아직 설정창이 없습니다');
+              Get.to(SettingsPage());
             },
             icon: Image.asset(
               'assets/icons/setting.png',
