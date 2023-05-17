@@ -38,7 +38,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
               //
               UserRepository.googleAccountDeletion();
               //만약 회원 가입 중간에 다시 되돌아갈 경우 구글 계정 다시 로그인하게 함
-              Get.to(WelcomePage());
+              Get.to(() =>WelcomePage());
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -211,10 +211,10 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
               widget.email, emailController.text);
           if (groupIdStatus == GroupIdStatus.noData) {
             openAlertDialog(
-                message: '올바른 메일주소를 입력하였는지,\n짝꿍이 회원가입을 완료 하였는지 확인해주세요.');
+                title: '올바른 메일주소를 입력하였는지,\n짝꿍이 회원가입을 완료 하였는지 확인해주세요.');
           } else if (groupIdStatus == GroupIdStatus.hasGroup) {
             openAlertDialog(
-                message: '상대방이 이미 짝꿍이 있습니다.\n올바른 메일주소를 입력하였는지 확인해주세요.');
+                title: '상대방이 이미 짝꿍이 있습니다.\n올바른 메일주소를 입력하였는지 확인해주세요.');
           } else {
             //BukkungListPageController initbinding을 여기다 해야 할 거 같음
             //InitBinding.additionalBinding();

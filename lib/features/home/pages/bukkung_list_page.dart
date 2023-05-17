@@ -143,7 +143,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               child: CircularProgressIndicator(color: CustomColors.mainPink),
             );
           } else if (bukkungLists.hasError) {
-            openAlertDialog(message: '에러 발생');
+            openAlertDialog(title: '에러 발생');
           } else {
             final _list = bukkungLists.data!;
             print('리스트 출력(buk page)${_list.length}');
@@ -214,7 +214,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         actions: [
           IconButton(
             onPressed: () {
-              Get.to(SettingsPage());
+              Get.to(() =>SettingsPage());
             },
             icon: Image.asset(
               'assets/icons/setting.png',

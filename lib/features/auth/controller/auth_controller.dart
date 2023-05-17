@@ -43,7 +43,7 @@ class AuthController extends GetxController {
       return userData; //로딩 중 경우 null반환
     } catch (e) {
       print('loginUser 오류(cont)$e');
-      openAlertDialog(message: '로그인 오류${e.toString()}');
+      openAlertDialog(title: '로그인 오류${e.toString()}');
       return null;
     }
   }

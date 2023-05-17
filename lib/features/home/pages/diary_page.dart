@@ -93,7 +93,7 @@ class _DiaryPageState extends State<DiaryPage>
               child: CustomIconButton(
                 onTap: () {
                   openAlertDialog(
-                    message: '아직 다이어리 페이지 없음 ㅎ',
+                    title: '아직 다이어리 페이지 없음 ㅎ',
                   );
                 },
               )),
@@ -155,7 +155,7 @@ class _DiaryPageState extends State<DiaryPage>
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: IconButton(
               onPressed: () {
-                openAlertDialog(message: '아직 추가 페이지 없음');
+                openAlertDialog(title: '아직 추가 페이지 없음');
               },
               icon: Image.asset(
                 'assets/icons/plus.png',

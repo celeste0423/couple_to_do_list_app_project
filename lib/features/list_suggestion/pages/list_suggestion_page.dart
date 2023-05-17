@@ -153,7 +153,7 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
         tag: 'background',
         child: CustomIconButton(
           onTap: () {
-            openAlertDialog(message: '아직 추천 페이지 없음');
+            openAlertDialog(title: '아직 추천 페이지 없음');
           },
           size: 70,
           icon: Icon(
