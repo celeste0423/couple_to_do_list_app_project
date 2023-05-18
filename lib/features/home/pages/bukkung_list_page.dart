@@ -1,6 +1,6 @@
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
-import 'package:couple_to_do_list_app/features/home/pages/setting_page.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
+import 'package:couple_to_do_list_app/features/setting/pages/setting_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -205,7 +205,6 @@ class BukkungListPage extends GetView<BukkungListPageController> {
 
   @override
   Widget build(BuildContext context) {
-
     //Get.put(BukkungListPageController());
     return Scaffold(
       appBar: AppBar(
@@ -214,7 +213,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         actions: [
           IconButton(
             onPressed: () {
-              Get.to(() =>SettingsPage());
+              Get.to(() => SettingsPage());
             },
             icon: Image.asset(
               'assets/icons/setting.png',
@@ -227,7 +226,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          _listAddButton(),
+          Hero(tag: 'addButton', child: _listAddButton()),
           _listTypeSelector(),
           Hero(
             tag: 'search_bar',

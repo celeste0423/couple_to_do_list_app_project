@@ -161,5 +161,10 @@ ThemeData baseTheme() {
     datePickerTheme: DatePickerThemeData(
       backgroundColor: CustomColors.mainPink,
     ),
+    dialogTheme: const DialogTheme(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(25)),
+      ),
+    ),
   );
 }

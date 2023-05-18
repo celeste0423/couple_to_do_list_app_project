@@ -47,6 +47,8 @@ dependencies:
   uuid: ^3.0.7
   launch_review: ^3.0.1
   share_plus: ^7.0.0
+  flutter_localizations:
+    sdk: flutter
 
 flutter_native_splash:
   color: "#FAA7A7"

@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class UploadBukkungListPage extends GetView<UploadBukkungListController> {
   const UploadBukkungListPage({Key? key}) : super(key: key);
@@ -25,7 +26,6 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           onPressed: () {},
           child: controller.locationController != null &&
                   controller.listCategory.value != null &&
-                  controller.dateController != null &&
                   controller.contentController != null
               ? Text('저장', style: TextStyle(color: CustomColors.mainPink))
               : Text(
@@ -262,12 +262,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return _dateDialog();
-                  },
-                );
+                controller.datePicker(context);
               },
               child: Container(
                 height: 50,
@@ -277,28 +272,35 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                 ),
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: Text(
-                    '예상 날짜',
-                    style: TextStyle(
-                      color: CustomColors.greyText,
-                      fontSize: 25,
-                    ),
-                  ),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                  child: Obx(() {
+                    return Row(
+                      children: [
+                        CategoryIcon(
+                          category: controller.listCategory.value ?? '',
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          controller.listDateTime.value == null
+                              ? '예상 날짜'
+                              : DateFormat('yyyy-MM-dd')
+                                  .format(controller.listDateTime.value!),
+                          style: TextStyle(
+                            color: controller.listDateTime.value == null
+                                ? CustomColors.greyText
+                                : CustomColors.blackText,
+                            fontSize: 25,
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
                 ),
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _dateDialog() {
-    return DatePickerDialog(
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
     );
   }
 
@@ -315,6 +317,10 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           controller: controller.contentController,
           maxLines: null,
           onChanged: (value) {},
+          onSubmitted: (value) {
+            String textWithNewLIne = value + '\n';
+            value = textWithNewLIne;
+          },
           textInputAction: TextInputAction.search,
           style: TextStyle(
             color: CustomColors.blackText,
