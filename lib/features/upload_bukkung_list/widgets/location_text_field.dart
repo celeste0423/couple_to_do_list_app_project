@@ -91,7 +91,7 @@ class _LocationTextFieldState extends State<LocationTextField> {
           child: const Divider(
             height: 2,
             thickness: 2,
-            color: CustomColors.lightGreyText,
+            color: CustomColors.lightGrey,
           ),
         ),
         ListTile(

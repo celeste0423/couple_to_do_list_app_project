@@ -49,6 +49,8 @@ dependencies:
   share_plus: ^7.0.0
   flutter_localizations:
     sdk: flutter
+  image_picker: ^0.8.7+5
+  photo_manager: ^2.6.0
 
 flutter_native_splash:
   color: "#FAA7A7"
