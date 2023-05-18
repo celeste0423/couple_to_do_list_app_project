@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class UploadBukkungListPage extends GetView<UploadBukkungListController> {
-  const UploadBukkungListPage({Key? key}) : super(key: key);
+  UploadBukkungListPage({Key? key}) : super(key: key);
 
   PreferredSizeWidget _appBar() {
     return AppBar(
@@ -272,27 +272,19 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                 ),
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: Obx(() {
-                    return Row(
-                      children: [
-                        CategoryIcon(
-                          category: controller.listCategory.value ?? '',
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          controller.listDateTime.value == null
-                              ? '예상 날짜'
-                              : DateFormat('yyyy-MM-dd')
-                                  .format(controller.listDateTime.value!),
-                          style: TextStyle(
-                            color: controller.listDateTime.value == null
-                                ? CustomColors.greyText
-                                : CustomColors.blackText,
-                            fontSize: 25,
-                          ),
-                        ),
-                      ],
+                    return Text(
+                      controller.listDateTime.value == null
+                          ? '예상 날짜'
+                          : DateFormat('yyyy-MM-dd')
+                              .format(controller.listDateTime.value!),
+                      style: TextStyle(
+                        color: controller.listDateTime.value == null
+                            ? CustomColors.greyText
+                            : CustomColors.blackText,
+                        fontSize: 25,
+                      ),
                     );
                   }),
                 ),
@@ -305,35 +297,224 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
   }
 
   Widget _contentTextField() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      height: Get.height - 470,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        color: Colors.white,
+      ),
+      child: TextField(
+        controller: controller.contentController,
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
+        onChanged: (value) {},
+        style: TextStyle(
+          color: CustomColors.blackText,
+          fontSize: 25,
+        ),
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
+          hintText: '계획을 작성해 주세요',
+          hintStyle: TextStyle(
+            color: CustomColors.greyText,
+            fontSize: 25,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _imagePicker(BuildContext context) {
+    return Obx(() {
+      return Container(
+        height: 45,
+        width: 55,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: controller.isImage.value
+              ? CustomColors.mainPink
+              : Colors.white,
+        ),
+        child: GestureDetector(
+          onTap: () {
+            controller.pickImageFromGallery(context);
+          },
+          child: Center(
+            child: Image.asset(
+              'assets/icons/image.png',
+              width: 35,
+              color: Colors.black.withOpacity(0.6),
+              colorBlendMode: BlendMode.modulate,
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  // Widget _imagePicker(BuildContext context) {
+  //   return Container(
+  //     height: 45,
+  //     width: 55,
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(25),
+  //       color: Colors.white,
+  //     ),
+  //     child: GestureDetector(
+  //       onTap: () {
+  //         showModalBottomSheet(
+  //           context: context,
+  //           builder: (context) {
+  //             return Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 ShortHBar(),
+  //                 Padding(
+  //                   padding: const EdgeInsets.symmetric(vertical: 20),
+  //                   child: Row(
+  //                     children: [
+  //                       const SizedBox(width: 20),
+  //                       const Text(
+  //                         '버꿍 리스트 사진 업로드',
+  //                         style: TextStyle(
+  //                           fontSize: 25,
+  //                         ),
+  //                       ),
+  //                       const Spacer(),
+  //                       GestureDetector(
+  //                         onTap: () => Navigator.pop(context),
+  //                         child: Icon(
+  //                           Icons.close_rounded,
+  //                           color: Colors.grey,
+  //                           size: 25,
+  //                         ),
+  //                       ),
+  //                       const SizedBox(width: 15),
+  //                     ],
+  //                   ),
+  //                 ),
+  //                 customDivider(),
+  //                 const SizedBox(height: 15),
+  //                 Row(
+  //                   children: [
+  //                     const SizedBox(width: 20),
+  //                     imagePickerIcon(
+  //                       onTap: () {
+  //                         controller.pickImageFromCamera(context);
+  //                       },
+  //                       icon: Icon(
+  //                         Icons.camera_alt_rounded,
+  //                         color: Colors.white,
+  //                         size: 35,
+  //                       ),
+  //                       text: '카메라',
+  //                     ),
+  //                     const SizedBox(width: 15),
+  //                     imagePickerIcon(
+  //                       onTap: () async {
+  //                         Navigator.pop(context);
+  //                         final image = await Navigator.of(context).push(
+  //                           MaterialPageRoute(
+  //                             builder: (context) => ImagePickerPage(),
+  //                           ),
+  //                         );
+  //                         if (image == null) return;
+  //                         controller.imageGallery = image;
+  //                         controller.imageCamera = null;
+  //                       },
+  //                       icon: Icon(
+  //                         Icons.photo_camera_back_rounded,
+  //                         color: Colors.white,
+  //                         size: 35,
+  //                       ),
+  //                       text: '갤러리',
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 const SizedBox(height: 15),
+  //               ],
+  //             );
+  //           },
+  //         );
+  //       },
+  //       child: Center(
+  //         child: Image.asset(
+  //           'assets/icons/image.png',
+  //           width: 35,
+  //           color: Colors.black.withOpacity(0.6),
+  //           colorBlendMode: BlendMode.modulate,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+  //
+  // imagePickerIcon({
+  //   required VoidCallback onTap,
+  //   required Icon icon,
+  //   required String text,
+  // }) {
+  //   return Column(
+  //     children: [
+  //       GestureDetector(
+  //         onTap: onTap,
+  //         child: Container(
+  //           width: 50,
+  //           height: 50,
+  //           decoration: BoxDecoration(
+  //             color: CustomColors.lightPink,
+  //             borderRadius: BorderRadius.circular(50),
+  //           ),
+  //           child: icon,
+  //         ),
+  //       ),
+  //       const SizedBox(height: 20),
+  //       Text(
+  //         text,
+  //         style: TextStyle(
+  //           color: CustomColors.greyText,
+  //           fontSize: 20,
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
+
+  Widget _publicSwitch() {
     return Expanded(
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        height: 45,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           color: Colors.white,
         ),
-        child: TextField(
-          controller: controller.contentController,
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          onChanged: (value) {},
-          style: TextStyle(
-            color: CustomColors.blackText,
-            fontSize: 25,
-          ),
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            errorBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-            hintText: '세부 사항을 적어주세요',
-            hintStyle: TextStyle(
-              color: CustomColors.greyText,
-              fontSize: 25,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '버꿍 리스트 공개 여부 설정',
+              style: TextStyle(
+                color: CustomColors.greyText,
+                fontSize: 18,
+              ),
             ),
-          ),
+            Obx(() {
+              return Switch(
+                inactiveThumbColor: CustomColors.grey,
+                value: controller.isPublic.value,
+                onChanged: (value) {
+                  controller.isPublic.value = value;
+                },
+              );
+            }),
+          ],
         ),
       ),
     );
@@ -362,13 +543,30 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                   _titleTextField(),
                   customDivider(),
                   Expanded(
-                    child: Column(
-                      children: [
-                        _categorySelector(context),
-                        _locationTextfield(context),
-                        _datePicker(context),
-                        _contentTextField(),
-                      ],
+                    child: SingleChildScrollView(
+                      controller: controller.contentScrollController,
+                      child: Column(
+                        children: [
+                          _categorySelector(context),
+                          _locationTextfield(context),
+                          _datePicker(context),
+                          _contentTextField(),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 15,
+                              left: 30,
+                              right: 30,
+                            ),
+                            child: Row(
+                              children: [
+                                _imagePicker(context),
+                                SizedBox(width: 10),
+                                _publicSwitch(),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ],
