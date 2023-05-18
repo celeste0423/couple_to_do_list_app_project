@@ -315,13 +315,9 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         ),
         child: TextField(
           controller: controller.contentController,
+          keyboardType: TextInputType.multiline,
           maxLines: null,
           onChanged: (value) {},
-          onSubmitted: (value) {
-            String textWithNewLIne = value + '\n';
-            value = textWithNewLIne;
-          },
-          textInputAction: TextInputAction.search,
           style: TextStyle(
             color: CustomColors.blackText,
             fontSize: 25,
