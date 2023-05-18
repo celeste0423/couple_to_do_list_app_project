@@ -10,8 +10,6 @@ import 'package:uuid/uuid.dart';
 enum GroupIdStatus { noData, hasGroup, createdGroupId }
 
 class AuthController extends GetxController {
-  @override
-
   static AuthController get to => Get.find();
   Rx<UserModel> user = UserModel().obs;
   // Rx<UserModel> user = UserModel(uid: 'base').obs;

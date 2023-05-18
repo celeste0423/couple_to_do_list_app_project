@@ -1,8 +1,10 @@
+import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/type_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DiaryPage extends StatefulWidget {
   const DiaryPage({Key? key}) : super(key: key);
@@ -123,17 +125,6 @@ class _DiaryPageState extends State<DiaryPage>
                 CustomColors.grey.withOpacity(0.5),
               ),
             ),
-            // TabBarView(
-            //   controller: _tabSmallController,
-            //   children: [
-            //     Center(child: Text('전체')),
-            //     Center(child: Text('여행')),
-            //     Center(child: Text('액티비티')),
-            //     Center(child: Text('식사')),
-            //     Center(child: Text('문화활동')),
-            //     Center(child: Text('기타')),
-            //   ],
-            // ),
           ],
         ),
       ),
@@ -155,7 +146,7 @@ class _DiaryPageState extends State<DiaryPage>
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: IconButton(
               onPressed: () {
-                openAlertDialog(title: '아직 추가 페이지 없음');
+               Get.to(()=>UploadDiaryPage());
               },
               icon: Image.asset(
                 'assets/icons/plus.png',

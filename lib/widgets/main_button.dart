@@ -10,7 +10,7 @@ Widget mainButton(
     width: x ?? double.infinity,
     child: ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: color, // Background color
+        backgroundColor: color, // Background color
       ),
       onPressed: onPressed,
       child: Text(

@@ -1,31 +1,62 @@
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
+import 'package:couple_to_do_list_app/models/diary_model.dart';
+import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UploadDiaryController extends GetxController {
-  TextEditingController? titleController = TextEditingController();
-  TextEditingController? locationController = TextEditingController();
- // final FocusNode locationFocusNode = FocusNode();
-  OverlayEntry? overlayEntry;
-  TextEditingController? contentController = TextEditingController();
+  Rx<DiaryModel> bukkungList = DiaryModel().obs;
 
   static UploadDiaryController get to => Get.find();
+  TextEditingController? contentController = TextEditingController();
+  ScrollController contentScrollController = ScrollController();
 
-  Rx<String?> listCategory = "".obs;
-  Map<String, String> categoryToString = {
-    "travel": "여행",
-    "meal": "식사",
-    "activity": "액티비티",
-    "culture": "문화 활동",
-    "study": "자기 계발",
-    "etc": "기타",
-  };
-  Rx<DateTime?> listDateTime = Rx<DateTime?>(null);
-  List<AutoCompletePrediction> placePredictions = [];
-
+  Rx<DateTime?> diaryDateTime = Rx<DateTime?>(null);
   @override
   void onInit() {
     super.onInit();
+
+
+    contentController = null;
+    contentScrollController.addListener(scrollToContent);
+  }
+
+  void datePicker(BuildContext context) async {
+    final selectedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2100),
+        initialEntryMode: DatePickerEntryMode.calendarOnly,
+        locale: const Locale('ko', ''),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+                colorScheme: ColorScheme.light(
+                  primary: Colors.white,
+                  onPrimary: CustomColors.mainPink,
+                  onSurface: Colors.white,
+                ),
+                textButtonTheme: TextButtonThemeData(
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                    ))),
+            child: child!,
+          );
+        });
+    if (selectedDate != null) {
+      diaryDateTime(selectedDate);
+    }
+
+  }
+  void scrollToContent() {
+    if (contentScrollController.hasClients) {
+      contentScrollController.animateTo(
+        contentScrollController.position.maxScrollExtent - 100,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
 
   }
 }
