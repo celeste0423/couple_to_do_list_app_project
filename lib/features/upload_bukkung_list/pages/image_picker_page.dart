@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class ImagePickerPage extends StatefulWidget {
@@ -99,20 +100,17 @@ class _ImagePickerPageState extends State<ImagePickerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Icon(Icons.arrow_back_ios),
+          onTap: Get.back,
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: CustomColors.mainPink,
+            size: 35,
+          ),
         ),
         title: titleText(
-          '사진을 선택하세요',
+          '갤러리',
         ),
-        actions: [
-          GestureDetector(
-            onTap: () {},
-            child: Icon(Icons.more_vert),
-          )
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(5),
