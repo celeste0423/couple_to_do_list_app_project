@@ -1,94 +1,67 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DiaryModel {
-  final String? title;
+class BukkungListModel {
   final String? category;
+  final String? title;
+  final String? content;
   final String? location;
-  final String? imgUrl1;
-  final String? imgUrl2;
-  final String? imgUrl3;
-  final String? imgUrl4;
-  final String? mySogam;
-  final String? bukkungSogam;
-  final DateTime? startDate;
-  final DateTime? endDate;
+  final String? imgUrl;
+  final int? likeCount;
+  final DateTime? date;
 
-  DiaryModel({
-    this.title,
+  BukkungListModel({
     this.category,
+    this.title,
+    this.content,
     this.location,
-    this.imgUrl1,
-    this.imgUrl2,
-    this.imgUrl3,
-    this.imgUrl4,
-    this.mySogam,
-    this.bukkungSogam,
-    this.startDate,
-    this.endDate,
+    this.imgUrl,
+    this.likeCount,
+    this.date,
   });
 
-  factory DiaryModel.fromJson(Map<String, dynamic> json) {
-    return DiaryModel(
-      title: json['title'] == null ? null : json['title'] as String,
+  factory BukkungListModel.fromJson(Map<String, dynamic> json) {
+    return BukkungListModel(
       category: json['category'] == null ? null : json['category'] as String,
+      title: json['title'] == null ? null : json['title'] as String,
+      content: json['content'] == null ? null : json['content'] as String,
       location: json['location'] == null ? null : json['location'] as String,
-      imgUrl1: json['imgUrl1'] == null ? null : json['imgUrl1'] as String,
-      imgUrl2: json['imgUrl2'] == null ? null : json['imgUrl2'] as String,
-      imgUrl3: json['imgUrl3'] == null ? null : json['imgUrl3'] as String,
-      imgUrl4: json['imgUrl4'] == null ? null : json['imgUrl4'] as String,
-      mySogam: json['mySogam'] == null ? null : json['mySogam'] as String,
-      bukkungSogam:
-      json['bukkungSogam'] == null ? null : json['bukkungSogam'] as String,
-      startDate: json['startDate'] == null
-          ? null
-          : (json['startDate'] as Timestamp).toDate(),
-      endDate: json['endDate'] == null
-          ? null
-          : (json['endDate'] as Timestamp).toDate(),
+      imgUrl: json['imgUrl'] == null ? null : json['imgUrl'] as String,
+      likeCount: json['likeCount'] == null ? 0 : json['likeCount'] as int,
+      date: json['date'] == null
+          ? DateTime.now()
+          : (json['date'] as Timestamp).toDate(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'title': title,
       'category': category,
+      'title': title,
+      'content': content,
       'location': location,
-      'imgUrl1': imgUrl1,
-      'imgUrl2': imgUrl2,
-      'imgUrl3': imgUrl3,
-      'imgUrl4': imgUrl4,
-      'mySogam': mySogam,
-      'bukkungSogam': bukkungSogam,
-      'startDate': startDate,
-      'endDate': endDate,
+      'imgUrl': imgUrl,
+      'likeCount': likeCount,
+      'date': date,
     };
   }
 
-  DiaryModel copyWith({
-    String? title,
+  BukkungListModel copyWith({
     String? category,
+    String? title,
+    String? content,
     String? location,
-    String? imgUrl1,
-    String? imgUrl2,
-    String? imgUrl3,
-    String? imgUrl4,
-    String? mySogam,
-    String? bukkungSogam,
-    DateTime? startDate,
-    DateTime? endDate,
+    String? imgUrl,
+    int? likeCount,
+    DateTime? date,
   }) {
-    return DiaryModel(
-      title: title ?? this.title,
+    return BukkungListModel(
       category: category ?? this.category,
+      title: title ?? this.title,
+      content: content ?? this.content,
       location: location ?? this.location,
-      imgUrl1: imgUrl1 ?? this.imgUrl1,
-      imgUrl2: imgUrl2 ?? this.imgUrl2,
-      imgUrl3: imgUrl3 ?? this.imgUrl3,
-      imgUrl4: imgUrl4 ?? this.imgUrl4,
-      mySogam: mySogam ?? this.mySogam,
-      bukkungSogam: bukkungSogam ?? this.bukkungSogam,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
+      imgUrl: imgUrl ?? this.imgUrl,
+      likeCount: likeCount ?? this.likeCount,
+      date: date ?? this.date,
     );
   }
 }
