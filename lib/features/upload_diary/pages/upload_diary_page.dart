@@ -2,17 +2,46 @@ import 'package:couple_to_do_list_app/features/upload_diary/controller/upload_di
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/auxiliary_button.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
+import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+//Todo: controller 가 이 페이지 꺼지면 바로 꺼지게 해야 함
+
 class UploadDiaryPage extends GetView<UploadDiaryController> {
-  const UploadDiaryPage({super.key});
+  final String? title;
+  final String? date;
+  final String? imgUrl;
+  const UploadDiaryPage(this.title, this.date, this.imgUrl, {super.key});
 
   PreferredSizeWidget _appBar() {
     return AppBar(
-      //Todo : 데이터 채우기
-      title: Text('데이터 채우기'),
+      title: title != null
+          ? titleText(title!)
+          : TextField(
+              controller: controller.titleController,
+              maxLines: null,
+              textInputAction: TextInputAction.done,
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                color: CustomColors.darkGrey,
+                fontSize: 40,
+              ),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 15),
+                hintText: '제목을 입력하세요',
+                hintStyle: TextStyle(
+                  color: CustomColors.darkGrey,
+                  fontSize: 40,
+                ),
+              ),
+            ),
       leading: TextButton(
         onPressed: () {
           Get.back();
@@ -54,7 +83,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   child: Obx(() {
                     return Text(
                       controller.diaryDateTime.value == null
-                          ? '예상 날짜'
+                          ? date ?? '예상 날짜'
                           : DateFormat('yyyy-MM-dd')
                               .format(controller.diaryDateTime.value!),
                       style: TextStyle(
@@ -88,26 +117,39 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
           ),
           SizedBox(width: 10),
           Container(
-            width: 170,
-            height: 170,
-            decoration: BoxDecoration(
-              color: CustomColors.lightGrey,
-              borderRadius: BorderRadius.circular(25),
-              image: DecorationImage(
-                image: NetworkImage(
-                  'https://post-phinf.pstatic.net/MjAxNzEwMjBfNjYg/MDAxNTA4NDY0NzkxMDc3.BXMDJ0jGbaunHr6TRI6N4NOBiGOXAlXbzlmgaZYHMkQg.P6Rbnq9YTv9CCqH5Vgu6JCSEGZC_wOZ25onOnoT4AAAg.PNG/11.png?type=w1200',
-                ),
-                fit: BoxFit.cover,
+              padding: EdgeInsets.all(10),
+              width: 170,
+              height: 170,
+              decoration: BoxDecoration(
+                color: CustomColors.lightGrey,
+                borderRadius: BorderRadius.circular(25),
+                image: imgUrl == null
+                    ? null
+                    : DecorationImage(
+                        image: NetworkImage(
+                          imgUrl!,
+                        ),
+                        fit: BoxFit.cover,
+                      ),
               ),
-            ),
-
-            //사진이 없을경우 기본 이미지 꼬물이로
-            // child: Image.asset(
-            //   'assets/images/ggomool.png',
-            //   width: 170,
-            //   height: 170,
-            // ),
-          ),
+              child: imgUrl != null
+                  ? null
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          height: 35,
+                        ),
+                        Image.asset(
+                          'assets/icons/add.png',
+                          width: 60,
+                        ),
+                        Text(
+                          '이미지 추가',
+                          style: TextStyle(fontSize: 35, color: Colors.white),
+                        )
+                      ],
+                    )),
         ],
       ),
     );
@@ -163,6 +205,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
           _datePicker(context),
           _imagePicker(),
           _contentTextField(),
+          //todo: 버튼 타자기떄문에 위로 안올라가게
           Padding(
             padding: EdgeInsets.fromLTRB(30, 5, 30, 20),
             child: auxiliaryButton('저장', () {}),

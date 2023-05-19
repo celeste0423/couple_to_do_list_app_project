@@ -4,10 +4,14 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+//Todo: onDelete 함수 어떻게 불러오는거징
 class UploadDiaryController extends GetxController {
   Rx<DiaryModel> bukkungList = DiaryModel().obs;
 
   static UploadDiaryController get to => Get.find();
+
+  TextEditingController titleController = TextEditingController();
+
   TextEditingController? contentController = TextEditingController();
   ScrollController contentScrollController = ScrollController();
 

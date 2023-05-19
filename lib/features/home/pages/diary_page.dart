@@ -1,5 +1,6 @@
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
+import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:couple_to_do_list_app/widgets/type_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -146,7 +147,7 @@ class _DiaryPageState extends State<DiaryPage>
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: IconButton(
               onPressed: () {
-               Get.to(()=>UploadDiaryPage());
+               Get.to(()=>UploadDiaryPage(null, null, null));
               },
               icon: Image.asset(
                 'assets/icons/plus.png',
