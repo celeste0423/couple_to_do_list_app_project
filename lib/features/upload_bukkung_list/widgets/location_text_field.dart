@@ -1,6 +1,7 @@
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LocationTextField extends StatefulWidget {
   const LocationTextField({Key? key}) : super(key: key);
@@ -10,15 +11,14 @@ class LocationTextField extends StatefulWidget {
 }
 
 class _LocationTextFieldState extends State<LocationTextField> {
-  UploadBukkungListController _controller = UploadBukkungListController();
-
+  final UploadBukkungListController _controller =
+      Get.find<UploadBukkungListController>();
   final FocusNode _focusNode = FocusNode();
   OverlayEntry? _overlayEntry;
 
   @override
   void initState() {
     _focusNode.addListener(() {
-      print(_focusNode.hasFocus);
       if (_focusNode.hasFocus) {
         this._overlayEntry = this._createOverlayEntry();
         Overlay.of(context).insert(this._overlayEntry!);

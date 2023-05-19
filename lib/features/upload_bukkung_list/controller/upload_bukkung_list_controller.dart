@@ -11,7 +11,9 @@ import 'package:get/get.dart';
 class UploadBukkungListController extends GetxController {
   static UploadBukkungListController get to => Get.find();
 
-  TextEditingController? titleController = TextEditingController();
+  Rx<bool> isCompleted = false.obs;
+
+  TextEditingController titleController = TextEditingController();
 
   Rx<String?> listCategory = "".obs;
   Map<String, String> categoryToString = {
@@ -23,14 +25,14 @@ class UploadBukkungListController extends GetxController {
     "etc": "기타",
   };
 
-  TextEditingController? locationController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
   final FocusNode locationFocusNode = FocusNode();
   OverlayEntry? overlayEntry;
   List<AutoCompletePrediction> placePredictions = [];
 
   Rx<DateTime?> listDateTime = Rx<DateTime?>(null);
 
-  TextEditingController? contentController = TextEditingController();
+  TextEditingController contentController = TextEditingController();
   ScrollController contentScrollController = ScrollController();
 
   Uint8List? listImage = null;
@@ -41,12 +43,31 @@ class UploadBukkungListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    listCategory.value = "";
-    titleController = null;
-    locationController = null;
-    contentController = null;
+
+    _checkCompleted();
+    titleController!.addListener(_checkCompleted);
+    listCategory.listen((_) {
+      _checkCompleted();
+    });
+    locationController!.addListener(_checkCompleted);
+    listDateTime.listen((_) {
+      _checkCompleted();
+    });
+    contentController!.addListener(_checkCompleted);
 
     contentScrollController.addListener(scrollToContent);
+  }
+
+  void _checkCompleted() {
+    if (titleController.text.isNotEmpty &&
+        listCategory.value!.isNotEmpty &&
+        locationController.text.isNotEmpty &&
+        listDateTime.value != null &&
+        contentController.text.isNotEmpty) {
+      isCompleted.value = true;
+    } else {
+      isCompleted.value = false;
+    }
   }
 
   void changeCategory(String category) {
@@ -115,7 +136,7 @@ class UploadBukkungListController extends GetxController {
     final image = await Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => ImagePickerPage()));
     if (image == null) {
-      print('선택한 이미지가 없습니다');
+      print('선택한 이미지가 없습니다(upl cont)');
       isImage(false);
       return;
     }

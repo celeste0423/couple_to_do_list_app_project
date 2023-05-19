@@ -1,5 +1,6 @@
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/widgets/location_text_field.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
@@ -22,17 +23,21 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () {},
-          child: controller.locationController != null &&
-                  controller.listCategory.value != null &&
-                  controller.contentController != null
-              ? Text('저장', style: TextStyle(color: CustomColors.mainPink))
-              : Text(
-                  '저장',
-                  style: TextStyle(color: CustomColors.mainPink),
-                ),
-        ),
+        Obx(() {
+          return TextButton(
+            onPressed: controller.isCompleted.value == true
+                ? () {}
+                : () {
+                    openAlertDialog(title: '값을 모두 입력해 주세요');
+                  },
+            child: controller.isCompleted.value == true
+                ? Text('저장', style: TextStyle(color: CustomColors.mainPink))
+                : Text(
+                    '저장',
+                    style: TextStyle(color: CustomColors.greyText),
+                  ),
+          );
+        }),
       ],
     );
   }
@@ -44,7 +49,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
       child: TextField(
         controller: controller.titleController,
         maxLines: null,
-        //여러줄을 입력할 수 있게 됨
+        textInputAction: TextInputAction.done,
         textAlign: TextAlign.center,
         style: TextStyle(
           color: CustomColors.blackText,
@@ -82,6 +87,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           Expanded(
             child: GestureDetector(
               onTap: () {
+                FocusManager.instance.primaryFocus?.unfocus();
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -138,51 +144,54 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         height: 550,
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '카테고리',
-                style: TextStyle(fontSize: 30),
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 450,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _categoryCard(
-                            'airplane', '여행', CustomColors.travel, 'travel'),
-                        _categoryCard('running', '액티비티', CustomColors.activity,
-                            'activity'),
-                        _categoryCard(
-                            'study', '자기계발', CustomColors.study, 'study'),
-                      ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '카테고리',
+                  style: TextStyle(fontSize: 30),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 450,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _categoryCard(
+                              'airplane', '여행', CustomColors.travel, 'travel'),
+                          _categoryCard('running', '액티비티',
+                              CustomColors.activity, 'activity'),
+                          _categoryCard(
+                              'study', '자기계발', CustomColors.study, 'study'),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 20),
-                  Container(
-                    height: 450,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _categoryCard('food', '식사', CustomColors.meal, 'meal'),
-                        _categoryCard(
-                            'singer', '문화활동', CustomColors.culture, 'culture'),
-                        _categoryCard(
-                            'filter-file', '기타', CustomColors.etc, 'etc'),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ],
+                    SizedBox(width: 20),
+                    Container(
+                      height: 450,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _categoryCard(
+                              'food', '식사', CustomColors.meal, 'meal'),
+                          _categoryCard('singer', '문화활동', CustomColors.culture,
+                              'culture'),
+                          _categoryCard(
+                              'filter-file', '기타', CustomColors.etc, 'etc'),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -196,8 +205,8 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         Get.back();
       },
       child: Container(
-        width: 130,
-        height: 130,
+        width: Get.width * 0.3,
+        height: Get.width * 0.3,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           color: color,
@@ -262,6 +271,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           Expanded(
             child: GestureDetector(
               onTap: () {
+                FocusManager.instance.primaryFocus?.unfocus();
                 controller.datePicker(context);
               },
               child: Container(
@@ -337,9 +347,8 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         width: 55,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
-          color: controller.isImage.value
-              ? CustomColors.mainPink
-              : Colors.white,
+          color:
+              controller.isImage.value ? CustomColors.mainPink : Colors.white,
         ),
         child: GestureDetector(
           onTap: () {
