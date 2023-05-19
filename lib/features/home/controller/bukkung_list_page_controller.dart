@@ -1,7 +1,7 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/home/repository/bukkung_list_repository.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
+import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:get/get.dart';
 
 class BukkungListPageController extends GetxController {
