@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 
@@ -13,7 +14,7 @@ class BukkungListRepository {
         .collection('groups')
         .doc(groupModel.uid)
         .collection('bukkungLists')
-        .orderBy('date')
+        .orderBy('date', descending: true)
         .snapshots()
         .map((event) {
       List<BukkungListModel> bukkungLists = [];
@@ -41,4 +42,22 @@ class BukkungListRepository {
   //     return bukkungLists;
   //   });
   // }
+
+  static Future<void> setSuggestionBukkungList(
+      BukkungListModel bukkungLisData, String listId) async {
+    await FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .doc(listId)
+        .set(bukkungLisData.toJson());
+  }
+
+  static Future<void> setGroupBukkungList(
+      BukkungListModel bukkungLisData, String listId) async {
+    await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(AuthController.to.user.value.groupId)
+        .collection('bukkungLists')
+        .doc(listId)
+        .set(bukkungLisData.toJson());
+  }
 }

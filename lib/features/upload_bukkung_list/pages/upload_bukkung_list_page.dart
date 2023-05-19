@@ -26,7 +26,10 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         Obx(() {
           return TextButton(
             onPressed: controller.isCompleted.value == true
-                ? () {}
+                ? () {
+                    controller.uploadBukkungList();
+                    Get.back();
+                  }
                 : () {
                     openAlertDialog(title: '값을 모두 입력해 주세요');
                   },
@@ -352,6 +355,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         ),
         child: GestureDetector(
           onTap: () {
+            FocusManager.instance.primaryFocus?.unfocus();
             controller.pickImageFromGallery(context);
           },
           child: Center(

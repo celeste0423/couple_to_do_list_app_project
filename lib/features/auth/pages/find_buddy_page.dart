@@ -1,10 +1,9 @@
-import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
-import 'package:couple_to_do_list_app/features/auth/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/features/home/pages/home_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +37,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
               //
               UserRepository.googleAccountDeletion();
               //만약 회원 가입 중간에 다시 되돌아갈 경우 구글 계정 다시 로그인하게 함
-              Get.to(() =>WelcomePage());
+              Get.to(() => WelcomePage());
             },
             icon: Icon(
               Icons.arrow_back_ios,
