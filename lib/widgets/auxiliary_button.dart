@@ -10,7 +10,7 @@ Widget auxiliaryButton(String text, Function()? onPressed,[double? x]){
         backgroundColor: Colors.white,
         side: BorderSide(
           width: 2,
-          color: CustomColors.lightPink
+          color: CustomColors.mainPink
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),

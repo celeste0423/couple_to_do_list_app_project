@@ -2,6 +2,7 @@ import 'package:couple_to_do_list_app/features/upload_diary/controller/upload_di
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/auxiliary_button.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
+import 'package:couple_to_do_list_app/widgets/main_button.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,7 +14,57 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   final String? title;
   final String? date;
   final String? imgUrl;
+
   const UploadDiaryPage(this.title, this.date, this.imgUrl, {super.key});
+
+  Widget _Title() {
+    if (title == null) {
+      return TextField(
+        controller: controller.titleController,
+        maxLines: null,
+        textInputAction: TextInputAction.done,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: CustomColors.darkGrey,
+          fontSize: 40,
+        ),
+        decoration: const InputDecoration(
+          prefixIcon:  Icon(
+            Icons.edit,
+            color: CustomColors.darkGrey,
+            size: 30,
+          ),
+          suffixIcon: Icon(
+            Icons.edit,
+            color: CustomColors.darkGrey,
+            size: 30,
+          ),
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
+          contentPadding: EdgeInsets.only(left: 15),
+          hintText: '제목을 입력하세요',
+          hintStyle: TextStyle(
+            color: CustomColors.darkGrey,
+            fontSize: 40,
+          ),
+        ),
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          titleText(title!),
+          Icon(
+            Icons.edit,
+            size: 30,
+          ),
+        ],
+      );
+    }
+  }
 
   PreferredSizeWidget _appBar() {
     return AppBar(
@@ -42,15 +93,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                 ),
               ),
             ),
-      leading: TextButton(
-        onPressed: () {
-          Get.back();
-        },
-        child: Text(
-          '취소',
-          style: TextStyle(color: CustomColors.greyText),
-        ),
-      ),
+      leading: SizedBox(),
     );
   }
 
@@ -159,34 +202,42 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 11),
         //Todo: 이거 수정해야될듯 높이
-        //height: Get.height - 470,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           color: Colors.white,
         ),
-        child: TextField(
-          controller: controller.contentController,
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          onChanged: (value) {},
-          style: TextStyle(
-            color: CustomColors.blackText,
-            fontSize: 25,
-          ),
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            errorBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-            hintText: '나의 소감',
-            hintStyle: TextStyle(
-              color: CustomColors.greyText,
-              fontSize: 25,
+        child: Column(
+          children: [
+            Divider(
+              color: Colors.black,
             ),
-          ),
+            TextField(
+              controller: controller.contentController,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              onChanged: (value) {},
+              style: TextStyle(
+                color: CustomColors.blackText,
+                fontSize: 25,
+              ),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.redAccent), //<-- SEE HERE
+                ),
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                hintText: '나의 소감',
+                hintStyle: TextStyle(
+                  color: CustomColors.greyText,
+                  fontSize: 25,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -195,22 +246,32 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   @override
   Widget build(BuildContext context) {
     Get.put(UploadDiaryController());
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: CustomColors.backgroundLightGrey,
-      appBar: _appBar(),
-      body: Column(
-        children: [
-          customDivider(),
-          _datePicker(context),
-          _imagePicker(),
-          _contentTextField(),
-          //todo: 버튼 타자기떄문에 위로 안올라가게
-          Padding(
-            padding: EdgeInsets.fromLTRB(30, 5, 30, 20),
-            child: auxiliaryButton('저장', () {}),
-          )
-        ],
+    return GestureDetector(
+      onTap:(){ FocusManager.instance.primaryFocus?.unfocus();},
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: CustomColors.lightPink,
+        body: Column(
+          children: [
+            SizedBox(height: 10,),
+            _Title(),
+            _contentTextField(),
+            // //todo: 버튼 타자기떄문에 위로 안올라가게
+            _imagePicker(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                auxiliaryButton('취소', () {
+                  Get.back();
+                }, Get.width * 1 / 4),
+                mainButton('다이어리 작성', () {}, Get.width * 5 / 8)
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            )
+          ],
+        ),
       ),
     );
   }
