@@ -33,17 +33,17 @@ class BukkungListPageController extends GetxController {
     switch (type) {
       case 'category':
         return BukkungListRepository(groupModel: groupModel)
-            .getAllBukkungListByDate();
+            .getGroupBukkungListByDate();
       case 'date':
         return BukkungListRepository(groupModel: groupModel)
-            .getAllBukkungListByDate();
+            .getGroupBukkungListByDate();
       case 'like':
         return BukkungListRepository(groupModel: groupModel)
-            .getAllBukkungListByDate();
+            .getGroupBukkungListByDate();
       default:
         print('에러: 분류 타입 지정 안됨(buk cont)');
         return BukkungListRepository(groupModel: groupModel)
-            .getAllBukkungListByDate();
+            .getGroupBukkungListByDate();
     }
   }
 }

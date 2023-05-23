@@ -8,7 +8,7 @@ class BukkungListRepository {
 
   BukkungListRepository({required this.groupModel});
 
-  Stream<List<BukkungListModel>> getAllBukkungListByDate() {
+  Stream<List<BukkungListModel>> getGroupBukkungListByDate() {
     print('스트림 시작');
     return FirebaseFirestore.instance
         .collection('groups')

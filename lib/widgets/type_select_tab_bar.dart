@@ -1,7 +1,7 @@
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
 
-Widget typeSelectTabBar(
+Widget categorySelectTabBar(
   TabController tabController,
   Color? selectedColor,
   Color? unselectedColor,

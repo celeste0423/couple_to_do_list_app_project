@@ -1,43 +1,15 @@
+import 'package:couple_to_do_list_app/features/list_suggestion/controller/list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/type_select_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ListSuggestionPage extends StatefulWidget {
+class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   const ListSuggestionPage({Key? key}) : super(key: key);
-
-  @override
-  State<ListSuggestionPage> createState() => _ListSuggestionPageState();
-}
-
-class _ListSuggestionPageState extends State<ListSuggestionPage>
-    with SingleTickerProviderStateMixin {
-  late final TabController _tabSuggestionController =
-      TabController(length: 6, vsync: this);
-
-  TextEditingController _searchBarController = TextEditingController();
-  bool _isTextEmpty = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _searchBarController.addListener(_onTextChanged);
-  }
-
-  @override
-  void dispose() {
-    _searchBarController.dispose();
-    super.dispose();
-  }
-
-  void _onTextChanged() {
-    setState(() {
-      _isTextEmpty = _searchBarController.text.isEmpty;
-    });
-  }
 
   Widget _background() {
     return Container(
@@ -63,7 +35,7 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
           ),
           height: 50,
           child: TextField(
-            controller: _searchBarController,
+            controller: controller.searchBarController,
             style: TextStyle(
               color: CustomColors.darkGrey,
               fontFamily: 'Yoonwoo',
@@ -82,7 +54,7 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
               //   color: Colors.white.withOpacity(0.7),
               //   colorBlendMode: BlendMode.modulate,
               // ),
-              suffixIcon: _isTextEmpty
+              suffixIcon: controller.isTextEmpty
                   ? null
                   : IconButton(
                       icon: Icon(
@@ -91,7 +63,7 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
                         color: CustomColors.darkGrey,
                       ),
                       onPressed: () {
-                        return _searchBarController.clear();
+                        return controller.searchBarController.clear();
                       },
                     ),
             ),
@@ -124,7 +96,7 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 20),
       width: 330,
-      height: 270,
+      height: 230,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
@@ -147,7 +119,7 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
 
   Widget _listPlayButton() {
     return Positioned(
-      top: 390,
+      top: 350,
       left: Get.width / 2 - 35,
       child: Hero(
         tag: 'background',
@@ -168,8 +140,118 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
     );
   }
 
-  Widget _suggestionList() {
-    return Container();
+  Widget _suggestionListTab() {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: TabBarView(
+          controller: controller.suggestionListTabController,
+          children: [
+            _suggestionAllList(),
+            _suggestionList(1),
+            _suggestionList(2),
+            _suggestionList(3),
+            _suggestionList(4),
+            _suggestionList(5),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _suggestionAllList() {
+    return StreamBuilder(
+      stream: controller.getSuggestionAllBukkungList(),
+      builder: (BuildContext context,
+          AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+        print(bukkungLists.hasData);
+        if (!bukkungLists.hasData) {
+          return Center(
+            child: CircularProgressIndicator(color: CustomColors.mainPink),
+          );
+        } else if (bukkungLists.hasError) {
+          openAlertDialog(title: '에러 발생');
+        } else {
+          final _list = bukkungLists.data!;
+          print('리스트 출력(sugg page)${_list.length}');
+          return ListView.builder(
+            itemCount: _list.length,
+            itemBuilder: (context, index) {
+              final _bukkungList = _list[index];
+              return _suggestionListCard(_bukkungList);
+            },
+          );
+        }
+        return Center(child: Text('아직 버꿍리스트가 없습니다'));
+      },
+    );
+  }
+
+  Widget _suggestionList(int index) {
+    return FutureBuilder(
+      future: controller.getSuggestionBukkungList(
+        controller.tabIndexToName(index),
+      ),
+      builder: (BuildContext context,
+          AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+        print(bukkungLists.hasData);
+        if (!bukkungLists.hasData) {
+          return Center(
+            child: CircularProgressIndicator(color: CustomColors.mainPink),
+          );
+        } else if (bukkungLists.hasError) {
+          openAlertDialog(title: '에러 발생');
+        } else {
+          final _list = bukkungLists.data!;
+          print('리스트 출력(sugg page)${_list.length}');
+          return ListView.builder(
+            itemCount: _list.length,
+            itemBuilder: (context, index) {
+              final _bukkungList = _list[index];
+              return _suggestionListCard(_bukkungList);
+            },
+          );
+        }
+        return Center(child: Text('아직 버꿍리스트가 없습니다'));
+      },
+    );
+  }
+
+  Widget _suggestionListCard(BukkungListModel bukkungListModel) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
+      child: Stack(
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 10,
+                  offset: Offset(5, 5), // Offset(수평, 수직)
+                ),
+              ],
+              image: DecorationImage(
+                image: NetworkImage(bukkungListModel.imgUrl!),
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   Widget _listAddButton() {
@@ -181,7 +263,7 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
         Get.to(() => UploadBukkungListPage());
       },
       style: ElevatedButton.styleFrom(
-        fixedSize: Size(260, 60),
+        fixedSize: Size(260, 50),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50.0),
         ),
@@ -209,6 +291,7 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
 
   @override
   Widget build(BuildContext context) {
+    Get.put(ListSuggestionPageController());
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -239,13 +322,13 @@ class _ListSuggestionPageState extends State<ListSuggestionPage>
             Column(
               children: [
                 _searchBar(),
-                typeSelectTabBar(
-                  _tabSuggestionController,
+                categorySelectTabBar(
+                  controller.suggestionListTabController,
                   Colors.black.withOpacity(0.8),
                   Colors.black.withOpacity(0.5),
                 ),
                 _selectedImage(),
-                _suggestionList(),
+                _suggestionListTab(),
               ],
             ),
             _listPlayButton(),
