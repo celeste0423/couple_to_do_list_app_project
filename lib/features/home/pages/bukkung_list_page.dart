@@ -8,6 +8,7 @@ import 'package:couple_to_do_list_app/utils/type_to_color.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class BukkungListPage extends GetView<BukkungListPageController> {
   const BukkungListPage({Key? key}) : super(key: key);
@@ -151,7 +152,6 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               itemCount: _list.length,
               itemBuilder: (context, index) {
                 final _bukkungList = _list[index];
-                print(_bukkungList.title);
                 return _bukkungListCard(_bukkungList);
               },
             );
@@ -164,11 +164,11 @@ class BukkungListPage extends GetView<BukkungListPageController> {
 
   Widget _bukkungListCard(BukkungListModel bukkungListModel) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Row(
         children: [
           Expanded(
-            flex: 9,
+            flex: 12,
             child: Container(
               height: 150,
               decoration: BoxDecoration(
@@ -178,9 +178,54 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                   bottomLeft: Radius.circular(25),
                 ),
               ),
-              child: ListTile(
-                title: Text(bukkungListModel.title!),
-                subtitle: Text(bukkungListModel.content!),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        bottomLeft: Radius.circular(25),
+                      ),
+                      child: Image.network(
+                        '${bukkungListModel.imgUrl}',
+                        height: 150,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                    flex: 7,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          bukkungListModel.title!,
+                          style: TextStyle(
+                            fontSize: 25,
+                            color: CustomColors.blackText,
+                          ),
+                        ),
+                        Text(DateFormat('yyyy-MM-dd')
+                            .format(bukkungListModel.date!)),
+                        Row(
+                          children: [
+                            Image.asset(
+                              'assets/icons/location-pin.png',
+                              color: CustomColors.grey.withOpacity(0.5),
+                              colorBlendMode: BlendMode.modulate,
+                              width: 25,
+                            ),
+                            SizedBox(width: 10),
+                            Text(bukkungListModel.location!),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
           ),
