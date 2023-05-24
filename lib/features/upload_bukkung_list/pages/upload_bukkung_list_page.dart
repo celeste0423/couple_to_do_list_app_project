@@ -91,12 +91,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
             child: GestureDetector(
               onTap: () {
                 FocusManager.instance.primaryFocus?.unfocus();
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return _categoryDialog();
-                  },
-                );
+                Get.dialog(_categoryDialog());
               },
               child: Container(
                 height: 50,

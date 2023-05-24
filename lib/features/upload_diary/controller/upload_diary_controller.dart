@@ -1,4 +1,6 @@
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
+import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
+import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +12,26 @@ class UploadDiaryController extends GetxController {
 
   static UploadDiaryController get to => Get.find();
 
+  TextEditingController locationController = TextEditingController();
+  List<AutoCompletePrediction> placePredictions = [];
+
   TextEditingController titleController = TextEditingController();
 
   TextEditingController? contentController = TextEditingController();
   ScrollController contentScrollController = ScrollController();
 
   Rx<DateTime?> diaryDateTime = Rx<DateTime?>(null);
+
+  Rx<String?> DiaryCategory = "".obs;
+  Map<String, String> categoryToString = {
+    "travel": "여행",
+    "meal": "식사",
+    "activity": "액티비티",
+    "culture": "문화 활동",
+    "study": "자기 계발",
+    "etc": "기타",
+  };
+
   @override
   void onInit() {
     super.onInit();
@@ -51,7 +67,29 @@ class UploadDiaryController extends GetxController {
     if (selectedDate != null) {
       diaryDateTime(selectedDate);
     }
+  }
 
+  void placeAutocomplete(String query) async {
+    String apiKey = 'AIzaSyASuuGiXo0mFRd2jm_vL5mHBo4r4uCTJZw';
+    Uri uri =
+    Uri.https("maps.googleapis.com", 'maps/api/place/autocomplete/json', {
+      "input": query,
+      "key": apiKey,
+      "language": "ko",
+      "components": "country:kr",
+    });
+    String? response = await LocationNetworkUtil.fetchUrl(uri);
+
+    if (response != null) {
+      PlaceAutoCompleteResponse result =
+      PlaceAutoCompleteResponse.parseAutocompleteResult(response);
+      if (result.predictions != null) {
+        placePredictions = result.predictions!;
+      }
+    }
+  }
+  void changeCategory(String category) {
+    DiaryCategory(category);
   }
   void scrollToContent() {
     if (contentScrollController.hasClients) {
@@ -61,6 +99,5 @@ class UploadDiaryController extends GetxController {
         curve: Curves.easeOut,
       );
     }
-
   }
 }

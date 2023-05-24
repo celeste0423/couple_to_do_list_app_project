@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 class CategoryIcon extends StatelessWidget {
   final String category;
-
-  const CategoryIcon({Key? key, required this.category}) : super(key: key);
+final double? size;
+  const CategoryIcon({Key? key, required this.category, this.size}) : super(key: key);
 
   Widget _categoryIcon(Color color, String icon) {
     return Container(
       padding: const EdgeInsets.all(5),
-      width: 40,
-      height: 40,
+      width: size ?? 40,
+      height: size ?? 40,
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(13),

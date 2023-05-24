@@ -1,6 +1,8 @@
 import 'package:couple_to_do_list_app/features/upload_diary/controller/upload_diary_controller.dart';
+import 'package:couple_to_do_list_app/features/upload_diary/widgets/location_text_field.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/auxiliary_button.dart';
+import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:couple_to_do_list_app/widgets/main_button.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
@@ -29,7 +31,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
           fontSize: 40,
         ),
         decoration: const InputDecoration(
-          prefixIcon:  Icon(
+          prefixIcon: Icon(
             Icons.edit,
             color: CustomColors.darkGrey,
             size: 30,
@@ -197,24 +199,183 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       ),
     );
   }
-
-  Widget _contentTextField() {
-    return Expanded(
+  Widget _categoryDialog() {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(25),
+      ),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 11),
-        //Todo: 이거 수정해야될듯 높이
+        height: 550,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '카테고리',
+                  style: TextStyle(fontSize: 30),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 450,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _categoryCard(
+                              'airplane', '여행', CustomColors.travel, 'travel'),
+                          _categoryCard('running', '액티비티',
+                              CustomColors.activity, 'activity'),
+                          _categoryCard(
+                              'study', '자기계발', CustomColors.study, 'study'),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Container(
+                      height: 450,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _categoryCard(
+                              'food', '식사', CustomColors.meal, 'meal'),
+                          _categoryCard('singer', '문화활동', CustomColors.culture,
+                              'culture'),
+                          _categoryCard(
+                              'filter-file', '기타', CustomColors.etc, 'etc'),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _categoryCard(String icon, String text, Color color, String category) {
+    return GestureDetector(
+      onTap: () {
+        controller.changeCategory(category);
+        Get.back();
+      },
+      child: Container(
+        width: Get.width * 0.3,
+        height: Get.width * 0.3,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
-          color: Colors.white,
+          color: color,
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Divider(
-              color: Colors.black,
+            Image.asset(
+              'assets/icons/$icon.png',
+              width: 60,
             ),
-            TextField(
-              controller: controller.contentController,
+            SizedBox(height: 10),
+            Text(
+              text,
+              style: TextStyle(fontSize: 25, color: CustomColors.blackText),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _contentContainer(context) {
+double x=20;
+    Widget contents() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  controller.datePicker(context);
+                },
+                child: Obx(() {
+                  return Container(
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(color: CustomColors.grey)
+                        )
+                    ),
+                    child: Text(
+                      controller.diaryDateTime.value == null
+                          ? date ?? ' 날짜'
+                          : DateFormat('yyyy-MM-dd')
+                              .format(controller.diaryDateTime.value!),
+                      style: TextStyle(
+                        color: controller.diaryDateTime.value == null
+                            ? CustomColors.greyText
+                            : CustomColors.blackText,
+                        fontSize: 25,
+                      ),
+                    ),
+                  );
+                }),
+              ),
+              SizedBox(width: 30,),
+              GestureDetector(
+                onTap: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  Get.dialog(_categoryDialog());
+                },
+                child: Obx(() {
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: CustomColors.grey)
+                      )
+                    ),
+                    child: Row(
+                      children: [
+                        CategoryIcon(
+                          category: controller.DiaryCategory.value ?? '', size: 25,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          controller.categoryToString[
+                          controller.DiaryCategory.value] ??
+                              '카테고리',
+                          style: TextStyle(
+                            color: controller.categoryToString[
+                            controller.DiaryCategory.value] ==
+                                null
+                                ? CustomColors.greyText
+                                : CustomColors.blackText,
+                            fontSize: 25,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ),
+
+            ],
+          ),
+          Container(
+            width: (Get.width-100-x)*3/4,
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: CustomColors.grey)
+                )
+            ),
+            child: TextField(
+              controller: controller.locationController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
               onChanged: (value) {},
@@ -225,17 +386,90 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.redAccent), //<-- SEE HERE
-                ),
                 errorBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,
-                hintText: '나의 소감',
+                suffixIcon: Icon(Icons.location_on_outlined, color: CustomColors.lightGrey,),
+                hintText: ' 위치',
                 hintStyle: TextStyle(
                   color: CustomColors.greyText,
                   fontSize: 25,
                 ),
               ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    circleHole() {
+      return Container(
+        margin: EdgeInsets.all(10),
+        width: x,
+        height: x,
+        decoration: BoxDecoration(
+          color: CustomColors.redbrown,
+          shape: BoxShape.circle,
+        ),
+      );
+    }
+
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        padding: EdgeInsets.fromLTRB(0, 10, 20, 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: Colors.white,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                circleHole(),
+                circleHole(),
+                circleHole(),
+                circleHole(),
+                circleHole(),
+              ],
+            ),
+            Column(
+              children: [
+                contents(),
+                // Divider(
+                //   color: Colors.black,
+                //   height: 10,
+                // ),
+                SizedBox(
+                  width: Get.width-100-x,
+                  child: TextField(
+                    controller: controller.contentController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    onChanged: (value) {},
+                    style: TextStyle(
+                      color: CustomColors.blackText,
+                      fontSize: 25,
+                    ),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.redAccent), //<-- SEE HERE
+                      ),
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      hintText: '나의 소감',
+                      hintStyle: TextStyle(
+                        color: CustomColors.greyText,
+                        fontSize: 25,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -247,15 +481,19 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   Widget build(BuildContext context) {
     Get.put(UploadDiaryController());
     return GestureDetector(
-      onTap:(){ FocusManager.instance.primaryFocus?.unfocus();},
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: CustomColors.lightPink,
         body: Column(
           children: [
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             _Title(),
-            _contentTextField(),
+            _contentContainer(context),
             // //todo: 버튼 타자기떄문에 위로 안올라가게
             _imagePicker(),
             Row(
