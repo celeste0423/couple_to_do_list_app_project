@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage>
   late final TabController _tabController =
       TabController(length: 4, vsync: this);
 
-@override
+  @override
   void initState() {
     super.initState();
     InitBinding.additionalBinding();
@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage>
       ),
       child: TabBar(
         indicator: CircleTabIndicator(
-          color: CustomColors.backgroundLightGrey,
+          color: Colors.white,
           radius: 12,
         ),
         controller: _tabController,
@@ -100,7 +100,6 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: TabBarView(
         controller: _tabController,
