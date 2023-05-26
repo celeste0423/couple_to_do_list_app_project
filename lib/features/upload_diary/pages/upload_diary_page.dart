@@ -72,31 +72,33 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   PreferredSizeWidget _appBar() {
     return AppBar(
       backgroundColor: CustomColors.lightPink,
-      title: title != null
-          ? titleText(title!)
-          : TextField(
-              controller: controller.titleController,
-              maxLines: null,
-              textInputAction: TextInputAction.done,
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                color: CustomColors.darkGrey,
-                fontSize: 40,
-              ),
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 15),
-                hintText: '제목을 입력하세요',
-                hintStyle: TextStyle(
+      title:
+          Center(
+            child: TextField(
+                controller: controller.titleController,
+                maxLines: 1,
+                textInputAction: TextInputAction.done,
+                textAlign: TextAlign.start,
+                style: TextStyle(
                   color: CustomColors.darkGrey,
                   fontSize: 40,
                 ),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  contentPadding: EdgeInsets.only(left: 15),
+                  hintText: title != null ? title! :'제목을 입력하세요',
+                  suffixIcon: Icon(Icons.edit, size: 23, color: CustomColors.grey,),
+                  hintStyle: TextStyle(
+                    color: CustomColors.darkGrey,
+                    fontSize: 40,
+                  ),
+                ),
               ),
-            ),
+          ),
       leading: SizedBox(),
     );
   }
@@ -299,9 +301,10 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   Widget _contentContainer(context) {
     double numberoflines = 8;
     double holediameter = 16;
+
     Widget contents() {
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -312,12 +315,13 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                 },
                 child: Obx(() {
                   return Container(
+                    width: (Get.width - 110 - holediameter-20) *1/2 ,
                     decoration: BoxDecoration(
                         border: Border(
                             bottom: BorderSide(color: CustomColors.grey))),
                     child: Text(
                       controller.diaryDateTime.value == null
-                          ? date ?? '날짜'
+                          ? date ?? ' 날짜'
                           : DateFormat('yyyy-MM-dd')
                               .format(controller.diaryDateTime.value!),
                       style: TextStyle(
@@ -331,7 +335,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                 }),
               ),
               SizedBox(
-                width: 30,
+                width: 20,
               ),
               GestureDetector(
                 onTap: () {
@@ -340,10 +344,12 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                 },
                 child: Obx(() {
                   return Container(
-                    decoration: BoxDecoration(
+                      width: (Get.width - 110 - holediameter-20) *1/2,
+                      decoration: BoxDecoration(
                         border: Border(
                             bottom: BorderSide(color: CustomColors.grey))),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         CategoryIcon(
                           category: controller.DiaryCategory.value ?? '',
@@ -353,7 +359,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                         Text(
                           controller.categoryToString[
                                   controller.DiaryCategory.value] ??
-                              '카테고리',
+                              ' 카테고리',
                           style: TextStyle(
                             color: controller.categoryToString[
                                         controller.DiaryCategory.value] ==
@@ -371,32 +377,30 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
             ],
           ),
           Container(
-            width: (Get.width - 100 - holediameter) * 3 / 4,
-            // decoration: BoxDecoration(
-            //     border: Border(
-            //         bottom: BorderSide(color: CustomColors.grey)
-            //     )
-            // ),
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: CustomColors.grey))),
+            width: (Get.width - 100 - holediameter) * 11/16,
             child: TextField(
               controller: controller.locationController,
               keyboardType: TextInputType.multiline,
-              maxLines: null,
+              maxLines: 1,
               onChanged: (value) {},
               style: TextStyle(
                 color: CustomColors.blackText,
                 fontSize: 25,
-                decoration: TextDecoration.underline,
+                // decoration: TextDecoration.underline,
               ),
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 errorBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,
-                prefixIcon: Icon(
+                suffixIcon: Icon(
                   Icons.location_on_outlined,
                   color: CustomColors.lightGrey,
                 ),
-                hintText: ' 위치',
+                hintText: ' 장소/위치',
                 hintStyle: TextStyle(
                   color: CustomColors.greyText,
                   fontSize: 25,
@@ -414,7 +418,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
         width: holediameter,
         height: holediameter,
         decoration: BoxDecoration(
-          color: CustomColors.grey,
+          color: Color(0xffECE2E1),
           shape: BoxShape.circle,
         ),
       );
@@ -440,10 +444,6 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 contents(),
-                // Divider(
-                //   color: Colors.black,
-                //   height: 10,
-                // ),
                 Stack(
                   children: [
                     for (int i = 0; i < numberoflines; i++)
@@ -510,7 +510,17 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       ),
     );
   }
-
+Widget _buttonRow(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        auxiliaryButton('취소', () {
+          Get.back();
+        }, Get.width * 1 / 4),
+        mainButton('다이어리 작성', () {}, Get.width * 5 / 8)
+      ],
+    );
+}
   @override
   Widget build(BuildContext context) {
     Get.put(UploadDiaryController());
@@ -525,17 +535,8 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
         body: Column(
           children: [
             _contentContainer(context),
-            // //todo: 버튼 타자기떄문에 위로 안올라가게
             _imagePicker(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                auxiliaryButton('취소', () {
-                  Get.back();
-                }, Get.width * 1 / 4),
-                mainButton('다이어리 작성', () {}, Get.width * 5 / 8)
-              ],
-            ),
+            _buttonRow(),
             SizedBox(
               height: 10,
             )
