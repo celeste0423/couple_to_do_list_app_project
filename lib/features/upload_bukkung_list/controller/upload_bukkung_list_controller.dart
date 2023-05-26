@@ -16,6 +16,8 @@ import 'package:uuid/uuid.dart';
 class UploadBukkungListController extends GetxController {
   static UploadBukkungListController get to => Get.find();
 
+  final BukkungListModel? selectedBukkungListModel = Get.arguments;
+
   Rx<bool> isCompleted = false.obs;
 
   TextEditingController titleController = TextEditingController();
@@ -41,7 +43,11 @@ class UploadBukkungListController extends GetxController {
   ScrollController contentScrollController = ScrollController();
 
   Uint8List? listImage = null;
+  String baseImageUrl =
+      "https://firebasestorage.googleapis.com/v0/b/bukkunglist.appspot.com/o/bukkung_list%2F67b9ade0-ee36-11ed-b243-2f79762c93de%2FClosure%3A%20(%7BMap%3CString%2C%20dynamic%3E%3F%20options%7D)%20%3D%3E%20String%20from%20Function%20'v4'%3A..jpg?alt=media&token=f8db7acb-8888-4ca6-97f9-0a6ab237055d";
+
   Rx<bool> isImage = false.obs;
+  bool _isSelectedImage = false;
 
   Rx<bool> isPublic = true.obs;
   BukkungListModel? bukkungList;
@@ -49,6 +55,21 @@ class UploadBukkungListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    if (selectedBukkungListModel != null) {
+      titleController.text = selectedBukkungListModel!.title!;
+      listCategory(selectedBukkungListModel!.category!);
+      contentController.text = selectedBukkungListModel!.content!;
+      locationController.text = selectedBukkungListModel!.location!;
+      isPublic(false);
+      if (selectedBukkungListModel!.imgUrl != baseImageUrl) {
+        _isSelectedImage == false;
+      } else {
+        _isSelectedImage == true;
+      }
+      //Todo: 사진 있는 지 여부 확인 필요
+      // if(selectedBukkungListModel)
+    }
 
     _checkCompleted();
     titleController.addListener(_checkCompleted);
@@ -198,8 +219,7 @@ class UploadBukkungListController extends GetxController {
         content: contentController.text,
         location: locationController.text,
         //꼬물이 사진 기본 사진으로
-        imgUrl:
-            "https://firebasestorage.googleapis.com/v0/b/bukkunglist.appspot.com/o/bukkung_list%2F67b9ade0-ee36-11ed-b243-2f79762c93de%2FClosure%3A%20(%7BMap%3CString%2C%20dynamic%3E%3F%20options%7D)%20%3D%3E%20String%20from%20Function%20'v4'%3A..jpg?alt=media&token=f8db7acb-8888-4ca6-97f9-0a6ab237055d",
+        imgUrl: baseImageUrl,
         likeCount: 0,
         date: listDateTime.value,
         madeBy: AuthController.to.user.value.nickname,

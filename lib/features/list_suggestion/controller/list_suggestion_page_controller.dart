@@ -36,7 +36,8 @@ class ListSuggestionPageController extends GetxController
         content: list[0].content,
         location: list[0].location,
         category: list[0].category,
-        imgUrl: list[0].imgUrl!,
+        imgUrl: list[0].imgUrl,
+        madeBy: list[0].madeBy,
       );
       selectedList.value = updatedList;
     }
