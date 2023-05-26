@@ -47,13 +47,14 @@ class ListSuggestionPageController extends GetxController
     }
   }
 
-  Stream<List<BukkungListModel>> getSuggestionAllBukkungList() {
-    return ListSuggestionRepository().getAllBukkungList();
-  }
-
   Future<List<BukkungListModel>> getSuggestionBukkungList(
-      String category) async {
+    String category,
+  ) async {
     print('리스트 추천 stream(sugg cont) ${category}');
-    return await ListSuggestionRepository().getTypeBukkungList(category);
+    if (category == 'all') {
+      return ListSuggestionRepository().getAllBukkungList();
+    } else {
+      return await ListSuggestionRepository().getTypeBukkungList(category);
+    }
   }
 }

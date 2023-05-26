@@ -147,7 +147,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         child: TabBarView(
           controller: controller.suggestionListTabController,
           children: [
-            _suggestionAllList(),
+            _suggestionList(0),
             _suggestionList(1),
             _suggestionList(2),
             _suggestionList(3),
@@ -159,35 +159,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
-  Widget _suggestionAllList() {
-    return StreamBuilder(
-      stream: controller.getSuggestionAllBukkungList(),
-      builder: (BuildContext context,
-          AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
-        print(bukkungLists.hasData);
-        if (!bukkungLists.hasData) {
-          return Center(
-            child: CircularProgressIndicator(color: CustomColors.mainPink),
-          );
-        } else if (bukkungLists.hasError) {
-          openAlertDialog(title: '에러 발생');
-        } else {
-          final _list = bukkungLists.data!;
-          print('리스트 출력(sugg page)${_list.length}');
-          return ListView.builder(
-            itemCount: _list.length,
-            itemBuilder: (context, index) {
-              final _bukkungList = _list[index];
-              return _suggestionListCard(_bukkungList);
-            },
-          );
-        }
-        return Center(child: Text('아직 버꿍리스트가 없습니다'));
-      },
-    );
-  }
-
   Widget _suggestionList(int index) {
+    print('탭별 리스트 로딩 (sug pag) 탭: $index}');
     return FutureBuilder(
       future: controller.getSuggestionBukkungList(
         controller.tabIndexToName(index),
