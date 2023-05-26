@@ -1,5 +1,6 @@
 import 'package:couple_to_do_list_app/features/upload_diary/controller/upload_diary_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/widgets/location_text_field.dart';
+import 'package:couple_to_do_list_app/features/upload_diary/widgets/underlined_textfield.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/auxiliary_button.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
@@ -70,31 +71,34 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
 
   PreferredSizeWidget _appBar() {
     return AppBar(
-      title: title != null
-          ? titleText(title!)
-          : TextField(
-              controller: controller.titleController,
-              maxLines: null,
-              textInputAction: TextInputAction.done,
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                color: CustomColors.darkGrey,
-                fontSize: 40,
-              ),
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 15),
-                hintText: '제목을 입력하세요',
-                hintStyle: TextStyle(
+      backgroundColor: CustomColors.lightPink,
+      title:
+          Center(
+            child: TextField(
+                controller: controller.titleController,
+                maxLines: 1,
+                textInputAction: TextInputAction.done,
+                textAlign: TextAlign.start,
+                style: TextStyle(
                   color: CustomColors.darkGrey,
                   fontSize: 40,
                 ),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  contentPadding: EdgeInsets.only(left: 15),
+                  hintText: title != null ? title! :'제목을 입력하세요',
+                  suffixIcon: Icon(Icons.edit, size: 23, color: CustomColors.grey,),
+                  hintStyle: TextStyle(
+                    color: CustomColors.darkGrey,
+                    fontSize: 40,
+                  ),
+                ),
               ),
-            ),
+          ),
       leading: SizedBox(),
     );
   }
@@ -199,6 +203,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       ),
     );
   }
+
   Widget _categoryDialog() {
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -292,14 +297,17 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       ),
     );
   }
+
   Widget _contentContainer(context) {
-double x=20;
+    double numberoflines = 8;
+    double holediameter = 16;
+
     Widget contents() {
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               GestureDetector(
                 onTap: () {
@@ -307,11 +315,10 @@ double x=20;
                 },
                 child: Obx(() {
                   return Container(
+                    width: (Get.width - 110 - holediameter-20) *1/2 ,
                     decoration: BoxDecoration(
                         border: Border(
-                            bottom: BorderSide(color: CustomColors.grey)
-                        )
-                    ),
+                            bottom: BorderSide(color: CustomColors.grey))),
                     child: Text(
                       controller.diaryDateTime.value == null
                           ? date ?? ' 날짜'
@@ -327,7 +334,9 @@ double x=20;
                   );
                 }),
               ),
-              SizedBox(width: 30,),
+              SizedBox(
+                width: 20,
+              ),
               GestureDetector(
                 onTap: () {
                   FocusManager.instance.primaryFocus?.unfocus();
@@ -335,25 +344,26 @@ double x=20;
                 },
                 child: Obx(() {
                   return Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: CustomColors.grey)
-                      )
-                    ),
+                      width: (Get.width - 110 - holediameter-20) *1/2,
+                      decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(color: CustomColors.grey))),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         CategoryIcon(
-                          category: controller.DiaryCategory.value ?? '', size: 25,
+                          category: controller.DiaryCategory.value ?? '',
+                          size: 25,
                         ),
                         SizedBox(width: 10),
                         Text(
                           controller.categoryToString[
-                          controller.DiaryCategory.value] ??
-                              '카테고리',
+                                  controller.DiaryCategory.value] ??
+                              ' 카테고리',
                           style: TextStyle(
                             color: controller.categoryToString[
-                            controller.DiaryCategory.value] ==
-                                null
+                                        controller.DiaryCategory.value] ==
+                                    null
                                 ? CustomColors.greyText
                                 : CustomColors.blackText,
                             fontSize: 25,
@@ -364,32 +374,33 @@ double x=20;
                   );
                 }),
               ),
-
             ],
           ),
           Container(
-            width: (Get.width-100-x)*3/4,
             decoration: BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: CustomColors.grey)
-                )
-            ),
+                    bottom: BorderSide(color: CustomColors.grey))),
+            width: (Get.width - 100 - holediameter) * 11/16,
             child: TextField(
               controller: controller.locationController,
               keyboardType: TextInputType.multiline,
-              maxLines: null,
+              maxLines: 1,
               onChanged: (value) {},
               style: TextStyle(
                 color: CustomColors.blackText,
                 fontSize: 25,
+                // decoration: TextDecoration.underline,
               ),
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 errorBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,
-                suffixIcon: Icon(Icons.location_on_outlined, color: CustomColors.lightGrey,),
-                hintText: ' 위치',
+                suffixIcon: Icon(
+                  Icons.location_on_outlined,
+                  color: CustomColors.lightGrey,
+                ),
+                hintText: ' 장소/위치',
                 hintStyle: TextStyle(
                   color: CustomColors.greyText,
                   fontSize: 25,
@@ -404,10 +415,10 @@ double x=20;
     circleHole() {
       return Container(
         margin: EdgeInsets.all(10),
-        width: x,
-        height: x,
+        width: holediameter,
+        height: holediameter,
         decoration: BoxDecoration(
-          color: CustomColors.redbrown,
+          color: Color(0xffECE2E1),
           shape: BoxShape.circle,
         ),
       );
@@ -416,7 +427,7 @@ double x=20;
     return Expanded(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        padding: EdgeInsets.fromLTRB(0, 10, 20, 10),
+        padding: EdgeInsets.fromLTRB(0, 20, 20, 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           color: Colors.white,
@@ -426,49 +437,72 @@ double x=20;
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                circleHole(),
-                circleHole(),
-                circleHole(),
-                circleHole(),
-                circleHole(),
-              ],
+              children: [for (int i = 0; i < 6; i++) circleHole()],
             ),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 contents(),
-                // Divider(
-                //   color: Colors.black,
-                //   height: 10,
-                // ),
-                SizedBox(
-                  width: Get.width-100-x,
-                  child: TextField(
-                    controller: controller.contentController,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    onChanged: (value) {},
-                    style: TextStyle(
-                      color: CustomColors.blackText,
-                      fontSize: 25,
-                    ),
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.redAccent), //<-- SEE HERE
+                Stack(
+                  children: [
+                    for (int i = 0; i < numberoflines; i++)
+                      Container(
+                        width: Get.width - 110 - holediameter,
+                        margin: EdgeInsets.only(
+                          top: 4 + (i + 1) * 28,
+                        ),
+                        height: 1,
+                        color: CustomColors.grey,
                       ),
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      hintText: '나의 소감',
-                      hintStyle: TextStyle(
-                        color: CustomColors.greyText,
-                        fontSize: 25,
+                    SizedBox(
+                      height: 28 * (numberoflines+2),
+                      width: Get.width - 100 - holediameter,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: TextField(
+                          decoration: InputDecoration(border: InputBorder.none),
+                          cursorHeight: 15,
+                          style: TextStyle(
+                            fontSize: 28.0,
+                          ),
+                          keyboardType: TextInputType.multiline,
+                          expands: false,
+                          maxLines: numberoflines.toInt(),
+                          maxLength: 170,
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
+                // SizedBox(
+                //   width: Get.width-100-x,
+                //   child: TextField(
+                //     controller: controller.contentController,
+                //     keyboardType: TextInputType.multiline,
+                //     maxLines: null,
+                //     onChanged: (value) {},
+                //     style: TextStyle(
+                //       color: CustomColors.blackText,
+                //       fontSize: 25,
+                //     ),
+                //     decoration: const InputDecoration(
+                //       border: InputBorder.none,
+                //       focusedBorder: InputBorder.none,
+                //       enabledBorder: UnderlineInputBorder(
+                //         borderSide:
+                //             BorderSide(color: Colors.redAccent), //<-- SEE HERE
+                //       ),
+                //       errorBorder: InputBorder.none,
+                //       disabledBorder: InputBorder.none,
+                //       hintText: '나의 소감',
+                //       hintStyle: TextStyle(
+                //         color: CustomColors.greyText,
+                //         fontSize: 25,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ],
@@ -476,7 +510,17 @@ double x=20;
       ),
     );
   }
-
+Widget _buttonRow(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        auxiliaryButton('취소', () {
+          Get.back();
+        }, Get.width * 1 / 4),
+        mainButton('다이어리 작성', () {}, Get.width * 5 / 8)
+      ],
+    );
+}
   @override
   Widget build(BuildContext context) {
     Get.put(UploadDiaryController());
@@ -487,24 +531,12 @@ double x=20;
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: CustomColors.lightPink,
+        appBar: _appBar(),
         body: Column(
           children: [
-            SizedBox(
-              height: 10,
-            ),
-            _Title(),
             _contentContainer(context),
-            // //todo: 버튼 타자기떄문에 위로 안올라가게
             _imagePicker(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                auxiliaryButton('취소', () {
-                  Get.back();
-                }, Get.width * 1 / 4),
-                mainButton('다이어리 작성', () {}, Get.width * 5 / 8)
-              ],
-            ),
+            _buttonRow(),
             SizedBox(
               height: 10,
             )
