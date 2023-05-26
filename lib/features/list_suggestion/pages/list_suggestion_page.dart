@@ -4,6 +4,7 @@ import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
+import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:couple_to_do_list_app/widgets/type_select_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -192,15 +193,47 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
 
   Widget _suggestionListCard(BukkungListModel bukkungListModel) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 4),
       child: Stack(
         children: [
           Container(
             margin: EdgeInsets.symmetric(vertical: 10),
-            height: 80,
+            padding: EdgeInsets.only(left: 120, right: 30),
+            height: 85,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(25),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MarqueeAbleText(
+                  text: bukkungListModel.title!,
+                  maxLength: 10,
+                  style: TextStyle(fontSize: 25, color: CustomColors.blackText),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _iconText(
+                      'location-pin.png',
+                      bukkungListModel.location!,
+                      true,
+                    ),
+                    // _iconText(
+                    //   'preview.png',
+                    //   '${bukkungListModel.viewCount!}회',
+                    //   false,
+                    // ),
+                    // _iconText(
+                    //   'like.png',
+                    //   '${bukkungListModel.likeCount.toString()!}개',
+                    //   false,
+                    // ),
+                  ],
+                )
+              ],
             ),
           ),
           Container(
@@ -224,6 +257,33 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _iconText(String image, String text, bool marquee) {
+    return Row(
+      children: [
+        Image.asset(
+          'assets/icons/$image',
+          width: 25,
+          color: CustomColors.grey.withOpacity(0.5),
+          colorBlendMode: BlendMode.modulate,
+        ),
+        marquee
+            ? MarqueeAbleText(
+                text: text,
+                maxLength: 5,
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              )
+            : Text(
+                text,
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+      ],
     );
   }
 
