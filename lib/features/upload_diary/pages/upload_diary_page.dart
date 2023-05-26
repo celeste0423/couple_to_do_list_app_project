@@ -1,5 +1,6 @@
 import 'package:couple_to_do_list_app/features/upload_diary/controller/upload_diary_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/widgets/location_text_field.dart';
+import 'package:couple_to_do_list_app/features/upload_diary/widgets/underlined_textfield.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/auxiliary_button.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
@@ -70,6 +71,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
 
   PreferredSizeWidget _appBar() {
     return AppBar(
+      backgroundColor: CustomColors.lightPink,
       title: title != null
           ? titleText(title!)
           : TextField(
@@ -199,6 +201,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       ),
     );
   }
+
   Widget _categoryDialog() {
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -292,14 +295,16 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       ),
     );
   }
+
   Widget _contentContainer(context) {
-double x=20;
+    double numberoflines = 8;
+    double holediameter = 16;
     Widget contents() {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               GestureDetector(
                 onTap: () {
@@ -309,12 +314,10 @@ double x=20;
                   return Container(
                     decoration: BoxDecoration(
                         border: Border(
-                            bottom: BorderSide(color: CustomColors.grey)
-                        )
-                    ),
+                            bottom: BorderSide(color: CustomColors.grey))),
                     child: Text(
                       controller.diaryDateTime.value == null
-                          ? date ?? ' 날짜'
+                          ? date ?? '날짜'
                           : DateFormat('yyyy-MM-dd')
                               .format(controller.diaryDateTime.value!),
                       style: TextStyle(
@@ -327,7 +330,9 @@ double x=20;
                   );
                 }),
               ),
-              SizedBox(width: 30,),
+              SizedBox(
+                width: 30,
+              ),
               GestureDetector(
                 onTap: () {
                   FocusManager.instance.primaryFocus?.unfocus();
@@ -336,24 +341,23 @@ double x=20;
                 child: Obx(() {
                   return Container(
                     decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: CustomColors.grey)
-                      )
-                    ),
+                        border: Border(
+                            bottom: BorderSide(color: CustomColors.grey))),
                     child: Row(
                       children: [
                         CategoryIcon(
-                          category: controller.DiaryCategory.value ?? '', size: 25,
+                          category: controller.DiaryCategory.value ?? '',
+                          size: 25,
                         ),
                         SizedBox(width: 10),
                         Text(
                           controller.categoryToString[
-                          controller.DiaryCategory.value] ??
+                                  controller.DiaryCategory.value] ??
                               '카테고리',
                           style: TextStyle(
                             color: controller.categoryToString[
-                            controller.DiaryCategory.value] ==
-                                null
+                                        controller.DiaryCategory.value] ==
+                                    null
                                 ? CustomColors.greyText
                                 : CustomColors.blackText,
                             fontSize: 25,
@@ -364,16 +368,15 @@ double x=20;
                   );
                 }),
               ),
-
             ],
           ),
           Container(
-            width: (Get.width-100-x)*3/4,
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(color: CustomColors.grey)
-                )
-            ),
+            width: (Get.width - 100 - holediameter) * 3 / 4,
+            // decoration: BoxDecoration(
+            //     border: Border(
+            //         bottom: BorderSide(color: CustomColors.grey)
+            //     )
+            // ),
             child: TextField(
               controller: controller.locationController,
               keyboardType: TextInputType.multiline,
@@ -382,13 +385,17 @@ double x=20;
               style: TextStyle(
                 color: CustomColors.blackText,
                 fontSize: 25,
+                decoration: TextDecoration.underline,
               ),
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 errorBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,
-                suffixIcon: Icon(Icons.location_on_outlined, color: CustomColors.lightGrey,),
+                prefixIcon: Icon(
+                  Icons.location_on_outlined,
+                  color: CustomColors.lightGrey,
+                ),
                 hintText: ' 위치',
                 hintStyle: TextStyle(
                   color: CustomColors.greyText,
@@ -404,10 +411,10 @@ double x=20;
     circleHole() {
       return Container(
         margin: EdgeInsets.all(10),
-        width: x,
-        height: x,
+        width: holediameter,
+        height: holediameter,
         decoration: BoxDecoration(
-          color: CustomColors.redbrown,
+          color: CustomColors.grey,
           shape: BoxShape.circle,
         ),
       );
@@ -416,7 +423,7 @@ double x=20;
     return Expanded(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        padding: EdgeInsets.fromLTRB(0, 10, 20, 10),
+        padding: EdgeInsets.fromLTRB(0, 20, 20, 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           color: Colors.white,
@@ -426,49 +433,76 @@ double x=20;
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                circleHole(),
-                circleHole(),
-                circleHole(),
-                circleHole(),
-                circleHole(),
-              ],
+              children: [for (int i = 0; i < 6; i++) circleHole()],
             ),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 contents(),
                 // Divider(
                 //   color: Colors.black,
                 //   height: 10,
                 // ),
-                SizedBox(
-                  width: Get.width-100-x,
-                  child: TextField(
-                    controller: controller.contentController,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    onChanged: (value) {},
-                    style: TextStyle(
-                      color: CustomColors.blackText,
-                      fontSize: 25,
-                    ),
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.redAccent), //<-- SEE HERE
+                Stack(
+                  children: [
+                    for (int i = 0; i < numberoflines; i++)
+                      Container(
+                        width: Get.width - 110 - holediameter,
+                        margin: EdgeInsets.only(
+                          top: 4 + (i + 1) * 28,
+                        ),
+                        height: 1,
+                        color: CustomColors.grey,
                       ),
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      hintText: '나의 소감',
-                      hintStyle: TextStyle(
-                        color: CustomColors.greyText,
-                        fontSize: 25,
+                    SizedBox(
+                      height: 28 * (numberoflines+2),
+                      width: Get.width - 100 - holediameter,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: TextField(
+                          decoration: InputDecoration(border: InputBorder.none),
+                          cursorHeight: 15,
+                          style: TextStyle(
+                            fontSize: 28.0,
+                          ),
+                          keyboardType: TextInputType.multiline,
+                          expands: false,
+                          maxLines: numberoflines.toInt(),
+                          maxLength: 170,
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
+                // SizedBox(
+                //   width: Get.width-100-x,
+                //   child: TextField(
+                //     controller: controller.contentController,
+                //     keyboardType: TextInputType.multiline,
+                //     maxLines: null,
+                //     onChanged: (value) {},
+                //     style: TextStyle(
+                //       color: CustomColors.blackText,
+                //       fontSize: 25,
+                //     ),
+                //     decoration: const InputDecoration(
+                //       border: InputBorder.none,
+                //       focusedBorder: InputBorder.none,
+                //       enabledBorder: UnderlineInputBorder(
+                //         borderSide:
+                //             BorderSide(color: Colors.redAccent), //<-- SEE HERE
+                //       ),
+                //       errorBorder: InputBorder.none,
+                //       disabledBorder: InputBorder.none,
+                //       hintText: '나의 소감',
+                //       hintStyle: TextStyle(
+                //         color: CustomColors.greyText,
+                //         fontSize: 25,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ],
@@ -487,12 +521,9 @@ double x=20;
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: CustomColors.lightPink,
+        appBar: _appBar(),
         body: Column(
           children: [
-            SizedBox(
-              height: 10,
-            ),
-            _Title(),
             _contentContainer(context),
             // //todo: 버튼 타자기떄문에 위로 안올라가게
             _imagePicker(),
