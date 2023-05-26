@@ -9,6 +9,7 @@ class BukkungListModel {
   final String? location;
   final String? imgUrl;
   final int? likeCount;
+  final int? viewCount;
   final DateTime? date;
   final String? madeBy;
   final String? userId;
@@ -23,6 +24,7 @@ class BukkungListModel {
     this.location,
     this.imgUrl,
     this.likeCount,
+    this.viewCount,
     this.date,
     this.madeBy,
     this.userId,
@@ -40,6 +42,7 @@ class BukkungListModel {
       location: '',
       imgUrl: null,
       likeCount: 0,
+      viewCount: 0,
       date: time,
       madeBy: userInfo.nickname,
       userId: userInfo.uid,
@@ -57,6 +60,7 @@ class BukkungListModel {
       location: json['location'] == null ? null : json['location'] as String,
       imgUrl: json['imgUrl'] == null ? null : json['imgUrl'] as String,
       likeCount: json['likeCount'] == null ? 0 : json['likeCount'] as int,
+      viewCount: json['viewCount'] == null ? 0 : json['viewCount'] as int,
       date: json['date'] == null
           ? DateTime.now()
           : (json['date'] as Timestamp).toDate(),
@@ -78,6 +82,7 @@ class BukkungListModel {
       'location': location,
       'imgUrl': imgUrl,
       'likeCount': likeCount,
+      'viewCount': viewCount,
       'date': date,
       'madeBy': madeBy,
       'userId': userId,
@@ -94,6 +99,7 @@ class BukkungListModel {
     String? location,
     String? imgUrl,
     int? likeCount,
+    int? viewCount,
     DateTime? date,
     String? madeBy,
     String? userId,
@@ -108,6 +114,7 @@ class BukkungListModel {
       location: location ?? this.location,
       imgUrl: imgUrl ?? this.imgUrl,
       likeCount: likeCount ?? this.likeCount,
+      viewCount: viewCount ?? this.viewCount,
       date: date ?? this.date,
       madeBy: madeBy ?? this.madeBy,
       userId: userId ?? this.userId,
