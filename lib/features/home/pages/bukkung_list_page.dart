@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/utils/type_to_color.dart';
+import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:flutter/material.dart';
@@ -72,9 +73,9 @@ class BukkungListPage extends GetView<BukkungListPageController> {
           itemBuilder: (BuildContext context) {
             return [
               PopupMenuItem(
-                value: "icon",
+                value: "category",
                 child: Text(
-                  "유형별",
+                  "카테고리 별",
                   style: TextStyle(
                     fontSize: 20,
                     fontFamily: 'Yoonwoo',
@@ -86,7 +87,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               PopupMenuItem(
                 value: "date",
                 child: Text(
-                  "날짜 순",
+                  "최신 순",
                   style: TextStyle(
                     fontSize: 20,
                     fontFamily: 'Yoonwoo',
@@ -96,9 +97,9 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                 ),
               ),
               PopupMenuItem(
-                value: "like",
+                value: "redate",
                 child: Text(
-                  "좋아요 순",
+                  "이전 순",
                   style: TextStyle(
                     fontSize: 20,
                     fontFamily: 'Yoonwoo',
@@ -131,41 +132,218 @@ class BukkungListPage extends GetView<BukkungListPageController> {
   }
 
   Widget _bukkungListView() {
-    print('현재 타입 (buk page)${controller.currentType!.value}');
-    return Expanded(
-      child: StreamBuilder(
-        stream: BukkungListPageController.to.getAllBukkungList(
-          controller.currentType.value!,
-        ),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
-          if (!bukkungLists.hasData) {
-            print('로딩중(buk page');
-            return Center(
-              child: CircularProgressIndicator(color: CustomColors.mainPink),
-            );
-          } else if (bukkungLists.hasError) {
-            openAlertDialog(title: '에러 발생');
-          } else {
-            final _list = bukkungLists.data!;
-            print('리스트 출력(buk page)${_list.length}');
-            return ListView(
-              physics: AlwaysScrollableScrollPhysics(),
-              children: [
-                Column(
-                  children: List.generate(_list.length, (index) {
-                    final _bukkungList = _list[index];
-                    return _bukkungListCard(_bukkungList);
-                  }),
-                ),
-                SizedBox(height: 100),
-              ],
-            );
-          }
-          return Center(child: Text('아직 버꿍리스트가 없습니다'));
-        },
-      ),
-    );
+    return Obx(() {
+      print('현재 타입 (buk page)${controller.currentType!.value}');
+      if (controller.currentType!.value == 'category') {
+        return Expanded(
+          child: StreamBuilder(
+            stream: BukkungListPageController.to.getAllBukkungListByCategory(),
+            builder: (BuildContext context,
+                AsyncSnapshot<Map<String, dynamic>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child:
+                      CircularProgressIndicator(color: CustomColors.mainPink),
+                );
+              } else if (snapshot.hasError) {
+                openAlertDialog(title: '에러 발생');
+              } else if (snapshot.hasData) {
+                final _list =
+                    snapshot.data!['bukkungLists'] as List<BukkungListModel>;
+                final _categoryCount =
+                    snapshot.data!['categoryCount'] as List<int>;
+                print('리스트 출력(buk page)${_list.length}');
+
+                if (_list != null) {
+                  return ListView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    children: [
+                      Column(
+                        children: List.generate(_list.length, (index) {
+                          final _bukkungList = _list[index];
+
+                          if (_categoryCount[0] != 0 && index == 0) {
+                            return Column(
+                              children: [
+                                _categoryDivider(1),
+                                _bukkungListCard(_bukkungList),
+                              ],
+                            );
+                          } else if (_categoryCount[1] != 0 &&
+                              index == _categoryCount[0]) {
+                            return Column(
+                              children: [
+                                _categoryDivider(2),
+                                _bukkungListCard(_bukkungList),
+                              ],
+                            );
+                          } else if (_categoryCount[2] != 0 &&
+                              index == _categoryCount[0] + _categoryCount[1]) {
+                            return Column(
+                              children: [
+                                _categoryDivider(3),
+                                _bukkungListCard(_bukkungList),
+                              ],
+                            );
+                          } else if (_categoryCount[3] != 0 &&
+                              index ==
+                                  _categoryCount[0] +
+                                      _categoryCount[1] +
+                                      _categoryCount[2]) {
+                            return Column(
+                              children: [
+                                _categoryDivider(4),
+                                _bukkungListCard(_bukkungList),
+                              ],
+                            );
+                          } else if (_categoryCount[4] != 0 &&
+                              index ==
+                                  _categoryCount[0] +
+                                      _categoryCount[1] +
+                                      _categoryCount[2] +
+                                      _categoryCount[3]) {
+                            return Column(
+                              children: [
+                                _categoryDivider(5),
+                                _bukkungListCard(_bukkungList),
+                              ],
+                            );
+                          } else if (_categoryCount[5] != 0 &&
+                              index ==
+                                  _categoryCount[0] +
+                                      _categoryCount[1] +
+                                      _categoryCount[2] +
+                                      _categoryCount[3] +
+                                      _categoryCount[4]) {
+                            return Column(
+                              children: [
+                                _categoryDivider(6),
+                                _bukkungListCard(_bukkungList),
+                              ],
+                            );
+                          }
+                          return _bukkungListCard(_bukkungList);
+                        }),
+                      ),
+                      SizedBox(height: 100),
+                    ],
+                  );
+                }
+              }
+              return Center(child: Text('아직 버꿍리스트가 없습니다'));
+            },
+          ),
+        );
+      } else {
+        return Expanded(
+          child: StreamBuilder(
+            stream: BukkungListPageController.to.getAllBukkungList(
+              controller.currentType.value!,
+            ),
+            builder: (BuildContext context,
+                AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+              if (!bukkungLists.hasData) {
+                return Center(
+                  child:
+                      CircularProgressIndicator(color: CustomColors.mainPink),
+                );
+              } else if (bukkungLists.hasError) {
+                openAlertDialog(title: '에러 발생');
+              } else {
+                final _list = bukkungLists.data!;
+                print('리스트 출력(buk page)${_list.length}');
+                return ListView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  children: [
+                    Column(
+                      children: List.generate(_list.length, (index) {
+                        final _bukkungList = _list[index];
+                        return _bukkungListCard(_bukkungList);
+                      }),
+                    ),
+                    SizedBox(height: 100),
+                  ],
+                );
+              }
+              return Center(child: Text('아직 버꿍리스트가 없습니다'));
+            },
+          ),
+        );
+      }
+    });
+  }
+
+  Widget _categoryDivider(int categoryNumber) {
+    switch (categoryNumber) {
+      case 1:
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Row(
+            children: [
+              CategoryIcon(category: '1travel'),
+              SizedBox(width: 10),
+              Text('여행', style: TextStyle(fontSize: 25)),
+            ],
+          ),
+        );
+      case 2:
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Row(
+            children: [
+              CategoryIcon(category: '2meal'),
+              SizedBox(width: 10),
+              Text('식사', style: TextStyle(fontSize: 25)),
+            ],
+          ),
+        );
+      case 3:
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Row(
+            children: [
+              CategoryIcon(category: '3activity'),
+              SizedBox(width: 10),
+              Text('액티비티', style: TextStyle(fontSize: 25)),
+            ],
+          ),
+        );
+      case 4:
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Row(
+            children: [
+              CategoryIcon(category: '4culture'),
+              SizedBox(width: 10),
+              Text('문화 활동', style: TextStyle(fontSize: 25)),
+            ],
+          ),
+        );
+      case 5:
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Row(
+            children: [
+              CategoryIcon(category: '5study'),
+              SizedBox(width: 10),
+              Text('자기 계발', style: TextStyle(fontSize: 25)),
+            ],
+          ),
+        );
+      case 6:
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Row(
+            children: [
+              CategoryIcon(category: '6etc'),
+              SizedBox(width: 10),
+              Text('기타', style: TextStyle(fontSize: 25)),
+            ],
+          ),
+        );
+      default:
+        return Container();
+    }
   }
 
   Widget _bukkungListCard(BukkungListModel bukkungListModel) {
@@ -176,7 +354,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
           Expanded(
             flex: 12,
             child: Container(
-              height: 150,
+              height: 120,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -245,7 +423,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
           Expanded(
             flex: 1,
             child: Container(
-              height: 150,
+              height: 120,
               decoration: BoxDecoration(
                 color: TypeToColor.typeToColor(bukkungListModel.category),
                 borderRadius: BorderRadius.only(

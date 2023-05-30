@@ -12,8 +12,8 @@ class BukkungListPageController extends GetxController {
   Rx<String?> currentType = "category".obs;
   Map<String, String> typetoString = {
     "category": "카테고리 별",
-    "date": "날짜 순",
-    "like": "좋아요 순",
+    "date": "최신 순",
+    "redate": "이전 순",
   };
 
   @override
@@ -21,6 +21,12 @@ class BukkungListPageController extends GetxController {
     super.onInit();
     currentType.value = "category";
     // myGroup(AuthController.to.group.value);
+  }
+
+  Stream<Map<String, dynamic>> getAllBukkungListByCategory() {
+    final GroupModel groupModel = AuthController.to.group.value;
+    return BukkungListRepository(groupModel: groupModel)
+        .getGroupBukkungListByCategory();
   }
 
   Stream<List<BukkungListModel>> getAllBukkungList(String type) {
@@ -31,15 +37,12 @@ class BukkungListPageController extends GetxController {
     // print('현재 유저 (buk page cont)${myGroup.value.uid}');
 
     switch (type) {
-      case 'category':
-        return BukkungListRepository(groupModel: groupModel)
-            .getGroupBukkungListByDate();
       case 'date':
         return BukkungListRepository(groupModel: groupModel)
             .getGroupBukkungListByDate();
-      case 'like':
+      case 'redate':
         return BukkungListRepository(groupModel: groupModel)
-            .getGroupBukkungListByDate();
+            .getGroupBukkungListByReverseDate();
       default:
         print('에러: 분류 타입 지정 안됨(buk cont)');
         return BukkungListRepository(groupModel: groupModel)

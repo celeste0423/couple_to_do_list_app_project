@@ -8,8 +8,34 @@ class BukkungListRepository {
 
   BukkungListRepository({required this.groupModel});
 
+  Stream<Map<String, dynamic>> getGroupBukkungListByCategory() {
+    return FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupModel.uid)
+        .collection('bukkungLists')
+        .orderBy('category', descending: false)
+        .snapshots()
+        .map((event) {
+      List<BukkungListModel> bukkungLists = [];
+      List<int> categoryCount = [0, 0, 0, 0, 0, 0];
+      for (var bukkungList in event.docs) {
+        final bukkungListModel = BukkungListModel.fromJson(bukkungList.data());
+        bukkungLists.add(bukkungListModel);
+
+        //카테고리별 개수 추가
+        final categoryIndex =
+            int.parse(bukkungListModel.category!.substring(0, 1));
+        categoryCount[categoryIndex - 1]++;
+      }
+      print('버꿍리스트(buk repo)${bukkungLists.length}');
+      return {
+        'bukkungLists': bukkungLists,
+        'categoryCount': categoryCount,
+      };
+    });
+  }
+
   Stream<List<BukkungListModel>> getGroupBukkungListByDate() {
-    print('스트림 시작');
     return FirebaseFirestore.instance
         .collection('groups')
         .doc(groupModel.uid)
@@ -21,7 +47,22 @@ class BukkungListRepository {
       for (var bukkungList in event.docs) {
         bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
       }
-      print('버꿍리스트(buk repo)${bukkungLists.length}');
+      return bukkungLists;
+    });
+  }
+
+  Stream<List<BukkungListModel>> getGroupBukkungListByReverseDate() {
+    return FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupModel.uid)
+        .collection('bukkungLists')
+        .orderBy('date', descending: false)
+        .snapshots()
+        .map((event) {
+      List<BukkungListModel> bukkungLists = [];
+      for (var bukkungList in event.docs) {
+        bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+      }
       return bukkungLists;
     });
   }
