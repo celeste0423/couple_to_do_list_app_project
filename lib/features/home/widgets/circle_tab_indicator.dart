@@ -21,10 +21,20 @@ class _CirclePainter extends BoxPainter {
 
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {
-    final Offset circleOffset =
-        offset + Offset(cfg.size!.width / 2, cfg.size!.height / 2 + 37);
-    // final Offset circleOffset =
-    //     offset + Offset(cfg.size!.width / 2, cfg.size!.height - radius - 5);
-    canvas.drawCircle(circleOffset, radius, _paint);
+    final Rect rect = Rect.fromCircle(
+      center: offset + Offset(cfg.size!.width / 2, cfg.size!.height / 2 + 37.4),
+      radius: radius,
+    );
+    final double startAngle = -3.141592; // 시작 각도 (반시계 방향)
+    final double sweepAngle = 3.141592; // 반원의 호도 (반시계 방향)
+
+    canvas.drawArc(rect, startAngle, sweepAngle, true, _paint);
   }
+  // void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {
+  //   final Offset circleOffset =
+  //       offset + Offset(cfg.size!.width / 2, cfg.size!.height / 2 + 37);
+  //   // final Offset circleOffset =
+  //   //     offset + Offset(cfg.size!.width / 2, cfg.size!.height - radius - 5);
+  //   canvas.drawCircle(circleOffset, radius, _paint);
+  // }
 }

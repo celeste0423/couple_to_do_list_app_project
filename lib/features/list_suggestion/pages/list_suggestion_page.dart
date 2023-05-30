@@ -94,44 +94,135 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   }
 
   Widget _selectedImage() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 20),
-      width: 330,
-      height: 230,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 3,
-            blurRadius: 10,
-            offset: Offset(5, 5), // Offset(수평, 수직)
-          ),
-        ],
-        image: DecorationImage(
-          image: NetworkImage(
-            'https://post-phinf.pstatic.net/MjAxNzEwMjBfNjYg/MDAxNTA4NDY0NzkxMDc3.BXMDJ0jGbaunHr6TRI6N4NOBiGOXAlXbzlmgaZYHMkQg.P6Rbnq9YTv9CCqH5Vgu6JCSEGZC_wOZ25onOnoT4AAAg.PNG/11.png?type=w1200',
-          ),
-          fit: BoxFit.cover,
+    return Obx(() {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        child: Stack(
+          children: [
+            controller.selectedList.value.imgUrl == null
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: CustomColors.mainPink,
+                    ),
+                  )
+                : Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    width: Get.width - 80,
+                    height: 230,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 3,
+                          blurRadius: 10,
+                          offset: Offset(5, 5), // Offset(수평, 수직)
+                        ),
+                      ],
+                      image: DecorationImage(
+                        image: NetworkImage(
+                            controller.selectedList.value.imgUrl ?? ''),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              width: Get.width - 80,
+              height: 230,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: Colors.black.withOpacity(0.5),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+                bottom: 10,
+              ),
+              width: Get.width - 80,
+              height: 230,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(
+                        'assets/icons/locationPinWhite.png',
+                        width: 35,
+                        color: Colors.white.withOpacity(0.9),
+                        colorBlendMode: BlendMode.modulate,
+                      ),
+                      Expanded(
+                        child: Text(
+                          controller.selectedList.value.location ?? '',
+                          overflow: TextOverflow.fade,
+                          maxLines: 2,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    controller.selectedList.value.content ?? '',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 4,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'by: ${controller.selectedList.value.madeBy}',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 15,
+                        ),
+                      ),
+                      Icon(
+                        Icons.favorite_border,
+                        color: Colors.white.withOpacity(0.9),
+                        size: 25,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _listPlayButton() {
     return Positioned(
-      top: 350,
-      left: Get.width / 2 - 35,
+      top: 340,
+      left: Get.width / 2 - 30,
       child: Hero(
         tag: 'background',
         child: CustomIconButton(
           onTap: () {
-            openAlertDialog(title: '아직 추천 페이지 없음');
+            Get.to(() => UploadBukkungListPage(),
+                arguments: controller.selectedList.value);
           },
-          size: 70,
+          size: 60,
           icon: Icon(
             Icons.play_arrow_rounded,
-            size: 70,
+            size: 60,
             color: Colors.white,
           ),
           shadowOffset: Offset(5, 5),
@@ -142,21 +233,16 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   }
 
   Widget _suggestionListTab() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: TabBarView(
-          controller: controller.suggestionListTabController,
-          children: [
-            _suggestionList(0),
-            _suggestionList(1),
-            _suggestionList(2),
-            _suggestionList(3),
-            _suggestionList(4),
-            _suggestionList(5),
-          ],
-        ),
-      ),
+    return TabBarView(
+      controller: controller.suggestionListTabController,
+      children: [
+        _suggestionList(0),
+        _suggestionList(1),
+        _suggestionList(2),
+        _suggestionList(3),
+        _suggestionList(4),
+        _suggestionList(5),
+      ],
     );
   }
 
@@ -168,7 +254,6 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       ),
       builder: (BuildContext context,
           AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
-        print(bukkungLists.hasData);
         if (!bukkungLists.hasData) {
           return Center(
             child: CircularProgressIndicator(color: CustomColors.mainPink),
@@ -177,13 +262,18 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           openAlertDialog(title: '에러 발생');
         } else {
           final _list = bukkungLists.data!;
-          print('리스트 출력(sugg page)${_list.length}');
-          return ListView.builder(
-            itemCount: _list.length,
-            itemBuilder: (context, index) {
-              final _bukkungList = _list[index];
-              return _suggestionListCard(_bukkungList);
-            },
+          return ListView(
+            physics: AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(height: 400),
+              Column(
+                children: List.generate(_list.length, (index) {
+                  final _bukkungList = _list[index];
+                  return _suggestionListCard(_bukkungList, index);
+                }),
+              ),
+              SizedBox(height: 20),
+            ],
           );
         }
         return Center(child: Text('아직 버꿍리스트가 없습니다'));
@@ -191,84 +281,114 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
-  Widget _suggestionListCard(BukkungListModel bukkungListModel) {
+  Widget _suggestionListCard(BukkungListModel bukkungListModel, int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 4),
-      child: Stack(
-        children: [
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            padding: EdgeInsets.only(left: 120, right: 30),
-            height: 85,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                MarqueeAbleText(
-                  text: bukkungListModel.title!,
-                  maxLength: 10,
-                  style: TextStyle(fontSize: 25, color: CustomColors.blackText),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: GestureDetector(
+        onTap: () {
+          final updatedList = controller.selectedList.value.copyWith(
+            title: bukkungListModel.title,
+            content: bukkungListModel.content,
+            location: bukkungListModel.location,
+            category: bukkungListModel.category,
+            imgUrl: bukkungListModel.imgUrl,
+            madeBy: bukkungListModel.madeBy,
+          );
+          controller.selectedIndex(index);
+          controller.selectedList.value = updatedList;
+        },
+        child: Stack(
+          children: [
+            Obx(() {
+              return Container(
+                margin: EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.only(left: 120, right: 30),
+                height: 85,
+                decoration: BoxDecoration(
+                    color: index == controller.selectedIndex.value
+                        ? CustomColors.lightPink.withOpacity(0.1)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                      color: index == controller.selectedIndex.value
+                          ? CustomColors.mainPink
+                          : Colors.white,
+                      width: 2,
+                    )),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _iconText(
-                      'location-pin.png',
-                      bukkungListModel.location!,
-                      true,
+                    MarqueeAbleText(
+                      text: bukkungListModel.title!,
+                      maxLength: 10,
+                      style: TextStyle(
+                          fontSize: 25, color: CustomColors.blackText),
                     ),
-                    // _iconText(
-                    //   'preview.png',
-                    //   '${bukkungListModel.viewCount!}회',
-                    //   false,
-                    // ),
-                    // _iconText(
-                    //   'like.png',
-                    //   '${bukkungListModel.likeCount.toString()!}개',
-                    //   false,
-                    // ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _iconText(
+                          'location-pin.png',
+                          bukkungListModel.location ?? '',
+                          true,
+                        ),
+                        _iconText(
+                          'preview.png',
+                          '${bukkungListModel.viewCount ?? ''}회',
+                          false,
+                        ),
+                        _iconText(
+                          null,
+                          '${bukkungListModel.likeCount.toString()}개',
+                          false,
+                        ),
+                      ],
+                    )
                   ],
-                )
-              ],
-            ),
-          ),
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 2,
-                  blurRadius: 10,
-                  offset: Offset(5, 5), // Offset(수평, 수직)
                 ),
-              ],
-              image: DecorationImage(
-                image: NetworkImage(bukkungListModel.imgUrl!),
-                fit: BoxFit.cover,
+              );
+            }),
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 10,
+                    offset: Offset(5, 5), // Offset(수평, 수직)
+                  ),
+                ],
+                image: DecorationImage(
+                  image: NetworkImage(bukkungListModel.imgUrl!),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Widget _iconText(String image, String text, bool marquee) {
+  Widget _iconText(String? image, String text, bool marquee) {
     return Row(
       children: [
-        Image.asset(
-          'assets/icons/$image',
-          width: 25,
-          color: CustomColors.grey.withOpacity(0.5),
-          colorBlendMode: BlendMode.modulate,
-        ),
+        image == null
+            ? Icon(
+                Icons.favorite_border,
+                size: 20,
+                color: Colors.black.withOpacity(0.5),
+              )
+            : Image.asset(
+                'assets/icons/$image',
+                width: 25,
+                color: CustomColors.grey.withOpacity(0.5),
+                colorBlendMode: BlendMode.modulate,
+              ),
         marquee
             ? MarqueeAbleText(
                 text: text,
@@ -287,40 +407,40 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
-  Widget _listAddButton() {
-    return ElevatedButton(
-      onPressed: () {
-        // Get.lazyPut<UploadBukkungListController>(
-        //     () => UploadBukkungListController(context: context),
-        //     fenix: true);
-        Get.to(() => UploadBukkungListPage());
-      },
-      style: ElevatedButton.styleFrom(
-        fixedSize: Size(260, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50.0),
-        ),
-      ),
-      child: Row(
-        children: [
-          Image.asset(
-            'assets/icons/plus.png',
-            width: 30,
-            color: Colors.black.withOpacity(0.5),
-            colorBlendMode: BlendMode.modulate,
-          ),
-          SizedBox(width: 10),
-          Text(
-            '리스트 새로 만들기',
-            style: TextStyle(
-              color: Colors.black.withOpacity(0.5),
-              fontSize: 30,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _listAddButton() {
+  //   return ElevatedButton(
+  //     onPressed: () {
+  //       // Get.lazyPut<UploadBukkungListController>(
+  //       //     () => UploadBukkungListController(context: context),
+  //       //     fenix: true);
+  //       Get.to(() => UploadBukkungListPage());
+  //     },
+  //     style: ElevatedButton.styleFrom(
+  //       fixedSize: Size(260, 50),
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(50.0),
+  //       ),
+  //     ),
+  //     child: Row(
+  //       children: [
+  //         Image.asset(
+  //           'assets/icons/plus.png',
+  //           width: 30,
+  //           color: Colors.black.withOpacity(0.5),
+  //           colorBlendMode: BlendMode.modulate,
+  //         ),
+  //         SizedBox(width: 10),
+  //         Text(
+  //           '리스트 새로 만들기',
+  //           style: TextStyle(
+  //             color: Colors.black.withOpacity(0.5),
+  //             fontSize: 30,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -348,9 +468,25 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               color: Colors.white,
             ),
           ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: GestureDetector(
+                onTap: () {
+                  Get.to(() => UploadBukkungListPage());
+                },
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 45,
+                ),
+              ),
+            ),
+          ],
         ),
         body: Stack(
           children: [
+            _suggestionListTab(),
             _background(),
             Column(
               children: [
@@ -361,14 +497,13 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                   Colors.black.withOpacity(0.5),
                 ),
                 _selectedImage(),
-                _suggestionListTab(),
               ],
             ),
             _listPlayButton(),
           ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: _listAddButton(),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        // floatingActionButton: _listAddButton(),
       ),
     );
   }

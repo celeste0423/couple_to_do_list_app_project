@@ -6,6 +6,7 @@ import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/utils/type_to_color.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
+import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -148,12 +149,17 @@ class BukkungListPage extends GetView<BukkungListPageController> {
           } else {
             final _list = bukkungLists.data!;
             print('리스트 출력(buk page)${_list.length}');
-            return ListView.builder(
-              itemCount: _list.length,
-              itemBuilder: (context, index) {
-                final _bukkungList = _list[index];
-                return _bukkungListCard(_bukkungList);
-              },
+            return ListView(
+              physics: AlwaysScrollableScrollPhysics(),
+              children: [
+                Column(
+                  children: List.generate(_list.length, (index) {
+                    final _bukkungList = _list[index];
+                    return _bukkungListCard(_bukkungList);
+                  }),
+                ),
+                SizedBox(height: 100),
+              ],
             );
           }
           return Center(child: Text('아직 버꿍리스트가 없습니다'));
@@ -201,8 +207,9 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text(
-                          bukkungListModel.title!,
+                        MarqueeAbleText(
+                          text: bukkungListModel.title!,
+                          maxLength: 10,
                           style: TextStyle(
                             fontSize: 25,
                             color: CustomColors.blackText,
@@ -219,7 +226,13 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                               width: 25,
                             ),
                             SizedBox(width: 10),
-                            Text(bukkungListModel.location!),
+                            MarqueeAbleText(
+                              text: bukkungListModel.location!,
+                              maxLength: 20,
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
                           ],
                         ),
                       ],

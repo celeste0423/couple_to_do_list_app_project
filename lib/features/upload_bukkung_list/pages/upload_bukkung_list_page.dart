@@ -565,13 +565,15 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                               left: 30,
                               right: 30,
                             ),
-                            child: Row(
-                              children: [
-                                _imagePicker(context),
-                                SizedBox(width: 10),
-                                _publicSwitch(),
-                              ],
-                            ),
+                            child: Get.arguments == null
+                                ? Row(
+                                    children: [
+                                      _imagePicker(context),
+                                      SizedBox(width: 10),
+                                      _publicSwitch(),
+                                    ],
+                                  )
+                                : _imagePicker(context),
                           )
                         ],
                       ),
