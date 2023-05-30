@@ -24,18 +24,17 @@ class UploadDiaryController extends GetxController {
 
   Rx<String?> DiaryCategory = "".obs;
   Map<String, String> categoryToString = {
-    "travel": "여행",
-    "meal": "식사",
-    "activity": "액티비티",
-    "culture": "문화 활동",
-    "study": "자기 계발",
-    "etc": "기타",
+    "1travel": "여행",
+    "2meal": "식사",
+    "3activity": "액티비티",
+    "4culture": "문화 활동",
+    "5study": "자기 계발",
+    "6etc": "기타",
   };
 
   @override
   void onInit() {
     super.onInit();
-
 
     contentController = null;
     contentScrollController.addListener(scrollToContent);
@@ -59,8 +58,8 @@ class UploadDiaryController extends GetxController {
                 ),
                 textButtonTheme: TextButtonThemeData(
                     style: TextButton.styleFrom(
-                      primary: Colors.white,
-                    ))),
+                  primary: Colors.white,
+                ))),
             child: child!,
           );
         });
@@ -72,7 +71,7 @@ class UploadDiaryController extends GetxController {
   void placeAutocomplete(String query) async {
     String apiKey = 'AIzaSyASuuGiXo0mFRd2jm_vL5mHBo4r4uCTJZw';
     Uri uri =
-    Uri.https("maps.googleapis.com", 'maps/api/place/autocomplete/json', {
+        Uri.https("maps.googleapis.com", 'maps/api/place/autocomplete/json', {
       "input": query,
       "key": apiKey,
       "language": "ko",
@@ -82,15 +81,17 @@ class UploadDiaryController extends GetxController {
 
     if (response != null) {
       PlaceAutoCompleteResponse result =
-      PlaceAutoCompleteResponse.parseAutocompleteResult(response);
+          PlaceAutoCompleteResponse.parseAutocompleteResult(response);
       if (result.predictions != null) {
         placePredictions = result.predictions!;
       }
     }
   }
+
   void changeCategory(String category) {
     DiaryCategory(category);
   }
+
   void scrollToContent() {
     if (contentScrollController.hasClients) {
       contentScrollController.animateTo(

@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 class TypeToColor {
   static Color typeToColor(String? type) {
     switch (type) {
-      case 'travel':
+      case '1travel':
         return CustomColors.travel;
-      case 'meal':
+      case '2meal':
         return CustomColors.meal;
-      case 'activity':
+      case '3activity':
         return CustomColors.activity;
-      case 'culture':
+      case '4culture':
         return CustomColors.culture;
-      case 'study':
+      case '5study':
         return CustomColors.study;
-      case 'etc':
+      case '6etc':
         return CustomColors.etc;
 
       default:

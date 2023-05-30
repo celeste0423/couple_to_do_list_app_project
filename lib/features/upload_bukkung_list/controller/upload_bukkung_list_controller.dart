@@ -24,12 +24,12 @@ class UploadBukkungListController extends GetxController {
 
   Rx<String?> listCategory = "".obs;
   Map<String, String> categoryToString = {
-    "travel": "여행",
-    "meal": "식사",
-    "activity": "액티비티",
-    "culture": "문화 활동",
-    "study": "자기 계발",
-    "etc": "기타",
+    "1travel": "여행",
+    "2meal": "식사",
+    "3activity": "액티비티",
+    "4culture": "문화 활동",
+    "5study": "자기 계발",
+    "6etc": "기타",
   };
 
   TextEditingController locationController = TextEditingController();

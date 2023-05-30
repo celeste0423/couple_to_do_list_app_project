@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 class CategoryIcon extends StatelessWidget {
   final String category;
-final double? size;
-  const CategoryIcon({Key? key, required this.category, this.size}) : super(key: key);
+  final double? size;
+  const CategoryIcon({Key? key, required this.category, this.size})
+      : super(key: key);
 
   Widget _categoryIcon(Color color, String icon) {
     return Container(
@@ -24,17 +25,17 @@ final double? size;
   @override
   Widget build(BuildContext context) {
     switch (category) {
-      case 'travel':
+      case '1travel':
         return _categoryIcon(CustomColors.travel, 'airplane');
-      case 'activity':
+      case '3activity':
         return _categoryIcon(CustomColors.activity, 'running');
-      case 'study':
+      case '5study':
         return _categoryIcon(CustomColors.study, 'study');
-      case 'meal':
+      case '2meal':
         return _categoryIcon(CustomColors.meal, 'food');
-      case 'culture':
+      case '4culture':
         return _categoryIcon(CustomColors.culture, 'singer');
-      case 'etc':
+      case '6etc':
         return _categoryIcon(CustomColors.etc, 'filter-file');
       default:
         return Container();

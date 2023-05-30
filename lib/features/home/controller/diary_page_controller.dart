@@ -1,17 +1,16 @@
-import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:get/get.dart';
 
-class DiaryPageController extends GetxController{
+class DiaryPageController extends GetxController {
   static DiaryPageController get to => Get.find();
   Rx<String?> listCategory = "".obs;
   Map<String, String> categoryToString = {
-    "all" : "전체",
-    "travel": "여행",
-    "meal": "식사",
-    "activity": "액티비티",
-    "culture": "문화 활동",
-    "study": "자기 계발",
-    "etc": "기타",
+    "all": "전체",
+    "1travel": "여행",
+    "2meal": "식사",
+    "3activity": "액티비티",
+    "4culture": "문화 활동",
+    "5study": "자기 계발",
+    "6etc": "기타",
   };
 
   @override

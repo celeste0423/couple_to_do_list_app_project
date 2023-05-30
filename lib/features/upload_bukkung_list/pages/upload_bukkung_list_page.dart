@@ -162,11 +162,11 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _categoryCard(
-                              'airplane', '여행', CustomColors.travel, 'travel'),
+                              'airplane', '여행', CustomColors.travel, '1travel'),
                           _categoryCard('running', '액티비티',
-                              CustomColors.activity, 'activity'),
+                              CustomColors.activity, '3activity'),
                           _categoryCard(
-                              'study', '자기계발', CustomColors.study, 'study'),
+                              'study', '자기계발', CustomColors.study, '5study'),
                         ],
                       ),
                     ),
@@ -178,11 +178,11 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _categoryCard(
-                              'food', '식사', CustomColors.meal, 'meal'),
+                              'food', '식사', CustomColors.meal, '2meal'),
                           _categoryCard('singer', '문화활동', CustomColors.culture,
-                              'culture'),
+                              '4culture'),
                           _categoryCard(
-                              'filter-file', '기타', CustomColors.etc, 'etc'),
+                              'filter-file', '기타', CustomColors.etc, '6etc'),
                         ],
                       ),
                     )

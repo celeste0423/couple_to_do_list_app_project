@@ -242,6 +242,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         _suggestionList(3),
         _suggestionList(4),
         _suggestionList(5),
+        _suggestionList(6),
       ],
     );
   }
