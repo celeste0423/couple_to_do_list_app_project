@@ -345,8 +345,9 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         width: 55,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
-          color:
-              controller.isImage.value ? CustomColors.mainPink : Colors.white,
+          color: controller.isImage.value || controller.isSelectedImage.value
+              ? CustomColors.mainPink
+              : Colors.white,
         ),
         child: GestureDetector(
           onTap: () {

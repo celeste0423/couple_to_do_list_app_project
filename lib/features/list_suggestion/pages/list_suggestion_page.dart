@@ -283,7 +283,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
 
   Widget _suggestionListCard(BukkungListModel bukkungListModel, int index) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: GestureDetector(
         onTap: () {
           final updatedList = controller.selectedList.value.copyWith(
