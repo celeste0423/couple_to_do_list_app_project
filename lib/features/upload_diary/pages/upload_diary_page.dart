@@ -441,7 +441,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 contents(),
                 Stack(
@@ -450,7 +450,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                       Container(
                         width: Get.width - 110 - holediameter,
                         margin: EdgeInsets.only(
-                          top: 4 + (i + 1) * 28,
+                          top:  7+ (i + 1) * 28,
                         ),
                         height: 1,
                         color: CustomColors.grey,
@@ -461,7 +461,13 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: TextField(
-                          decoration: InputDecoration(border: InputBorder.none),
+                          decoration: InputDecoration(
+                              hintText: ' 소감 작성하기',
+                              hintStyle: TextStyle(
+                                color: CustomColors.grey,
+                                fontSize: 20,
+                              ),
+                              border: InputBorder.none),
                           cursorHeight: 15,
                           style: TextStyle(
                             fontSize: 28.0,
@@ -475,34 +481,6 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                     ),
                   ],
                 ),
-                // SizedBox(
-                //   width: Get.width-100-x,
-                //   child: TextField(
-                //     controller: controller.contentController,
-                //     keyboardType: TextInputType.multiline,
-                //     maxLines: null,
-                //     onChanged: (value) {},
-                //     style: TextStyle(
-                //       color: CustomColors.blackText,
-                //       fontSize: 25,
-                //     ),
-                //     decoration: const InputDecoration(
-                //       border: InputBorder.none,
-                //       focusedBorder: InputBorder.none,
-                //       enabledBorder: UnderlineInputBorder(
-                //         borderSide:
-                //             BorderSide(color: Colors.redAccent), //<-- SEE HERE
-                //       ),
-                //       errorBorder: InputBorder.none,
-                //       disabledBorder: InputBorder.none,
-                //       hintText: '나의 소감',
-                //       hintStyle: TextStyle(
-                //         color: CustomColors.greyText,
-                //         fontSize: 25,
-                //       ),
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ],
