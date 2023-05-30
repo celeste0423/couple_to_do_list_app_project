@@ -3,9 +3,9 @@ import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
-import 'package:couple_to_do_list_app/widgets/type_select_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -96,18 +96,21 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   Widget _selectedImage() {
     return Obx(() {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Stack(
           children: [
             controller.selectedList.value.imgUrl == null
-                ? Center(
-                    child: CircularProgressIndicator(
-                      color: CustomColors.mainPink,
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 400),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: CustomColors.mainPink,
+                      ),
                     ),
                   )
                 : Container(
                     margin: const EdgeInsets.only(top: 10),
-                    width: Get.width - 80,
+                    width: Get.width - 60,
                     height: 230,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
@@ -128,7 +131,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                   ),
             Container(
               margin: const EdgeInsets.only(top: 10),
-              width: Get.width - 80,
+              width: Get.width - 60,
               height: 230,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
@@ -142,7 +145,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 right: 20,
                 bottom: 10,
               ),
-              width: Get.width - 80,
+              width: Get.width - 60,
               height: 230,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,10 +195,17 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                           fontSize: 15,
                         ),
                       ),
-                      Icon(
-                        Icons.favorite_border,
-                        color: Colors.white.withOpacity(0.9),
-                        size: 25,
+                      GestureDetector(
+                        onTap: () {
+                          controller.toggleLike();
+                        },
+                        child: Icon(
+                          controller.isLiked.value
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: Colors.white.withOpacity(0.9),
+                          size: 30,
+                        ),
                       ),
                     ],
                   )
@@ -243,6 +253,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         _suggestionList(4),
         _suggestionList(5),
         _suggestionList(6),
+        _suggestionMyList(),
       ],
     );
   }
@@ -288,15 +299,19 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       child: GestureDetector(
         onTap: () {
           final updatedList = controller.selectedList.value.copyWith(
+            listId: bukkungListModel.listId,
             title: bukkungListModel.title,
             content: bukkungListModel.content,
             location: bukkungListModel.location,
             category: bukkungListModel.category,
             imgUrl: bukkungListModel.imgUrl,
             madeBy: bukkungListModel.madeBy,
+            likedUsers: bukkungListModel.likedUsers,
+            likeCount: bukkungListModel.likeCount,
           );
-          controller.selectedIndex(index);
-          controller.selectedList.value = updatedList;
+          print(updatedList.likedUsers);
+          print(updatedList.listId);
+          controller.indexSelection(index, updatedList);
         },
         child: Stack(
           children: [
@@ -408,6 +423,38 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
+  Widget _suggestionMyList() {
+    return FutureBuilder(
+      future: controller.getSuggestionMyBukkungList(),
+      builder: (BuildContext context,
+          AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+        if (!bukkungLists.hasData) {
+          return Center(
+            child: CircularProgressIndicator(color: CustomColors.mainPink),
+          );
+        } else if (bukkungLists.hasError) {
+          openAlertDialog(title: '에러 발생');
+        } else {
+          final _list = bukkungLists.data!;
+          return ListView(
+            physics: AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(height: 400),
+              Column(
+                children: List.generate(_list.length, (index) {
+                  final _bukkungList = _list[index];
+                  return _suggestionListCard(_bukkungList, index);
+                }),
+              ),
+              SizedBox(height: 20),
+            ],
+          );
+        }
+        return Center(child: Text('아직 버꿍리스트가 없습니다'));
+      },
+    );
+  }
+
   // Widget _listAddButton() {
   //   return ElevatedButton(
   //     onPressed: () {
@@ -492,10 +539,11 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             Column(
               children: [
                 _searchBar(),
-                categorySelectTabBar(
-                  controller.suggestionListTabController,
-                  Colors.black.withOpacity(0.8),
-                  Colors.black.withOpacity(0.5),
+                CategorySelectTabBar(
+                  tabController: controller.suggestionListTabController,
+                  selectedColor: Colors.black.withOpacity(0.8),
+                  unselectedColor: Colors.black.withOpacity(0.5),
+                  isMyTab: true,
                 ),
                 _selectedImage(),
               ],

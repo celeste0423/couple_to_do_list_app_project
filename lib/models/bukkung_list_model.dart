@@ -15,6 +15,7 @@ class BukkungListModel {
   final String? userId;
   final String? groupId;
   final DateTime? createdAt;
+  final List<String>? likedUsers;
 
   BukkungListModel({
     this.listId,
@@ -30,6 +31,7 @@ class BukkungListModel {
     this.userId,
     this.groupId,
     this.createdAt,
+    this.likedUsers,
   });
 
   factory BukkungListModel.init(UserModel userInfo) {
@@ -48,6 +50,7 @@ class BukkungListModel {
       userId: userInfo.uid,
       groupId: userInfo.groupId,
       createdAt: time,
+      likedUsers: [],
     );
   }
 
@@ -70,6 +73,9 @@ class BukkungListModel {
       createdAt: json['createdAt'] == null
           ? DateTime.now()
           : json['createdAt'].toDate(),
+      likedUsers: json['likedUsers'] != null
+          ? List<String>.from(json['likedUsers'] as List<dynamic>)
+          : null,
     );
   }
 
@@ -88,6 +94,7 @@ class BukkungListModel {
       'userId': userId,
       'groupId': groupId,
       'createdAt': createdAt,
+      'likedUsers': likedUsers,
     };
   }
 
@@ -105,6 +112,7 @@ class BukkungListModel {
     String? userId,
     String? groupId,
     DateTime? createdAt,
+    List<String>? likedUsers,
   }) {
     return BukkungListModel(
       listId: listId ?? this.listId,
@@ -120,6 +128,7 @@ class BukkungListModel {
       userId: userId ?? this.userId,
       groupId: groupId ?? this.groupId,
       createdAt: createdAt ?? this.createdAt,
+      likedUsers: likedUsers ?? null,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
@@ -48,5 +49,14 @@ class BukkungListPageController extends GetxController {
         return BukkungListRepository(groupModel: groupModel)
             .getGroupBukkungListByDate();
     }
+  }
+
+  void deleteBukkungList(BukkungListModel bukkungListModel) {
+    FirebaseFirestore.instance
+        .collection('groups')
+        .doc('${AuthController.to.user.value.groupId}')
+        .collection('bukkungLists')
+        .doc('${bukkungListModel.listId}')
+        .delete();
   }
 }

@@ -25,6 +25,20 @@ openAlertDialog({
           ),
     contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
     actions: [
+      secondButtonText != null
+          ? TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text(
+                secondButtonText,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: CustomColors.greyText,
+                ),
+              ),
+            )
+          : Container(),
       TextButton(
         onPressed: function ??
             () {
@@ -38,21 +52,6 @@ openAlertDialog({
           ),
         ),
       ),
-      secondButtonText != null
-          ? TextButton(
-              onPressed: function ??
-                  () {
-                    Get.back();
-                  },
-              child: Text(
-                secondButtonText,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: CustomColors.greyText,
-                ),
-              ),
-            )
-          : Container(),
     ],
   ));
 }

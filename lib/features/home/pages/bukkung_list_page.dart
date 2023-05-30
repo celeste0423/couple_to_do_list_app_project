@@ -438,7 +438,8 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                       title: '정말로 지우시겠습니다?',
                       secondButtonText: '취소',
                       function: () {
-                        //Todo: delete 기능 추가
+                        controller.deleteBukkungList(bukkungListModel);
+                        Get.back();
                       });
                 },
                 child: Icon(

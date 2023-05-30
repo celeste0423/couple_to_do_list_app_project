@@ -1,8 +1,8 @@
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
-import 'package:couple_to_do_list_app/widgets/type_select_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -119,10 +119,10 @@ class _DiaryPageState extends State<DiaryPage>
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               //Todo: 색상 입력 안해도 되도록 기본값 넣어뒀는데도 오류가 발생하는 이유..?
-              child: categorySelectTabBar(
-                _tabDiaryController,
-                CustomColors.darkGrey,
-                CustomColors.grey.withOpacity(0.5),
+              child: CategorySelectTabBar(
+                tabController: _tabDiaryController,
+                selectedColor: CustomColors.darkGrey,
+                unselectedColor: CustomColors.grey.withOpacity(0.5),
               ),
             ),
           ],
