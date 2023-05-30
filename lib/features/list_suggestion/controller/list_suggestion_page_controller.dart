@@ -18,7 +18,7 @@ class ListSuggestionPageController extends GetxController
   @override
   void onInit() {
     super.onInit();
-    suggestionListTabController = TabController(length: 6, vsync: this);
+    suggestionListTabController = TabController(length: 7, vsync: this);
     // suggestionListTabController.addListener(() {
     //   print('탭 변화 감지중');
     //   _onTabChanged;
@@ -67,15 +67,17 @@ class ListSuggestionPageController extends GetxController
       case 0:
         return 'all';
       case 1:
-        return 'travel';
+        return '1travel';
       case 2:
-        return 'activity';
+        return '2meal';
       case 3:
-        return 'meal';
+        return '3activity';
       case 4:
-        return 'culture';
+        return '4culture';
       case 5:
-        return 'etc';
+        return '5study';
+      case 6:
+        return '6etc';
       default:
         return 'all';
     }

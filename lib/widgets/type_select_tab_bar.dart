@@ -21,9 +21,10 @@ Widget categorySelectTabBar(
     tabs: const [
       Tab(text: '전체'),
       Tab(text: '여행'),
-      Tab(text: '액티비티'),
       Tab(text: '식사'),
+      Tab(text: '액티비티'),
       Tab(text: '문화활동'),
+      Tab(text: '자기계발'),
       Tab(text: '기타'),
     ],
   );
