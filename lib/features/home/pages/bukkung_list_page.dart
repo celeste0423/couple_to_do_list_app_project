@@ -432,6 +432,21 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                 ),
               ),
               width: 30,
+              child: GestureDetector(
+                onTap: () {
+                  openAlertDialog(
+                      title: '정말로 지우시겠습니다?',
+                      secondButtonText: '취소',
+                      function: () {
+                        //Todo: delete 기능 추가
+                      });
+                },
+                child: Icon(
+                  Icons.delete_outline,
+                  size: 25,
+                  color: Colors.white,
+                ),
+              ),
             ),
           )
         ],
