@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/features/upload_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -142,6 +143,7 @@ class _DiaryPageState extends State<DiaryPage>
           style: TextStyle(color: Colors.black.withOpacity(0.6)),
         ),
         actions: [
+          IconButton(onPressed: (){Get.to(ReadDiaryPage(title: 'hi',));}, icon: Icon(Icons.abc)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: IconButton(
