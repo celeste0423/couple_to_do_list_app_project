@@ -133,8 +133,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
 
   Widget _bukkungListView() {
     return Obx(() {
-      print('현재 타입 (buk page)${controller.currentType!.value}');
-      if (controller.currentType!.value == 'category') {
+      if (controller.currentType.value == 'category') {
         return Expanded(
           child: StreamBuilder(
             stream: BukkungListPageController.to.getAllBukkungListByCategory(),
@@ -148,86 +147,88 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               } else if (snapshot.hasError) {
                 openAlertDialog(title: '에러 발생');
               } else if (snapshot.hasData) {
-                final _list =
+                final list =
                     snapshot.data!['bukkungLists'] as List<BukkungListModel>;
-                final _categoryCount =
+                final categoryCount =
                     snapshot.data!['categoryCount'] as List<int>;
-                print('리스트 출력(buk page)${_list.length}');
+                // print('리스트 출력(buk page)${list.length}');
 
-                if (_list != null) {
+                if (list.isNotEmpty) {
                   return ListView(
                     physics: AlwaysScrollableScrollPhysics(),
                     children: [
                       Column(
-                        children: List.generate(_list.length, (index) {
-                          final _bukkungList = _list[index];
+                        children: List.generate(list.length, (index) {
+                          final bukkungList = list[index];
 
-                          if (_categoryCount[0] != 0 && index == 0) {
+                          if (categoryCount[0] != 0 && index == 0) {
                             return Column(
                               children: [
                                 _categoryDivider(1),
-                                _bukkungListCard(_bukkungList),
+                                _bukkungListCard(bukkungList),
                               ],
                             );
-                          } else if (_categoryCount[1] != 0 &&
-                              index == _categoryCount[0]) {
+                          } else if (categoryCount[1] != 0 &&
+                              index == categoryCount[0]) {
                             return Column(
                               children: [
                                 _categoryDivider(2),
-                                _bukkungListCard(_bukkungList),
+                                _bukkungListCard(bukkungList),
                               ],
                             );
-                          } else if (_categoryCount[2] != 0 &&
-                              index == _categoryCount[0] + _categoryCount[1]) {
+                          } else if (categoryCount[2] != 0 &&
+                              index == categoryCount[0] + categoryCount[1]) {
                             return Column(
                               children: [
                                 _categoryDivider(3),
-                                _bukkungListCard(_bukkungList),
+                                _bukkungListCard(bukkungList),
                               ],
                             );
-                          } else if (_categoryCount[3] != 0 &&
+                          } else if (categoryCount[3] != 0 &&
                               index ==
-                                  _categoryCount[0] +
-                                      _categoryCount[1] +
-                                      _categoryCount[2]) {
+                                  categoryCount[0] +
+                                      categoryCount[1] +
+                                      categoryCount[2]) {
                             return Column(
                               children: [
                                 _categoryDivider(4),
-                                _bukkungListCard(_bukkungList),
+                                _bukkungListCard(bukkungList),
                               ],
                             );
-                          } else if (_categoryCount[4] != 0 &&
+                          } else if (categoryCount[4] != 0 &&
                               index ==
-                                  _categoryCount[0] +
-                                      _categoryCount[1] +
-                                      _categoryCount[2] +
-                                      _categoryCount[3]) {
+                                  categoryCount[0] +
+                                      categoryCount[1] +
+                                      categoryCount[2] +
+                                      categoryCount[3]) {
                             return Column(
                               children: [
                                 _categoryDivider(5),
-                                _bukkungListCard(_bukkungList),
+                                _bukkungListCard(bukkungList),
                               ],
                             );
-                          } else if (_categoryCount[5] != 0 &&
+                          } else if (categoryCount[5] != 0 &&
                               index ==
-                                  _categoryCount[0] +
-                                      _categoryCount[1] +
-                                      _categoryCount[2] +
-                                      _categoryCount[3] +
-                                      _categoryCount[4]) {
+                                  categoryCount[0] +
+                                      categoryCount[1] +
+                                      categoryCount[2] +
+                                      categoryCount[3] +
+                                      categoryCount[4]) {
                             return Column(
                               children: [
                                 _categoryDivider(6),
-                                _bukkungListCard(_bukkungList),
+                                _bukkungListCard(bukkungList),
                               ],
                             );
                           }
-                          return _bukkungListCard(_bukkungList);
+                          return _bukkungListCard(bukkungList);
                         }),
                       ),
                       SizedBox(height: 100),
                     ],
                   );
+                } else {
+                  return Center(child: Text('아직 버꿍리스트가 없습니다'));
                 }
               }
               return Center(child: Text('아직 버꿍리스트가 없습니다'));
@@ -250,20 +251,24 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               } else if (bukkungLists.hasError) {
                 openAlertDialog(title: '에러 발생');
               } else {
-                final _list = bukkungLists.data!;
-                print('리스트 출력(buk page)${_list.length}');
-                return ListView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  children: [
-                    Column(
-                      children: List.generate(_list.length, (index) {
-                        final _bukkungList = _list[index];
-                        return _bukkungListCard(_bukkungList);
-                      }),
-                    ),
-                    SizedBox(height: 100),
-                  ],
-                );
+                final list = bukkungLists.data!;
+                // print('리스트 출력(buk page)${list.length}');
+                if (list.isNotEmpty) {
+                  return ListView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    children: [
+                      Column(
+                        children: List.generate(list.length, (index) {
+                          final bukkungList = list[index];
+                          return _bukkungListCard(bukkungList);
+                        }),
+                      ),
+                      SizedBox(height: 100),
+                    ],
+                  );
+                } else {
+                  return Center(child: Text('아직 버꿍리스트가 없습니다'));
+                }
               }
               return Center(child: Text('아직 버꿍리스트가 없습니다'));
             },
@@ -279,7 +284,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Row(
-            children: [
+            children: const [
               CategoryIcon(category: '1travel'),
               SizedBox(width: 10),
               Text('여행', style: TextStyle(fontSize: 25)),
@@ -290,7 +295,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Row(
-            children: [
+            children: const [
               CategoryIcon(category: '2meal'),
               SizedBox(width: 10),
               Text('식사', style: TextStyle(fontSize: 25)),
@@ -301,7 +306,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Row(
-            children: [
+            children: const [
               CategoryIcon(category: '3activity'),
               SizedBox(width: 10),
               Text('액티비티', style: TextStyle(fontSize: 25)),
@@ -312,7 +317,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Row(
-            children: [
+            children: const [
               CategoryIcon(category: '4culture'),
               SizedBox(width: 10),
               Text('문화 활동', style: TextStyle(fontSize: 25)),
@@ -323,7 +328,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Row(
-            children: [
+            children: const [
               CategoryIcon(category: '5study'),
               SizedBox(width: 10),
               Text('자기 계발', style: TextStyle(fontSize: 25)),
@@ -334,7 +339,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Row(
-            children: [
+            children: const [
               CategoryIcon(category: '6etc'),
               SizedBox(width: 10),
               Text('기타', style: TextStyle(fontSize: 25)),
