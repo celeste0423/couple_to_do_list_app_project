@@ -8,6 +8,7 @@ class BukkungListModel {
   final String? content;
   final String? location;
   final String? imgUrl;
+  final String? imgId;
   final int? likeCount;
   final int? viewCount;
   final DateTime? date;
@@ -24,6 +25,7 @@ class BukkungListModel {
     this.content,
     this.location,
     this.imgUrl,
+    this.imgId,
     this.likeCount,
     this.viewCount,
     this.date,
@@ -43,6 +45,7 @@ class BukkungListModel {
       content: '',
       location: '',
       imgUrl: null,
+      imgId: null,
       likeCount: 0,
       viewCount: 0,
       date: time,
@@ -62,6 +65,7 @@ class BukkungListModel {
       content: json['content'] == null ? null : json['content'] as String,
       location: json['location'] == null ? null : json['location'] as String,
       imgUrl: json['imgUrl'] == null ? null : json['imgUrl'] as String,
+      imgId: json['imgId'] == null ? null : json['imgId'] as String,
       likeCount: json['likeCount'] == null ? 0 : json['likeCount'] as int,
       viewCount: json['viewCount'] == null ? 0 : json['viewCount'] as int,
       date: json['date'] == null
@@ -87,6 +91,7 @@ class BukkungListModel {
       'content': content,
       'location': location,
       'imgUrl': imgUrl,
+      'imgId': imgId,
       'likeCount': likeCount,
       'viewCount': viewCount,
       'date': date,
@@ -105,6 +110,7 @@ class BukkungListModel {
     String? content,
     String? location,
     String? imgUrl,
+    String? imgId,
     int? likeCount,
     int? viewCount,
     DateTime? date,
@@ -121,6 +127,7 @@ class BukkungListModel {
       content: content ?? this.content,
       location: location ?? this.location,
       imgUrl: imgUrl ?? this.imgUrl,
+      imgId: imgId ?? this.imgId,
       likeCount: likeCount ?? this.likeCount,
       viewCount: viewCount ?? this.viewCount,
       date: date ?? this.date,

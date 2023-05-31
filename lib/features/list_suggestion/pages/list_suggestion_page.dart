@@ -8,6 +8,7 @@ import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   const ListSuggestionPage({Key? key}) : super(key: key);
@@ -281,7 +282,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               Column(
                 children: List.generate(_list.length, (index) {
                   final _bukkungList = _list[index];
-                  return _suggestionListCard(_bukkungList, index);
+                  return _suggestionListCard(_bukkungList, index, false);
                 }),
               ),
               SizedBox(height: 20),
@@ -293,7 +294,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
-  Widget _suggestionListCard(BukkungListModel bukkungListModel, int index) {
+  Widget _suggestionListCard(
+      BukkungListModel bukkungListModel, int index, bool isDelete) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: GestureDetector(
@@ -308,14 +310,17 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             madeBy: bukkungListModel.madeBy,
             likedUsers: bukkungListModel.likedUsers,
             likeCount: bukkungListModel.likeCount,
+            viewCount: bukkungListModel.viewCount,
           );
-          print(updatedList.likedUsers);
-          print(updatedList.listId);
           controller.indexSelection(index, updatedList);
+          controller.viewCount();
         },
         child: Stack(
           children: [
             Obx(() {
+              int? viewCount = bukkungListModel.viewCount;
+              NumberFormat formatter = NumberFormat.compact(locale: "ko_KR");
+              String formattedViewCount = formatter.format(viewCount);
               return Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
                 padding: EdgeInsets.only(left: 120, right: 30),
@@ -341,26 +346,29 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                           fontSize: 25, color: CustomColors.blackText),
                     ),
                     SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _iconText(
-                          'location-pin.png',
-                          bukkungListModel.location ?? '',
-                          true,
-                        ),
-                        _iconText(
-                          'preview.png',
-                          '${bukkungListModel.viewCount ?? ''}회',
-                          false,
-                        ),
-                        _iconText(
-                          null,
-                          '${bukkungListModel.likeCount.toString()}개',
-                          false,
-                        ),
-                      ],
-                    )
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _iconText(
+                            'location-pin.png',
+                            bukkungListModel.location ?? '',
+                            true,
+                          ),
+                          _iconText(
+                            'preview.png',
+                            '${formattedViewCount ?? ''}회',
+                            false,
+                          ),
+                          _iconText(
+                            null,
+                            '${bukkungListModel.likeCount.toString()}개',
+                            false,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
                   ],
                 ),
               );
@@ -383,7 +391,23 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                   fit: BoxFit.cover,
                 ),
               ),
-            )
+            ),
+            if (isDelete)
+              Positioned(
+                right: 0,
+                child: CustomIconButton(
+                  onTap: () {},
+                  size: 30,
+                  icon: Icon(
+                    Icons.delete_outline,
+                    size: 20,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: CustomColors.redbrown,
+                  shadowBlurRadius: 2,
+                  shadowOffset: Offset(1, 1),
+                ),
+              ),
           ],
         ),
       ),
@@ -443,7 +467,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               Column(
                 children: List.generate(_list.length, (index) {
                   final _bukkungList = _list[index];
-                  return _suggestionListCard(_bukkungList, index);
+                  return _suggestionListCard(_bukkungList, index, true);
                 }),
               ),
               SizedBox(height: 20),

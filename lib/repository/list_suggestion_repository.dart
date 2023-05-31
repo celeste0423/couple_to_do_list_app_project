@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ListSuggestionRepository {
   ListSuggestionRepository();
@@ -54,5 +56,26 @@ class ListSuggestionRepository {
       'likeCount': likeCount,
       'likedUsers': likedUsers,
     });
+  }
+
+  void updateViewCount(String listId, int viewCount) {
+    FirebaseFirestore.instance.collection('bukkungLists').doc(listId).update({
+      'viewCount': viewCount,
+    });
+  }
+
+  void deleteList(String listId) {
+    FirebaseFirestore.instance.collection('bukkungLists').doc(listId).delete();
+  }
+
+  Future<void> deleteListImage(String imagePath) async {
+    try {
+      Reference imageRef =
+          FirebaseStorage.instance.ref().child('bukkung_list').child(imagePath);
+
+      await imageRef.delete();
+    } catch (e) {
+      openAlertDialog(title: '이미지 삭제 오류 $e');
+    }
   }
 }

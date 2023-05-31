@@ -44,6 +44,7 @@ class ListSuggestionPageController extends GetxController
         madeBy: list[0].madeBy,
         likeCount: list[0].likeCount,
         likedUsers: list[0].likedUsers,
+        viewCount: list[0].viewCount,
       );
       selectedList.value = updatedList;
       if (selectedList.value.likedUsers != null &&
@@ -151,5 +152,19 @@ class ListSuggestionPageController extends GetxController
           [AuthController.to.user.value.uid!]);
       isLiked(true);
     }
+  }
+
+  void viewCount() {
+    ListSuggestionRepository().updateViewCount(
+      selectedList.value.listId!,
+      selectedList.value.viewCount! + 1,
+    );
+  }
+
+  Future<void> listDelete() async {
+    await ListSuggestionRepository().deleteListImage();
+    ListSuggestionRepository().deleteList(
+      selectedList.value.listId!,
+    );
   }
 }

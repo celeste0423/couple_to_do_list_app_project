@@ -17,7 +17,7 @@ class DiaryPage extends StatefulWidget {
 class _DiaryPageState extends State<DiaryPage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabDiaryController =
-      TabController(length: 6, vsync: this);
+      TabController(length: 7, vsync: this);
 
   //ToDo: 파이어베이스에서 가져온 정보로 채워 넣을 것
   Widget _diary() {
@@ -143,7 +143,13 @@ class _DiaryPageState extends State<DiaryPage>
           style: TextStyle(color: Colors.black.withOpacity(0.6)),
         ),
         actions: [
-          IconButton(onPressed: (){Get.to(ReadDiaryPage(title: 'hi',));}, icon: Icon(Icons.abc)),
+          IconButton(
+              onPressed: () {
+                Get.to(ReadDiaryPage(
+                  title: 'hi',
+                ));
+              },
+              icon: Icon(Icons.abc)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: IconButton(

@@ -209,6 +209,7 @@ class UploadBukkungListController extends GetxController {
             content: contentController.text,
             location: locationController.text,
             imgUrl: downloadUrl,
+            imgId: imageId,
             date: listDateTime.value,
           );
           _submitBukkungList(updatedBukkungList, listId, false);
@@ -282,9 +283,8 @@ class UploadBukkungListController extends GetxController {
     }
   }
 
-  UploadTask uploadFile(Uint8List image, String filename) {
-    var ref =
-        FirebaseStorage.instance.ref().child('bukkung_list').child(filename);
+  UploadTask uploadFile(Uint8List image, String location, String filename) {
+    var ref = FirebaseStorage.instance.ref().child(location).child(filename);
     final metadata = SettableMetadata(
       contentType: 'image/jpeg',
     );
