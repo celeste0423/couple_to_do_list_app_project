@@ -185,18 +185,19 @@ class UploadBukkungListController extends GetxController {
 //   }
 // }
 
-  void uploadBukkungList() {
+  Future<void> uploadBukkungList() async {
     FocusManager.instance.primaryFocus?.unfocus();
     var uuid = Uuid();
     String listId = uuid.v1();
     String imageId = uuid.v4();
-
     var filename = '$imageId.jpg';
+
     if (selectedBukkungListModel == null && listImage != null) {
       //선택 안함, 사진 있음
       print('업로드 준비 완료(upl cont)');
-      var task = uploadFile(
-          listImage!, '${AuthController.to.user.value.groupId}/${filename}');
+      var task = uploadFile(listImage!, 'group_bukkunglist',
+          '${AuthController.to.user.value.groupId}/${filename}');
+
       task.snapshotEvents.listen((event) async {
         if (event.bytesTransferred == event.totalBytes &&
             event.state == TaskState.success) {
@@ -231,14 +232,30 @@ class UploadBukkungListController extends GetxController {
     } else if (selectedBukkungListModel != null &&
         isSelectedImage.value == true &&
         listImage == null) {
-      //선택함, 사진 있음(웹사진)
+      // 선택함, 사진 있음(웹사진)
+      String sourcePath = '${selectedBukkungListModel!.imgId}.jpg';
+      String destinationPath =
+          '${AuthController.to.user.value.groupId}/$filename';
+      Reference sourceRef = FirebaseStorage.instance
+          .ref()
+          .child('suggestion_bukkunglist')
+          .child(sourcePath);
+      Reference destinationRef = FirebaseStorage.instance
+          .ref()
+          .child('group_bukkunglist')
+          .child(destinationPath);
+      Uint8List? sourceData = await sourceRef.getData()!;
+      await destinationRef.putData(sourceData!);
+
+      var downloadUrl = await destinationRef.getDownloadURL();
       var updatedBukkungList = bukkungList!.copyWith(
         listId: listId,
         category: listCategory.value,
         title: titleController.text,
         content: contentController.text,
         location: locationController.text,
-        imgUrl: selectedBukkungListModel!.imgUrl,
+        imgUrl: downloadUrl,
+        imgId: imageId,
         likeCount: 0,
         date: listDateTime.value,
         // Todo:기존 제작자의 저작권을 남길 지 말지 선택
@@ -246,8 +263,8 @@ class UploadBukkungListController extends GetxController {
       _submitBukkungList(updatedBukkungList, listId, true);
     } else if (selectedBukkungListModel != null && listImage != null) {
       //선택함, 사진 있음(로컬사진)
-      var task = uploadFile(
-          listImage!, '${AuthController.to.user.value.groupId}/${filename}');
+      var task = uploadFile(listImage!, 'group_bukkunglist',
+          '${AuthController.to.user.value.groupId}/${filename}');
       task.snapshotEvents.listen((event) async {
         if (event.bytesTransferred == event.totalBytes &&
             event.state == TaskState.success) {
@@ -294,10 +311,34 @@ class UploadBukkungListController extends GetxController {
   void _submitBukkungList(
       BukkungListModel bukkungListData, String listId, bool isSelected) async {
     await BukkungListRepository.setGroupBukkungList(bukkungListData, listId);
+
+    //공개되었을 경우
     if (isPublic.value == true && isSelected == false) {
       print('추천 리스트 공개 업로드(upl cont)');
-      await BukkungListRepository.setSuggestionBukkungList(
-          bukkungListData, listId);
+      var uuid = Uuid();
+      String imageId = uuid.v4();
+      var filename = '$imageId.jpg';
+      var task =
+          uploadFile(listImage!, 'suggestion_bukkunglist', '${filename}');
+
+      task.snapshotEvents.listen((event) async {
+        if (event.bytesTransferred == event.totalBytes &&
+            event.state == TaskState.success) {
+          var downloadUrl = await event.ref.getDownloadURL();
+          var updatedBukkungList = bukkungList!.copyWith(
+            listId: listId,
+            category: listCategory.value,
+            title: titleController.text,
+            content: contentController.text,
+            location: locationController.text,
+            imgUrl: downloadUrl,
+            imgId: imageId,
+            date: listDateTime.value,
+          );
+          await BukkungListRepository.setSuggestionBukkungList(
+              updatedBukkungList, listId);
+        }
+      });
     }
   }
 }

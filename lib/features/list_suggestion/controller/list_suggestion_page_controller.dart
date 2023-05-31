@@ -162,7 +162,8 @@ class ListSuggestionPageController extends GetxController
   }
 
   Future<void> listDelete() async {
-    await ListSuggestionRepository().deleteListImage();
+    await ListSuggestionRepository()
+        .deleteListImage('${selectedList.value.listId!}.jpg');
     ListSuggestionRepository().deleteList(
       selectedList.value.listId!,
     );

@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class BukkungListRepository {
   final GroupModel groupModel;
@@ -100,5 +102,18 @@ class BukkungListRepository {
         .collection('bukkungLists')
         .doc(listId)
         .set(bukkungLisData.toJson());
+  }
+
+  Future<void> deleteListImage(String imagePath) async {
+    try {
+      Reference imageRef = FirebaseStorage.instance
+          .ref()
+          .child('group_bukkunglist')
+          .child(imagePath);
+
+      await imageRef.delete();
+    } catch (e) {
+      openAlertDialog(title: '이미지 삭제 오류 $e');
+    }
   }
 }

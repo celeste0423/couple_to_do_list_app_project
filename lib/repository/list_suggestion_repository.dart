@@ -70,8 +70,10 @@ class ListSuggestionRepository {
 
   Future<void> deleteListImage(String imagePath) async {
     try {
-      Reference imageRef =
-          FirebaseStorage.instance.ref().child('bukkung_list').child(imagePath);
+      Reference imageRef = FirebaseStorage.instance
+          .ref()
+          .child('suggestion_bukkunglist')
+          .child(imagePath);
 
       await imageRef.delete();
     } catch (e) {

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 class BukkungListPageController extends GetxController {
   static BukkungListPageController get to => Get.find();
+
   // Rx<GroupModel> myGroup = GroupModel().obs;
   Rx<BukkungListModel> bukkungList = BukkungListModel().obs;
 
@@ -51,7 +52,10 @@ class BukkungListPageController extends GetxController {
     }
   }
 
-  void deleteBukkungList(BukkungListModel bukkungListModel) {
+  void deleteBukkungList(BukkungListModel bukkungListModel) async {
+    final GroupModel groupModel = AuthController.to.group.value;
+    await BukkungListRepository(groupModel: groupModel)
+        .deleteListImage('${bukkungListModel.imgId}.jpg');
     FirebaseFirestore.instance
         .collection('groups')
         .doc('${AuthController.to.user.value.groupId}')

@@ -26,8 +26,8 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         Obx(() {
           return TextButton(
             onPressed: controller.isCompleted.value == true
-                ? () {
-                    controller.uploadBukkungList();
+                ? () async {
+                    await controller.uploadBukkungList();
                     Get.back();
                   }
                 : () {

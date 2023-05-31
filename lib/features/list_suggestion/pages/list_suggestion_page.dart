@@ -396,7 +396,16 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               Positioned(
                 right: 0,
                 child: CustomIconButton(
-                  onTap: () {},
+                  onTap: () {
+                    openAlertDialog(
+                      title: '정말로 지우시겠습니다?',
+                      secondButtonText: '취소',
+                      function: () {
+                        controller.listDelete();
+                        Get.back();
+                      },
+                    );
+                  },
                   size: 30,
                   icon: Icon(
                     Icons.delete_outline,
