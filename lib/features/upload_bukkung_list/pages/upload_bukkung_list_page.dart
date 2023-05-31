@@ -30,6 +30,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                     print('업로드 시작(upl page)');
                     await controller.uploadBukkungList();
                     // Get.find<ListSuggestionPageController>().refresh();
+                    // Todo: 저장하고 나면 알아서 FutureBuilder refresh가 되도록 해야함
                     Get.back();
                   }
                 : () {
