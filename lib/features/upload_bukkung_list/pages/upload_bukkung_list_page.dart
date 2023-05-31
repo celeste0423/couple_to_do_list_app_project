@@ -27,7 +27,9 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           return TextButton(
             onPressed: controller.isCompleted.value == true
                 ? () async {
+                    print('업로드 시작(upl page)');
                     await controller.uploadBukkungList();
+                    // Get.find<ListSuggestionPageController>().refresh();
                     Get.back();
                   }
                 : () {
@@ -155,7 +157,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
+                    SizedBox(
                       height: 450,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -171,7 +173,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                       ),
                     ),
                     SizedBox(width: 20),
-                    Container(
+                    SizedBox(
                       height: 450,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

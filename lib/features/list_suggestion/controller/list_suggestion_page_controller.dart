@@ -1,4 +1,5 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,7 @@ class ListSuggestionPageController extends GetxController
         location: list[0].location,
         category: list[0].category,
         imgUrl: list[0].imgUrl,
+        imgId: list[0].imgId,
         madeBy: list[0].madeBy,
         likeCount: list[0].likeCount,
         likedUsers: list[0].likedUsers,
@@ -162,8 +164,10 @@ class ListSuggestionPageController extends GetxController
   }
 
   Future<void> listDelete() async {
-    await ListSuggestionRepository()
-        .deleteListImage('${selectedList.value.listId!}.jpg');
+    if (UploadBukkungListController.baseImageUrl != selectedList.value.imgUrl) {
+      await ListSuggestionRepository()
+          .deleteListImage('${selectedList.value.imgId!}.jpg');
+    }
     ListSuggestionRepository().deleteList(
       selectedList.value.listId!,
     );

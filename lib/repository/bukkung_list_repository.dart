@@ -109,7 +109,7 @@ class BukkungListRepository {
       Reference imageRef = FirebaseStorage.instance
           .ref()
           .child('group_bukkunglist')
-          .child(imagePath);
+          .child('${AuthController.to.user.value.groupId}/$imagePath');
 
       await imageRef.delete();
     } catch (e) {

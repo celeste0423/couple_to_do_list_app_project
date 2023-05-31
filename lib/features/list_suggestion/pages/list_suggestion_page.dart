@@ -307,6 +307,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             location: bukkungListModel.location,
             category: bukkungListModel.category,
             imgUrl: bukkungListModel.imgUrl,
+            imgId: bukkungListModel.imgId,
             madeBy: bukkungListModel.madeBy,
             likedUsers: bukkungListModel.likedUsers,
             likeCount: bukkungListModel.likeCount,
@@ -403,6 +404,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                       function: () {
                         controller.listDelete();
                         Get.back();
+                        Get.find<ListSuggestionPageController>().refresh();
                       },
                     );
                   },

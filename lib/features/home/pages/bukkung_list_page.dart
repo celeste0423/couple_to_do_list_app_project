@@ -228,7 +228,10 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                     ],
                   );
                 } else {
-                  return Center(child: Text('아직 버꿍리스트가 없습니다'));
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 50),
+                    child: Center(child: Text('아직 버꿍리스트가 없습니다')),
+                  );
                 }
               }
               return Center(child: Text('아직 버꿍리스트가 없습니다'));
@@ -267,7 +270,10 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                     ],
                   );
                 } else {
-                  return Center(child: Text('아직 버꿍리스트가 없습니다'));
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: Center(child: Text('아직 버꿍리스트가 없습니다')),
+                  );
                 }
               }
               return Center(child: Text('아직 버꿍리스트가 없습니다'));
@@ -411,7 +417,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                             SizedBox(width: 10),
                             MarqueeAbleText(
                               text: bukkungListModel.location!,
-                              maxLength: 20,
+                              maxLength: 15,
                               style: TextStyle(
                                 fontSize: 15,
                               ),
