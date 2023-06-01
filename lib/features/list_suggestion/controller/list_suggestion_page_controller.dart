@@ -14,7 +14,7 @@ class ListSuggestionPageController extends GetxController
   static ListSuggestionPageController get to => Get.find();
 
   TextEditingController searchBarController = TextEditingController();
-  bool isTextEmpty = true;
+  Rx<bool> isTextEmpty = true.obs;
 
   Rx<bool> isLiked = false.obs;
 
@@ -28,7 +28,7 @@ class ListSuggestionPageController extends GetxController
     //   print('탭 변화 감지중');
     //   _onTabChanged;
     // });
-    searchBarController.addListener(_onTextChanged);
+    searchBarController.addListener(onTextChanged);
     _initMainImage();
   }
 
@@ -71,8 +71,14 @@ class ListSuggestionPageController extends GetxController
     searchBarController.dispose();
   }
 
-  void _onTextChanged() {
-    isTextEmpty = searchBarController.text.isEmpty;
+  void onTextChanged() {
+    isTextEmpty(searchBarController.text.isEmpty);
+  }
+
+  Stream<List<BukkungListModel>> getSearchedBukkungList() {
+    print(searchBarController.text);
+    return ListSuggestionRepository()
+        .getSearchedBukkungList(searchBarController.text);
   }
 
   void _onTabChanged() {

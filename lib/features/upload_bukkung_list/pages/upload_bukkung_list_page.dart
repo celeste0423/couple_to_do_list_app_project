@@ -61,6 +61,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           color: CustomColors.blackText,
           fontSize: 30,
         ),
+        cursorColor: CustomColors.mainPink,
         decoration: const InputDecoration(
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
@@ -325,6 +326,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           color: CustomColors.blackText,
           fontSize: 25,
         ),
+        cursorColor: CustomColors.darkGrey,
         decoration: const InputDecoration(
           border: InputBorder.none,
           focusedBorder: InputBorder.none,

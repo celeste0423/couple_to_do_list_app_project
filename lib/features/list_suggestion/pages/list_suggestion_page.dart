@@ -35,35 +35,79 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             borderRadius: BorderRadius.circular(25),
             color: Colors.white,
           ),
-          height: 50,
-          child: TextField(
-            controller: controller.searchBarController,
-            style: TextStyle(
-              color: CustomColors.darkGrey,
-              fontFamily: 'Yoonwoo',
-              fontSize: 20,
-            ),
-            decoration: InputDecoration(
-              hintText: '다양한 버꿍리스트를 찾아보세요',
-              border: InputBorder.none,
-              prefixIcon: Icon(
-                Icons.search_rounded,
-                size: 35,
-                color: CustomColors.darkGrey,
-              ),
-              suffixIcon: controller.isTextEmpty
-                  ? null
-                  : IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        size: 20,
-                        color: CustomColors.darkGrey,
-                      ),
-                      onPressed: () {
-                        return controller.searchBarController.clear();
-                      },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 50,
+                child: TextField(
+                  controller: controller.searchBarController,
+                  style: TextStyle(
+                    color: CustomColors.darkGrey,
+                    fontFamily: 'Yoonwoo',
+                    fontSize: 20,
+                  ),
+                  cursorColor: CustomColors.darkGrey,
+                  decoration: InputDecoration(
+                    hintText: '다양한 버꿍리스트를 찾아보세요',
+                    border: InputBorder.none,
+                    prefixIcon: Icon(
+                      Icons.search_rounded,
+                      size: 35,
+                      color: CustomColors.darkGrey,
                     ),
-            ),
+                    suffixIcon: controller.isTextEmpty.value
+                        ? null
+                        : IconButton(
+                            icon: Icon(
+                              Icons.close,
+                              size: 20,
+                              color: CustomColors.darkGrey,
+                            ),
+                            onPressed: () {
+                              return controller.searchBarController.clear();
+                            },
+                          ),
+                  ),
+                  // onChanged: controller.onTextChanged,
+                  //Todo: 스트림이 텍스트필드 들어올때마다 작동하도록
+                ),
+              ),
+              Obx(() {
+                if (!controller.isTextEmpty.value) {
+                  return StreamBuilder(
+                    stream: controller.getSearchedBukkungList(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+                      if (!bukkungLists.hasData) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                              color: CustomColors.mainPink),
+                        );
+                      } else if (bukkungLists.hasError) {
+                        openAlertDialog(title: '에러 발생');
+                      } else {
+                        final list = bukkungLists.data!;
+                        return ListView(
+                          physics: AlwaysScrollableScrollPhysics(),
+                          children: [
+                            Column(
+                              children: List.generate(list.length, (index) {
+                                final bukkungList = list[index];
+                                return _suggestionListCard(
+                                    bukkungList, index, false);
+                              }),
+                            ),
+                          ],
+                        );
+                      }
+                      return Center(child: Text('아직 버꿍리스트가 없습니다'));
+                    },
+                  );
+                }
+                return Container(height: 0);
+              }),
+            ],
           ),
         ),
       ),
@@ -528,7 +572,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             _background(),
             Column(
               children: [
-                _searchBar(),
+                SizedBox(height: 80),
                 CategorySelectTabBar(
                   tabController: controller.suggestionListTabController,
                   selectedColor: Colors.black.withOpacity(0.8),
@@ -539,6 +583,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               ],
             ),
             _listPlayButton(),
+            _searchBar(),
           ],
         ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

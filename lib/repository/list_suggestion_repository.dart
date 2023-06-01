@@ -7,6 +7,23 @@ import 'package:firebase_storage/firebase_storage.dart';
 class ListSuggestionRepository {
   ListSuggestionRepository();
 
+  Stream<List<BukkungListModel>> getSearchedBukkungList(String searchWord) {
+    return FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .where('title', arrayContainsAny: [searchWord])
+        .orderBy('likeCount', descending: true)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((event) {
+          List<BukkungListModel> bukkungLists = [];
+          for (var bukkungList in event.docs) {
+            bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+          }
+          print(bukkungLists);
+          return bukkungLists;
+        });
+  }
+
   Stream<List<BukkungListModel>> getAllBukkungList() {
     return FirebaseFirestore.instance
         .collection('bukkungLists')

@@ -132,6 +132,7 @@ class _LocationTextFieldState extends State<LocationTextField> {
             color: CustomColors.blackText,
             fontSize: 25,
           ),
+          cursorColor: CustomColors.darkGrey,
           decoration: const InputDecoration(
             border: InputBorder.none,
             focusedBorder: InputBorder.none,
