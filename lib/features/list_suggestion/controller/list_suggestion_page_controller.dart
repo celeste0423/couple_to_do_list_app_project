@@ -19,7 +19,6 @@ class ListSuggestionPageController extends GetxController
   Rx<bool> isLiked = false.obs;
 
   Rx<BukkungListModel> selectedList = Rx<BukkungListModel>(BukkungListModel());
-  Rx<int> selectedIndex = 0.obs;
 
   @override
   void onInit() {
@@ -34,8 +33,7 @@ class ListSuggestionPageController extends GetxController
   }
 
   void _initMainImage() {
-    final stream =
-        getSuggestionBukkungList(tabIndexToName(selectedIndex.value));
+    final stream = getSuggestionBukkungList('all');
     StreamSubscription<List<BukkungListModel>>? subscription;
     subscription = stream.listen((list) {
       if (list.isNotEmpty) {
@@ -78,7 +76,6 @@ class ListSuggestionPageController extends GetxController
   }
 
   void _onTabChanged() {
-    selectedIndex.value = 0;
     _initMainImage();
   }
 
@@ -118,8 +115,7 @@ class ListSuggestionPageController extends GetxController
     return ListSuggestionRepository().getMyBukkungList();
   }
 
-  void indexSelection(int index, BukkungListModel updatedList) {
-    selectedIndex(index);
+  void indexSelection(BukkungListModel updatedList) {
     selectedList(updatedList);
     if (selectedList.value.likedUsers != null &&
         selectedList.value.likedUsers!

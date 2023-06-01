@@ -51,11 +51,6 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 size: 35,
                 color: CustomColors.darkGrey,
               ),
-              // prefixIcon: Image.asset(
-              //   'assets/icons/search.png',
-              //   color: Colors.white.withOpacity(0.7),
-              //   colorBlendMode: BlendMode.modulate,
-              // ),
               suffixIcon: controller.isTextEmpty
                   ? null
                   : IconButton(
@@ -70,25 +65,6 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     ),
             ),
           ),
-          // child: Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children: [
-          //     Image.asset(
-          //       'assets/icons/search.png',
-          //       width: 30,
-          //       color: Colors.white.withOpacity(0.7),
-          //       colorBlendMode: BlendMode.modulate,
-          //     ),
-          //     SizedBox(width: 20),
-          //     Text(
-          //       '다양한 버꿍리스트를 찾아보세요',
-          //       style: TextStyle(
-          //         color: CustomColors.grey.withOpacity(0.5),
-          //         fontSize: 20,
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ),
       ),
     );
@@ -312,7 +288,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             likeCount: bukkungListModel.likeCount,
             viewCount: bukkungListModel.viewCount,
           );
-          controller.indexSelection(index, updatedList);
+          controller.indexSelection(updatedList);
           controller.viewCount();
         },
         child: Stack(
@@ -326,12 +302,14 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 padding: EdgeInsets.only(left: 120, right: 30),
                 height: 85,
                 decoration: BoxDecoration(
-                    color: index == controller.selectedIndex.value
+                    color: bukkungListModel.listId ==
+                            controller.selectedList.value.listId
                         ? CustomColors.lightPink.withOpacity(0.1)
                         : Colors.white,
                     borderRadius: BorderRadius.circular(25),
                     border: Border.all(
-                      color: index == controller.selectedIndex.value
+                      color: bukkungListModel.listId ==
+                              controller.selectedList.value.listId
                           ? CustomColors.mainPink
                           : Colors.white,
                       width: 2,
@@ -410,7 +388,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                       likeCount: bukkungListModel.likeCount,
                       viewCount: bukkungListModel.viewCount,
                     );
-                    controller.indexSelection(index, updatedList);
+                    controller.indexSelection(updatedList);
                     openAlertDialog(
                       title: '정말로 지우시겠습니다?',
                       secondButtonText: '취소',
