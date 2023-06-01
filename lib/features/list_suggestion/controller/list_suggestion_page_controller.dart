@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
@@ -31,30 +33,34 @@ class ListSuggestionPageController extends GetxController
     _initMainImage();
   }
 
-  void _initMainImage() async {
-    final list =
-        await getSuggestionBukkungList(tabIndexToName(selectedIndex.value));
-    if (list.isNotEmpty) {
-      final updatedList = selectedList.value.copyWith(
-        listId: list[0].listId,
-        title: list[0].title,
-        content: list[0].content,
-        location: list[0].location,
-        category: list[0].category,
-        imgUrl: list[0].imgUrl,
-        imgId: list[0].imgId,
-        madeBy: list[0].madeBy,
-        likeCount: list[0].likeCount,
-        likedUsers: list[0].likedUsers,
-        viewCount: list[0].viewCount,
-      );
-      selectedList.value = updatedList;
-      if (selectedList.value.likedUsers != null &&
-          selectedList.value.likedUsers!
-              .contains(AuthController.to.user.value.uid)) {
-        isLiked(true);
+  void _initMainImage() {
+    final stream =
+        getSuggestionBukkungList(tabIndexToName(selectedIndex.value));
+    StreamSubscription<List<BukkungListModel>>? subscription;
+    subscription = stream.listen((list) {
+      if (list.isNotEmpty) {
+        final updatedList = selectedList.value.copyWith(
+          listId: list[0].listId,
+          title: list[0].title,
+          content: list[0].content,
+          location: list[0].location,
+          category: list[0].category,
+          imgUrl: list[0].imgUrl,
+          imgId: list[0].imgId,
+          madeBy: list[0].madeBy,
+          likeCount: list[0].likeCount,
+          likedUsers: list[0].likedUsers,
+          viewCount: list[0].viewCount,
+        );
+        selectedList.value = updatedList;
+        if (selectedList.value.likedUsers != null &&
+            selectedList.value.likedUsers!
+                .contains(AuthController.to.user.value.uid)) {
+          isLiked(true);
+        }
+        subscription?.cancel();
       }
-    }
+    });
   }
 
   @override
@@ -97,18 +103,18 @@ class ListSuggestionPageController extends GetxController
     }
   }
 
-  Future<List<BukkungListModel>> getSuggestionBukkungList(
+  Stream<List<BukkungListModel>> getSuggestionBukkungList(
     String category,
-  ) async {
+  ) {
     print('리스트 추천 stream(sugg cont) ${category}');
     if (category == 'all') {
       return ListSuggestionRepository().getAllBukkungList();
     } else {
-      return await ListSuggestionRepository().getTypeBukkungList(category);
+      return ListSuggestionRepository().getTypeBukkungList(category);
     }
   }
 
-  Future<List<BukkungListModel>> getSuggestionMyBukkungList() async {
+  Stream<List<BukkungListModel>> getSuggestionMyBukkungList() {
     return ListSuggestionRepository().getMyBukkungList();
   }
 
@@ -127,6 +133,7 @@ class ListSuggestionPageController extends GetxController
   }
 
   void toggleLike() {
+    print(selectedList.value.likedUsers);
     if (selectedList.value.likedUsers != null) {
       if (selectedList.value.likedUsers!
           .contains(AuthController.to.user.value.uid)) {

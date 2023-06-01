@@ -7,48 +7,81 @@ import 'package:firebase_storage/firebase_storage.dart';
 class ListSuggestionRepository {
   ListSuggestionRepository();
 
-  Future<List<BukkungListModel>> getAllBukkungList() async {
-    print('파이어스토어에서 전체 받아옴');
-    var snapshot = await FirebaseFirestore.instance
+  Stream<List<BukkungListModel>> getAllBukkungList() {
+    return FirebaseFirestore.instance
         .collection('bukkungLists')
         .orderBy('likeCount', descending: true)
         .orderBy('createdAt', descending: true)
-        .get();
-    List<BukkungListModel> bukkungLists = [];
-    for (var bukkungList in snapshot.docs) {
-      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-    }
-    return bukkungLists;
+        .snapshots()
+        .map((event) {
+      List<BukkungListModel> bukkungLists = [];
+      for (var bukkungList in event.docs) {
+        bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+      }
+      return bukkungLists;
+    });
   }
 
-  Future<List<BukkungListModel>> getTypeBukkungList(String category) async {
+  Stream<List<BukkungListModel>> getTypeBukkungList(String category) {
     print('파이어스토에서 받아옴(sugg repo) $category');
-    var snapshot = await FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection('bukkungLists')
         .where('category', isEqualTo: category)
         .orderBy('likeCount', descending: true)
         .orderBy('createdAt', descending: true)
-        .get();
-    List<BukkungListModel> bukkungLists = [];
-    for (var bukkungList in snapshot.docs) {
-      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-    }
-    return bukkungLists;
+        .snapshots()
+        .map((event) {
+      List<BukkungListModel> bukkungLists = [];
+      for (var bukkungList in event.docs) {
+        bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+      }
+      return bukkungLists;
+    });
   }
+  // Future<List<BukkungListModel>> getAllBukkungList() async {
+  //   print('파이어스토어에서 전체 받아옴');
+  //   var snapshot = await FirebaseFirestore.instance
+  //       .collection('bukkungLists')
+  //       .orderBy('likeCount', descending: true)
+  //       .orderBy('createdAt', descending: true)
+  //       .get();
+  //   List<BukkungListModel> bukkungLists = [];
+  //   for (var bukkungList in snapshot.docs) {
+  //     bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+  //   }
+  //   return bukkungLists;
+  // }
+  //
+  // Future<List<BukkungListModel>> getTypeBukkungList(String category) async {
+  //   print('파이어스토에서 받아옴(sugg repo) $category');
+  //   var snapshot = await FirebaseFirestore.instance
+  //       .collection('bukkungLists')
+  //       .where('category', isEqualTo: category)
+  //       .orderBy('likeCount', descending: true)
+  //       .orderBy('createdAt', descending: true)
+  //       .get();
+  //   List<BukkungListModel> bukkungLists = [];
+  //   for (var bukkungList in snapshot.docs) {
+  //     bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+  //   }
+  //   return bukkungLists;
+  // }
 
-  Future<List<BukkungListModel>> getMyBukkungList() async {
+  Stream<List<BukkungListModel>> getMyBukkungList() {
     print('파이어스토어에서 전체 받아옴');
-    var snapshot = await FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection('bukkungLists')
         .where('userId', isEqualTo: AuthController.to.user.value.uid)
         .orderBy('likeCount', descending: true)
         .orderBy('createdAt', descending: true)
-        .get();
-    List<BukkungListModel> bukkungLists = [];
-    for (var bukkungList in snapshot.docs) {
-      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-    }
-    return bukkungLists;
+        .snapshots()
+        .map((event) {
+      List<BukkungListModel> bukkungLists = [];
+      for (var bukkungList in event.docs) {
+        bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+      }
+      return bukkungLists;
+    });
   }
 
   void updateLike(String listId, int likeCount, List<String> likedUsers) {

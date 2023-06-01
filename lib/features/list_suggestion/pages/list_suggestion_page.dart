@@ -260,9 +260,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   }
 
   Widget _suggestionList(int index) {
-    print('탭별 리스트 로딩 (sug pag) 탭: $index}');
-    return FutureBuilder(
-      future: controller.getSuggestionBukkungList(
+    return StreamBuilder(
+      stream: controller.getSuggestionBukkungList(
         controller.tabIndexToName(index),
       ),
       builder: (BuildContext context,
@@ -274,15 +273,15 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         } else if (bukkungLists.hasError) {
           openAlertDialog(title: '에러 발생');
         } else {
-          final _list = bukkungLists.data!;
+          final list = bukkungLists.data!;
           return ListView(
             physics: AlwaysScrollableScrollPhysics(),
             children: [
               SizedBox(height: 400),
               Column(
-                children: List.generate(_list.length, (index) {
-                  final _bukkungList = _list[index];
-                  return _suggestionListCard(_bukkungList, index, false);
+                children: List.generate(list.length, (index) {
+                  final bukkungList = list[index];
+                  return _suggestionListCard(bukkungList, index, false);
                 }),
               ),
               SizedBox(height: 20),
@@ -358,7 +357,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                           ),
                           _iconText(
                             'preview.png',
-                            '${formattedViewCount ?? ''}회',
+                            '$formattedViewCount회',
                             false,
                           ),
                           _iconText(
@@ -398,13 +397,26 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 right: 0,
                 child: CustomIconButton(
                   onTap: () {
+                    final updatedList = controller.selectedList.value.copyWith(
+                      listId: bukkungListModel.listId,
+                      title: bukkungListModel.title,
+                      content: bukkungListModel.content,
+                      location: bukkungListModel.location,
+                      category: bukkungListModel.category,
+                      imgUrl: bukkungListModel.imgUrl,
+                      imgId: bukkungListModel.imgId,
+                      madeBy: bukkungListModel.madeBy,
+                      likedUsers: bukkungListModel.likedUsers,
+                      likeCount: bukkungListModel.likeCount,
+                      viewCount: bukkungListModel.viewCount,
+                    );
+                    controller.indexSelection(index, updatedList);
                     openAlertDialog(
                       title: '정말로 지우시겠습니다?',
                       secondButtonText: '취소',
                       function: () {
                         controller.listDelete();
                         Get.back();
-                        Get.find<ListSuggestionPageController>().refresh();
                       },
                     );
                   },
@@ -459,8 +471,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   }
 
   Widget _suggestionMyList() {
-    return FutureBuilder(
-      future: controller.getSuggestionMyBukkungList(),
+    return StreamBuilder(
+      stream: controller.getSuggestionMyBukkungList(),
       builder: (BuildContext context,
           AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
         if (!bukkungLists.hasData) {
@@ -470,15 +482,15 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         } else if (bukkungLists.hasError) {
           openAlertDialog(title: '에러 발생');
         } else {
-          final _list = bukkungLists.data!;
+          final list = bukkungLists.data!;
           return ListView(
             physics: AlwaysScrollableScrollPhysics(),
             children: [
               SizedBox(height: 400),
               Column(
-                children: List.generate(_list.length, (index) {
-                  final _bukkungList = _list[index];
-                  return _suggestionListCard(_bukkungList, index, true);
+                children: List.generate(list.length, (index) {
+                  final bukkungList = list[index];
+                  return _suggestionListCard(bukkungList, index, true);
                 }),
               ),
               SizedBox(height: 20),
@@ -489,41 +501,6 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       },
     );
   }
-
-  // Widget _listAddButton() {
-  //   return ElevatedButton(
-  //     onPressed: () {
-  //       // Get.lazyPut<UploadBukkungListController>(
-  //       //     () => UploadBukkungListController(context: context),
-  //       //     fenix: true);
-  //       Get.to(() => UploadBukkungListPage());
-  //     },
-  //     style: ElevatedButton.styleFrom(
-  //       fixedSize: Size(260, 50),
-  //       shape: RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.circular(50.0),
-  //       ),
-  //     ),
-  //     child: Row(
-  //       children: [
-  //         Image.asset(
-  //           'assets/icons/plus.png',
-  //           width: 30,
-  //           color: Colors.black.withOpacity(0.5),
-  //           colorBlendMode: BlendMode.modulate,
-  //         ),
-  //         SizedBox(width: 10),
-  //         Text(
-  //           '리스트 새로 만들기',
-  //           style: TextStyle(
-  //             color: Colors.black.withOpacity(0.5),
-  //             fontSize: 30,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
