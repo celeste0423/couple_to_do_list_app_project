@@ -14,7 +14,9 @@ class ListSuggestionPageController extends GetxController
   static ListSuggestionPageController get to => Get.find();
 
   TextEditingController searchBarController = TextEditingController();
-  Rx<bool> isTextEmpty = true.obs;
+  List<String> _searchWord = [];
+  bool isTextEmpty = true;
+  Rx<bool> isSearchResult = false.obs;
 
   Rx<bool> isLiked = false.obs;
 
@@ -72,13 +74,14 @@ class ListSuggestionPageController extends GetxController
   }
 
   void onTextChanged() {
-    isTextEmpty(searchBarController.text.isEmpty);
+    isTextEmpty = searchBarController.text.isEmpty;
+    _searchWord = searchBarController.text.split(' ');
+    isSearchResult(true);
+    update(['searchResult'], true);
   }
 
   Stream<List<BukkungListModel>> getSearchedBukkungList() {
-    print(searchBarController.text);
-    return ListSuggestionRepository()
-        .getSearchedBukkungList(searchBarController.text);
+    return ListSuggestionRepository().getSearchedBukkungList(_searchWord);
   }
 
   void _onTabChanged() {

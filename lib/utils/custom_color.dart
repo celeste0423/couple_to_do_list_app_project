@@ -10,7 +10,7 @@ class CustomColors {
   // static const Color lightPink = Color(0xFFFCD1D1);
 
   // lightpink 쫌 진하게 바꿨는데 맘에 안들면 말해~
-  static const Color lightPink = Color(0xFFFABDBD);
+  static const Color lightPink = Color(0xFFFDCECE);
   static const Color backgroundLightGrey = Color(0xFFEFEFEF);
   static const Color lightGrey = Color(0xFFBBBBBB);
   static const Color grey = Color(0xFF7A7A7A);

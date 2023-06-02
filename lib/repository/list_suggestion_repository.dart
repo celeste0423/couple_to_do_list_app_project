@@ -7,21 +7,43 @@ import 'package:firebase_storage/firebase_storage.dart';
 class ListSuggestionRepository {
   ListSuggestionRepository();
 
-  Stream<List<BukkungListModel>> getSearchedBukkungList(String searchWord) {
+  Stream<List<BukkungListModel>> getSearchedBukkungList(
+      List<String> searchWords) {
     return FirebaseFirestore.instance
         .collection('bukkungLists')
-        .where('title', arrayContainsAny: [searchWord])
         .orderBy('likeCount', descending: true)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((event) {
-          List<BukkungListModel> bukkungLists = [];
-          for (var bukkungList in event.docs) {
-            bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+      List<BukkungListModel> bukkungLists = [];
+      for (var bukkungList in event.docs) {
+        Map<String, dynamic> data = bukkungList.data();
+        int wordMatchCount = 0;
+        for (String word in searchWords) {
+          if (data.toString().contains(word)) {
+            wordMatchCount++;
           }
-          print(bukkungLists);
-          return bukkungLists;
-        });
+        }
+        if (wordMatchCount > 0) {
+          bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+        }
+      }
+      bukkungLists.sort((a, b) {
+        int matchCountA = 0;
+        int matchCountB = 0;
+        for (String word in searchWords) {
+          if (a.toString().contains(word)) {
+            matchCountA++;
+          }
+          if (b.toString().contains(word)) {
+            matchCountB++;
+          }
+        }
+        return matchCountB.compareTo(matchCountA);
+      });
+      print(bukkungLists);
+      return bukkungLists;
+    });
   }
 
   Stream<List<BukkungListModel>> getAllBukkungList() {

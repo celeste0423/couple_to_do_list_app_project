@@ -29,8 +29,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       child: Material(
         type: MaterialType.transparency,
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
             color: Colors.white,
@@ -38,8 +37,9 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
+              Container(
                 height: 50,
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 child: TextField(
                   controller: controller.searchBarController,
                   style: TextStyle(
@@ -56,7 +56,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                       size: 35,
                       color: CustomColors.darkGrey,
                     ),
-                    suffixIcon: controller.isTextEmpty.value
+                    suffixIcon: controller.isTextEmpty
                         ? null
                         : IconButton(
                             icon: Icon(
@@ -69,44 +69,160 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                             },
                           ),
                   ),
-                  // onChanged: controller.onTextChanged,
-                  //Todo: 스트림이 텍스트필드 들어올때마다 작동하도록
+                  onTap: () {
+                    controller.isSearchResult(true);
+                  },
+                  onEditingComplete: () {
+                    controller.isSearchResult(false);
+                  },
+                  onSubmitted: (_) {
+                    controller.isSearchResult(false);
+                  },
                 ),
               ),
               Obx(() {
-                if (!controller.isTextEmpty.value) {
-                  return StreamBuilder(
-                    stream: controller.getSearchedBukkungList(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
-                      if (!bukkungLists.hasData) {
-                        return Center(
-                          child: CircularProgressIndicator(
-                              color: CustomColors.mainPink),
-                        );
-                      } else if (bukkungLists.hasError) {
-                        openAlertDialog(title: '에러 발생');
-                      } else {
-                        final list = bukkungLists.data!;
-                        return ListView(
-                          physics: AlwaysScrollableScrollPhysics(),
-                          children: [
-                            Column(
-                              children: List.generate(list.length, (index) {
-                                final bukkungList = list[index];
-                                return _suggestionListCard(
-                                    bukkungList, index, false);
-                              }),
-                            ),
-                          ],
-                        );
-                      }
-                      return Center(child: Text('아직 버꿍리스트가 없습니다'));
+                print(controller.isSearchResult.value);
+                if (controller.isSearchResult.value) {
+                  return GetBuilder<ListSuggestionPageController>(
+                    id: 'searchResult',
+                    builder: (ListSuggestionPageController) {
+                      return ConstrainedBox(
+                        constraints: BoxConstraints(maxHeight: 300),
+                        child: StreamBuilder(
+                          stream: controller.getSearchedBukkungList(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<BukkungListModel>>
+                                  bukkungLists) {
+                            if (!bukkungLists.hasData) {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                    color: CustomColors.mainPink),
+                              );
+                            } else if (bukkungLists.hasError) {
+                              openAlertDialog(title: '에러 발생');
+                            } else {
+                              final list = bukkungLists.data!;
+                              return ListView(
+                                physics: AlwaysScrollableScrollPhysics(),
+                                children: [
+                                  Column(
+                                    children:
+                                        List.generate(list.length, (index) {
+                                      final bukkungList = list[index];
+                                      return _searchListCard(
+                                          bukkungList, index);
+                                    }),
+                                  ),
+                                ],
+                              );
+                            }
+                            return Center(child: Text('아직 버꿍리스트가 없습니다'));
+                          },
+                        ),
+                      );
                     },
                   );
                 }
-                return Container(height: 0);
-              }),
+                return Container();
+              })
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _searchListCard(BukkungListModel bukkungListModel, int index) {
+    int? viewCount = bukkungListModel.viewCount;
+    NumberFormat formatter = NumberFormat.compact(locale: "ko_KR");
+    String formattedViewCount = formatter.format(viewCount);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+      child: GestureDetector(
+        onTap: () {
+          final updatedList = controller.selectedList.value.copyWith(
+            listId: bukkungListModel.listId,
+            title: bukkungListModel.title,
+            content: bukkungListModel.content,
+            location: bukkungListModel.location,
+            category: bukkungListModel.category,
+            imgUrl: bukkungListModel.imgUrl,
+            imgId: bukkungListModel.imgId,
+            madeBy: bukkungListModel.madeBy,
+            likedUsers: bukkungListModel.likedUsers,
+            likeCount: bukkungListModel.likeCount,
+            viewCount: bukkungListModel.viewCount,
+          );
+          controller.indexSelection(updatedList);
+          controller.viewCount();
+          controller.isSearchResult(false);
+        },
+        child: Container(
+          height: 85,
+          decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(
+                color: CustomColors.darkGrey,
+                width: 1,
+              )),
+          child: Row(
+            children: [
+              Container(
+                width: 84,
+                height: 84,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                      offset: Offset(5, 5), // Offset(수평, 수직)
+                    ),
+                  ],
+                  image: DecorationImage(
+                    image: NetworkImage(bukkungListModel.imgUrl!),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MarqueeAbleText(
+                    text: bukkungListModel.title!,
+                    maxLength: 13,
+                    style:
+                        TextStyle(fontSize: 25, color: CustomColors.blackText),
+                  ),
+                  SizedBox(height: 20),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _iconText(
+                          'location-pin.png',
+                          bukkungListModel.location ?? '',
+                          true,
+                        ),
+                        _iconText(
+                          'preview.png',
+                          '$formattedViewCount회',
+                          false,
+                        ),
+                        _iconText(
+                          null,
+                          '${bukkungListModel.likeCount.toString()}개',
+                          false,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                ],
+              ),
             ],
           ),
         ),
@@ -530,6 +646,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
+        controller.isSearchResult(false);
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
