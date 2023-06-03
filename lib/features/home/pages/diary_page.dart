@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
@@ -6,18 +7,10 @@ import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
-class DiaryPage extends StatefulWidget {
-  const DiaryPage({Key? key}) : super(key: key);
-
-  @override
-  State<DiaryPage> createState() => _DiaryPageState();
-}
-
-class _DiaryPageState extends State<DiaryPage>
-    with SingleTickerProviderStateMixin {
-  late final TabController _tabDiaryController =
-      TabController(length: 7, vsync: this);
+class DiaryPage extends GetView<DiaryPageController> {
+  const DiaryPage({super.key});
 
   //ToDo: 파이어베이스에서 가져온 정보로 채워 넣을 것
   Widget _diary() {
@@ -106,6 +99,46 @@ class _DiaryPageState extends State<DiaryPage>
   }
 
   Widget _diaryList() {
+    Widget myListTile(String? title, String? location, DateTime? date) {
+      String dateString =
+      date != null ? DateFormat('yyyy-MM-dd').format(date) : '';
+      return Container(
+        height: 90,
+        child: Row(
+          children: [
+            Container(),
+            Column(
+              children: [
+                Text(
+                  title ?? '',
+                  style: TextStyle(fontSize: 25),
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                      size: 15,
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Text(
+                      location ?? '',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
+                Text(
+                  dateString,
+                  style: TextStyle(fontSize: 15),
+                )
+              ],
+            )
+          ],
+        ),
+      );
+    }
+
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
@@ -118,14 +151,35 @@ class _DiaryPageState extends State<DiaryPage>
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               //Todo: 색상 입력 안해도 되도록 기본값 넣어뒀는데도 오류가 발생하는 이유..?
               child: CategorySelectTabBar(
-                tabController: _tabDiaryController,
+                tabController: controller.tabDiaryController,
                 selectedColor: CustomColors.darkGrey,
                 unselectedColor: CustomColors.grey.withOpacity(0.5),
               ),
             ),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: controller.diarylist.length,
+                  itemBuilder: (BuildContext ctx, int i) {
+                    return GestureDetector(
+                      onTap: () {
+                        Get.to(ReadDiaryPage(
+                          title: controller.diarylist[i].title,
+                          imgurllist: controller.diarylist[i].imgUrlList,
+                          date: controller.diarylist[i].date,
+                          mysogam: controller.diarylist[i].mySogam,
+                          bukkungsogam: controller.diarylist[i].bukkungSogam,));
+                      },
+                      child: myListTile(
+                        controller.diarylist[i].title,
+                        controller.diarylist[i].location,
+                        controller.diarylist[i].date,
+                      ),
+                    );
+                  }),
+            )
           ],
         ),
       ),
@@ -134,6 +188,7 @@ class _DiaryPageState extends State<DiaryPage>
 
   @override
   Widget build(BuildContext context) {
+    Get.put(DiaryPageController());
     return Scaffold(
       backgroundColor: CustomColors.lightPink,
       appBar: AppBar(

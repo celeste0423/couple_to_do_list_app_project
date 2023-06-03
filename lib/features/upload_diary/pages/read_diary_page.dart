@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ReadDiaryPage extends StatefulWidget {
-  final String title;
+
+  final String? title;
   final List? imgurllist;
   final DateTime? date;
   final String? mysogam;

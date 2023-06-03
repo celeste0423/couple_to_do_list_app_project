@@ -1,6 +1,11 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/models/diary_model.dart';
+import 'package:couple_to_do_list_app/models/group_model.dart';
+import 'package:couple_to_do_list_app/repository/diary_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class DiaryPageController extends GetxController {
+class DiaryPageController extends GetxController with GetTickerProviderStateMixin{
   static DiaryPageController get to => Get.find();
   Rx<String?> listCategory = "".obs;
   Map<String, String> categoryToString = {
@@ -13,12 +18,48 @@ class DiaryPageController extends GetxController {
     "6etc": "기타",
   };
 
+  RxList<DiaryModel> diarylist = <DiaryModel>[].obs;
+
+  late final TabController tabDiaryController =
+  TabController(length: 7, vsync: this);
+
   @override
   void onInit() {
     super.onInit();
     listCategory.value = "all";
-    // myGroup(AuthController.to.group.value);
+    diarylist.bindStream(getDiaryList('all'));
+
   }
+
+  Stream<List<DiaryModel>> getDiaryList(String type) {
+    // AuthController.to.saveGroupData();
+    final GroupModel groupModel = AuthController.to.group.value;
+    // final GroupModel groupModel = await AuthController.to.group.value;
+    print('현재 그룹 (buk page cont)${groupModel.uid}');
+    // print('현재 유저 (buk page cont)${myGroup.value.uid}');
+    return DiaryRepository(groupModel: groupModel)
+        .getallDiary();
+    // switch (type) {
+    //   case 'all':
+    //     return DiaryRepository(groupModel: groupModel)
+    //         .getallDiary();
+    //     //Todo: list 가지고 case 나눠야 함
+    //   case '1travel':
+    //     return DiaryRepository(groupModel: groupModel)
+    //         .getallDiary();
+    //   default:
+    //     print('에러: 분류 타입 지정 안됨(buk cont)');
+    //     return DiaryRepository(groupModel: groupModel)
+    //         .getallDiary();
+    // }
+  }
+
+  @override
+  void onClose() {
+    tabDiaryController.dispose();
+    super.onClose();
+  }
+
 //
 //   Stream<List<DiaryModel>> getAllDiaryList(String type) {
 //     // AuthController.to.saveGroupData();
