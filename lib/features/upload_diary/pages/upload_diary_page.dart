@@ -1,6 +1,8 @@
 import 'package:couple_to_do_list_app/features/upload_diary/controller/upload_diary_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/widgets/location_text_field.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/widgets/underlined_textfield.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/auxiliary_button.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
@@ -14,60 +16,56 @@ import 'package:intl/intl.dart';
 //Todo: controller 가 이 페이지 꺼지면 바로 꺼지게 해야 함
 
 class UploadDiaryPage extends GetView<UploadDiaryController> {
-  final String? title;
-  final String? date;
-  final String? imgUrl;
+  // Widget _Title() {
+  //   if (title == null) {
+  //     return TextField(
+  //       controller: controller.titleController,
+  //       maxLines: null,
+  //       textInputAction: TextInputAction.done,
+  //       textAlign: TextAlign.center,
+  //       style: TextStyle(
+  //         color: CustomColors.darkGrey,
+  //         fontSize: 40,
+  //       ),
+  //       decoration: const InputDecoration(
+  //         prefixIcon: Icon(
+  //           Icons.edit,
+  //           color: CustomColors.darkGrey,
+  //           size: 30,
+  //         ),
+  //         suffixIcon: Icon(
+  //           Icons.edit,
+  //           color: CustomColors.darkGrey,
+  //           size: 30,
+  //         ),
+  //         border: InputBorder.none,
+  //         focusedBorder: InputBorder.none,
+  //         enabledBorder: InputBorder.none,
+  //         errorBorder: InputBorder.none,
+  //         disabledBorder: InputBorder.none,
+  //         contentPadding: EdgeInsets.only(left: 15),
+  //         hintText: '제목을 입력하세요',
+  //         hintStyle: TextStyle(
+  //           color: CustomColors.darkGrey,
+  //           fontSize: 40,
+  //         ),
+  //       ),
+  //     );
+  //   } else {
+  //     return Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //       children: [
+  //         titleText(title!),
+  //         Icon(
+  //           Icons.edit,
+  //           size: 30,
+  //         ),
+  //       ],
+  //     );
+  //   }
+  // }
 
-  const UploadDiaryPage(this.title, this.date, this.imgUrl, {super.key});
-
-  Widget _Title() {
-    if (title == null) {
-      return TextField(
-        controller: controller.titleController,
-        maxLines: null,
-        textInputAction: TextInputAction.done,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: CustomColors.darkGrey,
-          fontSize: 40,
-        ),
-        decoration: const InputDecoration(
-          prefixIcon: Icon(
-            Icons.edit,
-            color: CustomColors.darkGrey,
-            size: 30,
-          ),
-          suffixIcon: Icon(
-            Icons.edit,
-            color: CustomColors.darkGrey,
-            size: 30,
-          ),
-          border: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          errorBorder: InputBorder.none,
-          disabledBorder: InputBorder.none,
-          contentPadding: EdgeInsets.only(left: 15),
-          hintText: '제목을 입력하세요',
-          hintStyle: TextStyle(
-            color: CustomColors.darkGrey,
-            fontSize: 40,
-          ),
-        ),
-      );
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          titleText(title!),
-          Icon(
-            Icons.edit,
-            size: 30,
-          ),
-        ],
-      );
-    }
-  }
+final DiaryModel? selectedDiaryModel = Get.arguments;
 
   PreferredSizeWidget _appBar() {
     return AppBar(
@@ -89,7 +87,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
             errorBorder: InputBorder.none,
             disabledBorder: InputBorder.none,
             contentPadding: EdgeInsets.only(left: 15),
-            hintText: title != null ? title! : '제목을 입력하세요',
+            hintText: selectedDiaryModel != null ? selectedDiaryModel!.title! : '제목을 입력하세요',
             suffixIcon: Icon(
               Icons.edit,
               size: 23,
@@ -133,8 +131,9 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   child: Obx(() {
                     return Text(
+                      //todo: controller 에서 diaryDateTime initialize  했는지 확인
                       controller.diaryDateTime.value == null
-                          ? date ?? '예상 날짜'
+                          ? '예상 날짜'
                           : DateFormat('yyyy-MM-dd')
                               .format(controller.diaryDateTime.value!),
                       style: TextStyle(
@@ -155,6 +154,22 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   }
 
   Widget _imagePicker() {
+
+    DecorationImage? myDecorationImage() {
+      if(selectedDiaryModel==null){return null;}
+      else{
+        if(selectedDiaryModel!.imgUrlList==null
+        ){return null;}
+        else{
+          return DecorationImage(
+            image: NetworkImage(
+              selectedDiaryModel!.imgUrlList![0],
+            ),
+            fit: BoxFit.cover,
+          );
+        }
+      }
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Row(
@@ -174,16 +189,9 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
               decoration: BoxDecoration(
                 color: CustomColors.lightGrey,
                 borderRadius: BorderRadius.circular(25),
-                image: imgUrl == null
-                    ? null
-                    : DecorationImage(
-                        image: NetworkImage(
-                          imgUrl!,
-                        ),
-                        fit: BoxFit.cover,
-                      ),
+                image: myDecorationImage()
               ),
-              child: imgUrl != null
+              child: myDecorationImage() != null
                   ? null
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -200,7 +208,8 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                           style: TextStyle(fontSize: 35, color: Colors.white),
                         )
                       ],
-                    )),
+                    )
+          ),
         ],
       ),
     );
@@ -235,11 +244,11 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _categoryCard(
-                              'airplane', '여행', CustomColors.travel, 'travel'),
+                              'airplane', '여행', CustomColors.travel, '1travel'),
                           _categoryCard('running', '액티비티',
-                              CustomColors.activity, 'activity'),
+                              CustomColors.activity, '3activity'),
                           _categoryCard(
-                              'study', '자기계발', CustomColors.study, 'study'),
+                              'study', '자기계발', CustomColors.study, '5study'),
                         ],
                       ),
                     ),
@@ -251,11 +260,11 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _categoryCard(
-                              'food', '식사', CustomColors.meal, 'meal'),
+                              'food', '식사', CustomColors.meal, '2meal'),
                           _categoryCard('singer', '문화활동', CustomColors.culture,
-                              'culture'),
+                              '4culture'),
                           _categoryCard(
-                              'filter-file', '기타', CustomColors.etc, 'etc'),
+                              'filter-file', '기타', CustomColors.etc, '6etc'),
                         ],
                       ),
                     )
@@ -323,7 +332,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                             bottom: BorderSide(color: CustomColors.grey))),
                     child: Text(
                       controller.diaryDateTime.value == null
-                          ? date ?? '날짜'
+                          ? '날짜'
                           : DateFormat('yyyy-MM-dd')
                               .format(controller.diaryDateTime.value!),
                       style: TextStyle(
@@ -354,17 +363,17 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         CategoryIcon(
-                          category: controller.DiaryCategory.value ?? '',
+                          category: controller.diaryCategory.value ?? '',
                           size: 25,
                         ),
                         SizedBox(width: 10),
                         Text(
                           controller.categoryToString[
-                                  controller.DiaryCategory.value] ??
+                                  controller.diaryCategory.value] ??
                               '카테고리',
                           style: TextStyle(
                             color: controller.categoryToString[
-                                        controller.DiaryCategory.value] ==
+                                        controller.diaryCategory.value] ==
                                     null
                                 ? CustomColors.greyText
                                 : CustomColors.blackText,
@@ -468,6 +477,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: TextField(
+                          controller: controller.contentController,
                           decoration: InputDecoration(
                               hintText: ' 소감 작성하기',
                               hintStyle: TextStyle(
@@ -503,7 +513,17 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
         auxiliaryButton('취소', () {
           Get.back();
         }, Get.width * 1 / 4),
-        mainButton('다이어리 작성', () {}, Get.width * 5 / 8)
+        mainButton('다이어리 작성', () async{
+          if(controller.isValid()){
+            print('isvalid');
+            controller.uploadDiary();
+
+          }
+          else
+            {openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');}
+
+
+        }, Get.width * 5 / 8)
       ],
     );
   }
@@ -533,3 +553,5 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
     );
   }
 }
+
+

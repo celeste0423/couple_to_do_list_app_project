@@ -165,12 +165,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                   itemBuilder: (BuildContext ctx, int i) {
                     return GestureDetector(
                       onTap: () {
-                        Get.to(ReadDiaryPage(
-                          title: controller.diarylist[i].title,
-                          imgurllist: controller.diarylist[i].imgUrlList,
-                          date: controller.diarylist[i].date,
-                          mysogam: controller.diarylist[i].mySogam,
-                          bukkungsogam: controller.diarylist[i].bukkungSogam,));
+                        Get.to(ReadDiaryPage(), arguments : controller.diarylist[i]);
                       },
                       child: myListTile(
                         controller.diarylist[i].title,
@@ -201,7 +196,6 @@ class DiaryPage extends GetView<DiaryPageController> {
           IconButton(
               onPressed: () {
                 Get.to(ReadDiaryPage(
-                  title: 'hi',
                 ));
               },
               icon: Icon(Icons.abc)),
@@ -209,7 +203,7 @@ class DiaryPage extends GetView<DiaryPageController> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: IconButton(
               onPressed: () {
-                Get.to(() => UploadDiaryPage(null, null, null));
+                Get.to(() => UploadDiaryPage());
               },
               icon: Image.asset(
                 'assets/icons/plus.png',

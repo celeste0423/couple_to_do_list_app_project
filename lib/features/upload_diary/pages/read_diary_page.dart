@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
@@ -5,26 +6,13 @@ import 'package:get/get.dart';
 
 class ReadDiaryPage extends StatefulWidget {
 
-  final String? title;
-  final List? imgurllist;
-  final DateTime? date;
-  final String? mysogam;
-  final String? bukkungsogam;
-
-  const ReadDiaryPage(
-      {Key? key,
-      required this.title,
-      this.imgurllist,
-      this.date,
-      this.mysogam,
-      this.bukkungsogam})
-      : super(key: key);
-
   @override
   State<ReadDiaryPage> createState() => _ReadDiaryPageState();
 }
 
 class _ReadDiaryPageState extends State<ReadDiaryPage> {
+
+  final DiaryModel selectedDiaryModel = Get.arguments;
   int? i;
 
   @override
@@ -155,7 +143,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [circleHolesColumn(), Padding(
                   padding: EdgeInsets.symmetric(vertical: 15.0),
-                  child: Text(widget.mysogam ?? '없음', style: TextStyle(decoration: TextDecoration.underline,color: CustomColors.greyText),),
+                  child: Text(selectedDiaryModel.mySogam ?? '없음', style: TextStyle(decoration: TextDecoration.underline,color: CustomColors.greyText),),
                 )],
               ),
             ),
@@ -214,7 +202,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [circleHolesColumn(), Padding(
                   padding: EdgeInsets.symmetric(vertical: 15.0),
-                  child: Text(widget.bukkungsogam ?? '없음', style: TextStyle(decoration: TextDecoration.underline,color: CustomColors.greyText),),
+                  child: Text(selectedDiaryModel.bukkungSogam ?? '없음', style: TextStyle(decoration: TextDecoration.underline,color: CustomColors.greyText),),
                 )],
               ),
             ),
@@ -243,7 +231,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _customAppBar(widget.title),
+      appBar: _customAppBar(selectedDiaryModel.title),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 30),
         child: Column(
@@ -256,7 +244,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
             SizedBox(
               height: 5,
             ),
-            _DateText(widget.date),
+            _DateText(selectedDiaryModel.date),
             SizedBox(
               height: 5,
             ),

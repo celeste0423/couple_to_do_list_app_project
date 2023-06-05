@@ -12,17 +12,19 @@ class UploadDiaryController extends GetxController {
 
   static UploadDiaryController get to => Get.find();
 
+  final DiaryModel? selectedDiaryModel = Get.arguments;
+
   TextEditingController locationController = TextEditingController();
   List<AutoCompletePrediction> placePredictions = [];
 
   TextEditingController titleController = TextEditingController();
 
-  TextEditingController? contentController = TextEditingController();
+  TextEditingController contentController = TextEditingController();
   ScrollController contentScrollController = ScrollController();
 
   Rx<DateTime?> diaryDateTime = Rx<DateTime?>(null);
 
-  Rx<String?> DiaryCategory = "".obs;
+  Rx<String?> diaryCategory = "".obs;
   Map<String, String> categoryToString = {
     "1travel": "여행",
     "2meal": "식사",
@@ -35,8 +37,13 @@ class UploadDiaryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
-    contentController = null;
+    if(selectedDiaryModel!=null){
+      titleController.text = selectedDiaryModel!.title!;
+      diaryCategory(selectedDiaryModel!.category!);
+      diaryDateTime(selectedDiaryModel!.date);
+      if(selectedDiaryModel!.location != null){locationController.text = selectedDiaryModel!.location!;}
+      if(selectedDiaryModel!.mySogam != null){contentController.text = selectedDiaryModel!.mySogam!;}
+    }
     contentScrollController.addListener(scrollToContent);
   }
 
@@ -89,7 +96,9 @@ class UploadDiaryController extends GetxController {
   }
 
   void changeCategory(String category) {
-    DiaryCategory(category);
+    diaryCategory(category);
+    print('changed category');
+    print(diaryCategory);
   }
 
   void scrollToContent() {
@@ -101,4 +110,19 @@ class UploadDiaryController extends GetxController {
       );
     }
   }
+
+  bool isValid() {
+    if (titleController.text.isNotEmpty &&
+        diaryCategory.value! !='' &&
+        locationController.text.isNotEmpty &&
+        diaryDateTime.value != null &&
+        contentController.text.isNotEmpty ) {
+      return true;
+    } else {
+      print(diaryDateTime.value);
+      return false;
+    }
+  }
+
+  void uploadDiary() {}
 }
