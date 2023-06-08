@@ -169,7 +169,8 @@ class ListSuggestionPageController extends GetxController
   }
 
   void toggleLike() {
-    //Todo: 좋아요 기능 테스트 하기
+    //Todo: 임시방편
+    pagingController.refresh();
     if (selectedList.value.likedUsers != null) {
       if (selectedList.value.likedUsers!
           .contains(AuthController.to.user.value.uid)) {
