@@ -1,16 +1,22 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 //Todo: onDelete 함수 어떻게 불러오는거징
 class UploadDiaryController extends GetxController {
   Rx<DiaryModel> bukkungList = DiaryModel().obs;
 
   static UploadDiaryController get to => Get.find();
+
+  Uint8List? diaryImage = null;
 
   final DiaryModel? selectedDiaryModel = Get.arguments;
 
@@ -124,5 +130,24 @@ class UploadDiaryController extends GetxController {
     }
   }
 
-  void uploadDiary() {}
+  Future<void> uploadDiary() async {
+    var uuid = Uuid();
+    String diaryId =uuid.v1();
+    String imageId = uuid.v4();
+    var filename = '$imageId.jpg';
+
+    if(diaryImage !=null){
+      print('다이어리 사진 있음(로컬)');
+      var task = uploadFile(diaryImage!, 'group_diary',
+          '${AuthController.to.user.value.groupId}/${filename}');
+
+    }
+  }
+}
+UploadTask uploadFile(Uint8List image, String location, String filename) {
+  var ref = FirebaseStorage.instance.ref().child(location).child(filename);
+  final metadata = SettableMetadata(
+    contentType: 'image/jpeg',
+  );
+  return ref.putData(image, metadata);
 }
