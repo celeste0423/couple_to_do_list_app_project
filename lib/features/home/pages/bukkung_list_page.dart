@@ -116,12 +116,9 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               children: [
                 Text(controller.typetoString[controller.currentType.value] ??
                     ""),
-                Hero(
-                  tag: 'background',
-                  child: Icon(
-                    Icons.arrow_drop_down,
-                    color: CustomColors.mainPink,
-                  ),
+                Icon(
+                  Icons.arrow_drop_down,
+                  color: CustomColors.mainPink,
                 ),
               ],
             );
@@ -489,12 +486,9 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Hero(tag: 'addButton', child: _listAddButton()),
+          Hero(tag: 'search_bar', child: _listAddButton()),
           _listTypeSelector(),
-          Hero(
-            tag: 'search_bar',
-            child: customDivider(),
-          ),
+          customDivider(),
           _bukkungListView(),
         ],
       ),

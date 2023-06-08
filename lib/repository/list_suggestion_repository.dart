@@ -55,7 +55,7 @@ class ListSuggestionRepository {
           .collection('bukkungLists')
           .orderBy('likeCount', descending: true)
           .orderBy('createdAt', descending: true)
-          .startAfter([pageKey.data()!])
+          .startAfterDocument(pageKey)
           .limit(pageSize)
           .get();
     } else {
@@ -76,30 +76,6 @@ class ListSuggestionRepository {
       ListSuggestionPageController.to.pagingController
           .appendPage(loadedBukkungLists.docs, nextPageKey);
     }
-  }
-
-  static Future<List<QueryDocumentSnapshot>> getNextPageSuggestionBukkungList({
-    int pageSize = 10,
-    DocumentSnapshot? startAfter,
-  }) async {
-    final collection = FirebaseFirestore.instance.collection('bukkungLists');
-
-    Query query = collection
-        .orderBy('likeCount', descending: true)
-        .orderBy('createdAt', descending: true)
-        .limit(pageSize);
-
-    if (startAfter != null) {
-      query = query.startAfterDocument(
-          startAfter as DocumentSnapshot<Map<String, dynamic>>);
-    }
-
-    final snapshot = await query.get();
-    final List<QueryDocumentSnapshot> bukkungLists = [];
-    for (var bukkungList in snapshot.docs) {
-      bukkungLists.add(bukkungList);
-    }
-    return bukkungLists;
   }
 
   Stream<List<BukkungListModel>> getAllBukkungList() {
@@ -133,35 +109,6 @@ class ListSuggestionRepository {
       return bukkungLists;
     });
   }
-
-  // Future<List<BukkungListModel>> getAllBukkungList() async {
-  //   print('파이어스토어에서 전체 받아옴');
-  //   var snapshot = await FirebaseFirestore.instance
-  //       .collection('bukkungLists')
-  //       .orderBy('likeCount', descending: true)
-  //       .orderBy('createdAt', descending: true)
-  //       .get();
-  //   List<BukkungListModel> bukkungLists = [];
-  //   for (var bukkungList in snapshot.docs) {
-  //     bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-  //   }
-  //   return bukkungLists;
-  // }
-  //
-  // Future<List<BukkungListModel>> getTypeBukkungList(String category) async {
-  //   print('파이어스토에서 받아옴(sugg repo) $category');
-  //   var snapshot = await FirebaseFirestore.instance
-  //       .collection('bukkungLists')
-  //       .where('category', isEqualTo: category)
-  //       .orderBy('likeCount', descending: true)
-  //       .orderBy('createdAt', descending: true)
-  //       .get();
-  //   List<BukkungListModel> bukkungLists = [];
-  //   for (var bukkungList in snapshot.docs) {
-  //     bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-  //   }
-  //   return bukkungLists;
-  // }
 
   Stream<List<BukkungListModel>> getMyBukkungList() {
     print('파이어스토어에서 전체 받아옴');

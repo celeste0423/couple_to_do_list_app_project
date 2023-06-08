@@ -31,9 +31,7 @@ class ListSuggestionPageController extends GetxController
   ScrollController suggestionListScrollController = ScrollController();
   var _scrollOffset = 0.0.obs;
   double get scrollOffset => _scrollOffset.value;
-  bool isLoading = false;
   int _pageSize = 10;
-  QueryDocumentSnapshot<Object?>? lastDocument;
 
   @override
   void onInit() {
@@ -93,18 +91,6 @@ class ListSuggestionPageController extends GetxController
       pageKey,
       _pageSize,
     );
-  }
-
-  Future<void> _loadMoreData() async {
-    final newData =
-        await ListSuggestionRepository.getNextPageSuggestionBukkungList(
-      pageSize: _pageSize,
-      startAfter: lastDocument,
-    );
-    if (newData.isNotEmpty) {
-      lastDocument = newData.last;
-    }
-    isLoading = false;
   }
 
   @override

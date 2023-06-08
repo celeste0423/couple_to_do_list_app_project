@@ -362,22 +362,19 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     return Positioned(
       top: 340,
       left: Get.width / 2 - 30,
-      child: Hero(
-        tag: 'background',
-        child: CustomIconButton(
-          onTap: () {
-            Get.to(() => UploadBukkungListPage(),
-                arguments: controller.selectedList.value);
-          },
+      child: CustomIconButton(
+        onTap: () {
+          Get.to(() => UploadBukkungListPage(),
+              arguments: controller.selectedList.value);
+        },
+        size: 60,
+        icon: Icon(
+          Icons.play_arrow_rounded,
           size: 60,
-          icon: Icon(
-            Icons.play_arrow_rounded,
-            size: 60,
-            color: Colors.white,
-          ),
-          shadowOffset: Offset(5, 5),
-          shadowBlurRadius: 5,
+          color: Colors.white,
         ),
+        shadowOffset: Offset(5, 5),
+        shadowBlurRadius: 5,
       ),
     );
   }
