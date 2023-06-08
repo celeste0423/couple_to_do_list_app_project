@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/controller/list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -46,6 +47,61 @@ class ListSuggestionRepository {
     });
   }
 
+  static void fetchSuggestionBukkungList(
+      DocumentSnapshot<Object?>? pageKey, int pageSize) async {
+    QuerySnapshot<Map<String, dynamic>> loadedBukkungLists;
+    if (pageKey != null) {
+      loadedBukkungLists = await FirebaseFirestore.instance
+          .collection('bukkungLists')
+          .orderBy('likeCount', descending: true)
+          .orderBy('createdAt', descending: true)
+          .startAfter([pageKey.data()!])
+          .limit(pageSize)
+          .get();
+    } else {
+      loadedBukkungLists = await FirebaseFirestore.instance
+          .collection('bukkungLists')
+          .orderBy('likeCount', descending: true)
+          .orderBy('createdAt', descending: true)
+          .limit(pageSize)
+          .get();
+    }
+    print('로드된 리스트 수 ${loadedBukkungLists.docs.length} (sugg repo)');
+    final isLastPage = loadedBukkungLists.docs.length < pageSize;
+    if (isLastPage) {
+      ListSuggestionPageController.to.pagingController
+          .appendLastPage(loadedBukkungLists.docs);
+    } else {
+      final nextPageKey = loadedBukkungLists.docs.last;
+      ListSuggestionPageController.to.pagingController
+          .appendPage(loadedBukkungLists.docs, nextPageKey);
+    }
+  }
+
+  static Future<List<QueryDocumentSnapshot>> getNextPageSuggestionBukkungList({
+    int pageSize = 10,
+    DocumentSnapshot? startAfter,
+  }) async {
+    final collection = FirebaseFirestore.instance.collection('bukkungLists');
+
+    Query query = collection
+        .orderBy('likeCount', descending: true)
+        .orderBy('createdAt', descending: true)
+        .limit(pageSize);
+
+    if (startAfter != null) {
+      query = query.startAfterDocument(
+          startAfter as DocumentSnapshot<Map<String, dynamic>>);
+    }
+
+    final snapshot = await query.get();
+    final List<QueryDocumentSnapshot> bukkungLists = [];
+    for (var bukkungList in snapshot.docs) {
+      bukkungLists.add(bukkungList);
+    }
+    return bukkungLists;
+  }
+
   Stream<List<BukkungListModel>> getAllBukkungList() {
     return FirebaseFirestore.instance
         .collection('bukkungLists')
@@ -77,6 +133,7 @@ class ListSuggestionRepository {
       return bukkungLists;
     });
   }
+
   // Future<List<BukkungListModel>> getAllBukkungList() async {
   //   print('파이어스토어에서 전체 받아옴');
   //   var snapshot = await FirebaseFirestore.instance

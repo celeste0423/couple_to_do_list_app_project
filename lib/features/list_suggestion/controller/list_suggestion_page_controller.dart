@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ListSuggestionPageController extends GetxController
     with GetTickerProviderStateMixin {
@@ -22,19 +24,40 @@ class ListSuggestionPageController extends GetxController
 
   Rx<BukkungListModel> selectedList = Rx<BukkungListModel>(BukkungListModel());
 
+  //페이징컨트롤러<페이지 번호, 내용물> = PagingController(첫번째 페이지 키)
+  PagingController<DocumentSnapshot<Map<String, dynamic>?>?,
+          QueryDocumentSnapshot<Map<String, dynamic>>> pagingController =
+      PagingController(firstPageKey: null);
+  ScrollController suggestionListScrollController = ScrollController();
+  var _scrollOffset = 0.0.obs;
+  double get scrollOffset => _scrollOffset.value;
+  bool isLoading = false;
+  int _pageSize = 10;
+  QueryDocumentSnapshot<Object?>? lastDocument;
+
   @override
   void onInit() {
     super.onInit();
     suggestionListTabController = TabController(length: 8, vsync: this);
-    // suggestionListTabController.addListener(() {
-    //   print('탭 변화 감지중');
-    //   _onTabChanged;
-    // });
+    suggestionListTabController.addListener(() {
+      print('탭 변화 감지중');
+      _onTabChanged;
+    });
     searchBarController.addListener(onTextChanged);
-    _initMainImage();
+    _initSelectedBukkungList();
+    suggestionListScrollController.addListener(() {
+      _scrollOffset.value = suggestionListScrollController.offset;
+    });
+    pagingController.addPageRequestListener((pageKey) {
+      _fetchSuggestionBukkungList(pageKey);
+    });
   }
 
-  void _initMainImage() {
+  void _onTabChanged() {
+    _initSelectedBukkungList();
+  }
+
+  void _initSelectedBukkungList() {
     final stream = getSuggestionBukkungList('all');
     StreamSubscription<List<BukkungListModel>>? subscription;
     subscription = stream.listen((list) {
@@ -63,14 +86,37 @@ class ListSuggestionPageController extends GetxController
     });
   }
 
+  void _fetchSuggestionBukkungList(
+    DocumentSnapshot<Object?>? pageKey,
+  ) {
+    return ListSuggestionRepository.fetchSuggestionBukkungList(
+      pageKey,
+      _pageSize,
+    );
+  }
+
+  Future<void> _loadMoreData() async {
+    final newData =
+        await ListSuggestionRepository.getNextPageSuggestionBukkungList(
+      pageSize: _pageSize,
+      startAfter: lastDocument,
+    );
+    if (newData.isNotEmpty) {
+      lastDocument = newData.last;
+    }
+    isLoading = false;
+  }
+
   @override
   void dispose() {
     super.dispose();
-    // suggestionListTabController.removeListener(() {
-    //   _onTabChanged;
-    // });
+    suggestionListTabController.removeListener(() {
+      _onTabChanged;
+    });
     suggestionListTabController.dispose();
     searchBarController.dispose();
+    suggestionListScrollController.dispose();
+    pagingController.dispose();
   }
 
   void onTextChanged() {
@@ -82,10 +128,6 @@ class ListSuggestionPageController extends GetxController
 
   Stream<List<BukkungListModel>> getSearchedBukkungList() {
     return ListSuggestionRepository().getSearchedBukkungList(_searchWord);
-  }
-
-  void _onTabChanged() {
-    _initMainImage();
   }
 
   String tabIndexToName(int tabIndex) {

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/controller/list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
@@ -8,6 +9,7 @@ import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 
 class ListSuggestionPage extends GetView<ListSuggestionPageController> {
@@ -81,7 +83,6 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 ),
               ),
               Obx(() {
-                print(controller.isSearchResult.value);
                 if (controller.isSearchResult.value) {
                   return GetBuilder<ListSuggestionPageController>(
                     id: 'searchResult',
@@ -110,7 +111,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                                         List.generate(list.length, (index) {
                                       final bukkungList = list[index];
                                       return _searchListCard(
-                                          bukkungList, index);
+                                          bukkungList, index, context);
                                     }),
                                   ),
                                 ],
@@ -132,7 +133,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
-  Widget _searchListCard(BukkungListModel bukkungListModel, int index) {
+  Widget _searchListCard(
+      BukkungListModel bukkungListModel, int index, BuildContext context) {
     int? viewCount = bukkungListModel.viewCount;
     NumberFormat formatter = NumberFormat.compact(locale: "ko_KR");
     String formattedViewCount = formatter.format(viewCount);
@@ -156,6 +158,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           controller.indexSelection(updatedList);
           controller.viewCount();
           controller.isSearchResult(false);
+          FocusScope.of(context).unfocus();
         },
         child: Container(
           height: 85,
@@ -383,7 +386,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     return TabBarView(
       controller: controller.suggestionListTabController,
       children: [
-        _suggestionList(0),
+        _suggestionTestList(),
         _suggestionList(1),
         _suggestionList(2),
         _suggestionList(3),
@@ -392,6 +395,32 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         _suggestionList(6),
         _suggestionMyList(),
       ],
+    );
+  }
+
+  Widget _suggestionTestList() {
+    return RefreshIndicator(
+      onRefresh: () => Future.sync(
+        () => controller.pagingController.refresh(),
+      ),
+      child: PagedListView(
+        physics: AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.only(top: 400, bottom: 20),
+        scrollController: controller.suggestionListScrollController,
+        pagingController: controller.pagingController,
+        builderDelegate: PagedChildBuilderDelegate<
+            QueryDocumentSnapshot<Map<String, dynamic>>>(
+          itemBuilder: (context, snapshots, index) {
+            QueryDocumentSnapshot<Map<String, dynamic>> snapshot = snapshots;
+            BukkungListModel bukkungList =
+                BukkungListModel.fromJson(snapshot.data());
+            return _suggestionListCard(bukkungList, index, false);
+          },
+          noItemsFoundIndicatorBuilder: (context) => Center(
+            child: Text('아직 리스트가 없습니다'),
+          ),
+        ),
+      ),
     );
   }
 
