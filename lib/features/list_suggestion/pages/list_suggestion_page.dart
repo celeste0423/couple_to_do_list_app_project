@@ -689,7 +689,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           return ListView(
             physics: AlwaysScrollableScrollPhysics(),
             children: [
-              SizedBox(height: 400),
+              SizedBox(height: 50),
               Column(
                 children: List.generate(list.length, (index) {
                   final bukkungList = list[index];

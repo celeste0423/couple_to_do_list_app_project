@@ -7,6 +7,7 @@ import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rxdart/subjects.dart';
 
 class ListSuggestionPageController extends GetxController
     with GetTickerProviderStateMixin {
@@ -26,7 +27,7 @@ class ListSuggestionPageController extends GetxController
 
   ScrollController suggestionListScrollController = ScrollController();
   StreamController<List<BukkungListModel>> streamController =
-      StreamController<List<BukkungListModel>>();
+      BehaviorSubject<List<BukkungListModel>>();
   QueryDocumentSnapshot<Map<String, dynamic>>? keyPage;
   List<BukkungListModel>? prevList;
   bool isLastPage = false;
@@ -121,6 +122,7 @@ class ListSuggestionPageController extends GetxController
     suggestionListTabController.dispose();
     searchBarController.dispose();
     suggestionListScrollController.dispose();
+    streamController.close();
     // pagingController.dispose();
   }
 
@@ -196,7 +198,6 @@ class ListSuggestionPageController extends GetxController
   }
 
   void toggleLike() {
-    //Todo: 임시방편
     // pagingController.refresh();
     if (selectedList.value.likedUsers != null) {
       if (selectedList.value.likedUsers!
@@ -216,8 +217,11 @@ class ListSuggestionPageController extends GetxController
           selectedList.value.likedUsers!,
         );
         //오프라인 리스트 업데이트
-        prevList![selectedListIndex].likeCount = selectedList.value.likeCount!;
-        streamController.add(prevList!);
+        if (suggestionListTabController.index == 0) {
+          prevList![selectedListIndex].likeCount =
+              selectedList.value.likeCount!;
+          streamController.add(prevList!);
+        }
         //화면 업데이트
         isLiked(false);
       } else {
@@ -235,8 +239,11 @@ class ListSuggestionPageController extends GetxController
           selectedList.value.likedUsers!,
         );
         //오프라인 리스트 업데이트
-        prevList![selectedListIndex].likeCount = selectedList.value.likeCount!;
-        streamController.add(prevList!);
+        if (suggestionListTabController.index == 0) {
+          prevList![selectedListIndex].likeCount =
+              selectedList.value.likeCount!;
+          streamController.add(prevList!);
+        }
         //화면 업데이트
         isLiked(true);
       }
@@ -251,8 +258,10 @@ class ListSuggestionPageController extends GetxController
       ListSuggestionRepository().updateLike(selectedList.value.listId!,
           selectedList.value.likeCount!, [AuthController.to.user.value.uid!]);
       //오프라인 리스트 업데이트
-      prevList![selectedListIndex].likeCount = selectedList.value.likeCount!;
-      streamController.add(prevList!);
+      if (suggestionListTabController.index == 0) {
+        prevList![selectedListIndex].likeCount = selectedList.value.likeCount!;
+        streamController.add(prevList!);
+      }
       //화면 업데이트
       isLiked(true);
     }
@@ -264,8 +273,11 @@ class ListSuggestionPageController extends GetxController
       selectedList.value.viewCount! + 1,
     );
     //오프라인 리스트 업데이트
-    prevList![selectedListIndex].viewCount = selectedList.value.viewCount! + 1;
-    streamController.add(prevList!);
+    if (suggestionListTabController.index == 0) {
+      prevList![selectedListIndex].viewCount =
+          selectedList.value.viewCount! + 1;
+      streamController.add(prevList!);
+    }
   }
 
   Future<void> listDelete() async {
