@@ -7,7 +7,6 @@ import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ListSuggestionPageController extends GetxController
     with GetTickerProviderStateMixin {
@@ -24,18 +23,13 @@ class ListSuggestionPageController extends GetxController
 
   Rx<BukkungListModel> selectedList = Rx<BukkungListModel>(BukkungListModel());
 
-  //페이징컨트롤러<페이지 번호, 내용물> = PagingController(첫번째 페이지 키)
-  PagingController<DocumentSnapshot<Map<String, dynamic>?>?,
-          QueryDocumentSnapshot<Map<String, dynamic>>> pagingController =
-      PagingController(firstPageKey: null);
   ScrollController suggestionListScrollController = ScrollController();
-  var _scrollOffset = 0.0.obs;
-
-  double get scrollOffset => _scrollOffset.value;
-  int _pageSize = 10;
   StreamController<List<BukkungListModel>> streamController =
       StreamController<List<BukkungListModel>>();
   QueryDocumentSnapshot<Map<String, dynamic>>? keyPage;
+  List<BukkungListModel>? prevList;
+  bool isLastPage = false;
+  int _pageSize = 5;
 
   @override
   void onInit() {
@@ -48,12 +42,13 @@ class ListSuggestionPageController extends GetxController
     });
     searchBarController.addListener(onTextChanged);
     _initSelectedBukkungList();
+    loadNewBukkungLists();
     suggestionListScrollController.addListener(() {
       loadMoreBukkungLists();
     });
-    pagingController.addPageRequestListener((pageKey) {
-      _fetchSuggestionBukkungList(pageKey);
-    });
+    // pagingController.addPageRequestListener((pageKey) {
+    //   _fetchSuggestionBukkungList(pageKey);
+    // });
   }
 
   void _onTabChanged() {
@@ -90,14 +85,31 @@ class ListSuggestionPageController extends GetxController
     });
   }
 
-  void _fetchSuggestionBukkungList(
-    DocumentSnapshot<Object?>? pageKey,
-  ) {
-    return ListSuggestionRepository.fetchSuggestionBukkungList(
-      pageKey,
-      _pageSize,
-    );
+  void loadNewBukkungLists() async {
+    List<BukkungListModel> firstList = await ListSuggestionRepository()
+        .getAllTestFutureBukkungList(_pageSize, null, null);
+    streamController.add(firstList);
   }
+
+  void loadMoreBukkungLists() async {
+    if (suggestionListScrollController.position.pixels ==
+        suggestionListScrollController.position.maxScrollExtent) {
+      if (!isLastPage) {
+        List<BukkungListModel> nextList = await ListSuggestionRepository()
+            .getAllTestFutureBukkungList(_pageSize, keyPage, prevList);
+        streamController.add(nextList);
+      }
+    }
+  }
+
+  // void _fetchSuggestionBukkungList(
+  //   DocumentSnapshot<Object?>? pageKey,
+  // ) {
+  //   return ListSuggestionRepository.fetchSuggestionBukkungList(
+  //     pageKey,
+  //     _pageSize,
+  //   );
+  // }
 
   @override
   void dispose() {
@@ -108,7 +120,7 @@ class ListSuggestionPageController extends GetxController
     suggestionListTabController.dispose();
     searchBarController.dispose();
     suggestionListScrollController.dispose();
-    pagingController.dispose();
+    // pagingController.dispose();
   }
 
   void onTextChanged() {
@@ -143,26 +155,15 @@ class ListSuggestionPageController extends GetxController
     }
   }
 
-  void loadNewBukkungLists() async {
-    List<BukkungListModel> firstList = await ListSuggestionRepository()
-        .getAllTestFutureBukkungList(_pageSize, null);
-    streamController.add(firstList);
-  }
-
-  void loadMoreBukkungLists() async {
-    if (suggestionListScrollController.position ==
-        suggestionListScrollController.position.maxScrollExtent) {}
-  }
-
-  Stream<List<BukkungListModel>> getSuggestionTestBukkungList(
-    String category,
-  ) {
-    if (category == 'all') {
-      return ListSuggestionRepository().getAllTestStreamBukkungList(_pageSize);
-    } else {
-      return ListSuggestionRepository().getTypeBukkungList(category);
-    }
-  }
+  // Stream<List<BukkungListModel>> getSuggestionTestBukkungList(
+  //   String category,
+  // ) {
+  //   if (category == 'all') {
+  //     return ListSuggestionRepository().getAllTestStreamBukkungList(_pageSize);
+  //   } else {
+  //     return ListSuggestionRepository().getTypeBukkungList(category);
+  //   }
+  // }
 
   Stream<List<BukkungListModel>> getSuggestionBukkungList(
     String category,
@@ -194,7 +195,7 @@ class ListSuggestionPageController extends GetxController
 
   void toggleLike() {
     //Todo: 임시방편
-    pagingController.refresh();
+    // pagingController.refresh();
     if (selectedList.value.likedUsers != null) {
       if (selectedList.value.likedUsers!
           .contains(AuthController.to.user.value.uid)) {

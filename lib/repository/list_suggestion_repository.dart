@@ -47,40 +47,41 @@ class ListSuggestionRepository {
     });
   }
 
-  static void fetchSuggestionBukkungList(
-      DocumentSnapshot<Object?>? pageKey, int pageSize) async {
-    QuerySnapshot<Map<String, dynamic>> loadedBukkungLists;
-    if (pageKey != null) {
-      loadedBukkungLists = await FirebaseFirestore.instance
-          .collection('bukkungLists')
-          .orderBy('likeCount', descending: true)
-          .orderBy('createdAt', descending: true)
-          .startAfterDocument(pageKey)
-          .limit(pageSize)
-          .get();
-    } else {
-      loadedBukkungLists = await FirebaseFirestore.instance
-          .collection('bukkungLists')
-          .orderBy('likeCount', descending: true)
-          .orderBy('createdAt', descending: true)
-          .limit(pageSize)
-          .get();
-    }
-    print('로드된 리스트 수 ${loadedBukkungLists.docs.length} (sugg repo)');
-    final isLastPage = loadedBukkungLists.docs.length < pageSize;
-    if (isLastPage) {
-      ListSuggestionPageController.to.pagingController
-          .appendLastPage(loadedBukkungLists.docs);
-    } else {
-      final nextPageKey = loadedBukkungLists.docs.last;
-      ListSuggestionPageController.to.pagingController
-          .appendPage(loadedBukkungLists.docs, nextPageKey);
-    }
-  }
+  // static void fetchSuggestionBukkungList(
+  //     DocumentSnapshot<Object?>? pageKey, int pageSize) async {
+  //   QuerySnapshot<Map<String, dynamic>> loadedBukkungLists;
+  //   if (pageKey != null) {
+  //     loadedBukkungLists = await FirebaseFirestore.instance
+  //         .collection('bukkungLists')
+  //         .orderBy('likeCount', descending: true)
+  //         .orderBy('createdAt', descending: true)
+  //         .startAfterDocument(pageKey)
+  //         .limit(pageSize)
+  //         .get();
+  //   } else {
+  //     loadedBukkungLists = await FirebaseFirestore.instance
+  //         .collection('bukkungLists')
+  //         .orderBy('likeCount', descending: true)
+  //         .orderBy('createdAt', descending: true)
+  //         .limit(pageSize)
+  //         .get();
+  //   }
+  //   print('로드된 리스트 수 ${loadedBukkungLists.docs.length} (sugg repo)');
+  //   final isLastPage = loadedBukkungLists.docs.length < pageSize;
+  //   if (isLastPage) {
+  //     ListSuggestionPageController.to.pagingController
+  //         .appendLastPage(loadedBukkungLists.docs);
+  //   } else {
+  //     final nextPageKey = loadedBukkungLists.docs.last;
+  //     ListSuggestionPageController.to.pagingController
+  //         .appendPage(loadedBukkungLists.docs, nextPageKey);
+  //   }
+  // }
 
   Future<List<BukkungListModel>> getAllTestFutureBukkungList(
     int pageSize,
     QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
+    List<BukkungListModel>? prevList,
   ) async {
     Query<Map<String, dynamic>> query = FirebaseFirestore.instance
         .collection('bukkungLists')
@@ -91,51 +92,58 @@ class ListSuggestionRepository {
     }
     query = query.limit(pageSize);
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
-    List<BukkungListModel> bukkungLists = [];
+    List<BukkungListModel> bukkungLists = prevList ?? [];
     for (var bukkungList in querySnapshot.docs) {
       bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
     }
+    //키페이지 설정
     QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
         querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
     ListSuggestionPageController.to.keyPage = lastDocument;
+    //이전 리스트 저장
+    ListSuggestionPageController.to.prevList = bukkungLists;
+    //마지막 페이지인지 여부 확인
+    if (querySnapshot.docs.length < pageSize) {
+      ListSuggestionPageController.to.isLastPage = true;
+    }
     return bukkungLists;
   }
 
-  Stream<List<BukkungListModel>> getAllTestStreamBukkungList(
-    int pageSize,
-    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
-  ) {
-    if (keyPage != null) {
-      return FirebaseFirestore.instance
-          .collection('bukkungLists')
-          .orderBy('likeCount', descending: true)
-          .orderBy('createdAt', descending: true)
-          .startAfterDocument(keyPage)
-          .limit(pageSize)
-          .snapshots()
-          .map((querySnapshot) {
-        List<BukkungListModel> bukkungLists = [];
-        for (var bukkungList in querySnapshot.docs) {
-          bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-        }
-        return bukkungLists;
-      });
-    } else {
-      return FirebaseFirestore.instance
-          .collection('bukkungLists')
-          .orderBy('likeCount', descending: true)
-          .orderBy('createdAt', descending: true)
-          .limit(pageSize)
-          .snapshots()
-          .map((querySnapshot) {
-        List<BukkungListModel> bukkungLists = [];
-        for (var bukkungList in querySnapshot.docs) {
-          bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-        }
-        return bukkungLists;
-      });
-    }
-  }
+  // Stream<List<BukkungListModel>> getAllTestStreamBukkungList(
+  //   int pageSize,
+  //   QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
+  // ) {
+  //   if (keyPage != null) {
+  //     return FirebaseFirestore.instance
+  //         .collection('bukkungLists')
+  //         .orderBy('likeCount', descending: true)
+  //         .orderBy('createdAt', descending: true)
+  //         .startAfterDocument(keyPage)
+  //         .limit(pageSize)
+  //         .snapshots()
+  //         .map((querySnapshot) {
+  //       List<BukkungListModel> bukkungLists = [];
+  //       for (var bukkungList in querySnapshot.docs) {
+  //         bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+  //       }
+  //       return bukkungLists;
+  //     });
+  //   } else {
+  //     return FirebaseFirestore.instance
+  //         .collection('bukkungLists')
+  //         .orderBy('likeCount', descending: true)
+  //         .orderBy('createdAt', descending: true)
+  //         .limit(pageSize)
+  //         .snapshots()
+  //         .map((querySnapshot) {
+  //       List<BukkungListModel> bukkungLists = [];
+  //       for (var bukkungList in querySnapshot.docs) {
+  //         bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+  //       }
+  //       return bukkungLists;
+  //     });
+  //   }
+  // }
 
   Stream<List<BukkungListModel>> getAllBukkungList() {
     return FirebaseFirestore.instance

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/controller/list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
@@ -9,7 +8,6 @@ import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 
 class ListSuggestionPage extends GetView<ListSuggestionPageController> {
@@ -380,52 +378,52 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   }
 
   Widget _suggestionListTab() {
-    return TabBarView(
-      controller: controller.suggestionListTabController,
-      children: [
-        _suggestionTestList(0),
-        _suggestionList(1),
-        _suggestionList(2),
-        _suggestionList(3),
-        _suggestionList(4),
-        _suggestionList(5),
-        _suggestionList(6),
-        _suggestionMyList(),
-      ],
+    return Expanded(
+      child: TabBarView(
+        controller: controller.suggestionListTabController,
+        children: [
+          _suggestionTestList(0),
+          _suggestionList(1),
+          _suggestionList(2),
+          _suggestionList(3),
+          _suggestionList(4),
+          _suggestionList(5),
+          _suggestionList(6),
+          _suggestionMyList(),
+        ],
+      ),
     );
   }
 
-  Widget _suggestionTest1List() {
-    return RefreshIndicator(
-      onRefresh: () => Future.sync(
-        () => controller.pagingController.refresh(),
-      ),
-      child: PagedListView(
-        physics: AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.only(top: 400, bottom: 20),
-        scrollController: controller.suggestionListScrollController,
-        pagingController: controller.pagingController,
-        builderDelegate: PagedChildBuilderDelegate<
-            QueryDocumentSnapshot<Map<String, dynamic>>>(
-          itemBuilder: (context, snapshots, index) {
-            QueryDocumentSnapshot<Map<String, dynamic>> snapshot = snapshots;
-            BukkungListModel bukkungList =
-                BukkungListModel.fromJson(snapshot.data());
-            return _suggestionListCard(bukkungList, index, false);
-          },
-          noItemsFoundIndicatorBuilder: (context) => Center(
-            child: Text('아직 리스트가 없습니다'),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _suggestionTest1List() {
+  //   return RefreshIndicator(
+  //     onRefresh: () => Future.sync(
+  //       () => controller.pagingController.refresh(),
+  //     ),
+  //     child: PagedListView(
+  //       physics: AlwaysScrollableScrollPhysics(),
+  //       padding: const EdgeInsets.only(top: 400, bottom: 20),
+  //       scrollController: controller.suggestionListScrollController,
+  //       pagingController: controller.pagingController,
+  //       builderDelegate: PagedChildBuilderDelegate<
+  //           QueryDocumentSnapshot<Map<String, dynamic>>>(
+  //         itemBuilder: (context, snapshots, index) {
+  //           QueryDocumentSnapshot<Map<String, dynamic>> snapshot = snapshots;
+  //           BukkungListModel bukkungList =
+  //               BukkungListModel.fromJson(snapshot.data());
+  //           return _suggestionListCard(bukkungList, index, false);
+  //         },
+  //         noItemsFoundIndicatorBuilder: (context) => Center(
+  //           child: Text('아직 리스트가 없습니다'),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _suggestionTestList(int index) {
     return StreamBuilder(
-      stream: controller.getSuggestionTestBukkungList(
-        controller.tabIndexToName(index),
-      ),
+      stream: controller.streamController.stream,
       builder: (BuildContext context,
           AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
         if (!bukkungLists.hasData) {
@@ -436,19 +434,25 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           openAlertDialog(title: '에러 발생');
         } else {
           final list = bukkungLists.data!;
-          return ListView(
-            physics: AlwaysScrollableScrollPhysics(),
+          return Scrollbar(
             controller: controller.suggestionListScrollController,
-            children: [
-              SizedBox(height: 400),
-              Column(
-                children: List.generate(list.length, (index) {
-                  final bukkungList = list[index];
-                  return _suggestionListCard(bukkungList, index, false);
-                }),
-              ),
-              SizedBox(height: 20),
-            ],
+            thickness: 5,
+            thumbVisibility: true,
+            radius: Radius.circular(25),
+            child: ListView(
+              physics: AlwaysScrollableScrollPhysics(),
+              controller: controller.suggestionListScrollController,
+              children: [
+                SizedBox(height: 50),
+                Column(
+                  children: List.generate(list.length, (index) {
+                    final bukkungList = list[index];
+                    return _suggestionListCard(bukkungList, index, false);
+                  }),
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
           );
         }
         return Center(child: Text('아직 버꿍리스트가 없습니다'));
@@ -474,7 +478,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           return ListView(
             physics: AlwaysScrollableScrollPhysics(),
             children: [
-              SizedBox(height: 400),
+              SizedBox(height: 50),
               Column(
                 children: List.generate(list.length, (index) {
                   final bukkungList = list[index];
@@ -746,8 +750,12 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         ),
         body: Stack(
           children: [
-            _suggestionListTab(),
-            _background(),
+            Column(
+              children: [
+                _background(),
+                _suggestionListTab(),
+              ],
+            ),
             Column(
               children: [
                 SizedBox(height: 80),
