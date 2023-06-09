@@ -22,6 +22,7 @@ class ListSuggestionPageController extends GetxController
   Rx<bool> isLiked = false.obs;
 
   Rx<BukkungListModel> selectedList = Rx<BukkungListModel>(BukkungListModel());
+  int selectedListIndex = 0;
 
   ScrollController suggestionListScrollController = ScrollController();
   StreamController<List<BukkungListModel>> streamController =
@@ -180,15 +181,16 @@ class ListSuggestionPageController extends GetxController
     return ListSuggestionRepository().getMyBukkungList();
   }
 
-  void indexSelection(BukkungListModel updatedList) {
+  void indexSelection(BukkungListModel updatedList, int index) {
     selectedList(updatedList);
+    selectedListIndex = index;
     if (selectedList.value.likedUsers != null &&
         selectedList.value.likedUsers!
             .contains(AuthController.to.user.value.uid)) {
-      print('좋아요 있음 (sug cont)${selectedList.value.likedUsers}');
+      // print('좋아요 있음 (sug cont)${selectedList.value.likedUsers}');
       isLiked(true);
     } else {
-      print('좋아요 없음 (sug cont)');
+      // print('좋아요 없음 (sug cont)');
       isLiked(false);
     }
   }
@@ -200,7 +202,7 @@ class ListSuggestionPageController extends GetxController
       if (selectedList.value.likedUsers!
           .contains(AuthController.to.user.value.uid)) {
         // 이미 userId가 존재하면 userId 제거 후 likeCount 감소
-        print('좋아요 감소(sug cont)');
+        // print('좋아요 감소(sug cont)');
         selectedList.value.likedUsers!
             .remove(AuthController.to.user.value.uid!);
         final updatedList = selectedList.value.copyWith(
@@ -213,10 +215,14 @@ class ListSuggestionPageController extends GetxController
           selectedList.value.likeCount!,
           selectedList.value.likedUsers!,
         );
+        //오프라인 리스트 업데이트
+        prevList![selectedListIndex].likeCount = selectedList.value.likeCount!;
+        streamController.add(prevList!);
+        //화면 업데이트
         isLiked(false);
       } else {
         // userId가 존재하지 않으면 userId 추가 후 likeCount 증가
-        print('좋아요 추가(sug cont)');
+        // print('좋아요 추가(sug cont)');
         selectedList.value.likedUsers!.add(AuthController.to.user.value.uid!);
         final updatedList = selectedList.value.copyWith(
           likeCount: selectedList.value.likeCount! + 1,
@@ -228,11 +234,15 @@ class ListSuggestionPageController extends GetxController
           selectedList.value.likeCount!,
           selectedList.value.likedUsers!,
         );
+        //오프라인 리스트 업데이트
+        prevList![selectedListIndex].likeCount = selectedList.value.likeCount!;
+        streamController.add(prevList!);
+        //화면 업데이트
         isLiked(true);
       }
     } else {
       // likedUsers가 null이면 새로운 리스트 생성 후 userId 추가
-      print('좋아요 null에서 추가(sug cont)');
+      // print('좋아요 null에서 추가(sug cont)');
       final updatedList = selectedList.value.copyWith(
         likeCount: selectedList.value.likeCount! + 1,
         likedUsers: [AuthController.to.user.value.uid!],
@@ -240,6 +250,10 @@ class ListSuggestionPageController extends GetxController
       selectedList(updatedList);
       ListSuggestionRepository().updateLike(selectedList.value.listId!,
           selectedList.value.likeCount!, [AuthController.to.user.value.uid!]);
+      //오프라인 리스트 업데이트
+      prevList![selectedListIndex].likeCount = selectedList.value.likeCount!;
+      streamController.add(prevList!);
+      //화면 업데이트
       isLiked(true);
     }
   }
@@ -249,6 +263,9 @@ class ListSuggestionPageController extends GetxController
       selectedList.value.listId!,
       selectedList.value.viewCount! + 1,
     );
+    //오프라인 리스트 업데이트
+    prevList![selectedListIndex].viewCount = selectedList.value.viewCount! + 1;
+    streamController.add(prevList!);
   }
 
   Future<void> listDelete() async {

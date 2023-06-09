@@ -9,8 +9,8 @@ class BukkungListModel {
   final String? location;
   final String? imgUrl;
   final String? imgId;
-  final int? likeCount;
-  final int? viewCount;
+  int? likeCount;
+  int? viewCount;
   final DateTime? date;
   final String? madeBy;
   final String? userId;

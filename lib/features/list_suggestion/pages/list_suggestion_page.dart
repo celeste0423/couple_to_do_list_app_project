@@ -153,7 +153,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             likeCount: bukkungListModel.likeCount,
             viewCount: bukkungListModel.viewCount,
           );
-          controller.indexSelection(updatedList);
+          controller.indexSelection(updatedList, index);
           controller.viewCount();
           controller.isSearchResult(false);
           FocusScope.of(context).unfocus();
@@ -513,7 +513,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             likeCount: bukkungListModel.likeCount,
             viewCount: bukkungListModel.viewCount,
           );
-          controller.indexSelection(updatedList);
+          controller.indexSelection(updatedList, index);
           controller.viewCount();
         },
         child: Stack(
@@ -613,7 +613,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                       likeCount: bukkungListModel.likeCount,
                       viewCount: bukkungListModel.viewCount,
                     );
-                    controller.indexSelection(updatedList);
+                    controller.indexSelection(updatedList, index);
                     openAlertDialog(
                       title: '정말로 지우시겠습니다?',
                       secondButtonText: '취소',
