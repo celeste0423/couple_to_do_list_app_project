@@ -78,6 +78,65 @@ class ListSuggestionRepository {
     }
   }
 
+  Future<List<BukkungListModel>> getAllTestFutureBukkungList(
+    int pageSize,
+    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
+  ) async {
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .orderBy('likeCount', descending: true)
+        .orderBy('createdAt', descending: true);
+    if (keyPage != null) {
+      query = query.startAfterDocument(keyPage);
+    }
+    query = query.limit(pageSize);
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+    List<BukkungListModel> bukkungLists = [];
+    for (var bukkungList in querySnapshot.docs) {
+      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+    }
+    QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
+        querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
+    ListSuggestionPageController.to.keyPage = lastDocument;
+    return bukkungLists;
+  }
+
+  Stream<List<BukkungListModel>> getAllTestStreamBukkungList(
+    int pageSize,
+    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
+  ) {
+    if (keyPage != null) {
+      return FirebaseFirestore.instance
+          .collection('bukkungLists')
+          .orderBy('likeCount', descending: true)
+          .orderBy('createdAt', descending: true)
+          .startAfterDocument(keyPage)
+          .limit(pageSize)
+          .snapshots()
+          .map((querySnapshot) {
+        List<BukkungListModel> bukkungLists = [];
+        for (var bukkungList in querySnapshot.docs) {
+          bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+        }
+        return bukkungLists;
+      });
+    } else {
+      return FirebaseFirestore.instance
+          .collection('bukkungLists')
+          .orderBy('likeCount', descending: true)
+          .orderBy('createdAt', descending: true)
+          .limit(pageSize)
+          .snapshots()
+          .map((querySnapshot) {
+        List<BukkungListModel> bukkungLists = [];
+        for (var bukkungList in querySnapshot.docs) {
+          bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+        }
+        return bukkungLists;
+      });
+    }
+  }
+
   Stream<List<BukkungListModel>> getAllBukkungList() {
     return FirebaseFirestore.instance
         .collection('bukkungLists')

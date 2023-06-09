@@ -33,6 +33,9 @@ class ListSuggestionPageController extends GetxController
 
   double get scrollOffset => _scrollOffset.value;
   int _pageSize = 10;
+  StreamController<List<BukkungListModel>> streamController =
+      StreamController<List<BukkungListModel>>();
+  QueryDocumentSnapshot<Map<String, dynamic>>? keyPage;
 
   @override
   void onInit() {
@@ -46,7 +49,7 @@ class ListSuggestionPageController extends GetxController
     searchBarController.addListener(onTextChanged);
     _initSelectedBukkungList();
     suggestionListScrollController.addListener(() {
-      _scrollOffset.value = suggestionListScrollController.offset;
+      loadMoreBukkungLists();
     });
     pagingController.addPageRequestListener((pageKey) {
       _fetchSuggestionBukkungList(pageKey);
@@ -137,6 +140,27 @@ class ListSuggestionPageController extends GetxController
         return '6etc';
       default:
         return 'all';
+    }
+  }
+
+  void loadNewBukkungLists() async {
+    List<BukkungListModel> firstList = await ListSuggestionRepository()
+        .getAllTestFutureBukkungList(_pageSize, null);
+    streamController.add(firstList);
+  }
+
+  void loadMoreBukkungLists() async {
+    if (suggestionListScrollController.position ==
+        suggestionListScrollController.position.maxScrollExtent) {}
+  }
+
+  Stream<List<BukkungListModel>> getSuggestionTestBukkungList(
+    String category,
+  ) {
+    if (category == 'all') {
+      return ListSuggestionRepository().getAllTestStreamBukkungList(_pageSize);
+    } else {
+      return ListSuggestionRepository().getTypeBukkungList(category);
     }
   }
 

@@ -383,7 +383,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     return TabBarView(
       controller: controller.suggestionListTabController,
       children: [
-        _suggestionTestList(),
+        _suggestionTestList(0),
         _suggestionList(1),
         _suggestionList(2),
         _suggestionList(3),
@@ -395,7 +395,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
-  Widget _suggestionTestList() {
+  Widget _suggestionTest1List() {
     return RefreshIndicator(
       onRefresh: () => Future.sync(
         () => controller.pagingController.refresh(),
@@ -418,6 +418,41 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _suggestionTestList(int index) {
+    return StreamBuilder(
+      stream: controller.getSuggestionTestBukkungList(
+        controller.tabIndexToName(index),
+      ),
+      builder: (BuildContext context,
+          AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+        if (!bukkungLists.hasData) {
+          return Center(
+            child: CircularProgressIndicator(color: CustomColors.mainPink),
+          );
+        } else if (bukkungLists.hasError) {
+          openAlertDialog(title: '에러 발생');
+        } else {
+          final list = bukkungLists.data!;
+          return ListView(
+            physics: AlwaysScrollableScrollPhysics(),
+            controller: controller.suggestionListScrollController,
+            children: [
+              SizedBox(height: 400),
+              Column(
+                children: List.generate(list.length, (index) {
+                  final bukkungList = list[index];
+                  return _suggestionListCard(bukkungList, index, false);
+                }),
+              ),
+              SizedBox(height: 20),
+            ],
+          );
+        }
+        return Center(child: Text('아직 버꿍리스트가 없습니다'));
+      },
     );
   }
 
