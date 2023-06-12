@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
@@ -24,6 +25,15 @@ class DiaryRepository {
     });
   }
 
+  static Future<void> setGroupDiary(
+      DiaryModel diaryData, String diaryId) async {
+    await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(AuthController.to.user.value.groupId)
+        .collection('diary')
+        .doc(diaryId)
+        .set(diaryData.toJson());
+  }
 
 
   // static Future<void> setSuggestionBukkungList(BukkungListModel bukkungLisData,

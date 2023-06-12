@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:couple_to_do_list_app/models/user_model.dart';
 class DiaryModel {
   final String? title;
   final String? category;
@@ -8,6 +8,10 @@ class DiaryModel {
   final String? mySogam;
   final String? bukkungSogam;
   final DateTime? date;
+  final String? creatorUserID;
+  final DateTime? createdAt;
+  final String? lastUpdatorID;
+  final DateTime? updatedAt;
 
   DiaryModel({
     this.title,
@@ -17,7 +21,27 @@ class DiaryModel {
     this.mySogam,
     this.bukkungSogam,
     this.date,
+    this.creatorUserID,
+    this.createdAt,
+    this.lastUpdatorID,
+    this.updatedAt,
   });
+
+  factory DiaryModel.init(UserModel userInfo) {
+    return DiaryModel(
+      title: '',
+      category: '',
+      location: '',
+      imgUrlList: null,
+      mySogam: '',
+      bukkungSogam: '',
+      date: DateTime.now(),
+      creatorUserID: userInfo.uid,
+      createdAt: DateTime.now(),
+      lastUpdatorID: '',
+      updatedAt: DateTime.now(),
+    );
+  }
 
   factory DiaryModel.fromJson(Map<String, dynamic> json) {
     return DiaryModel(
@@ -31,6 +55,10 @@ class DiaryModel {
       bukkungSogam:
       json['bukkungSogam'] == null ? null : json['bukkungSogam'] as String,
       date: json['date'] == null ? null : (json['date'] as Timestamp).toDate(),
+      creatorUserID: json['creatorUserID'] == null ? null : json['creatorUserID'] as String,
+      createdAt: json['createdAt'] == null ? null : (json['createdAt'] as Timestamp).toDate(),
+      lastUpdatorID: json['lastUpdatorID'] == null ? null : json['lastUpdatorID'] as String,
+      updatedAt: json['updatedAt'] == null ? null : (json['updatedAt'] as Timestamp).toDate(),
     );
   }
 
@@ -43,6 +71,10 @@ class DiaryModel {
       'mySogam': mySogam,
       'bukkungSogam': bukkungSogam,
       'date': date,
+      'creatorUserID': creatorUserID,
+      'createdAt': createdAt,
+      'lastUpdatorID': lastUpdatorID,
+      'updatedAt': updatedAt,
     };
   }
 
@@ -54,6 +86,10 @@ class DiaryModel {
     String? mySogam,
     String? bukkungSogam,
     DateTime? date,
+    String? creatorUserID,
+    DateTime? createdAt,
+    String? lastUpdatorID,
+    DateTime? updatedAt,
   }) {
     return DiaryModel(
       title: title ?? this.title,
@@ -63,6 +99,10 @@ class DiaryModel {
       mySogam: mySogam ?? this.mySogam,
       bukkungSogam: bukkungSogam ?? this.bukkungSogam,
       date: date ?? this.date,
+      creatorUserID: creatorUserID ?? this.creatorUserID,
+      createdAt: createdAt ?? this.createdAt,
+      lastUpdatorID: lastUpdatorID ?? this.lastUpdatorID,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

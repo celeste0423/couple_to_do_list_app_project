@@ -156,7 +156,8 @@ final DiaryModel? selectedDiaryModel = Get.arguments;
   Widget _imagePicker() {
 
     DecorationImage? myDecorationImage() {
-      if(selectedDiaryModel==null){return null;}
+      if(selectedDiaryModel==null){
+        return null;}
       else{
         if(selectedDiaryModel!.imgUrlList==null
         ){return null;}
@@ -193,22 +194,28 @@ final DiaryModel? selectedDiaryModel = Get.arguments;
               ),
               child: myDecorationImage() != null
                   ? null
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          height: 35,
-                        ),
-                        Image.asset(
-                          'assets/icons/add.png',
-                          width: 60,
-                        ),
-                        Text(
-                          '이미지 추가',
-                          style: TextStyle(fontSize: 35, color: Colors.white),
-                        )
-                      ],
-                    )
+                  : GestureDetector(
+                onTap: (){
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  controller.pickImageFromGallery;
+                },
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            height: 35,
+                          ),
+                          Image.asset(
+                            'assets/icons/add.png',
+                            width: 60,
+                          ),
+                          Text(
+                            '이미지 추가',
+                            style: TextStyle(fontSize: 35, color: Colors.white),
+                          )
+                        ],
+                      ),
+                  )
           ),
         ],
       ),

@@ -95,13 +95,13 @@ class BukkungListRepository {
   }
 
   static Future<void> setGroupBukkungList(
-      BukkungListModel bukkungLisData, String listId) async {
+      BukkungListModel bukkungListData, String listId) async {
     await FirebaseFirestore.instance
         .collection('groups')
         .doc(AuthController.to.user.value.groupId)
         .collection('bukkungLists')
         .doc(listId)
-        .set(bukkungLisData.toJson());
+        .set(bukkungListData.toJson());
   }
 
   Future<void> deleteListImage(String imagePath) async {

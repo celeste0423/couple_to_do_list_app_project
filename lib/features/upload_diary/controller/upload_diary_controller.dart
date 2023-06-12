@@ -1,8 +1,10 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
+import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/image_picker_page.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
+import 'package:couple_to_do_list_app/repository/diary_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -12,13 +14,14 @@ import 'package:uuid/uuid.dart';
 
 //Todo: onDelete 함수 어떻게 불러오는거징
 class UploadDiaryController extends GetxController {
-  Rx<DiaryModel> bukkungList = DiaryModel().obs;
-
   static UploadDiaryController get to => Get.find();
 
   Uint8List? diaryImage = null;
+  Rx<bool> isImage = false.obs;
 
+// todo: 다이어리 모델 둘중에 뭐 쓸까
   final DiaryModel? selectedDiaryModel = Get.arguments;
+  DiaryModel? diary;
 
   TextEditingController locationController = TextEditingController();
   List<AutoCompletePrediction> placePredictions = [];
@@ -43,12 +46,16 @@ class UploadDiaryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    if(selectedDiaryModel!=null){
+    if (selectedDiaryModel != null) {
       titleController.text = selectedDiaryModel!.title!;
       diaryCategory(selectedDiaryModel!.category!);
       diaryDateTime(selectedDiaryModel!.date);
-      if(selectedDiaryModel!.location != null){locationController.text = selectedDiaryModel!.location!;}
-      if(selectedDiaryModel!.mySogam != null){contentController.text = selectedDiaryModel!.mySogam!;}
+      if (selectedDiaryModel!.location != null) {
+        locationController.text = selectedDiaryModel!.location!;
+      }
+      if (selectedDiaryModel!.mySogam != null) {
+        contentController.text = selectedDiaryModel!.mySogam!;
+      }
     }
     contentScrollController.addListener(scrollToContent);
   }
@@ -119,10 +126,10 @@ class UploadDiaryController extends GetxController {
 
   bool isValid() {
     if (titleController.text.isNotEmpty &&
-        diaryCategory.value! !='' &&
+        diaryCategory.value! != '' &&
         locationController.text.isNotEmpty &&
         diaryDateTime.value != null &&
-        contentController.text.isNotEmpty ) {
+        contentController.text.isNotEmpty) {
       return true;
     } else {
       print(diaryDateTime.value);
@@ -130,24 +137,122 @@ class UploadDiaryController extends GetxController {
     }
   }
 
+  UploadTask uploadFile(Uint8List image, String location, String filename) {
+    var ref = FirebaseStorage.instance.ref().child(location).child(filename);
+    final metadata = SettableMetadata(
+      contentType: 'image/jpeg',
+    );
+    return ref.putData(image, metadata);
+  }
+
+  void pickImageFromGallery(BuildContext context) async {
+    final image = await Get.to(ImagePickerPage());
+    if (image == null) {
+      print('선택한 이미지가 없습니다(upl cont)');
+      isImage(false);
+      return;
+    }
+    isImage(true);
+    //todo: 이거 매커니즘 파악 해야 될듯 uint8list가 뭔지...
+    diaryImage = image;
+  }
+
+  Future<void> submitDiary(DiaryModel diaryData, String diaryId) async {
+    await DiaryRepository.setGroupDiary(diaryData, diaryId);
+  }
+
   Future<void> uploadDiary() async {
     var uuid = Uuid();
-    String diaryId =uuid.v1();
+    String diaryId = uuid.v1();
     String imageId = uuid.v4();
     var filename = '$imageId.jpg';
-
-    if(diaryImage !=null){
+    //diaryImage list 에 사진이 있으면
+    if (diaryImage != null) {
       print('다이어리 사진 있음(로컬)');
       var task = uploadFile(diaryImage!, 'group_diary',
           '${AuthController.to.user.value.groupId}/${filename}');
-
+      //task 완료 하면 submitdiary 되도록
+      task.snapshotEvents.listen((event) async {
+        if (event.bytesTransferred == event.totalBytes &&
+            event.state == TaskState.success) {
+          print('업로드 시작 (upl cont)');
+          var downloadUrl = await event.ref.getDownloadURL();
+          if (selectedDiaryModel != null) {
+            //기존 다이어리 수정할 경우
+            DiaryModel updatedDiary = selectedDiaryModel!.copyWith(
+              title: titleController.text,
+              category: diaryCategory.value,
+              location: locationController.text,
+              //todo: imgUrlList: diaryImage ?? null,
+              mySogam: contentController.text,
+              bukkungSogam: selectedDiaryModel == null
+                  ? null
+                  : selectedDiaryModel!.bukkungSogam,
+              date: diaryDateTime.value,
+              // 여긴selectedDiaryModel null 아닐때만이니까 이미 creatorUserID,createdAt 존재 함.
+              lastUpdatorID: AuthController.to.user.value.uid,
+              updatedAt: DateTime.now(),
+            );
+            submitDiary(updatedDiary, diaryId);
+          } else {
+            //새로운 다이어리 작성 할 경우
+            DiaryModel updatedDiary = DiaryModel(
+              title: titleController.text,
+              category: diaryCategory.value,
+              location: locationController.text,
+              //todo: imgUrlList: diaryImage ?? null,
+              mySogam: contentController.text,
+              bukkungSogam: selectedDiaryModel == null
+                  ? null
+                  : selectedDiaryModel!.bukkungSogam,
+              date: diaryDateTime.value,
+              createdAt: DateTime.now(),
+              creatorUserID: AuthController.to.user.value.uid,
+              lastUpdatorID: AuthController.to.user.value.uid,
+              updatedAt: DateTime.now(),
+            );
+            submitDiary(updatedDiary, diaryId);
+          }
+        }
+      });
+    } else {
+      //diaryImage list 에 아무것도 없으면(null) 이미지 없이 그냥 업로딩 한다
+      if (selectedDiaryModel != null) {
+        //기존 다이어리 수정할 경우
+        DiaryModel updatedDiary = selectedDiaryModel!.copyWith(
+          title: titleController.text,
+          category: diaryCategory.value,
+          location: locationController.text,
+          //todo: imgUrlList: diaryImage ?? null,
+          mySogam: contentController.text,
+          bukkungSogam: selectedDiaryModel == null
+              ? null
+              : selectedDiaryModel!.bukkungSogam,
+          date: diaryDateTime.value,
+          // 여긴selectedDiaryModel null 아닐때만이니까 이미 creatorUserID,createdAt 존재 함.
+          lastUpdatorID: AuthController.to.user.value.uid,
+          updatedAt: DateTime.now(),
+        );
+        submitDiary(updatedDiary, diaryId);
+      } else {
+        //새로운 다이어리 작성 할 경우
+        DiaryModel updatedDiary = DiaryModel(
+          title: titleController.text,
+          category: diaryCategory.value,
+          location: locationController.text,
+          //todo: imgUrlList: diaryImage ?? null,
+          mySogam: contentController.text,
+          bukkungSogam: selectedDiaryModel == null
+              ? null
+              : selectedDiaryModel!.bukkungSogam,
+          date: diaryDateTime.value,
+          createdAt: DateTime.now(),
+          creatorUserID: AuthController.to.user.value.uid,
+          lastUpdatorID: AuthController.to.user.value.uid,
+          updatedAt: DateTime.now(),
+        );
+        submitDiary(updatedDiary, diaryId);
+      }
     }
   }
-}
-UploadTask uploadFile(Uint8List image, String location, String filename) {
-  var ref = FirebaseStorage.instance.ref().child(location).child(filename);
-  final metadata = SettableMetadata(
-    contentType: 'image/jpeg',
-  );
-  return ref.putData(image, metadata);
 }
