@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BukkungListDetailPage extends StatelessWidget {
-  BukkungListModel bukkungListModel;
-  BukkungListDetailPage({
+  final BukkungListModel bukkungListModel;
+  const BukkungListDetailPage({
     Key? key,
     required this.bukkungListModel,
   }) : super(key: key);
