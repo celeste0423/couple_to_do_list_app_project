@@ -39,7 +39,7 @@ class WaitBuddyPage extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    titleText('짝꿍을 기다리는 중'),
+                    TitleText(text: '짝꿍을 기다리는 중'),
                     SizedBox(
                       width: 50,
                     ),

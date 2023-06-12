@@ -108,8 +108,8 @@ class _ImagePickerPageState extends State<ImagePickerPage> {
             size: 35,
           ),
         ),
-        title: titleText(
-          '갤러리',
+        title: TitleText(
+          text: '갤러리',
         ),
       ),
       body: Padding(

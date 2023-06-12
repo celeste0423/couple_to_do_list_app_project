@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/features/bukkung_list_detail/pages/bukkung_list_detail_page.dart';
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/setting/pages/setting_page.dart';
@@ -8,6 +9,8 @@ import 'package:couple_to_do_list_app/utils/type_to_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
+import 'package:couple_to_do_list_app/widgets/png_icons.dart';
+import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -15,10 +18,27 @@ import 'package:intl/intl.dart';
 class BukkungListPage extends GetView<BukkungListPageController> {
   const BukkungListPage({Key? key}) : super(key: key);
 
+  PreferredSizeWidget _appBar() {
+    return AppBar(
+      backgroundColor: CustomColors.backgroundLightGrey,
+      title: TitleText(text: '버꿍리스트'),
+      actions: [
+        IconButton(
+          onPressed: () {
+            Get.to(() => SettingsPage());
+          },
+          icon: PngIcon(
+            iconName: 'setting',
+            iconColor: Colors.white.withOpacity(0.5),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _listAddButton() {
     return GestureDetector(
       onTap: () {
-        //Todo: route로 파일 뽑아낼 것
         Get.to(() => ListSuggestionPage());
       },
       child: Container(
@@ -32,11 +52,10 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Image.asset(
-              'assets/icons/plus.png',
-              width: 30,
-              color: Colors.white.withOpacity(0.7),
-              colorBlendMode: BlendMode.modulate,
+            PngIcon(
+              iconName: 'plus',
+              iconColor: Colors.white.withOpacity(0.7),
+              iconSize: 30,
             ),
             SizedBox(width: 20),
             Material(
@@ -285,7 +304,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     switch (categoryNumber) {
       case 1:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '1travel'),
@@ -296,7 +315,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         );
       case 2:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '2meal'),
@@ -307,7 +326,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         );
       case 3:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '3activity'),
@@ -318,7 +337,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         );
       case 4:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '4culture'),
@@ -329,7 +348,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         );
       case 5:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '5study'),
@@ -340,7 +359,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         );
       case 6:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '6etc'),
@@ -356,109 +375,114 @@ class BukkungListPage extends GetView<BukkungListPageController> {
 
   Widget _bukkungListCard(BukkungListModel bukkungListModel) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 12,
-            child: Container(
-              height: 120,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  bottomLeft: Radius.circular(25),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        bottomLeft: Radius.circular(25),
-                      ),
-                      child: Image.network(
-                        '${bukkungListModel.imgUrl}',
-                        height: 150,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    flex: 7,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        MarqueeAbleText(
-                          text: bukkungListModel.title!,
-                          maxLength: 10,
-                          style: TextStyle(
-                            fontSize: 25,
-                            color: CustomColors.blackText,
-                          ),
-                        ),
-                        Text(DateFormat('yyyy-MM-dd')
-                            .format(bukkungListModel.date!)),
-                        Row(
-                          children: [
-                            Image.asset(
-                              'assets/icons/location-pin.png',
-                              color: CustomColors.grey.withOpacity(0.5),
-                              colorBlendMode: BlendMode.modulate,
-                              width: 25,
-                            ),
-                            SizedBox(width: 10),
-                            MarqueeAbleText(
-                              text: bukkungListModel.location!,
-                              maxLength: 15,
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              height: 120,
-              decoration: BoxDecoration(
-                color: TypeToColor.typeToColor(bukkungListModel.category),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(25),
-                  bottomRight: Radius.circular(25),
-                ),
-              ),
-              width: 30,
-              child: GestureDetector(
-                onTap: () {
-                  openAlertDialog(
-                      title: '정말로 지우시겠습니다?',
-                      secondButtonText: '취소',
-                      function: () {
-                        controller.deleteBukkungList(bukkungListModel);
-                        Get.back();
-                      });
-                },
-                child: Icon(
-                  Icons.delete_outline,
-                  size: 25,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: GestureDetector(
+        onTap: () {
+          Get.to(() => BukkungListDetailPage(
+                bukkungListModel: bukkungListModel,
+              ));
+        },
+        child: Row(
+          children: [
+            Expanded(
+              flex: 12,
+              child: Container(
+                height: 120,
+                decoration: BoxDecoration(
                   color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          bottomLeft: Radius.circular(25),
+                        ),
+                        child: Image.network(
+                          '${bukkungListModel.imgUrl}',
+                          height: 150,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      flex: 7,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          MarqueeAbleText(
+                            text: bukkungListModel.title!,
+                            maxLength: 10,
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: CustomColors.blackText,
+                            ),
+                          ),
+                          Text(DateFormat('yyyy-MM-dd')
+                              .format(bukkungListModel.date!)),
+                          Row(
+                            children: [
+                              PngIcon(
+                                iconName: 'location-pin',
+                                iconSize: 25,
+                              ),
+                              SizedBox(width: 10),
+                              MarqueeAbleText(
+                                text: bukkungListModel.location!,
+                                maxLength: 15,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
-          )
-        ],
+            Expanded(
+              flex: 1,
+              child: Container(
+                height: 120,
+                decoration: BoxDecoration(
+                  color: TypeToColor.typeToColor(bukkungListModel.category),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                  ),
+                ),
+                width: 30,
+                child: GestureDetector(
+                  onTap: () {
+                    openAlertDialog(
+                        title: '정말로 지우시겠습니다?',
+                        secondButtonText: '취소',
+                        function: () {
+                          controller.deleteBukkungList(bukkungListModel);
+                          Get.back();
+                        });
+                  },
+                  child: Icon(
+                    Icons.delete_outline,
+                    size: 25,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -467,22 +491,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
   Widget build(BuildContext context) {
     //Get.put(BukkungListPageController());
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: CustomColors.backgroundLightGrey,
-        title: Text('버꿍리스트'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Get.to(() => SettingsPage());
-            },
-            icon: Image.asset(
-              'assets/icons/setting.png',
-              color: Colors.white.withOpacity(0.7),
-              colorBlendMode: BlendMode.modulate,
-            ),
-          ),
-        ],
-      ),
+      appBar: _appBar(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [

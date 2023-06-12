@@ -22,7 +22,7 @@ class _SettingsPageState extends State<SettingsPage> {
   PreferredSizeWidget customAppBar() {
     return AppBar(
       backgroundColor: CustomColors.backgroundLightGrey,
-      title: titleText('설정'),
+      title: TitleText(text: '설정'),
       leading: IconButton(
         onPressed: () {
           Get.back();

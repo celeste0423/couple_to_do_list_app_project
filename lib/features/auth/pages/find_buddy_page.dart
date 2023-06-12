@@ -45,7 +45,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
               color: Colors.white,
             ),
           ),
-          titleText('짝꿍 찾기'),
+          TitleText(text: '짝꿍 찾기'),
           SizedBox(
             width: 50,
           ),

@@ -4,6 +4,7 @@ import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
+import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -84,11 +85,9 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Row(
         children: [
-          Image.asset(
-            'assets/icons/category.png',
-            width: 35,
-            color: Colors.black.withOpacity(0.6),
-            colorBlendMode: BlendMode.modulate,
+          PngIcon(
+            iconName: 'category',
+            iconColor: Colors.black.withOpacity(0.6),
           ),
           SizedBox(width: 10),
           Expanded(
@@ -236,11 +235,9 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Row(
         children: [
-          Image.asset(
-            'assets/icons/location-pin.png',
-            width: 35,
-            color: Colors.black.withOpacity(0.6),
-            colorBlendMode: BlendMode.modulate,
+          PngIcon(
+            iconName: 'location-pin',
+            iconColor: Colors.black.withOpacity(0.6),
           ),
           SizedBox(width: 10),
           Expanded(
@@ -263,11 +260,9 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Row(
         children: [
-          Image.asset(
-            'assets/icons/calendar.png',
-            width: 35,
-            color: Colors.black.withOpacity(0.6),
-            colorBlendMode: BlendMode.modulate,
+          PngIcon(
+            iconName: 'calendar',
+            iconColor: Colors.black.withOpacity(0.6),
           ),
           SizedBox(width: 10),
           Expanded(
@@ -360,11 +355,9 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
             controller.pickImageFromGallery(context);
           },
           child: Center(
-            child: Image.asset(
-              'assets/icons/image.png',
-              width: 35,
-              color: Colors.black.withOpacity(0.6),
-              colorBlendMode: BlendMode.modulate,
+            child: PngIcon(
+              iconName: 'image',
+              iconColor: Colors.black.withOpacity(0.6),
             ),
           ),
         ),

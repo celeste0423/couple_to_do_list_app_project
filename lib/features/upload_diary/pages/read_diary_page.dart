@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ReadDiaryPage extends StatefulWidget {
-
   @override
   State<ReadDiaryPage> createState() => _ReadDiaryPageState();
 }
 
 class _ReadDiaryPageState extends State<ReadDiaryPage> {
-
   final DiaryModel selectedDiaryModel = Get.arguments;
   int? i;
 
@@ -25,7 +23,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
   PreferredSizeWidget _customAppBar(String? title) {
     return AppBar(
       backgroundColor: CustomColors.backgroundLightGrey,
-      title: titleText(title ?? ''),
+      title: TitleText(text: title ?? ''),
       leading: IconButton(
         onPressed: () {
           Get.back();
@@ -98,9 +96,9 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
         clipBehavior: Clip.none,
         children: [
           GestureDetector(
-            onTap: (){
+            onTap: () {
               setState(() {
-                i=1;
+                i = 1;
               });
             },
             child: Align(
@@ -115,8 +113,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                   width: Get.width * 15 / 32,
                   height: 45,
                   child: Align(
-                      alignment: Alignment.topRight,
-                      child: Text('짝꿍 소감')),
+                      alignment: Alignment.topRight, child: Text('짝꿍 소감')),
                 )),
           ),
           Align(
@@ -135,16 +132,23 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
             top: 35,
             child: Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white),
+                  borderRadius: BorderRadius.circular(10), color: Colors.white),
               height: 170,
               width: Get.width - 60,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [circleHolesColumn(), Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                  child: Text(selectedDiaryModel.mySogam ?? '없음', style: TextStyle(decoration: TextDecoration.underline,color: CustomColors.greyText),),
-                )],
+                children: [
+                  circleHolesColumn(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 15.0),
+                    child: Text(
+                      selectedDiaryModel.mySogam ?? '없음',
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: CustomColors.greyText),
+                    ),
+                  )
+                ],
               ),
             ),
           ),
@@ -159,9 +163,9 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
           Align(
               alignment: Alignment.topLeft,
               child: GestureDetector(
-                onTap: (){
+                onTap: () {
                   setState(() {
-                    i=0;
+                    i = 0;
                   });
                 },
                 child: Container(
@@ -186,24 +190,30 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                         topRight: Radius.circular(30))),
                 width: Get.width * 15 / 32,
                 height: 45,
-                child: Align(
-                    alignment: Alignment.topRight,
-                    child: Text('짝꿍 소감')),
+                child:
+                    Align(alignment: Alignment.topRight, child: Text('짝꿍 소감')),
               )),
           Positioned(
             top: 35,
             child: Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white),
+                  borderRadius: BorderRadius.circular(10), color: Colors.white),
               height: 170,
               width: Get.width - 60,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [circleHolesColumn(), Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                  child: Text(selectedDiaryModel.bukkungSogam ?? '없음', style: TextStyle(decoration: TextDecoration.underline,color: CustomColors.greyText),),
-                )],
+                children: [
+                  circleHolesColumn(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 15.0),
+                    child: Text(
+                      selectedDiaryModel.bukkungSogam ?? '없음',
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: CustomColors.greyText),
+                    ),
+                  )
+                ],
               ),
             ),
           ),

@@ -39,7 +39,7 @@ class SignupPageState extends State<SignupPage> {
         SizedBox(
           height: 20,
         ),
-        titleText('신규 등록'),
+        TitleText(text: '신규 등록'),
         SizedBox(
           height: 15,
         ),

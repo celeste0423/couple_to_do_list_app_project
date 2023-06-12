@@ -6,12 +6,48 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
+import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   const ListSuggestionPage({Key? key}) : super(key: key);
+
+  PreferredSizeWidget _appBar() {
+    return AppBar(
+      backgroundColor: CustomColors.mainPink,
+      leading: IconButton(
+        onPressed: () {
+          Get.back();
+        },
+        icon: Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: Colors.white,
+          size: 35,
+        ),
+      ),
+      title: TitleText(
+        text: '추천 리스트',
+        color: Colors.white,
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: GestureDetector(
+            onTap: () {
+              Get.to(() => UploadBukkungListPage());
+            },
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 45,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _background() {
     return Container(
@@ -715,39 +751,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: CustomColors.mainPink,
-          leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: Colors.white,
-            ),
-          ),
-          title: Text(
-            '추천 리스트',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: GestureDetector(
-                onTap: () {
-                  Get.to(() => UploadBukkungListPage());
-                },
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 45,
-                ),
-              ),
-            ),
-          ],
-        ),
+        appBar: _appBar(),
         body: Stack(
           children: [
             Column(
@@ -758,7 +762,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             ),
             Column(
               children: [
-                SizedBox(height: 80),
+                SizedBox(height: 75),
                 CategorySelectTabBar(
                   tabController: controller.suggestionListTabController,
                   selectedColor: Colors.black.withOpacity(0.8),
