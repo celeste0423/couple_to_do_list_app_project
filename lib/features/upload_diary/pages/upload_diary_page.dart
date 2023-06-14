@@ -523,13 +523,12 @@ final DiaryModel? selectedDiaryModel = Get.arguments;
         mainButton('다이어리 작성', () async{
           if(controller.isValid()){
             print('isvalid');
-            controller.uploadDiary();
-
+           await controller.uploadDiary();
+           print('uploadDiary Complete');
+            Get.back();
           }
           else
             {openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');}
-
-
         }, Get.width * 5 / 8)
       ],
     );

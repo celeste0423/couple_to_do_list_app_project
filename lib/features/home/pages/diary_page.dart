@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
@@ -11,80 +12,96 @@ import 'package:intl/intl.dart';
 
 class DiaryPage extends GetView<DiaryPageController> {
   const DiaryPage({super.key});
-
   //ToDo: 파이어베이스에서 가져온 정보로 채워 넣을 것
   Widget _diary() {
+    String? title;
+    String? date;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 30),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Stack(
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              RotatedBox(
-                quarterTurns: 135,
-                child: Text(
-                  '돼지길동🤍꼬물꼬물 다이어리',
-                  style: TextStyle(
-                      color: Colors.black.withOpacity(0.4), fontSize: 25),
+              Obx(
+                () => RotatedBox(
+                  quarterTurns: 135,
+                  child: Text(
+                    //todo: nickname 가져올것
+                    '${controller.maleNickname}🤍${controller.femaleNickname}',
+                    style: TextStyle(
+                        color: Colors.black.withOpacity(0.4), fontSize: 25),
+                  ),
                 ),
               ),
               Container(
-                width: 230,
-                height: 300,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      spreadRadius: 3,
-                      blurRadius: 10,
-                      offset: Offset(15, 15), // Offset(수평, 수직)
+                  width: 230,
+                  height: 230,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
                     ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      '제주도 여행',
-                      style: TextStyle(fontSize: 35),
-                    ),
-                    Container(
-                      width: 170,
-                      height: 170,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            'https://post-phinf.pstatic.net/MjAxNzEwMjBfNjYg/MDAxNTA4NDY0NzkxMDc3.BXMDJ0jGbaunHr6TRI6N4NOBiGOXAlXbzlmgaZYHMkQg.P6Rbnq9YTv9CCqH5Vgu6JCSEGZC_wOZ25onOnoT4AAAg.PNG/11.png?type=w1200',
-                          ),
-                          fit: BoxFit.cover,
-                        ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 3,
+                        blurRadius: 10,
+                        offset: Offset(15, 15), // Offset(수평, 수직)
                       ),
+                    ],
+                  ),
+                  child: Obx(() {
+                    if (controller.diarylist.isEmpty) {
+                      //todo: 여기 프로그래스 인디케이터 넣자
+                      return CircularProgressIndicator(color: CustomColors.mainPink);
+                    } else {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            controller.selectedDiary.value!.title ??
+                                controller.diarylist[0].title!,
+                            style: TextStyle(fontSize: 35),
+                          ),
+                          Container(
+                            width: 150,
+                            height: 140,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  //todo:이미지 나오게
+                                  'https://post-phinf.pstatic.net/MjAxNzEwMjBfNjYg/MDAxNTA4NDY0NzkxMDc3.BXMDJ0jGbaunHr6TRI6N4NOBiGOXAlXbzlmgaZYHMkQg.P6Rbnq9YTv9CCqH5Vgu6JCSEGZC_wOZ25onOnoT4AAAg.PNG/11.png?type=w1200',
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
 
-                      //사진이 없을경우 기본 이미지 꼬물이로
-                      // child: Image.asset(
-                      //   'assets/images/ggomool.png',
-                      //   width: 170,
-                      //   height: 170,
-                      // ),
-                    ),
-                    Text(
-                      '2023.04.05 ~ 2023.04.08',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-              ),
+                            //사진이 없을경우 기본 이미지 꼬물이로
+                            // child: Image.asset(
+                            //   'assets/images/ggomool.png',
+                            //   width: 170,
+                            //   height: 170,
+                            // ),
+                          ),
+                          Text(
+                            controller.selectedDiary.value!.date != null
+                                ? DateFormat('yyyy-MM-dd').format(
+                                    controller.selectedDiary.value!.date!)
+                                : DateFormat('yyyy-MM-dd')
+                                    .format(controller.diarylist[0].date!),
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ],
+                      );
+                    }
+                  })),
             ],
           ),
           Positioned(
-              top: 130,
+              top: 100,
               right: 50,
               child: CustomIconButton(
                 onTap: () {
@@ -101,13 +118,22 @@ class DiaryPage extends GetView<DiaryPageController> {
   Widget _diaryList() {
     Widget myListTile(String? title, String? location, DateTime? date) {
       String dateString =
-      date != null ? DateFormat('yyyy-MM-dd').format(date) : '';
+          date != null ? DateFormat('yyyy-MM-dd').format(date) : '';
       return Container(
         height: 90,
         child: Row(
           children: [
-            Container(),
+            Container(
+              height: 85,
+              width: 85,
+              color: Colors.black,
+            ),
+            SizedBox(
+              width: 30,
+            ),
             Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title ?? '',
@@ -127,6 +153,9 @@ class DiaryPage extends GetView<DiaryPageController> {
                       style: TextStyle(fontSize: 15),
                     ),
                   ],
+                ),
+                SizedBox(
+                  height: 3,
                 ),
                 Text(
                   dateString,
@@ -159,22 +188,23 @@ class DiaryPage extends GetView<DiaryPageController> {
                 unselectedColor: CustomColors.grey.withOpacity(0.5),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: controller.diarylist.length,
-                  itemBuilder: (BuildContext ctx, int i) {
-                    return GestureDetector(
-                      onTap: () {
-                        Get.to(ReadDiaryPage(), arguments : controller.diarylist[i]);
-                      },
-                      child: myListTile(
-                        controller.diarylist[i].title,
-                        controller.diarylist[i].location,
-                        controller.diarylist[i].date,
-                      ),
-                    );
-                  }),
-            )
+            Obx(() => Expanded(
+                  child: ListView.builder(
+                      itemCount: controller.diarylist.length,
+                      itemBuilder: (BuildContext ctx, int i) {
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(ReadDiaryPage(),
+                                arguments: controller.diarylist[i]);
+                          },
+                          child: myListTile(
+                            controller.diarylist[i].title,
+                            controller.diarylist[i].location,
+                            controller.diarylist[i].date,
+                          ),
+                        );
+                      }),
+                ))
           ],
         ),
       ),
@@ -193,12 +223,6 @@ class DiaryPage extends GetView<DiaryPageController> {
           style: TextStyle(color: Colors.black.withOpacity(0.6)),
         ),
         actions: [
-          IconButton(
-              onPressed: () {
-                Get.to(ReadDiaryPage(
-                ));
-              },
-              icon: Icon(Icons.abc)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: IconButton(

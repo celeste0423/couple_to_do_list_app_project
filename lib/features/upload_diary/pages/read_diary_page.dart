@@ -3,6 +3,7 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class ReadDiaryPage extends StatefulWidget {
   @override
@@ -55,7 +56,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Text(
-          date != null ? date.toString() : '2021-01-02',
+          date != null ? DateFormat('yyyy-MM-dd').format(date) : '',
           style: TextStyle(fontSize: 20, color: CustomColors.greyText),
         ),
         SizedBox(

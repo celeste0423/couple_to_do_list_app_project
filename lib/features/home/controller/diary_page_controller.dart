@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 
 class DiaryPageController extends GetxController with GetTickerProviderStateMixin{
   static DiaryPageController get to => Get.find();
+
   Rx<String?> listCategory = "".obs;
   Map<String, String> categoryToString = {
     "all": "전체",
@@ -19,16 +21,28 @@ class DiaryPageController extends GetxController with GetTickerProviderStateMixi
   };
 
   RxList<DiaryModel> diarylist = <DiaryModel>[].obs;
+  Rx<DiaryModel?> selectedDiary = DiaryModel().obs;
 
+  Rx<String> femaleNickname =''.obs;
+  Rx<String> maleNickname = ''.obs;
   late final TabController tabDiaryController =
   TabController(length: 7, vsync: this);
 
   @override
-  void onInit() {
+  void onInit() async{
     super.onInit();
     listCategory.value = "all";
     diarylist.bindStream(getDiaryList('all'));
+    getNickname();
+  }
 
+  getNickname()async{
+    final String femaleUid = AuthController.to.group.value.femaleUid!;
+    final String maleUid = AuthController.to.group.value.maleUid!;
+    final maledata =await FirebaseFirestore.instance.collection('users').doc(maleUid).get();
+    final femaledata =await FirebaseFirestore.instance.collection('users').doc(femaleUid).get();
+    maleNickname(maledata.data()!['nickname'].toString());
+    femaleNickname(femaledata.data()!['nickname'].toString());
   }
 
   Stream<List<DiaryModel>> getDiaryList(String type) {
