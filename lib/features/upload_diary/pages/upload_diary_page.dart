@@ -161,104 +161,86 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   }
 
   Widget _imagePicker() {
-    _mygridView(){
-      if (controller.selectedImages.isEmpty) {
-        return Container(
-          padding: EdgeInsets.all(10),
-          width: 170,
-          height: 170,
-          decoration: BoxDecoration(
+    Widget chooseimageContainer() {
+      return GestureDetector(
+        onTap: () {
+          print('이미지 추가 버튼 누름!');
+          FocusManager.instance.primaryFocus?.unfocus();
+          controller.pickMultipleImages;
+        },
+        child: Container(
+            padding: EdgeInsets.all(10),
+            width: 170,
+            height: 170,
+            decoration: BoxDecoration(
               color: CustomColors.lightGrey,
               borderRadius: BorderRadius.circular(25),
-              image: DecorationImage(
-                image: NetworkImage(
-                  selectedDiaryModel!.imgUrlList![0],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  height: 35,
                 ),
-                fit: BoxFit.cover,
-              )),
+                Image.asset(
+                  'assets/icons/add.png',
+                  width: 60,
+                ),
+                Text(
+                  '이미지 추가',
+                  style: TextStyle(fontSize: 35, color: Colors.white),
+                )
+              ],
+            )),
+      );
+    }
+
+    Widget _mygridView() {
+      if (controller.selectedImages.isEmpty) {
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.asset(
+              'assets/icons/image.png',
+              width: 35,
+              color: Colors.black.withOpacity(0.6),
+              colorBlendMode: BlendMode.modulate,
+            ),
+            SizedBox(width: 10),
+            chooseimageContainer(),
+          ],
         );
       } else {
-        return GridView.builder(
-          scrollDirection: Axis.horizontal,
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 250, mainAxisSpacing: 20),
-          itemBuilder: (context, index) {
-            return GridTile(
-                child: Container(
-                  width: 150,
-                    height: 150,
-                    color: Colors.blue[200],
+        return SizedBox(
+          height: 170,
+          child: ListView.builder(
+            itemCount: controller.selectedImages.length+1,
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            // gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            //     maxCrossAxisExtent: 10, mainAxisSpacing: 20),
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return chooseimageContainer();
+              } else {
+                return Container(
+                    width: 170,
+                    height: 170,
                     alignment: Alignment.center,
-                    child: Image.file(controller.selectedImages[index])));
-          },
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),
+                    image: DecorationImage(fit: BoxFit.cover, image: FileImage(controller.selectedImages[index - 1]))),
+                    );
+              }
+            },
+          ),
         );
       }
     }
-    Widget _myImagePickerContainer() {
-      if (selectedDiaryModel == null) {
-        return GestureDetector(
-          onTap: () {
-            print('이미지 추가 버튼 누름!');
-            FocusManager.instance.primaryFocus?.unfocus();
-            controller.pickMultipleImages;
-          },
-          child: Container(
-              padding: EdgeInsets.all(10),
-              width: 170,
-              height: 170,
-              decoration: BoxDecoration(
-                color: CustomColors.lightGrey,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    height: 35,
-                  ),
-                  Image.asset(
-                    'assets/icons/add.png',
-                    width: 60,
-                  ),
-                  Text(
-                    '이미지 추가',
-                    style: TextStyle(fontSize: 35, color: Colors.white),
-                  )
-                ],
-              )),
-        );
-      } else if (selectedDiaryModel!.imgUrlList == null) {
-        return GestureDetector(
-          onTap: () {
-            print('이미지 추가 버튼 누름!');
-            FocusManager.instance.primaryFocus?.unfocus();
-            controller.pickMultipleImages;
-          },
-          child: Container(
-              padding: EdgeInsets.all(10),
-              width: 170,
-              height: 170,
-              decoration: BoxDecoration(
-                color: CustomColors.lightGrey,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    height: 35,
-                  ),
-                  Image.asset(
-                    'assets/icons/add.png',
-                    width: 60,
-                  ),
-                  Text(
-                    '이미지 추가',
-                    style: TextStyle(fontSize: 35, color: Colors.white),
-                  )
-                ],
-              )),
-        );
+
+    Widget myImagePickerContainer() {
+      if (selectedDiaryModel != null &&
+          selectedDiaryModel!.imgUrlList!.isNotEmpty) {
+        return Obx(() => _mygridView());
       } else {
         return Obx(() => _mygridView());
       }
@@ -284,19 +266,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.asset(
-            'assets/icons/image.png',
-            width: 35,
-            color: Colors.black.withOpacity(0.6),
-            colorBlendMode: BlendMode.modulate,
-          ),
-          SizedBox(width: 10),
-          _myImagePickerContainer(),
-        ],
-      ),
+      child: myImagePickerContainer(),
     );
   }
 
