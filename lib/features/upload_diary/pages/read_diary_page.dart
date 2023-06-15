@@ -84,7 +84,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
           activeIndex: activeIndex,
           count: selectedDiaryModel.imgUrlList!.length,
           effect: JumpingDotEffect(
-            dotColor: CustomColors.redbrown,
+            activeDotColor: CustomColors.redbrown,
             dotHeight: 8,
             dotWidth: 8,
           ));
