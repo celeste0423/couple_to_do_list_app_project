@@ -46,12 +46,13 @@ class UploadDiaryController extends GetxController {
     "6etc": "기타",
   };
 
-  List<File> selectedImages = []; // List of selected image
+  RxList<File> selectedImages = <File>[].obs; // List of selected image
   final picker = ImagePicker(); // Instance of Image picker
 
   @override
   void onInit() {
     super.onInit();
+    print('selectedDiaryModelargument : $selectedDiaryModel');
     if (selectedDiaryModel != null) {
       titleController.text = selectedDiaryModel!.title!;
       diaryCategory(selectedDiaryModel!.category!);
@@ -167,6 +168,7 @@ class UploadDiaryController extends GetxController {
         selectedImages.add(File(xfilePick[i].path));
       }
       print(selectedImages[0].path);
+      print(selectedImages.length);
     } else {
       // If no image is selected it will show a
       // snackbar saying nothing is selected

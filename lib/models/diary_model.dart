@@ -32,7 +32,7 @@ class DiaryModel {
       title: '',
       category: '',
       location: '',
-      imgUrlList: null,
+      imgUrlList: [],
       mySogam: '',
       bukkungSogam: '',
       date: DateTime.now(),
@@ -49,7 +49,7 @@ class DiaryModel {
       category: json['category'] == null ? null : json['category'] as String,
       location: json['location'] == null ? null : json['location'] as String,
       imgUrlList: json['imgUrlList'] == null
-          ? null
+          ? []
           : List<String>.from(json['imgUrlList'] as List<dynamic>),
       mySogam: json['mySogam'] == null ? null : json['mySogam'] as String,
       bukkungSogam:
@@ -95,7 +95,7 @@ class DiaryModel {
       title: title ?? this.title,
       category: category ?? this.category,
       location: location ?? this.location,
-      imgUrlList: imgUrlList ?? this.imgUrlList,
+      imgUrlList: imgUrlList ?? this.imgUrlList??[],
       mySogam: mySogam ?? this.mySogam,
       bukkungSogam: bukkungSogam ?? this.bukkungSogam,
       date: date ?? this.date,

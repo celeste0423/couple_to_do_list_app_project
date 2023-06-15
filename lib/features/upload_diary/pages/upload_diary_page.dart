@@ -102,9 +102,12 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
           ),
         ),
       ),
-      leading: IconButton(icon: Icon(Icons.abc),onPressed: (){
-        controller.pickMultipleImages();
-      },),
+      leading: IconButton(
+        icon: Icon(Icons.abc),
+        onPressed: () {
+          controller.pickMultipleImages();
+        },
+      ),
     );
   }
 
@@ -158,77 +161,13 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   }
 
   Widget _imagePicker() {
-    Widget _myImagePickerContainer() {
-      if (selectedDiaryModel == null) {
+    _mygridView(){
+      if (controller.selectedImages.isEmpty) {
         return Container(
-            padding: EdgeInsets.all(10),
-            width: 170,
-            height: 170,
-            decoration: BoxDecoration(
-              color: CustomColors.lightGrey,
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: GestureDetector(
-              onTap: () {
-                print('이미지 추가 버튼 누름!');
-                // FocusManager.instance.primaryFocus?.unfocus();
-                controller.pickMultipleImages;
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    height: 35,
-                  ),
-                  Image.asset(
-                    'assets/icons/add.png',
-                    width: 60,
-                  ),
-                  Text(
-                    '이미지 추가',
-                    style: TextStyle(fontSize: 35, color: Colors.white),
-                  )
-                ],
-              ),
-            ));
-      }else if(selectedDiaryModel!.imgUrlList==null){
-        return Container(
-            padding: EdgeInsets.all(10),
-            width: 170,
-            height: 170,
-            decoration: BoxDecoration(
-              color: CustomColors.lightGrey,
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: GestureDetector(
-              onTap: () {
-                print('이미지 추가 버튼 누름!');
-                FocusManager.instance.primaryFocus?.unfocus();
-                controller.pickMultipleImages;
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    height: 35,
-                  ),
-                  Image.asset(
-                    'assets/icons/add.png',
-                    width: 60,
-                  ),
-                  Text(
-                    '이미지 추가',
-                    style: TextStyle(fontSize: 35, color: Colors.white),
-                  )
-                ],
-              ),
-            ));
-      }else{
-        return Container(
-            padding: EdgeInsets.all(10),
-            width: 170,
-            height: 170,
-            decoration: BoxDecoration(
+          padding: EdgeInsets.all(10),
+          width: 170,
+          height: 170,
+          decoration: BoxDecoration(
               color: CustomColors.lightGrey,
               borderRadius: BorderRadius.circular(25),
               image: DecorationImage(
@@ -236,8 +175,92 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   selectedDiaryModel!.imgUrlList![0],
                 ),
                 fit: BoxFit.cover,
-              )
-            ),);
+              )),
+        );
+      } else {
+        return GridView.builder(
+          scrollDirection: Axis.horizontal,
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 250, mainAxisSpacing: 20),
+          itemBuilder: (context, index) {
+            return GridTile(
+                child: Container(
+                  width: 150,
+                    height: 150,
+                    color: Colors.blue[200],
+                    alignment: Alignment.center,
+                    child: Image.file(controller.selectedImages[index])));
+          },
+        );
+      }
+    }
+    Widget _myImagePickerContainer() {
+      if (selectedDiaryModel == null) {
+        return GestureDetector(
+          onTap: () {
+            print('이미지 추가 버튼 누름!');
+            FocusManager.instance.primaryFocus?.unfocus();
+            controller.pickMultipleImages;
+          },
+          child: Container(
+              padding: EdgeInsets.all(10),
+              width: 170,
+              height: 170,
+              decoration: BoxDecoration(
+                color: CustomColors.lightGrey,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    height: 35,
+                  ),
+                  Image.asset(
+                    'assets/icons/add.png',
+                    width: 60,
+                  ),
+                  Text(
+                    '이미지 추가',
+                    style: TextStyle(fontSize: 35, color: Colors.white),
+                  )
+                ],
+              )),
+        );
+      } else if (selectedDiaryModel!.imgUrlList == null) {
+        return GestureDetector(
+          onTap: () {
+            print('이미지 추가 버튼 누름!');
+            FocusManager.instance.primaryFocus?.unfocus();
+            controller.pickMultipleImages;
+          },
+          child: Container(
+              padding: EdgeInsets.all(10),
+              width: 170,
+              height: 170,
+              decoration: BoxDecoration(
+                color: CustomColors.lightGrey,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    height: 35,
+                  ),
+                  Image.asset(
+                    'assets/icons/add.png',
+                    width: 60,
+                  ),
+                  Text(
+                    '이미지 추가',
+                    style: TextStyle(fontSize: 35, color: Colors.white),
+                  )
+                ],
+              )),
+        );
+      } else {
+        return Obx(() => _mygridView());
       }
     }
 
