@@ -60,8 +60,8 @@ class UploadDiaryController extends GetxController {
       if (selectedDiaryModel!.location != null) {
         locationController.text = selectedDiaryModel!.location!;
       }
-      if (selectedDiaryModel!.mySogam != null) {
-        contentController.text = selectedDiaryModel!.mySogam!;
+      if (selectedDiaryModel!.creatorSogam != null) {
+        contentController.text = selectedDiaryModel!.creatorSogam!;
       }
     }
     contentScrollController.addListener(scrollToContent);
@@ -215,7 +215,7 @@ class UploadDiaryController extends GetxController {
               category: diaryCategory.value,
               location: locationController.text,
               //todo: imgUrlList: diaryImage ?? null,
-              mySogam: contentController.text,
+              creatorSogam: contentController.text,
               bukkungSogam: selectedDiaryModel == null
                   ? null
                   : selectedDiaryModel!.bukkungSogam,
@@ -232,7 +232,7 @@ class UploadDiaryController extends GetxController {
               category: diaryCategory.value,
               location: locationController.text,
               //todo: imgUrlList: diaryImage ?? null,
-              mySogam: contentController.text,
+              creatorSogam: contentController.text,
               bukkungSogam: selectedDiaryModel == null
                   ? null
                   : selectedDiaryModel!.bukkungSogam,
@@ -255,7 +255,7 @@ class UploadDiaryController extends GetxController {
           category: diaryCategory.value,
           location: locationController.text,
           //todo: imgUrlList: diaryImage ?? null,
-          mySogam: contentController.text,
+          creatorSogam: contentController.text,
           bukkungSogam: selectedDiaryModel == null
               ? null
               : selectedDiaryModel!.bukkungSogam,
@@ -272,7 +272,7 @@ class UploadDiaryController extends GetxController {
           category: diaryCategory.value,
           location: locationController.text,
           //todo: imgUrlList: diaryImage ?? null,
-          mySogam: contentController.text,
+          creatorSogam: contentController.text,
           bukkungSogam: selectedDiaryModel == null
               ? null
               : selectedDiaryModel!.bukkungSogam,

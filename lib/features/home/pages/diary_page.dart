@@ -105,9 +105,8 @@ class DiaryPage extends GetView<DiaryPageController> {
               right: 50,
               child: CustomIconButton(
                 onTap: () {
-                  openAlertDialog(
-                    title: '아직 다이어리 페이지 없음 ㅎ',
-                  );
+                  Get.to(ReadDiaryPage(),
+                      arguments: controller.selectedDiary.value);
                 },
               )),
         ],
@@ -189,21 +188,23 @@ class DiaryPage extends GetView<DiaryPageController> {
               ),
             ),
             Obx(() => Expanded(
-                  child: ListView.builder(
-                      itemCount: controller.diarylist.length,
-                      itemBuilder: (BuildContext ctx, int i) {
-                        return GestureDetector(
-                          onTap: () {
-                            Get.to(ReadDiaryPage(),
-                                arguments: controller.diarylist[i]);
-                          },
-                          child: myListTile(
-                            controller.diarylist[i].title,
-                            controller.diarylist[i].location,
-                            controller.diarylist[i].date,
-                          ),
-                        );
-                      }),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: ListView.builder(
+                        itemCount: controller.diarylist.length,
+                        itemBuilder: (BuildContext ctx, int i) {
+                          return GestureDetector(
+                            onTap: () {
+                              controller.selectedDiary(controller.diarylist[i]);
+                            },
+                            child: myListTile(
+                              controller.diarylist[i].title,
+                              controller.diarylist[i].location,
+                              controller.diarylist[i].date,
+                            ),
+                          );
+                        }),
+                  ),
                 ))
           ],
         ),

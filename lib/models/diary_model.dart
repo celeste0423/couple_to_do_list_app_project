@@ -5,7 +5,7 @@ class DiaryModel {
   final String? category;
   final String? location;
   final List<String>? imgUrlList;
-  final String? mySogam;
+  final String? creatorSogam;
   final String? bukkungSogam;
   final DateTime? date;
   final String? creatorUserID;
@@ -18,7 +18,7 @@ class DiaryModel {
     this.category,
     this.location,
     this.imgUrlList,
-    this.mySogam,
+    this.creatorSogam,
     this.bukkungSogam,
     this.date,
     this.creatorUserID,
@@ -33,7 +33,7 @@ class DiaryModel {
       category: '',
       location: '',
       imgUrlList: [],
-      mySogam: '',
+      creatorSogam: '',
       bukkungSogam: '',
       date: DateTime.now(),
       creatorUserID: userInfo.uid,
@@ -51,7 +51,7 @@ class DiaryModel {
       imgUrlList: json['imgUrlList'] == null
           ? []
           : List<String>.from(json['imgUrlList'] as List<dynamic>),
-      mySogam: json['mySogam'] == null ? null : json['mySogam'] as String,
+      creatorSogam: json['creatorSogam'] == null ? null : json['creatorSogam'] as String,
       bukkungSogam:
       json['bukkungSogam'] == null ? null : json['bukkungSogam'] as String,
       date: json['date'] == null ? null : (json['date'] as Timestamp).toDate(),
@@ -68,7 +68,7 @@ class DiaryModel {
       'category': category,
       'location': location,
       'imgUrlList': imgUrlList,
-      'mySogam': mySogam,
+      'creatorSogam': creatorSogam,
       'bukkungSogam': bukkungSogam,
       'date': date,
       'creatorUserID': creatorUserID,
@@ -83,7 +83,7 @@ class DiaryModel {
     String? category,
     String? location,
     List<String>? imgUrlList,
-    String? mySogam,
+    String? creatorSogam,
     String? bukkungSogam,
     DateTime? date,
     String? creatorUserID,
@@ -96,7 +96,7 @@ class DiaryModel {
       category: category ?? this.category,
       location: location ?? this.location,
       imgUrlList: imgUrlList ?? this.imgUrlList??[],
-      mySogam: mySogam ?? this.mySogam,
+      creatorSogam: creatorSogam ?? this.creatorSogam,
       bukkungSogam: bukkungSogam ?? this.bukkungSogam,
       date: date ?? this.date,
       creatorUserID: creatorUserID ?? this.creatorUserID,

@@ -1,9 +1,14 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
+import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ReadDiaryPage extends StatefulWidget {
   @override
@@ -11,14 +16,38 @@ class ReadDiaryPage extends StatefulWidget {
 }
 
 class _ReadDiaryPageState extends State<ReadDiaryPage> {
+  int activeIndex = 0;
   final DiaryModel selectedDiaryModel = Get.arguments;
   int? i;
+  String? mynickname;
+  String? bukkungnickname;
+  String? mysogam;
+  String? bukkungsogam;
+  getsogam() {
+    if (AuthController.to.user.value.uid == selectedDiaryModel.creatorUserID) {
+      mysogam = selectedDiaryModel.creatorSogam;
+      bukkungsogam = selectedDiaryModel.bukkungSogam;
+    } else {
+      bukkungsogam = selectedDiaryModel.creatorSogam;
+      mysogam = selectedDiaryModel.bukkungSogam;
+    }
+  }
+
+  getnickname() {
+    mynickname = AuthController.to.user.value.nickname;
+    if (AuthController.to.user.value.gender == 'male') {
+      bukkungnickname = DiaryPageController.to.femaleNickname.value;
+    } else {
+      bukkungnickname = DiaryPageController.to.maleNickname.value;
+    }
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     i = 0;
+    getsogam();
   }
 
   PreferredSizeWidget _customAppBar(String? title) {
@@ -44,11 +73,55 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
     );
   }
 
+  Widget _AnimatedSmoothIndicator() {
+    if (selectedDiaryModel.imgUrlList!.isEmpty ||
+        selectedDiaryModel.imgUrlList!.length == 1) {
+      return SizedBox(
+        height: 20,
+      );
+    } else {
+      return AnimatedSmoothIndicator(
+          activeIndex: activeIndex,
+          count: selectedDiaryModel.imgUrlList!.length,
+          effect: JumpingDotEffect(
+            dotColor: CustomColors.redbrown,
+            dotHeight: 8,
+            dotWidth: 8,
+          ));
+    }
+  }
+
   Widget _ImgContainer() {
-    return Container(
-      color: Colors.black,
-      height: Get.width - 60,
-    );
+    if (selectedDiaryModel.imgUrlList!.isEmpty) {
+      return Container(
+        color: Colors.black,
+        height: Get.width - 60,
+      );
+    } else {
+      return Container(
+        height: Get.width - 60,
+        child: CarouselSlider.builder(
+            itemCount: selectedDiaryModel.imgUrlList!.length,
+            itemBuilder: (ctx, index, realIndex) {
+              return Container(
+                height: Get.width - 60,
+                child: Image.network(
+                  selectedDiaryModel.imgUrlList![index],
+                  fit: BoxFit.cover,
+                ),
+              );
+            },
+            options: CarouselOptions(
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    activeIndex = index;
+                  });
+                },
+                viewportFraction: 1,
+                autoPlay: true,
+                autoPlayInterval: Duration(seconds: 2))),
+      );
+    }
   }
 
   Widget _DateText(DateTime? date) {
@@ -60,7 +133,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
           style: TextStyle(fontSize: 20, color: CustomColors.greyText),
         ),
         SizedBox(
-          width: 10,
+          width: 5,
         )
       ],
     );
@@ -114,7 +187,8 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                   width: Get.width * 15 / 32,
                   height: 45,
                   child: Align(
-                      alignment: Alignment.topRight, child: Text('짝꿍 소감')),
+                      alignment: Alignment.topRight,
+                      child: Text('$bukkungnickname 소감')),
                 )),
           ),
           Align(
@@ -128,7 +202,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                           topRight: Radius.circular(700))),
                   width: Get.width * 15 / 32,
                   height: 45,
-                  child: Text('나의 소감'))),
+                  child: Text('$mynickname 소감'))),
           Positioned(
             top: 35,
             child: Container(
@@ -143,7 +217,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 15.0),
                     child: Text(
-                      selectedDiaryModel.mySogam ?? '없음',
+                      selectedDiaryModel.creatorSogam ?? '없음',
                       style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: CustomColors.greyText),
@@ -178,7 +252,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                             topRight: Radius.circular(700))),
                     width: Get.width * 15 / 32,
                     height: 45,
-                    child: Text('나의 소감')),
+                    child: Text('$mynickname 소감')),
               )),
           Align(
               alignment: Alignment.topRight,
@@ -191,8 +265,9 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                         topRight: Radius.circular(30))),
                 width: Get.width * 15 / 32,
                 height: 45,
-                child:
-                    Align(alignment: Alignment.topRight, child: Text('짝꿍 소감')),
+                child: Align(
+                    alignment: Alignment.topRight,
+                    child: Text('$bukkungnickname 소감')),
               )),
           Positioned(
             top: 35,
@@ -230,7 +305,9 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.off(() => UploadDiaryPage(), arguments: selectedDiaryModel);
+            },
             icon: Icon(Icons.edit, size: 25, color: CustomColors.lightPink)),
         IconButton(
             onPressed: () {},
@@ -248,9 +325,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
         child: Column(
           children: [
             _Divider(),
-            SizedBox(
-              height: 20,
-            ),
+            _AnimatedSmoothIndicator(),
             _ImgContainer(),
             SizedBox(
               height: 5,
