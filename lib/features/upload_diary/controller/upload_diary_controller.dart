@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
@@ -10,6 +12,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 //Todo: onDelete 함수 어떻게 불러오는거징
@@ -42,6 +45,9 @@ class UploadDiaryController extends GetxController {
     "5study": "자기 계발",
     "6etc": "기타",
   };
+
+  List<File> selectedImages = []; // List of selected image
+  final picker = ImagePicker(); // Instance of Image picker
 
   @override
   void onInit() {
@@ -145,17 +151,40 @@ class UploadDiaryController extends GetxController {
     return ref.putData(image, metadata);
   }
 
-  void pickImageFromGallery(BuildContext context) async {
-    final image = await Get.to(ImagePickerPage());
-    if (image == null) {
-      print('선택한 이미지가 없습니다(upl cont)');
-      isImage(false);
-      return;
+  Future pickMultipleImages() async{
+    print('pickMultipleImages function start');
+    final pickedFile = await picker.pickMultiImage(
+        imageQuality: 100, // To set quality of images
+        maxHeight: 1000, // To set maxheight of images that you want in your app
+        maxWidth: 1000); // To set maxheight of images that you want in your app
+    List<XFile> xfilePick = pickedFile;
+
+    // if atleast 1 images is selected it will add
+    // all images in selectedImages
+    // variable so that we can easily show them in UI
+    if (xfilePick.isNotEmpty) {
+      for (var i = 0; i < xfilePick.length; i++) {
+        selectedImages.add(File(xfilePick[i].path));
+      }
+      print(selectedImages[0].path);
+    } else {
+      // If no image is selected it will show a
+      // snackbar saying nothing is selected
+      Get.snackbar('사진 고르기 취소','Nothing is selected');
     }
-    isImage(true);
-    //todo: 이거 매커니즘 파악 해야 될듯 uint8list가 뭔지...
-    diaryImage = image;
   }
+  // void pickImageFromGallery(BuildContext context) async {
+  //   final image = await Navigator.of(context)
+  //       .push(MaterialPageRoute(builder: (context) => ImagePickerPage()));
+  //   if (image == null) {
+  //     print('선택한 이미지가 없습니다(upl cont)');
+  //     isImage(false);
+  //     return;
+  //   }
+  //   isImage(true);
+  //   //todo: 이거 매커니즘 파악 해야 될듯 uint8list가 뭔지...
+  //   diaryImage = image;
+  // }
 
   Future<void> submitDiary(DiaryModel diaryData, String diaryId) async {
     await DiaryRepository.setGroupDiary(diaryData, diaryId);

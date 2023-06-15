@@ -65,7 +65,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   //   }
   // }
 
-final DiaryModel? selectedDiaryModel = Get.arguments;
+  final DiaryModel? selectedDiaryModel = Get.arguments;
 
   PreferredSizeWidget _appBar() {
     return AppBar(
@@ -87,7 +87,9 @@ final DiaryModel? selectedDiaryModel = Get.arguments;
             errorBorder: InputBorder.none,
             disabledBorder: InputBorder.none,
             contentPadding: EdgeInsets.only(left: 15),
-            hintText: selectedDiaryModel != null ? selectedDiaryModel!.title! : '제목을 입력하세요',
+            hintText: selectedDiaryModel != null
+                ? selectedDiaryModel!.title!
+                : '제목을 입력하세요',
             suffixIcon: Icon(
               Icons.edit,
               size: 23,
@@ -100,7 +102,9 @@ final DiaryModel? selectedDiaryModel = Get.arguments;
           ),
         ),
       ),
-      leading: SizedBox(),
+      leading: IconButton(icon: Icon(Icons.abc),onPressed: (){
+        controller.pickMultipleImages();
+      },),
     );
   }
 
@@ -154,14 +158,97 @@ final DiaryModel? selectedDiaryModel = Get.arguments;
   }
 
   Widget _imagePicker() {
+    Widget _myImagePickerContainer() {
+      if (selectedDiaryModel == null) {
+        return Container(
+            padding: EdgeInsets.all(10),
+            width: 170,
+            height: 170,
+            decoration: BoxDecoration(
+              color: CustomColors.lightGrey,
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: GestureDetector(
+              onTap: () {
+                print('이미지 추가 버튼 누름!');
+                // FocusManager.instance.primaryFocus?.unfocus();
+                controller.pickMultipleImages;
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    height: 35,
+                  ),
+                  Image.asset(
+                    'assets/icons/add.png',
+                    width: 60,
+                  ),
+                  Text(
+                    '이미지 추가',
+                    style: TextStyle(fontSize: 35, color: Colors.white),
+                  )
+                ],
+              ),
+            ));
+      }else if(selectedDiaryModel!.imgUrlList==null){
+        return Container(
+            padding: EdgeInsets.all(10),
+            width: 170,
+            height: 170,
+            decoration: BoxDecoration(
+              color: CustomColors.lightGrey,
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: GestureDetector(
+              onTap: () {
+                print('이미지 추가 버튼 누름!');
+                FocusManager.instance.primaryFocus?.unfocus();
+                controller.pickMultipleImages;
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    height: 35,
+                  ),
+                  Image.asset(
+                    'assets/icons/add.png',
+                    width: 60,
+                  ),
+                  Text(
+                    '이미지 추가',
+                    style: TextStyle(fontSize: 35, color: Colors.white),
+                  )
+                ],
+              ),
+            ));
+      }else{
+        return Container(
+            padding: EdgeInsets.all(10),
+            width: 170,
+            height: 170,
+            decoration: BoxDecoration(
+              color: CustomColors.lightGrey,
+              borderRadius: BorderRadius.circular(25),
+              image: DecorationImage(
+                image: NetworkImage(
+                  selectedDiaryModel!.imgUrlList![0],
+                ),
+                fit: BoxFit.cover,
+              )
+            ),);
+      }
+    }
 
     DecorationImage? myDecorationImage() {
-      if(selectedDiaryModel==null){
-        return null;}
-      else{
-        if(selectedDiaryModel!.imgUrlList==null
-        ){return null;}
-        else{
+      //새로운 다이어리를 만드는경우이거나 다이어리 수정하는데 사진이 없는 경우가 아니면 이미지 보이게 함
+      if (selectedDiaryModel == null) {
+        return null;
+      } else {
+        if (selectedDiaryModel!.imgUrlList == null) {
+          return null;
+        } else {
           return DecorationImage(
             image: NetworkImage(
               selectedDiaryModel!.imgUrlList![0],
@@ -171,6 +258,7 @@ final DiaryModel? selectedDiaryModel = Get.arguments;
         }
       }
     }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Row(
@@ -183,40 +271,7 @@ final DiaryModel? selectedDiaryModel = Get.arguments;
             colorBlendMode: BlendMode.modulate,
           ),
           SizedBox(width: 10),
-          Container(
-              padding: EdgeInsets.all(10),
-              width: 170,
-              height: 170,
-              decoration: BoxDecoration(
-                color: CustomColors.lightGrey,
-                borderRadius: BorderRadius.circular(25),
-                image: myDecorationImage()
-              ),
-              child: myDecorationImage() != null
-                  ? null
-                  : GestureDetector(
-                onTap: (){
-                  FocusManager.instance.primaryFocus?.unfocus();
-                  controller.pickImageFromGallery;
-                },
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          SizedBox(
-                            height: 35,
-                          ),
-                          Image.asset(
-                            'assets/icons/add.png',
-                            width: 60,
-                          ),
-                          Text(
-                            '이미지 추가',
-                            style: TextStyle(fontSize: 35, color: Colors.white),
-                          )
-                        ],
-                      ),
-                  )
-          ),
+          _myImagePickerContainer(),
         ],
       ),
     );
@@ -396,8 +451,7 @@ final DiaryModel? selectedDiaryModel = Get.arguments;
           ),
           Container(
             decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(color: CustomColors.grey))),
+                border: Border(bottom: BorderSide(color: CustomColors.grey))),
             width: (Get.width - 100 - holediameter) * 11 / 16,
             child: TextField(
               controller: controller.locationController,
@@ -520,15 +574,15 @@ final DiaryModel? selectedDiaryModel = Get.arguments;
         auxiliaryButton('취소', () {
           Get.back();
         }, Get.width * 1 / 4),
-        mainButton('다이어리 작성', () async{
-          if(controller.isValid()){
+        mainButton('다이어리 작성', () async {
+          if (controller.isValid()) {
             print('isvalid');
-           await controller.uploadDiary();
-           print('uploadDiary Complete');
+            await controller.uploadDiary();
+            print('uploadDiary Complete');
             Get.back();
+          } else {
+            openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');
           }
-          else
-            {openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');}
         }, Get.width * 5 / 8)
       ],
     );
@@ -559,5 +613,3 @@ final DiaryModel? selectedDiaryModel = Get.arguments;
     );
   }
 }
-
-
