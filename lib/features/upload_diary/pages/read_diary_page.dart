@@ -23,6 +23,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
   String? bukkungnickname;
   String? mysogam;
   String? bukkungsogam;
+
   getsogam() {
     if (AuthController.to.user.value.uid == selectedDiaryModel.creatorUserID) {
       mysogam = selectedDiaryModel.creatorSogam;
@@ -48,6 +49,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
     super.initState();
     i = 0;
     getsogam();
+    getnickname();
   }
 
   PreferredSizeWidget _customAppBar(String? title) {
@@ -98,17 +100,19 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
         height: Get.width - 60,
       );
     } else {
-      return Container(
+      return SizedBox(
         height: Get.width - 60,
         child: CarouselSlider.builder(
             itemCount: selectedDiaryModel.imgUrlList!.length,
             itemBuilder: (ctx, index, realIndex) {
               return Container(
                 height: Get.width - 60,
-                child: Image.network(
-                  selectedDiaryModel.imgUrlList![index],
-                  fit: BoxFit.cover,
-                ),
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                              selectedDiaryModel.imgUrlList![index]))),
+                // child: NetworkImage(selectedDiaryModel.imgUrlList![index])
               );
             },
             options: CarouselOptions(
@@ -166,70 +170,73 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
 
   Widget _DiaryTab(int index) {
     if (index == 0) {
-      return Stack(
-        clipBehavior: Clip.none,
-        children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                i = 1;
-              });
-            },
-            child: Align(
-                alignment: Alignment.topRight,
+      return SizedBox(
+        height: 260,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  i = 1;
+                });
+              },
+              child: Align(
+                  alignment: Alignment.topRight,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
+                    decoration: BoxDecoration(
+                        color: CustomColors.lightPink,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(700),
+                            topRight: Radius.circular(30))),
+                    width: Get.width * 15 / 32,
+                    height: 45,
+                    child: Align(
+                        alignment: Alignment.topRight,
+                        child: Text('$bukkungnickname 소감')),
+                  )),
+            ),
+            Align(
+                alignment: Alignment.topLeft,
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
-                  decoration: BoxDecoration(
-                      color: CustomColors.lightPink,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(700),
-                          topRight: Radius.circular(30))),
-                  width: Get.width * 15 / 32,
-                  height: 45,
-                  child: Align(
-                      alignment: Alignment.topRight,
-                      child: Text('$bukkungnickname 소감')),
-                )),
-          ),
-          Align(
-              alignment: Alignment.topLeft,
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
+                    decoration: BoxDecoration(
+                        color: CustomColors.mainPink,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(700))),
+                    width: Get.width * 15 / 32,
+                    height: 45,
+                    child: Text('$mynickname 소감'))),
+            Positioned(
+              top: 35,
               child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
-                  decoration: BoxDecoration(
-                      color: CustomColors.mainPink,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(700))),
-                  width: Get.width * 15 / 32,
-                  height: 45,
-                  child: Text('$mynickname 소감'))),
-          Positioned(
-            top: 35,
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), color: Colors.white),
-              height: 170,
-              width: Get.width - 60,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  circleHolesColumn(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 15.0),
-                    child: Text(
-                      selectedDiaryModel.creatorSogam ?? '없음',
-                      style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: CustomColors.greyText),
-                    ),
-                  )
-                ],
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10), color: Colors.white),
+                height: 170,
+                width: Get.width - 60,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    circleHolesColumn(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 15.0),
+                      child: Text(
+                        selectedDiaryModel.creatorSogam ?? '없음',
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: CustomColors.greyText),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-          //top+height 하면 됨
-          Positioned(right: 0, top: 205, child: _bottombuttons())
-        ],
+            //top+height 하면 됨
+            Positioned(right: 0, top: 205, child: _bottombuttons())
+          ],
+        ),
       );
     } else {
       return Stack(
@@ -306,6 +313,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
       children: [
         IconButton(
             onPressed: () {
+              print('edit button');
               Get.off(() => UploadDiaryPage(), arguments: selectedDiaryModel);
             },
             icon: Icon(Icons.edit, size: 25, color: CustomColors.lightPink)),
@@ -323,6 +331,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 30),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _Divider(),
             _AnimatedSmoothIndicator(),

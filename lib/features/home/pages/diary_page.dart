@@ -36,7 +36,7 @@ class DiaryPage extends GetView<DiaryPageController> {
               ),
               Container(
                   width: 230,
-                  height: 230,
+                  height: 270,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -55,7 +55,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                   child: Obx(() {
                     if (controller.diarylist.isEmpty) {
                       //todo: 여기 프로그래스 인디케이터 넣자
-                      return CircularProgressIndicator(color: CustomColors.mainPink);
+                      return Center(child: SizedBox(width: 50, height: 50, child: CircularProgressIndicator(color: CustomColors.mainPink,)));
                     } else {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -101,7 +101,7 @@ class DiaryPage extends GetView<DiaryPageController> {
             ],
           ),
           Positioned(
-              top: 100,
+              top: 115,
               right: 50,
               child: CustomIconButton(
                 onTap: () {

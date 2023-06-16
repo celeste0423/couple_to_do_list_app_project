@@ -20,7 +20,8 @@ class UploadDiaryController extends GetxController {
   static UploadDiaryController get to => Get.find();
 
   Uint8List? diaryImage = null;
-  Rx<bool> isImage = false.obs;
+
+  // Rx<bool> isImage = false.obs;
 
 // todo: 다이어리 모델 둘중에 뭐 쓸까
   final DiaryModel? selectedDiaryModel = Get.arguments;
@@ -144,15 +145,7 @@ class UploadDiaryController extends GetxController {
     }
   }
 
-  UploadTask uploadFile(Uint8List image, String location, String filename) {
-    var ref = FirebaseStorage.instance.ref().child(location).child(filename);
-    final metadata = SettableMetadata(
-      contentType: 'image/jpeg',
-    );
-    return ref.putData(image, metadata);
-  }
-
-  Future pickMultipleImages() async{
+  Future pickMultipleImages() async {
     print('pickMultipleImages function start');
     final pickedFile = await picker.pickMultiImage(
         imageQuality: 100, // To set quality of images
@@ -172,118 +165,126 @@ class UploadDiaryController extends GetxController {
     } else {
       // If no image is selected it will show a
       // snackbar saying nothing is selected
-      Get.snackbar('사진 고르기 취소','Nothing is selected');
+      Get.snackbar('사진 고르기 취소', 'Nothing is selected');
     }
   }
-  // void pickImageFromGallery(BuildContext context) async {
-  //   final image = await Navigator.of(context)
-  //       .push(MaterialPageRoute(builder: (context) => ImagePickerPage()));
-  //   if (image == null) {
-  //     print('선택한 이미지가 없습니다(upl cont)');
-  //     isImage(false);
-  //     return;
-  //   }
-  //   isImage(true);
-  //   //todo: 이거 매커니즘 파악 해야 될듯 uint8list가 뭔지...
-  //   diaryImage = image;
-  // }
 
   Future<void> submitDiary(DiaryModel diaryData, String diaryId) async {
     await DiaryRepository.setGroupDiary(diaryData, diaryId);
   }
 
-  Future<void> uploadDiary() async {
-    var uuid = Uuid();
-    String diaryId = uuid.v1();
-    String imageId = uuid.v4();
-    var filename = '$imageId.jpg';
-    //diaryImage list 에 사진이 있으면
-    if (diaryImage != null) {
-      print('다이어리 사진 있음(로컬)');
-      var task = uploadFile(diaryImage!, 'group_diary',
-          '${AuthController.to.user.value.groupId}/${filename}');
-      //task 완료 하면 submitdiary 되도록
-      task.snapshotEvents.listen((event) async {
-        if (event.bytesTransferred == event.totalBytes &&
-            event.state == TaskState.success) {
-          print('업로드 시작 (upl cont)');
-          var downloadUrl = await event.ref.getDownloadURL();
-          if (selectedDiaryModel != null) {
-            //기존 다이어리 수정할 경우
-            DiaryModel updatedDiary = selectedDiaryModel!.copyWith(
-              title: titleController.text,
-              category: diaryCategory.value,
-              location: locationController.text,
-              //todo: imgUrlList: diaryImage ?? null,
-              creatorSogam: contentController.text,
-              bukkungSogam: selectedDiaryModel == null
-                  ? null
-                  : selectedDiaryModel!.bukkungSogam,
-              date: diaryDateTime.value,
-              // 여긴selectedDiaryModel null 아닐때만이니까 이미 creatorUserID,createdAt 존재 함.
-              lastUpdatorID: AuthController.to.user.value.uid,
-              updatedAt: DateTime.now(),
-            );
-            submitDiary(updatedDiary, diaryId);
-          } else {
-            //새로운 다이어리 작성 할 경우
-            DiaryModel updatedDiary = DiaryModel(
-              title: titleController.text,
-              category: diaryCategory.value,
-              location: locationController.text,
-              //todo: imgUrlList: diaryImage ?? null,
-              creatorSogam: contentController.text,
-              bukkungSogam: selectedDiaryModel == null
-                  ? null
-                  : selectedDiaryModel!.bukkungSogam,
-              date: diaryDateTime.value,
-              createdAt: DateTime.now(),
-              creatorUserID: AuthController.to.user.value.uid,
-              lastUpdatorID: AuthController.to.user.value.uid,
-              updatedAt: DateTime.now(),
-            );
-            submitDiary(updatedDiary, diaryId);
-          }
-        }
-      });
+  UploadTask uploadFile(File file, String location, String filename) {
+    final metadata = SettableMetadata(
+      contentType: 'image/jpeg',
+    );
+    var ref = FirebaseStorage.instance
+        .ref()
+        .child('group_diary')
+        .child('${AuthController.to.user.value.groupId}/${filename}');
+    return ref.putFile(file, metadata);
+  }
+
+  uploadselectedImages(String imageId) async {
+    List<String> addimgurllist = <String>[];
+    for (var i = 0; i < selectedImages.length; i++) {
+      String filename = imageId + i.toString() + '.jpg';
+      var uploadTask = await FirebaseStorage.instance
+          .ref()
+          .child('group_diary')
+          .child('${AuthController.to.user.value.groupId}/${filename}')
+          .putFile(selectedImages[i]);
+      var downloadUrl = await uploadTask.ref.getDownloadURL();
+      print('this is the url : $downloadUrl');
+      addimgurllist.add(downloadUrl);
+      // uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) async {
+      //   switch (taskSnapshot.state) {
+      //     case TaskState.running:
+      //       final progress = 100.0 *
+      //           (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
+      //       print("Upload is $progress% complete.");
+      //       break;
+      //     case TaskState.paused:
+      //       print("Upload is paused.");
+      //       break;
+      //     case TaskState.canceled:
+      //       print("Upload was canceled");
+      //       break;
+      //     case TaskState.error:
+      //       print('error');
+      //       break;
+      //     case TaskState.success:
+      //       // Handle successful uploads on complete
+      //       var downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      //       print('this is the url : $downloadUrl');
+      //       addimgurllist.add(downloadUrl);
+      //       break;
+      //   }
+      // });
+    }
+    return addimgurllist;
+  }
+
+  makeandsubmitDiary(String diaryId, List<String> addImgUrlList) {
+    if (selectedDiaryModel != null) {
+      //기존 다이어리 수정할 경우
+      DiaryModel updatedDiary = selectedDiaryModel!.copyWith(
+        title: titleController.text,
+        category: diaryCategory.value,
+        location: locationController.text,
+        imgUrlList: selectedDiaryModel!.imgUrlList! + addImgUrlList,
+        creatorSogam: contentController.text,
+        bukkungSogam: selectedDiaryModel == null
+            ? null
+            : selectedDiaryModel!.bukkungSogam,
+        date: diaryDateTime.value,
+        // 여긴selectedDiaryModel null 아닐때만이니까 이미 creatorUserID,createdAt 존재 함.
+        lastUpdatorID: AuthController.to.user.value.uid,
+        updatedAt: DateTime.now(),
+        diaryId: diaryId,
+      );
+      submitDiary(updatedDiary, diaryId);
     } else {
-      //diaryImage list 에 아무것도 없으면(null) 이미지 없이 그냥 업로딩 한다
-      if (selectedDiaryModel != null) {
-        //기존 다이어리 수정할 경우
-        DiaryModel updatedDiary = selectedDiaryModel!.copyWith(
-          title: titleController.text,
-          category: diaryCategory.value,
-          location: locationController.text,
-          //todo: imgUrlList: diaryImage ?? null,
-          creatorSogam: contentController.text,
-          bukkungSogam: selectedDiaryModel == null
-              ? null
-              : selectedDiaryModel!.bukkungSogam,
-          date: diaryDateTime.value,
-          // 여긴selectedDiaryModel null 아닐때만이니까 이미 creatorUserID,createdAt 존재 함.
-          lastUpdatorID: AuthController.to.user.value.uid,
-          updatedAt: DateTime.now(),
-        );
-        submitDiary(updatedDiary, diaryId);
-      } else {
-        //새로운 다이어리 작성 할 경우
-        DiaryModel updatedDiary = DiaryModel(
-          title: titleController.text,
-          category: diaryCategory.value,
-          location: locationController.text,
-          //todo: imgUrlList: diaryImage ?? null,
-          creatorSogam: contentController.text,
-          bukkungSogam: selectedDiaryModel == null
-              ? null
-              : selectedDiaryModel!.bukkungSogam,
-          date: diaryDateTime.value,
-          createdAt: DateTime.now(),
-          creatorUserID: AuthController.to.user.value.uid,
-          lastUpdatorID: AuthController.to.user.value.uid,
-          updatedAt: DateTime.now(),
-        );
-        submitDiary(updatedDiary, diaryId);
-      }
+      //새로운 다이어리 작성 할 경우
+      print(addImgUrlList);
+      print('바로위 리스트가 addImgUrlList에요');
+      DiaryModel updatedDiary = DiaryModel(
+        title: titleController.text,
+        category: diaryCategory.value,
+        location: locationController.text,
+        imgUrlList: addImgUrlList,
+        creatorSogam: contentController.text,
+        bukkungSogam: selectedDiaryModel == null
+            ? null
+            : selectedDiaryModel!.bukkungSogam,
+        date: diaryDateTime.value,
+        createdAt: DateTime.now(),
+        creatorUserID: AuthController.to.user.value.uid,
+        lastUpdatorID: AuthController.to.user.value.uid,
+        updatedAt: DateTime.now(),
+        diaryId: diaryId,
+      );
+      submitDiary(updatedDiary, diaryId);
+    }
+  }
+
+  Future uploadDiary() async {
+    var uuid = Uuid();
+    //기존 다이어리 수정의 경우 기존 diaryId 사용하면 됨.
+    String diaryId =
+        selectedDiaryModel != null ? selectedDiaryModel!.diaryId! : uuid.v1();
+    String imageId = uuid.v4();
+    List<String> addImgUrlList = [];
+    //selectedImages 에 사진file이 있으면
+    if (selectedImages.isNotEmpty) {
+      print('다이어리 사진 있음(로컬)');
+      addImgUrlList = await uploadselectedImages(imageId);
+      print('사진 업로드 완료, addImgUrlList = $addImgUrlList');
+      await makeandsubmitDiary(diaryId, addImgUrlList);
+      print('Diary 업로드 완료');
+    } else {
+      //selectedImages 에 아무것도 없으면(null) 이미지 없이 그냥 diary 업로딩 한다
+      await makeandsubmitDiary(diaryId, addImgUrlList);
+      print('Diary 업로드 완료');
     }
   }
 }

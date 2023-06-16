@@ -16,55 +16,6 @@ import 'package:intl/intl.dart';
 //Todo: controller 가 이 페이지 꺼지면 바로 꺼지게 해야 함
 
 class UploadDiaryPage extends GetView<UploadDiaryController> {
-  // Widget _Title() {
-  //   if (title == null) {
-  //     return TextField(
-  //       controller: controller.titleController,
-  //       maxLines: null,
-  //       textInputAction: TextInputAction.done,
-  //       textAlign: TextAlign.center,
-  //       style: TextStyle(
-  //         color: CustomColors.darkGrey,
-  //         fontSize: 40,
-  //       ),
-  //       decoration: const InputDecoration(
-  //         prefixIcon: Icon(
-  //           Icons.edit,
-  //           color: CustomColors.darkGrey,
-  //           size: 30,
-  //         ),
-  //         suffixIcon: Icon(
-  //           Icons.edit,
-  //           color: CustomColors.darkGrey,
-  //           size: 30,
-  //         ),
-  //         border: InputBorder.none,
-  //         focusedBorder: InputBorder.none,
-  //         enabledBorder: InputBorder.none,
-  //         errorBorder: InputBorder.none,
-  //         disabledBorder: InputBorder.none,
-  //         contentPadding: EdgeInsets.only(left: 15),
-  //         hintText: '제목을 입력하세요',
-  //         hintStyle: TextStyle(
-  //           color: CustomColors.darkGrey,
-  //           fontSize: 40,
-  //         ),
-  //       ),
-  //     );
-  //   } else {
-  //     return Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //       children: [
-  //         titleText(title!),
-  //         Icon(
-  //           Icons.edit,
-  //           size: 30,
-  //         ),
-  //       ],
-  //     );
-  //   }
-  // }
-
   final DiaryModel? selectedDiaryModel = Get.arguments;
 
   PreferredSizeWidget _appBar() {
@@ -102,71 +53,16 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
           ),
         ),
       ),
-      leading: IconButton(
-        icon: Icon(Icons.abc),
-        onPressed: () {
-          controller.pickMultipleImages();
-        },
-      ),
     );
   }
 
-  Widget _datePicker(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-      child: Row(
-        children: [
-          Image.asset(
-            'assets/icons/calendar.png',
-            width: 35,
-            color: Colors.black.withOpacity(0.6),
-            colorBlendMode: BlendMode.modulate,
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                controller.datePicker(context);
-              },
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: Obx(() {
-                    return Text(
-                      //todo: controller 에서 diaryDateTime initialize  했는지 확인
-                      controller.diaryDateTime.value == null
-                          ? '예상 날짜'
-                          : DateFormat('yyyy-MM-dd')
-                              .format(controller.diaryDateTime.value!),
-                      style: TextStyle(
-                        color: controller.diaryDateTime.value == null
-                            ? CustomColors.greyText
-                            : CustomColors.blackText,
-                        fontSize: 25,
-                      ),
-                    );
-                  }),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _imagePicker() {
+    Widget _imagePicker() {
     Widget chooseimageContainer() {
       return GestureDetector(
         onTap: () {
           print('이미지 추가 버튼 누름!');
           FocusManager.instance.primaryFocus?.unfocus();
-          controller.pickMultipleImages;
+          controller.pickMultipleImages();
         },
         child: Container(
             padding: EdgeInsets.all(10),
@@ -195,7 +91,81 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       );
     }
 
-    Widget _mygridView() {
+    Widget _mygridView2() {
+      if (controller.selectedImages.isEmpty) {
+        return SizedBox(
+          height: 170,
+          child: ListView.builder(
+            itemCount: selectedDiaryModel!.imgUrlList!.length + 1,
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return chooseimageContainer();
+              } else {
+                return Container(
+                  width: 170,
+                  height: 170,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                              selectedDiaryModel!.imgUrlList![index - 1]))),
+                );
+              }
+            },
+          ),
+        );
+      } else {
+        return SizedBox(
+          height: 170,
+          child: ListView.builder(
+            itemCount: controller.selectedImages.length +
+                selectedDiaryModel!.imgUrlList!.length +
+                1,
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            // gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            //     maxCrossAxisExtent: 10, mainAxisSpacing: 20),
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return chooseimageContainer();
+              } else if (index >= 1 &&
+                  index <= selectedDiaryModel!.imgUrlList!.length) {
+                return Container(
+                  width: 170,
+                  height: 170,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                              selectedDiaryModel!.imgUrlList![index - 1]))),
+                );
+              } else {
+                return Container(
+                  width: 170,
+                  height: 170,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: FileImage(controller.selectedImages[index -
+                              1 -
+                              selectedDiaryModel!.imgUrlList!.length]))),
+                );
+              }
+            },
+          ),
+        );
+      }
+    }
+
+    Widget _mygridView1() {
       if (controller.selectedImages.isEmpty) {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,7 +184,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
         return SizedBox(
           height: 170,
           child: ListView.builder(
-            itemCount: controller.selectedImages.length+1,
+            itemCount: controller.selectedImages.length + 1,
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             // gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -224,12 +194,16 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                 return chooseimageContainer();
               } else {
                 return Container(
-                    width: 170,
-                    height: 170,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),
-                    image: DecorationImage(fit: BoxFit.cover, image: FileImage(controller.selectedImages[index - 1]))),
-                    );
+                  width: 170,
+                  height: 170,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image:
+                              FileImage(controller.selectedImages[index - 1]))),
+                );
               }
             },
           ),
@@ -238,28 +212,16 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
     }
 
     Widget myImagePickerContainer() {
-      if (selectedDiaryModel != null &&
-          selectedDiaryModel!.imgUrlList!.isNotEmpty) {
-        return Obx(() => _mygridView());
-      } else {
-        return Obx(() => _mygridView());
-      }
-    }
-
-    DecorationImage? myDecorationImage() {
-      //새로운 다이어리를 만드는경우이거나 다이어리 수정하는데 사진이 없는 경우가 아니면 이미지 보이게 함
+      //완전 새로 작성하는 다이어리야?
       if (selectedDiaryModel == null) {
-        return null;
+        //yes 새로작성하는 다이어리야~
+        return Obx(() => _mygridView1());
       } else {
-        if (selectedDiaryModel!.imgUrlList == null) {
-          return null;
+        //imgurllist가 notempty야?
+        if (selectedDiaryModel!.imgUrlList!.isEmpty) {
+          return Obx(() => _mygridView1());
         } else {
-          return DecorationImage(
-            image: NetworkImage(
-              selectedDiaryModel!.imgUrlList![0],
-            ),
-            fit: BoxFit.cover,
-          );
+          return Obx(() => _mygridView2());
         }
       }
     }

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
+
 class DiaryModel {
+  final String? diaryId; // Added property
   final String? title;
   final String? category;
   final String? location;
@@ -14,6 +16,7 @@ class DiaryModel {
   final DateTime? updatedAt;
 
   DiaryModel({
+    this.diaryId,
     this.title,
     this.category,
     this.location,
@@ -29,6 +32,7 @@ class DiaryModel {
 
   factory DiaryModel.init(UserModel userInfo) {
     return DiaryModel(
+      diaryId: '',
       title: '',
       category: '',
       location: '',
@@ -45,6 +49,7 @@ class DiaryModel {
 
   factory DiaryModel.fromJson(Map<String, dynamic> json) {
     return DiaryModel(
+      diaryId: json['diaryId'] == null ? null : json['diaryId'] as String,
       title: json['title'] == null ? null : json['title'] as String,
       category: json['category'] == null ? null : json['category'] as String,
       location: json['location'] == null ? null : json['location'] as String,
@@ -64,6 +69,7 @@ class DiaryModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'diaryId': diaryId,
       'title': title,
       'category': category,
       'location': location,
@@ -79,6 +85,7 @@ class DiaryModel {
   }
 
   DiaryModel copyWith({
+    String? diaryId,
     String? title,
     String? category,
     String? location,
@@ -92,10 +99,11 @@ class DiaryModel {
     DateTime? updatedAt,
   }) {
     return DiaryModel(
+      diaryId: diaryId ?? this.diaryId,
       title: title ?? this.title,
       category: category ?? this.category,
       location: location ?? this.location,
-      imgUrlList: imgUrlList ?? this.imgUrlList??[],
+      imgUrlList: imgUrlList ?? this.imgUrlList ?? [],
       creatorSogam: creatorSogam ?? this.creatorSogam,
       bukkungSogam: bukkungSogam ?? this.bukkungSogam,
       date: date ?? this.date,
