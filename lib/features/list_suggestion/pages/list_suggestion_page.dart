@@ -398,8 +398,10 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       left: Get.width / 2 - 30,
       child: CustomIconButton(
         onTap: () {
-          Get.to(() => UploadBukkungListPage(),
-              arguments: controller.selectedList.value);
+          Get.to(
+            () => UploadBukkungListPage(),
+            arguments: [controller.selectedList.value, true],
+          );
         },
         size: 60,
         icon: Icon(

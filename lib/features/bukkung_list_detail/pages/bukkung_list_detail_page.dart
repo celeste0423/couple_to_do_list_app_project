@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/category_to_text.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -7,13 +8,18 @@ import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class BukkungListDetailPage extends StatelessWidget {
+class BukkungListDetailPage extends StatefulWidget {
   final BukkungListModel bukkungListModel;
   const BukkungListDetailPage({
     Key? key,
     required this.bukkungListModel,
   }) : super(key: key);
 
+  @override
+  State<BukkungListDetailPage> createState() => _BukkungListDetailPageState();
+}
+
+class _BukkungListDetailPageState extends State<BukkungListDetailPage> {
   PreferredSizeWidget _appBar() {
     return AppBar(
       leading: Padding(
@@ -42,7 +48,13 @@ class BukkungListDetailPage extends StatelessWidget {
           itemBuilder: (BuildContext context) {
             return [
               PopupMenuItem(
-                onTap: () {},
+                onTap: () {
+                  print('페이지 이동');
+                  Get.to(
+                    () => UploadBukkungListPage(),
+                    arguments: [widget.bukkungListModel, false],
+                  );
+                },
                 child: Text(
                   "수정하기",
                   style: TextStyle(
@@ -73,10 +85,10 @@ class BukkungListDetailPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Row(
               children: [
-                CategoryIcon(category: bukkungListModel.category!),
+                CategoryIcon(category: widget.bukkungListModel.category!),
                 SizedBox(width: 10),
                 Text(
-                  CategoryToText(bukkungListModel.category!),
+                  CategoryToText(widget.bukkungListModel.category!),
                   style: TextStyle(
                     color: CustomColors.blackText,
                     fontSize: 25,
@@ -89,7 +101,7 @@ class BukkungListDetailPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                bukkungListModel.title!,
+                widget.bukkungListModel.title!,
                 style: TextStyle(
                   color: CustomColors.blackText,
                   fontSize: 35,
@@ -98,7 +110,7 @@ class BukkungListDetailPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 20, top: 10),
                 child: Text(
-                  bukkungListModel.date!.toString().substring(0, 10),
+                  widget.bukkungListModel.date!.toString().substring(0, 10),
                   style: TextStyle(
                     color: CustomColors.greyText,
                   ),
@@ -108,15 +120,19 @@ class BukkungListDetailPage extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20, left: 20, bottom: 20),
-            child: ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(50),
-                bottomLeft: Radius.circular(50),
-              ),
-              child: Image.network(
-                bukkungListModel.imgUrl!,
-                height: 300,
-                fit: BoxFit.fill,
+            child: Container(
+              height: 350,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(50),
+                  bottomLeft: Radius.circular(50),
+                ),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    widget.bukkungListModel.imgUrl!,
+                  ),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
@@ -126,7 +142,7 @@ class BukkungListDetailPage extends StatelessWidget {
                 children: [
                   PngIcon(iconName: 'location-pin'),
                   Text(
-                    bukkungListModel.location!,
+                    widget.bukkungListModel.location!,
                     style: TextStyle(
                       color: CustomColors.blackText,
                     ),
@@ -140,7 +156,7 @@ class BukkungListDetailPage extends StatelessWidget {
             child: Align(
               alignment: Alignment.topLeft,
               child: Text(
-                bukkungListModel.content!,
+                widget.bukkungListModel.content!,
                 style: TextStyle(
                   color: CustomColors.blackText,
                 ),

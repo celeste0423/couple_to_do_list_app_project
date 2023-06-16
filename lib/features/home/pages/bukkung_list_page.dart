@@ -37,18 +37,25 @@ class BukkungListPage extends GetView<BukkungListPageController> {
   }
 
   Widget _listAddButton() {
-    return GestureDetector(
-      onTap: () {
-        Get.to(() => ListSuggestionPage());
-      },
-      child: Container(
+    return GestureDetector(onTap: () {
+      Get.to(() => ListSuggestionPage());
+    }, child: Obx(() {
+      return AnimatedContainer(
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         padding: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
+          border: Border.all(
+            width: controller.isAnimated.value ? 2 : 0,
+            color: controller.isAnimated.value
+                ? CustomColors.mainPink
+                : Colors.transparent,
+          ),
           color: Colors.white,
         ),
         height: 50,
+        duration: Duration(milliseconds: 1000),
+        curve: Curves.easeOut,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -70,8 +77,8 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             ),
           ],
         ),
-      ),
-    );
+      );
+    }));
   }
 
   Widget _listTypeSelector() {

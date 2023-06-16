@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
@@ -12,6 +14,8 @@ class BukkungListPageController extends GetxController {
   // Rx<GroupModel> myGroup = GroupModel().obs;
   Rx<BukkungListModel> bukkungList = BukkungListModel().obs;
 
+  Rx<bool> isAnimated = false.obs;
+
   Rx<String?> currentType = "category".obs;
   Map<String, String> typetoString = {
     "category": "카테고리 별",
@@ -22,8 +26,15 @@ class BukkungListPageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    addButtonAnimation();
     currentType.value = "category";
     // myGroup(AuthController.to.group.value);
+  }
+
+  void addButtonAnimation() {
+    Timer.periodic(Duration(seconds: 2), (timer) {
+      isAnimated(!isAnimated.value);
+    });
   }
 
   Stream<Map<String, dynamic>> getAllBukkungListByCategory() {

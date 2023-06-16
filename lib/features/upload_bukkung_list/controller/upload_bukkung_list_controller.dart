@@ -16,7 +16,8 @@ import 'package:uuid/uuid.dart';
 class UploadBukkungListController extends GetxController {
   static UploadBukkungListController get to => Get.find();
 
-  final BukkungListModel? selectedBukkungListModel = Get.arguments;
+  final BukkungListModel? selectedBukkungListModel = Get.arguments[0];
+  final bool? isSuggestion = Get.arguments[1];
 
   Rx<bool> isCompleted = false.obs;
 
@@ -55,12 +56,14 @@ class UploadBukkungListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
     if (selectedBukkungListModel != null) {
       titleController.text = selectedBukkungListModel!.title!;
       listCategory(selectedBukkungListModel!.category!);
-      contentController.text = selectedBukkungListModel!.content!;
       locationController.text = selectedBukkungListModel!.location!;
+      if (isSuggestion == false) {
+        listDateTime(selectedBukkungListModel!.date);
+      }
+      contentController.text = selectedBukkungListModel!.content!;
       isPublic(false);
       if (selectedBukkungListModel!.imgUrl == baseImageUrl) {
         print('사진 없음(upl cont) ${selectedBukkungListModel!.imgUrl}');
@@ -69,10 +72,7 @@ class UploadBukkungListController extends GetxController {
         print('사진 있음(upl cont');
         isSelectedImage(true);
       }
-      //Todo: 사진 있는 지 여부 확인 필요
-      // if(selectedBukkungListModel)
     }
-
     _checkCompleted();
     titleController.addListener(_checkCompleted);
     listCategory.listen((_) {
