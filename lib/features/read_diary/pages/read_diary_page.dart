@@ -18,28 +18,28 @@ class ReadDiaryPage extends StatefulWidget {
 class _ReadDiaryPageState extends State<ReadDiaryPage> {
   int activeIndex = 0;
   final DiaryModel selectedDiaryModel = Get.arguments;
-  int? i;
-  String? mynickname;
-  String? bukkungnickname;
-  String? mysogam;
-  String? bukkungsogam;
+  int? tabIndex;
+  String? myNickname;
+  String? bukkungNickname;
+  String? mySogam;
+  String? bukkungSogam;
 
-  getsogam() {
+  getSogam() {
     if (AuthController.to.user.value.uid == selectedDiaryModel.creatorUserID) {
-      mysogam = selectedDiaryModel.creatorSogam;
-      bukkungsogam = selectedDiaryModel.bukkungSogam;
+      mySogam = selectedDiaryModel.creatorSogam;
+      bukkungSogam = selectedDiaryModel.bukkungSogam;
     } else {
-      bukkungsogam = selectedDiaryModel.creatorSogam;
-      mysogam = selectedDiaryModel.bukkungSogam;
+      bukkungSogam = selectedDiaryModel.creatorSogam;
+      mySogam = selectedDiaryModel.bukkungSogam;
     }
   }
 
-  getnickname() {
-    mynickname = AuthController.to.user.value.nickname;
+  getNickname() {
+    myNickname = AuthController.to.user.value.nickname;
     if (AuthController.to.user.value.gender == 'male') {
-      bukkungnickname = DiaryPageController.to.femaleNickname.value;
+      bukkungNickname = DiaryPageController.to.femaleNickname.value;
     } else {
-      bukkungnickname = DiaryPageController.to.maleNickname.value;
+      bukkungNickname = DiaryPageController.to.maleNickname.value;
     }
   }
 
@@ -47,9 +47,9 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    i = 0;
-    getsogam();
-    getnickname();
+    tabIndex = 0;
+    getSogam();
+    getNickname();
   }
 
   PreferredSizeWidget _customAppBar(String? title) {
@@ -68,14 +68,14 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
     );
   }
 
-  Widget _Divider() {
+  Widget _divider() {
     return Divider(
       thickness: 2,
       color: CustomColors.mainPink,
     );
   }
 
-  Widget _AnimatedSmoothIndicator() {
+  Widget _animatedSmoothIndicator() {
     if (selectedDiaryModel.imgUrlList!.isEmpty ||
         selectedDiaryModel.imgUrlList!.length == 1) {
       return SizedBox(
@@ -93,42 +93,46 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
     }
   }
 
-  Widget _ImgContainer() {
+  Widget _imgContainer() {
+    double width = Get.width;
     if (selectedDiaryModel.imgUrlList!.isEmpty) {
       return Container(
         color: Colors.black,
-        height: Get.width - 60,
+        height: width - 60,
       );
     } else {
-      return SizedBox(
-        height: Get.width - 60,
+      return Expanded(
         child: CarouselSlider.builder(
-            itemCount: selectedDiaryModel.imgUrlList!.length,
-            itemBuilder: (ctx, index, realIndex) {
-              return Container(
-                height: Get.width - 60,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                              selectedDiaryModel.imgUrlList![index]))),
-                // child: NetworkImage(selectedDiaryModel.imgUrlList![index])
-              );
+          itemCount: selectedDiaryModel.imgUrlList!.length,
+          itemBuilder: (ctx, index, realIndex) {
+            return Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                    selectedDiaryModel.imgUrlList![index],
+                  ),
+                ),
+              ),
+            );
+          },
+          options: CarouselOptions(
+            onPageChanged: (index, reason) {
+              setState(() {
+                activeIndex = index;
+              });
             },
-            options: CarouselOptions(
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    activeIndex = index;
-                  });
-                },
-                viewportFraction: 1,
-                autoPlay: true,
-                autoPlayInterval: Duration(seconds: 2))),
+            height: width - 60,
+            viewportFraction: 1,
+            autoPlay: true,
+            autoPlayInterval: Duration(seconds: 6),
+          ),
+        ),
       );
     }
   }
 
-  Widget _DateText(DateTime? date) {
+  Widget _dateText(DateTime? date) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -168,7 +172,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
     );
   }
 
-  Widget _DiaryTab(int index) {
+  Widget _diaryTab(int index) {
     if (index == 0) {
       return SizedBox(
         height: 260,
@@ -178,7 +182,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
             GestureDetector(
               onTap: () {
                 setState(() {
-                  i = 1;
+                  tabIndex = 1;
                 });
               },
               child: Align(
@@ -194,7 +198,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                     height: 45,
                     child: Align(
                         alignment: Alignment.topRight,
-                        child: Text('$bukkungnickname 소감')),
+                        child: Text('$bukkungNickname 소감')),
                   )),
             ),
             Align(
@@ -208,12 +212,13 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                             topRight: Radius.circular(700))),
                     width: Get.width * 15 / 32,
                     height: 45,
-                    child: Text('$mynickname 소감'))),
+                    child: Text('$myNickname 소감'))),
             Positioned(
               top: 35,
               child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10), color: Colors.white),
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white),
                 height: 170,
                 width: Get.width - 60,
                 child: Row(
@@ -247,7 +252,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
               child: GestureDetector(
                 onTap: () {
                   setState(() {
-                    i = 0;
+                    tabIndex = 0;
                   });
                 },
                 child: Container(
@@ -259,7 +264,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                             topRight: Radius.circular(700))),
                     width: Get.width * 15 / 32,
                     height: 45,
-                    child: Text('$mynickname 소감')),
+                    child: Text('$myNickname 소감')),
               )),
           Align(
               alignment: Alignment.topRight,
@@ -274,7 +279,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                 height: 45,
                 child: Align(
                     alignment: Alignment.topRight,
-                    child: Text('$bukkungnickname 소감')),
+                    child: Text('$bukkungNickname 소감')),
               )),
           Positioned(
             top: 35,
@@ -328,22 +333,23 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _customAppBar(selectedDiaryModel.title),
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 30),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _Divider(),
-            _AnimatedSmoothIndicator(),
-            _ImgContainer(),
+            _divider(),
+            _animatedSmoothIndicator(),
+            _imgContainer(),
             SizedBox(
               height: 5,
             ),
-            _DateText(selectedDiaryModel.date),
+            _dateText(selectedDiaryModel.date),
             SizedBox(
               height: 5,
             ),
-            _DiaryTab(i!),
+            _diaryTab(tabIndex!),
           ],
         ),
       ),

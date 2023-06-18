@@ -8,18 +8,18 @@ import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class BukkungListDetailPage extends StatefulWidget {
+class ReadBukkungListPage extends StatefulWidget {
   final BukkungListModel bukkungListModel;
-  const BukkungListDetailPage({
+  const ReadBukkungListPage({
     Key? key,
     required this.bukkungListModel,
   }) : super(key: key);
 
   @override
-  State<BukkungListDetailPage> createState() => _BukkungListDetailPageState();
+  State<ReadBukkungListPage> createState() => _ReadBukkungListPageState();
 }
 
-class _BukkungListDetailPageState extends State<BukkungListDetailPage> {
+class _ReadBukkungListPageState extends State<ReadBukkungListPage> {
   PreferredSizeWidget _appBar() {
     return AppBar(
       leading: Padding(

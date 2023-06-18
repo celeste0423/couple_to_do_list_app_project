@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
-import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/image_picker_page.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/repository/diary_repository.dart';
@@ -184,7 +183,7 @@ class UploadDiaryController extends GetxController {
     return ref.putFile(file, metadata);
   }
 
-  uploadselectedImages(String imageId) async {
+  uploadSelectedImages(String imageId) async {
     List<String> addimgurllist = <String>[];
     for (var i = 0; i < selectedImages.length; i++) {
       String filename = imageId + i.toString() + '.jpg';
@@ -196,35 +195,11 @@ class UploadDiaryController extends GetxController {
       var downloadUrl = await uploadTask.ref.getDownloadURL();
       print('this is the url : $downloadUrl');
       addimgurllist.add(downloadUrl);
-      // uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) async {
-      //   switch (taskSnapshot.state) {
-      //     case TaskState.running:
-      //       final progress = 100.0 *
-      //           (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-      //       print("Upload is $progress% complete.");
-      //       break;
-      //     case TaskState.paused:
-      //       print("Upload is paused.");
-      //       break;
-      //     case TaskState.canceled:
-      //       print("Upload was canceled");
-      //       break;
-      //     case TaskState.error:
-      //       print('error');
-      //       break;
-      //     case TaskState.success:
-      //       // Handle successful uploads on complete
-      //       var downloadUrl = await taskSnapshot.ref.getDownloadURL();
-      //       print('this is the url : $downloadUrl');
-      //       addimgurllist.add(downloadUrl);
-      //       break;
-      //   }
-      // });
     }
     return addimgurllist;
   }
 
-  makeandsubmitDiary(String diaryId, List<String> addImgUrlList) {
+  makeAndSubmitDiary(String diaryId, List<String> addImgUrlList) {
     if (selectedDiaryModel != null) {
       //기존 다이어리 수정할 경우
       DiaryModel updatedDiary = selectedDiaryModel!.copyWith(
@@ -277,14 +252,10 @@ class UploadDiaryController extends GetxController {
     //selectedImages 에 사진file이 있으면
     if (selectedImages.isNotEmpty) {
       print('다이어리 사진 있음(로컬)');
-      addImgUrlList = await uploadselectedImages(imageId);
+      addImgUrlList = await uploadSelectedImages(imageId);
       print('사진 업로드 완료, addImgUrlList = $addImgUrlList');
-      await makeandsubmitDiary(diaryId, addImgUrlList);
-      print('Diary 업로드 완료');
-    } else {
-      //selectedImages 에 아무것도 없으면(null) 이미지 없이 그냥 diary 업로딩 한다
-      await makeandsubmitDiary(diaryId, addImgUrlList);
-      print('Diary 업로드 완료');
-    }
+    } //selectedImages 에 아무것도 없으면(null) 이미지 없이 그냥 diary 업로딩 한다
+    await makeAndSubmitDiary(diaryId, addImgUrlList);
+    print('Diary 업로드 완료');
   }
 }

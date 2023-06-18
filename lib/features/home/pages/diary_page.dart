@@ -1,8 +1,6 @@
-import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
-import 'package:couple_to_do_list_app/features/upload_diary/pages/read_diary_page.dart';
+import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
-import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
@@ -55,7 +53,13 @@ class DiaryPage extends GetView<DiaryPageController> {
                   child: Obx(() {
                     if (controller.diarylist.isEmpty) {
                       //todo: 여기 프로그래스 인디케이터 넣자
-                      return Center(child: SizedBox(width: 50, height: 50, child: CircularProgressIndicator(color: CustomColors.mainPink,)));
+                      return Center(
+                          child: SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: CircularProgressIndicator(
+                                color: CustomColors.mainPink,
+                              )));
                     } else {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -105,7 +109,7 @@ class DiaryPage extends GetView<DiaryPageController> {
               right: 50,
               child: CustomIconButton(
                 onTap: () {
-                  Get.to(ReadDiaryPage(),
+                  Get.to(() => ReadDiaryPage(),
                       arguments: controller.selectedDiary.value);
                 },
               )),
@@ -115,7 +119,8 @@ class DiaryPage extends GetView<DiaryPageController> {
   }
 
   Widget _diaryList() {
-    Widget myListTile(String? title, String? location, DateTime? date, String url) {
+    Widget myListTile(
+        String? title, String? location, DateTime? date, String url) {
       String dateString =
           date != null ? DateFormat('yyyy-MM-dd').format(date) : '';
       return Container(
@@ -123,14 +128,11 @@ class DiaryPage extends GetView<DiaryPageController> {
         child: Row(
           children: [
             Container(
-              height: 85,
-              width: 85,
+                height: 85,
+                width: 85,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                            url)))
-            ),
+                        fit: BoxFit.cover, image: NetworkImage(url)))),
             SizedBox(
               width: 30,
             ),
