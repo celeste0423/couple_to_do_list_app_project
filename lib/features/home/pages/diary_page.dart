@@ -115,7 +115,7 @@ class DiaryPage extends GetView<DiaryPageController> {
   }
 
   Widget _diaryList() {
-    Widget myListTile(String? title, String? location, DateTime? date) {
+    Widget myListTile(String? title, String? location, DateTime? date, String url) {
       String dateString =
           date != null ? DateFormat('yyyy-MM-dd').format(date) : '';
       return Container(
@@ -125,7 +125,11 @@ class DiaryPage extends GetView<DiaryPageController> {
             Container(
               height: 85,
               width: 85,
-              color: Colors.black,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(
+                            url)))
             ),
             SizedBox(
               width: 30,
@@ -201,6 +205,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                               controller.diarylist[i].title,
                               controller.diarylist[i].location,
                               controller.diarylist[i].date,
+                              controller.diarylist[i].imgUrlList![0],
                             ),
                           );
                         }),
