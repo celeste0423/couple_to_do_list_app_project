@@ -22,6 +22,7 @@ class DiaryPageTest extends GetView<DiaryPageController> {
     const double minDiarySize = 40;
 
     return CustomScrollView(
+      // controller: controller.sliverScrollController,
       slivers: [
         SliverPersistentHeader(
           delegate: SliverPersistentDelegate(
@@ -298,8 +299,11 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                             borderRadius: BorderRadius.circular(25),
                             image: DecorationImage(
                               image: NetworkImage(
-                                //todo:이미지 나오게
-                                'https://post-phinf.pstatic.net/MjAxNzEwMjBfNjYg/MDAxNTA4NDY0NzkxMDc3.BXMDJ0jGbaunHr6TRI6N4NOBiGOXAlXbzlmgaZYHMkQg.P6Rbnq9YTv9CCqH5Vgu6JCSEGZC_wOZ25onOnoT4AAAg.PNG/11.png?type=w1200',
+                                //Todo : 기본 selectedDiary 설정하기
+                                controller.selectedDiary.value != null
+                                    ? controller
+                                        .selectedDiary.value!.imgUrlList![0]
+                                    : 'https://post-phinf.pstatic.net/MjAxNzEwMjBfNjYg/MDAxNTA4NDY0NzkxMDc3.BXMDJ0jGbaunHr6TRI6N4NOBiGOXAlXbzlmgaZYHMkQg.P6Rbnq9YTv9CCqH5Vgu6JCSEGZC_wOZ25onOnoT4AAAg.PNG/11.png?type=w1200',
                               ),
                               fit: BoxFit.cover,
                             ),

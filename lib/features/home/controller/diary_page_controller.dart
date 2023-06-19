@@ -10,6 +10,9 @@ class DiaryPageController extends GetxController
     with GetTickerProviderStateMixin {
   static DiaryPageController get to => Get.find();
 
+  // ScrollController sliverScrollController = ScrollController();
+  // Rx<bool> isScrollMax = false.obs;
+
   Rx<String?> listCategory = "".obs;
   Map<String, String> categoryToString = {
     "all": "전체",
@@ -26,16 +29,32 @@ class DiaryPageController extends GetxController
 
   Rx<String> femaleNickname = ''.obs;
   Rx<String> maleNickname = ''.obs;
+
   late final TabController tabDiaryController =
       TabController(length: 7, vsync: this);
 
   @override
   void onInit() async {
     super.onInit();
+    // sliverScrollController.addListener(() {
+    //   sliverScroll();
+    // });
+
     listCategory.value = "all";
     diarylist.bindStream(getDiaryList('all'));
     getNickname();
   }
+
+  // void sliverScroll() {
+  //   if (sliverScrollController.position.pixels ==
+  //       sliverScrollController.position.maxScrollExtent) {
+  //     isScrollMax(true);
+  //   }
+  //   if (sliverScrollController.position.pixels ==
+  //       sliverScrollController.position.minScrollExtent) {
+  //     isScrollMax(true);
+  //   }
+  // }
 
   getNickname() async {
     final String femaleUid = AuthController.to.group.value.femaleUid!;
@@ -73,6 +92,23 @@ class DiaryPageController extends GetxController
   }
 
   @override
+  // void onNotification(ScrollNotification notification) {
+  //   if (sliverScrollController.position.pixels !=
+  //       sliverScrollController.position.minScrollExtent) {
+  //     if (notification is ScrollUpdateNotification &&
+  //         notification.scrollDelta! < 0) {
+  //       isScrollMax(false);
+  //     }
+  //   }
+  //   if (sliverScrollController.position.pixels ==
+  //       sliverScrollController.position.minScrollExtent) {
+  //     if (notification is ScrollUpdateNotification &&
+  //         notification.scrollDelta! > 0) {
+  //       isScrollMax(false);
+  //     }
+  //   }
+  // }
+
   void onClose() {
     tabDiaryController.dispose();
     super.onClose();
