@@ -104,9 +104,9 @@ class _HomePageState extends State<HomePage>
       body: TabBarView(
         controller: _tabController,
         physics: NeverScrollableScrollPhysics(),
-        children:  [
+        children: [
           BukkungListPage(),
-          DiaryPage(),
+          DiaryPageTest(),
           KkomulPage(),
           MyPage(),
         ],

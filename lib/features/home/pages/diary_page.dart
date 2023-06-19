@@ -1,225 +1,174 @@
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
+import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
+import 'package:couple_to_do_list_app/widgets/short_h_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class DiaryPage extends GetView<DiaryPageController> {
-  const DiaryPage({super.key});
-  //ToDo: 파이어베이스에서 가져온 정보로 채워 넣을 것
-  Widget _diary() {
-    return Container(
-      margin: const EdgeInsets.only(top: 10, bottom: 50),
-      child: Stack(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Obx(
-                () => RotatedBox(
-                  quarterTurns: 135,
-                  child: Text(
-                    //todo: nickname 가져올것
-                    '${controller.maleNickname}🤍${controller.femaleNickname}',
-                    style: TextStyle(
-                        color: Colors.black.withOpacity(0.4), fontSize: 25),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: Container(
-                  width: 230,
-                  height: 295,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 3,
-                        blurRadius: 10,
-                        offset: Offset(15, 15), // Offset(수평, 수직)
-                      ),
-                    ],
-                  ),
-                  child: Obx(() {
-                    if (controller.diarylist.isEmpty) {
-                      //todo: 여기 프로그래스 인디케이터 넣자
-                      return Center(
-                        child: SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: CircularProgressIndicator(
-                            color: CustomColors.mainPink,
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            controller.selectedDiary.value!.title ??
-                                controller.diarylist[0].title!,
-                            style: TextStyle(fontSize: 35),
-                          ),
-                          Container(
-                            width: 150,
-                            height: 170,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  //todo:이미지 나오게
-                                  'https://post-phinf.pstatic.net/MjAxNzEwMjBfNjYg/MDAxNTA4NDY0NzkxMDc3.BXMDJ0jGbaunHr6TRI6N4NOBiGOXAlXbzlmgaZYHMkQg.P6Rbnq9YTv9CCqH5Vgu6JCSEGZC_wOZ25onOnoT4AAAg.PNG/11.png?type=w1200',
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+class DiaryPageTest extends GetView<DiaryPageController> {
+  const DiaryPageTest({super.key});
 
-                            //사진이 없을경우 기본 이미지 꼬물이로
-                            // child: Image.asset(
-                            //   'assets/images/ggomool.png',
-                            //   width: 170,
-                            //   height: 170,
-                            // ),
-                          ),
-                          Text(
-                            controller.selectedDiary.value!.date != null
-                                ? DateFormat('yyyy-MM-dd').format(
-                                    controller.selectedDiary.value!.date!)
-                                : DateFormat('yyyy-MM-dd')
-                                    .format(controller.diarylist[0].date!),
-                            style: TextStyle(fontSize: 15),
-                          ),
-                        ],
-                      );
-                    }
-                  }),
-                ),
-              ),
-            ],
+  //ToDo: 파이어베이스에서 가져온 정보로 채워 넣을 것
+
+  Widget _diarySliver() {
+    const double maxHeaderHeight = 350;
+    const double minHeaderHeight = kToolbarHeight + 170;
+    const double maxDiarySize = 130;
+    const double minDiarySize = 40;
+
+    return CustomScrollView(
+      slivers: [
+        SliverPersistentHeader(
+          delegate: SliverPersistentDelegate(
+            controller,
+            maxHeaderHeight,
+            minHeaderHeight,
+            maxDiarySize,
+            minDiarySize,
           ),
-          Positioned(
-              top: 130,
-              right: 60,
-              child: CustomIconButton(
-                onTap: () {
-                  Get.to(() => ReadDiaryPage(),
-                      arguments: controller.selectedDiary.value);
-                },
-              )),
-        ],
-      ),
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+            height: Get.height - kToolbarHeight - minHeaderHeight,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.7),
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(50),
+                topLeft: Radius.circular(50),
+              ),
+            ),
+            child: Column(
+              children: [
+                ShortHBar(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                  ),
+                  //Todo: 색상 입력 안해도 되도록 기본값 넣어뒀는데도 오류가 발생하는 이유..?
+                  child: CategorySelectTabBar(
+                    tabController: controller.tabDiaryController,
+                    selectedColor: CustomColors.darkGrey,
+                    unselectedColor: CustomColors.grey.withOpacity(0.5),
+                  ),
+                ),
+                Obx(
+                  () => Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: ListView.builder(
+                        itemCount: controller.diarylist.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return myListTile(controller.diarylist[index]);
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _diaryList() {
-    Widget myListTile(
-        String? title, String? location, DateTime? date, String url) {
-      String dateString =
-          date != null ? DateFormat('yyyy-MM-dd').format(date) : '';
-      return Container(
-        height: 90,
-        child: Row(
-          children: [
-            Container(
-                height: 85,
-                width: 85,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.cover, image: NetworkImage(url)))),
-            SizedBox(
-              width: 30,
+  Widget myListTile(DiaryModel diaryModel) {
+    String dateString = diaryModel.date != null
+        ? DateFormat('yyyy-MM-dd').format(diaryModel.date!)
+        : '';
+    return GestureDetector(
+      onTap: () {
+        controller.indexSelection(diaryModel);
+      },
+      child: Obx(() {
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          height: 100,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(25),
+              bottomRight: Radius.circular(25),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title ?? '',
-                  style: TextStyle(fontSize: 25),
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on_outlined,
-                      size: 15,
-                    ),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    Text(
-                      location ?? '',
-                      style: TextStyle(fontSize: 15),
+            border: Border.all(
+              color:
+                  diaryModel.diaryId! == controller.selectedDiary.value!.diaryId
+                      ? CustomColors.grey.withOpacity(0.4)
+                      : Colors.transparent,
+              width: 2,
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                height: 85,
+                width: 70,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(diaryModel.imgUrlList![0]),
+                  ),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 3,
+                      blurRadius: 5,
+                      offset: Offset(5, 5), // Offset(수평, 수직)
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 3,
-                ),
-                Text(
-                  dateString,
-                  style: TextStyle(fontSize: 15),
-                )
-              ],
-            )
-          ],
-        ),
-      );
-    }
-
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: CustomColors.backgroundLightGrey,
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50),
-            topLeft: Radius.circular(50),
-          ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-              //Todo: 색상 입력 안해도 되도록 기본값 넣어뒀는데도 오류가 발생하는 이유..?
-              child: CategorySelectTabBar(
-                tabController: controller.tabDiaryController,
-                selectedColor: CustomColors.darkGrey,
-                unselectedColor: CustomColors.grey.withOpacity(0.5),
               ),
-            ),
-            Obx(() => Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: ListView.builder(
-                        itemCount: controller.diarylist.length,
-                        itemBuilder: (BuildContext ctx, int i) {
-                          return GestureDetector(
-                            onTap: () {
-                              controller.selectedDiary(controller.diarylist[i]);
-                            },
-                            child: myListTile(
-                              controller.diarylist[i].title,
-                              controller.diarylist[i].location,
-                              controller.diarylist[i].date,
-                              controller.diarylist[i].imgUrlList![0],
-                            ),
-                          );
-                        }),
+              SizedBox(
+                width: 30,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    diaryModel.title ?? '',
+                    style: TextStyle(fontSize: 25),
                   ),
-                ))
-          ],
-        ),
-      ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 15,
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      Text(
+                        diaryModel.location ?? '',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  Text(
+                    dateString,
+                    style: TextStyle(fontSize: 15),
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      }),
     );
   }
 
@@ -251,12 +200,158 @@ class DiaryPage extends GetView<DiaryPageController> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          _diary(),
-          _diaryList(),
-        ],
-      ),
+      body: _diarySliver(),
     );
+  }
+}
+
+class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
+  DiaryPageController controller;
+
+  final double maxHeaderHeight;
+  final double minHeaderHeight;
+  final double maxDiarySize;
+  final double minDiarySize;
+
+  SliverPersistentDelegate(
+    this.controller,
+    this.maxHeaderHeight,
+    this.minHeaderHeight,
+    this.maxDiarySize,
+    this.minDiarySize,
+  );
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset, // maxextend 범위 내에서 얼마나 늘어났는 지 정도
+    bool overlapsContent, //다른 슬리버와 겹치는 지 여부
+  ) {
+    final percent = 1 - shrinkOffset / (maxHeaderHeight);
+    return Stack(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Obx(
+            //   () => RotatedBox(
+            //     quarterTurns: 135,
+            //     child: Text(
+            //       //todo: nickname 가져올것
+            //       '${controller.maleNickname} 🤍 ${controller.femaleNickname}',
+            //       style: TextStyle(
+            //           color: Colors.black.withOpacity(0.4), fontSize: 25),
+            //     ),
+            //   ),
+            // ),
+            Padding(
+              padding: EdgeInsets.only(
+                top: 10,
+                bottom:
+                    percent < 0.8 ? 50 * (percent + 0.2) * (percent + 0.2) : 50,
+                right: 20,
+              ),
+              child: Container(
+                width: 230 * percent,
+                height: 295 * percent,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 3,
+                      blurRadius: 10,
+                      offset:
+                          Offset(15 * percent, 15 * percent), // Offset(수평, 수직)
+                    ),
+                  ],
+                ),
+                child: Obx(() {
+                  if (controller.diarylist.isEmpty) {
+                    //todo: 여기 프로그래스 인디케이터 넣자
+                    return Center(
+                      child: SizedBox(
+                        width: 50 * percent,
+                        height: 50 * percent,
+                        child: CircularProgressIndicator(
+                          color: CustomColors.mainPink,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          controller.selectedDiary.value!.title ??
+                              controller.diarylist[0].title!,
+                          style: TextStyle(fontSize: 35),
+                        ),
+                        Container(
+                          width: 150 * percent,
+                          height: 170 * percent,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                //todo:이미지 나오게
+                                'https://post-phinf.pstatic.net/MjAxNzEwMjBfNjYg/MDAxNTA4NDY0NzkxMDc3.BXMDJ0jGbaunHr6TRI6N4NOBiGOXAlXbzlmgaZYHMkQg.P6Rbnq9YTv9CCqH5Vgu6JCSEGZC_wOZ25onOnoT4AAAg.PNG/11.png?type=w1200',
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+
+                          //사진이 없을경우 기본 이미지 꼬물이로
+                          // child: Image.asset(
+                          //   'assets/images/ggomool.png',
+                          //   width: 170,
+                          //   height: 170,
+                          // ),
+                        ),
+                        Text(
+                          controller.selectedDiary.value!.date != null
+                              ? DateFormat('yyyy-MM-dd')
+                                  .format(controller.selectedDiary.value!.date!)
+                              : DateFormat('yyyy-MM-dd')
+                                  .format(controller.diarylist[0].date!),
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ],
+                    );
+                  }
+                }),
+              ),
+            ),
+          ],
+        ),
+        Positioned(
+          top: 140 * percent,
+          right: 75 + 105 * (1 - percent),
+          child: CustomIconButton(
+            onTap: () {
+              Get.to(
+                () => ReadDiaryPage(),
+                arguments: controller.selectedDiary.value,
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  double get maxExtent => maxHeaderHeight;
+
+  @override
+  double get minExtent => minHeaderHeight;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return false;
   }
 }
