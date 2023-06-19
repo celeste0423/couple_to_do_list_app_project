@@ -25,6 +25,7 @@ class DiaryRepository {
     });
   }
 
+  
   static Future<void> setGroupDiary(
       DiaryModel diaryData, String diaryId) async {
     await FirebaseFirestore.instance
