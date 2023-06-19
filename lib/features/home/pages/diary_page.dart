@@ -14,8 +14,8 @@ class DiaryPage extends GetView<DiaryPageController> {
 
   //ToDo: 파이어베이스에서 가져온 정보로 채워 넣을 것
   Widget _diary() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+    return Container(
+      margin: const EdgeInsets.only(top: 10, bottom: 50),
       child: Stack(
         children: <Widget>[
           Row(
@@ -32,9 +32,11 @@ class DiaryPage extends GetView<DiaryPageController> {
                   ),
                 ),
               ),
-              Container(
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Container(
                   width: 230,
-                  height: 270,
+                  height: 295,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -54,12 +56,14 @@ class DiaryPage extends GetView<DiaryPageController> {
                     if (controller.diarylist.isEmpty) {
                       //todo: 여기 프로그래스 인디케이터 넣자
                       return Center(
-                          child: SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: CircularProgressIndicator(
-                                color: CustomColors.mainPink,
-                              )));
+                        child: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(
+                            color: CustomColors.mainPink,
+                          ),
+                        ),
+                      );
                     } else {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -71,7 +75,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                           ),
                           Container(
                             width: 150,
-                            height: 140,
+                            height: 170,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
                               image: DecorationImage(
@@ -101,12 +105,14 @@ class DiaryPage extends GetView<DiaryPageController> {
                         ],
                       );
                     }
-                  })),
+                  }),
+                ),
+              ),
             ],
           ),
           Positioned(
-              top: 115,
-              right: 50,
+              top: 130,
+              right: 60,
               child: CustomIconButton(
                 onTap: () {
                   Get.to(() => ReadDiaryPage(),
