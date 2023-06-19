@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
@@ -10,10 +11,9 @@ import 'package:intl/intl.dart';
 
 class DiaryPage extends GetView<DiaryPageController> {
   const DiaryPage({super.key});
+
   //ToDo: 파이어베이스에서 가져온 정보로 채워 넣을 것
   Widget _diary() {
-    String? title;
-    String? date;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Stack(
@@ -75,9 +75,9 @@ class DiaryPage extends GetView<DiaryPageController> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
                               image: DecorationImage(
-                                image: NetworkImage(
-                                  //todo:이미지 나오게
-                                  'https://post-phinf.pstatic.net/MjAxNzEwMjBfNjYg/MDAxNTA4NDY0NzkxMDc3.BXMDJ0jGbaunHr6TRI6N4NOBiGOXAlXbzlmgaZYHMkQg.P6Rbnq9YTv9CCqH5Vgu6JCSEGZC_wOZ25onOnoT4AAAg.PNG/11.png?type=w1200',
+                                image: NetworkImage(controller.selectedDiary.value!.imgUrlList==null? Constants.baseImageUrl:
+                                    controller.selectedDiary.value!.imgUrlList!.isEmpty? Constants.baseImageUrl:
+                                  controller.selectedDiary.value!.imgUrlList![0]
                                 ),
                                 fit: BoxFit.cover,
                               ),
@@ -119,11 +119,12 @@ class DiaryPage extends GetView<DiaryPageController> {
   }
 
   Widget _diaryList() {
-    Widget myListTile(
-        String? title, String? location, DateTime? date, String url) {
+    Widget myListTile(String? title, String? location, DateTime? date,
+        List<String> imgUrlList) {
+      String url = imgUrlList.isEmpty ? Constants.baseImageUrl : imgUrlList[0];
       String dateString =
           date != null ? DateFormat('yyyy-MM-dd').format(date) : '';
-      return Container(
+      return SizedBox(
         height: 90,
         child: Row(
           children: [
@@ -207,7 +208,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                               controller.diarylist[i].title,
                               controller.diarylist[i].location,
                               controller.diarylist[i].date,
-                              controller.diarylist[i].imgUrlList![0],
+                              controller.diarylist[i].imgUrlList!,
                             ),
                           );
                         }),

@@ -244,70 +244,73 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
         ),
       );
     } else {
-      return Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Align(
-              alignment: Alignment.topLeft,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    tabIndex = 0;
-                  });
-                },
+      return SizedBox(
+        height: 260,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Align(
+                alignment: Alignment.topLeft,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      tabIndex = 0;
+                    });
+                  },
+                  child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
+                      decoration: BoxDecoration(
+                          color: CustomColors.mainPink,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(700))),
+                      width: Get.width * 15 / 32,
+                      height: 45,
+                      child: Text('$myNickname 소감')),
+                )),
+            Align(
+                alignment: Alignment.topRight,
                 child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
-                    decoration: BoxDecoration(
-                        color: CustomColors.mainPink,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(700))),
-                    width: Get.width * 15 / 32,
-                    height: 45,
-                    child: Text('$myNickname 소감')),
-              )),
-          Align(
-              alignment: Alignment.topRight,
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
+                  decoration: BoxDecoration(
+                      color: CustomColors.lightPink,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(700),
+                          topRight: Radius.circular(30))),
+                  width: Get.width * 15 / 32,
+                  height: 45,
+                  child: Align(
+                      alignment: Alignment.topRight,
+                      child: Text('$bukkungNickname 소감')),
+                )),
+            Positioned(
+              top: 35,
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
                 decoration: BoxDecoration(
-                    color: CustomColors.lightPink,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(700),
-                        topRight: Radius.circular(30))),
-                width: Get.width * 15 / 32,
-                height: 45,
-                child: Align(
-                    alignment: Alignment.topRight,
-                    child: Text('$bukkungNickname 소감')),
-              )),
-          Positioned(
-            top: 35,
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), color: Colors.white),
-              height: 170,
-              width: Get.width - 60,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  circleHolesColumn(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 15.0),
-                    child: Text(
-                      selectedDiaryModel.bukkungSogam ?? '없음',
-                      style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: CustomColors.greyText),
-                    ),
-                  )
-                ],
+                    borderRadius: BorderRadius.circular(10), color: Colors.white),
+                height: 170,
+                width: Get.width - 60,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    circleHolesColumn(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 15.0),
+                      child: Text(
+                        selectedDiaryModel.bukkungSogam ?? '없음',
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: CustomColors.greyText),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-          //top+height 하면 됨
-          Positioned(right: 0, top: 205, child: _bottombuttons())
-        ],
+            //top+height 하면 됨
+            Positioned(right: 0, top: 205, child: _bottombuttons())
+          ],
+        ),
       );
     }
   }
