@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
@@ -66,7 +67,7 @@ class BukkungListPageController extends GetxController {
 
   void deleteBukkungList(BukkungListModel bukkungListModel) async {
     final GroupModel groupModel = AuthController.to.group.value;
-    if (UploadBukkungListController.baseImageUrl != bukkungListModel.imgUrl) {
+    if (Constants.baseImageUrl != bukkungListModel.imgUrl) {
       await BukkungListRepository(groupModel: groupModel)
           .deleteListImage('${bukkungListModel.imgId}.jpg');
     }

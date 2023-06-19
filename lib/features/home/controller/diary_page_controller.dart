@@ -43,6 +43,11 @@ class DiaryPageController extends GetxController
     listCategory.value = "all";
     diarylist.bindStream(getDiaryList('all'));
     getNickname();
+
+  }
+
+  initSelectedDiary(){
+    selectedDiary(diarylist[0]);
   }
 
   // void sliverScroll() {
@@ -75,20 +80,10 @@ class DiaryPageController extends GetxController
     // final GroupModel groupModel = await AuthController.to.group.value;
     print('현재 그룹 (buk page cont)${groupModel.uid}');
     // print('현재 유저 (buk page cont)${myGroup.value.uid}');
-    return DiaryRepository(groupModel: groupModel).getallDiary();
-    // switch (type) {
-    //   case 'all':
-    //     return DiaryRepository(groupModel: groupModel)
-    //         .getallDiary();
-    //     //Todo: list 가지고 case 나눠야 함
-    //   case '1travel':
-    //     return DiaryRepository(groupModel: groupModel)
-    //         .getallDiary();
-    //   default:
-    //     print('에러: 분류 타입 지정 안됨(buk cont)');
-    //     return DiaryRepository(groupModel: groupModel)
-    //         .getallDiary();
-    // }
+
+    return DiaryRepository(groupModel: groupModel)
+        .getallDiary();
+
   }
 
   @override

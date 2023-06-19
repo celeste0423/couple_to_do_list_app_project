@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
