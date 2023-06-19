@@ -6,8 +6,12 @@ import 'package:couple_to_do_list_app/repository/diary_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class DiaryPageController extends GetxController with GetTickerProviderStateMixin{
+class DiaryPageController extends GetxController
+    with GetTickerProviderStateMixin {
   static DiaryPageController get to => Get.find();
+
+  // ScrollController sliverScrollController = ScrollController();
+  // Rx<bool> isScrollMax = false.obs;
 
   Rx<String?> listCategory = "".obs;
   Map<String, String> categoryToString = {
@@ -23,14 +27,19 @@ class DiaryPageController extends GetxController with GetTickerProviderStateMixi
   RxList<DiaryModel> diarylist = <DiaryModel>[].obs;
   Rx<DiaryModel?> selectedDiary = DiaryModel().obs;
 
-  Rx<String> femaleNickname =''.obs;
+  Rx<String> femaleNickname = ''.obs;
   Rx<String> maleNickname = ''.obs;
+
   late final TabController tabDiaryController =
-  TabController(length: 7, vsync: this);
+      TabController(length: 7, vsync: this);
 
   @override
-  void onInit() async{
+  void onInit() async {
     super.onInit();
+    // sliverScrollController.addListener(() {
+    //   sliverScroll();
+    // });
+
     listCategory.value = "all";
     diarylist.bindStream(getDiaryList('all'));
     getNickname();
@@ -41,11 +50,26 @@ class DiaryPageController extends GetxController with GetTickerProviderStateMixi
     selectedDiary(diarylist[0]);
   }
 
-  getNickname()async{
+  // void sliverScroll() {
+  //   if (sliverScrollController.position.pixels ==
+  //       sliverScrollController.position.maxScrollExtent) {
+  //     isScrollMax(true);
+  //   }
+  //   if (sliverScrollController.position.pixels ==
+  //       sliverScrollController.position.minScrollExtent) {
+  //     isScrollMax(true);
+  //   }
+  // }
+
+  getNickname() async {
     final String femaleUid = AuthController.to.group.value.femaleUid!;
     final String maleUid = AuthController.to.group.value.maleUid!;
-    final maledata =await FirebaseFirestore.instance.collection('users').doc(maleUid).get();
-    final femaledata =await FirebaseFirestore.instance.collection('users').doc(femaleUid).get();
+    final maledata =
+        await FirebaseFirestore.instance.collection('users').doc(maleUid).get();
+    final femaledata = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(femaleUid)
+        .get();
     maleNickname(maledata.data()!['nickname'].toString());
     femaleNickname(femaledata.data()!['nickname'].toString());
   }
@@ -63,9 +87,30 @@ class DiaryPageController extends GetxController with GetTickerProviderStateMixi
   }
 
   @override
+  // void onNotification(ScrollNotification notification) {
+  //   if (sliverScrollController.position.pixels !=
+  //       sliverScrollController.position.minScrollExtent) {
+  //     if (notification is ScrollUpdateNotification &&
+  //         notification.scrollDelta! < 0) {
+  //       isScrollMax(false);
+  //     }
+  //   }
+  //   if (sliverScrollController.position.pixels ==
+  //       sliverScrollController.position.minScrollExtent) {
+  //     if (notification is ScrollUpdateNotification &&
+  //         notification.scrollDelta! > 0) {
+  //       isScrollMax(false);
+  //     }
+  //   }
+  // }
+
   void onClose() {
     tabDiaryController.dispose();
     super.onClose();
+  }
+
+  void indexSelection(DiaryModel updatedDiary) {
+    selectedDiary(updatedDiary);
   }
 
 //
