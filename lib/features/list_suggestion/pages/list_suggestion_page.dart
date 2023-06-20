@@ -36,7 +36,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: GestureDetector(
             onTap: () {
-              Get.to(() => UploadBukkungListPage());
+              Get.to(() => UploadBukkungListPage(), arguments: [null, null]);
             },
             child: Icon(
               Icons.add,
