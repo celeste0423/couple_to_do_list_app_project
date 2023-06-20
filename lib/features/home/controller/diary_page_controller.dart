@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
@@ -32,7 +34,7 @@ class DiaryPageController extends GetxController
     <DiaryModel>[].obs,
     <DiaryModel>[].obs,
   ];
-  Rx<DiaryModel?> selectedDiary = DiaryModel().obs;
+  Rx<DiaryModel> selectedDiary = DiaryModel().obs;
 
   Rx<String> femaleNickname = ''.obs;
   Rx<String> maleNickname = ''.obs;
@@ -72,8 +74,27 @@ class DiaryPageController extends GetxController
   }
 
   void initSelectedDiary() {
-    print('기본 다이어리 선택');
-    selectedDiary.value = diaryList[0].value[0];
+    final stream = getDiaryList('all');
+    StreamSubscription<List<DiaryModel>>? subscription;
+    subscription = stream.listen((diary) {
+      if (diary.isNotEmpty) {
+        final updatedDiary = selectedDiary.value!.copyWith(
+          diaryId: diary[0].diaryId,
+          title: diary[0].title,
+          category: diary[0].category,
+          location: diary[0].location,
+          imgUrlList: diary[0].imgUrlList,
+          creatorSogam: diary[0].creatorSogam,
+          bukkungSogam: diary[0].bukkungSogam,
+          date: diary[0].date,
+          creatorUserID: diary[0].creatorUserID,
+          createdAt: diary[0].createdAt,
+          lastUpdatorID: diary[0].lastUpdatorID,
+          updatedAt: diary[0].updatedAt,
+        );
+        selectedDiary.value = updatedDiary;
+      }
+    });
   }
 
   // getNickname() async {

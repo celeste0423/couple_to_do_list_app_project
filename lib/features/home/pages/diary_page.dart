@@ -96,6 +96,7 @@ class DiaryPageTest extends GetView<DiaryPageController> {
             itemCount: controller.diaryList[tabIndex].length,
             itemBuilder: (BuildContext context, int index) {
               return Obx(() {
+                // print(controller.diaryList[tabIndex].length);
                 if (index != controller.diaryList[tabIndex].length) {
                   return myListTile(controller.diaryList[tabIndex][index]);
                 } else {
