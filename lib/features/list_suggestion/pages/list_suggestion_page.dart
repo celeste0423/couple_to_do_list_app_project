@@ -123,37 +123,44 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     builder: (ListSuggestionPageController) {
                       return ConstrainedBox(
                         constraints: BoxConstraints(maxHeight: 300),
-                        child: StreamBuilder(
-                          stream: controller.getSearchedBukkungList(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<List<BukkungListModel>>
-                                  bukkungLists) {
-                            if (!bukkungLists.hasData) {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                    color: CustomColors.mainPink),
-                              );
-                            } else if (bukkungLists.hasError) {
-                              openAlertDialog(title: '에러 발생');
-                            } else {
-                              final list = bukkungLists.data!;
-                              return ListView(
-                                physics: AlwaysScrollableScrollPhysics(),
-                                children: [
-                                  Column(
-                                    children:
-                                        List.generate(list.length, (index) {
-                                      final bukkungList = list[index];
-                                      return _searchListCard(
-                                          bukkungList, index, context);
-                                    }),
-                                  ),
-                                ],
-                              );
-                            }
-                            return Center(child: Text('아직 버꿍리스트가 없습니다'));
-                          },
-                        ),
+                        child: controller.isTextEmpty
+                            ? Center(
+                                child: Text('검색어를 입력하세요'),
+                              )
+                            : StreamBuilder(
+                                stream: controller.getSearchedBukkungList(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<List<BukkungListModel>>
+                                        bukkungLists) {
+                                  if (!bukkungLists.hasData) {
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                          color: CustomColors.mainPink),
+                                    );
+                                  } else if (bukkungLists.hasError) {
+                                    openAlertDialog(title: '에러 발생');
+                                  } else {
+                                    final list = bukkungLists.data!;
+                                    return ListView(
+                                      physics: AlwaysScrollableScrollPhysics(),
+                                      children: [
+                                        Column(
+                                          children: List.generate(list.length,
+                                              (index) {
+                                            final bukkungList = list[index];
+                                            return _searchListCard(
+                                              bukkungList,
+                                              index,
+                                              context,
+                                            );
+                                          }),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  return Center(child: Text('아직 버꿍리스트가 없습니다'));
+                                },
+                              ),
                       );
                     },
                   );
