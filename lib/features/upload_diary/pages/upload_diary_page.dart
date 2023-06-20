@@ -544,7 +544,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                 print('업로드 중');
                 controller.isButtonDisabled = true;
                 await controller.uploadDiary();
-                // Get.back();
+                Get.back();
               } else {
                 openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');
               }

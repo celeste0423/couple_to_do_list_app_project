@@ -43,19 +43,16 @@ class DiaryPageController extends GetxController
   @override
   void onInit() async {
     super.onInit();
-    initSelectedDiary();
+
     listCategory.value = "all";
 
     setDiaryList();
+    initSelectedDiary();
 
     // getNickname();
   }
 
-  void initSelectedDiary() {
-    selectedDiary(diaryList[0][0]);
-  }
-
-  void setDiaryList() {
+  Future setDiaryList() async {
     diaryList[0].bindStream(getDiaryList('all'));
     diaryList[1].bindStream(getDiaryList('1travel'));
     diaryList[2].bindStream(getDiaryList('2meal'));
@@ -72,6 +69,11 @@ class DiaryPageController extends GetxController
     } else {
       return DiaryRepository(groupModel: groupModel).getCategoryDiary(category);
     }
+  }
+
+  void initSelectedDiary() {
+    print('기본 다이어리 선택');
+    selectedDiary.value = diaryList[0].value[0];
   }
 
   // getNickname() async {

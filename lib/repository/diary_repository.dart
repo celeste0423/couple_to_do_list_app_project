@@ -24,6 +24,7 @@ class DiaryRepository {
           ),
         );
       }
+      print('리스트 다 가져옴');
       return diaryList;
     });
   }
