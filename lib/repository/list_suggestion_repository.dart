@@ -160,8 +160,8 @@ class ListSuggestionRepository {
     });
   }
 
-  Stream<List<BukkungListModel>> getTypeBukkungList(String category) {
-    print('파이어스토에서 받아옴(sugg repo) $category');
+  Stream<List<BukkungListModel>> getCategoryBukkungList(String category) {
+    // print('파이어스토에서 받아옴(sugg repo) $category');
     return FirebaseFirestore.instance
         .collection('bukkungLists')
         .where('category', isEqualTo: category)
@@ -178,7 +178,7 @@ class ListSuggestionRepository {
   }
 
   Stream<List<BukkungListModel>> getMyBukkungList() {
-    print('파이어스토어에서 전체 받아옴');
+    // print('파이어스토어에서 전체 받아옴');
     return FirebaseFirestore.instance
         .collection('bukkungLists')
         .where('userId', isEqualTo: AuthController.to.user.value.uid)

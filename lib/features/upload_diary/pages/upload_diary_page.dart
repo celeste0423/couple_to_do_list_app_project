@@ -96,7 +96,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
     );
   }
 
-  Widget _mygridView2() {
+  Widget _myGridView2() {
     if (controller.selectedImages.isEmpty) {
       return SizedBox(
         height: 170,
@@ -227,7 +227,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       if (selectedDiaryModel!.imgUrlList!.isEmpty) {
         return Obx(() => _myGridView1());
       } else {
-        return Obx(() => _mygridView2());
+        return Obx(() => _myGridView2());
       }
     }
   }
@@ -469,7 +469,9 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [for (int i = 0; i < 6; i++) circleHole()],
+              children: [
+                for (int i = 0; i < 6; i++) circleHole(),
+              ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -478,11 +480,11 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                 contents(),
                 Stack(
                   children: [
-                    for (int i = 0; i < numberoFlines; i++)
+                    for (int lines = 0; lines < numberoFlines; lines++)
                       Container(
                         width: Get.width - 110 - holeDiameter,
                         margin: EdgeInsets.only(
-                          top: 7 + (i + 1) * 28,
+                          top: 7 + (lines + 1) * 28,
                         ),
                         height: 1,
                         color: CustomColors.grey,
@@ -495,13 +497,15 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                         child: TextField(
                           controller: controller.contentController,
                           decoration: InputDecoration(
-                              hintText: ' 소감 작성하기',
-                              hintStyle: TextStyle(
-                                color: CustomColors.lightGreyText,
-                                fontSize: 20,
-                              ),
-                              border: InputBorder.none),
-                          cursorHeight: 15,
+                            hintText: ' 소감 작성하기',
+                            hintStyle: TextStyle(
+                              color: CustomColors.lightGreyText,
+                              fontSize: 20,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                          cursorColor: CustomColors.darkGrey,
+                          cursorHeight: 20,
                           style: TextStyle(
                             fontSize: 28.0,
                           ),
@@ -529,16 +533,25 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
         auxiliaryButton('취소', () {
           Get.back();
         }, Get.width * 1 / 4),
-        mainButton('다이어리 작성', () async {
-          if (controller.isValid()) {
-            print('isvalid');
-            await controller.uploadDiary();
-            print('uploadDiary Complete');
-            Get.back();
-          } else {
-            openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');
-          }
-        }, Get.width * 5 / 8)
+        mainButton(
+          '다이어리 작성',
+          () async {
+            if (controller.isButtonDisabled) {
+              print('버튼 비활성화');
+              null;
+            } else {
+              if (controller.isValid()) {
+                print('업로드 중');
+                controller.isButtonDisabled = true;
+                await controller.uploadDiary();
+                // Get.back();
+              } else {
+                openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');
+              }
+            }
+          },
+          Get.width * 5 / 8,
+        )
       ],
     );
   }

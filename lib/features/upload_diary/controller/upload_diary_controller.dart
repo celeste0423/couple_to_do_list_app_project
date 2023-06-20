@@ -49,6 +49,8 @@ class UploadDiaryController extends GetxController {
   RxList<File> selectedImages = <File>[].obs; // List of selected image
   final picker = ImagePicker(); // Instance of Image picker
 
+  bool isButtonDisabled = false;
+
   @override
   void onInit() {
     super.onInit();

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
@@ -24,67 +23,69 @@ class DiaryPageController extends GetxController
     "6etc": "기타",
   };
 
-  RxList<DiaryModel> diarylist = <DiaryModel>[].obs;
+  List<RxList<DiaryModel>> diaryList = [
+    <DiaryModel>[].obs,
+    <DiaryModel>[].obs,
+    <DiaryModel>[].obs,
+    <DiaryModel>[].obs,
+    <DiaryModel>[].obs,
+    <DiaryModel>[].obs,
+    <DiaryModel>[].obs,
+  ];
   Rx<DiaryModel?> selectedDiary = DiaryModel().obs;
 
   Rx<String> femaleNickname = ''.obs;
   Rx<String> maleNickname = ''.obs;
 
-  late final TabController tabDiaryController =
+  late final TabController diaryTabController =
       TabController(length: 7, vsync: this);
 
   @override
   void onInit() async {
     super.onInit();
-    // sliverScrollController.addListener(() {
-    //   sliverScroll();
-    // });
-
+    initSelectedDiary();
     listCategory.value = "all";
-    diarylist.bindStream(getDiaryList('all'));
-    getNickname();
 
+    setDiaryList();
+
+    // getNickname();
   }
 
-  initSelectedDiary(){
-    selectedDiary(diarylist[0]);
+  void initSelectedDiary() {
+    selectedDiary(diaryList[0][0]);
   }
 
-  // void sliverScroll() {
-  //   if (sliverScrollController.position.pixels ==
-  //       sliverScrollController.position.maxScrollExtent) {
-  //     isScrollMax(true);
-  //   }
-  //   if (sliverScrollController.position.pixels ==
-  //       sliverScrollController.position.minScrollExtent) {
-  //     isScrollMax(true);
-  //   }
-  // }
-
-  getNickname() async {
-    final String femaleUid = AuthController.to.group.value.femaleUid!;
-    final String maleUid = AuthController.to.group.value.maleUid!;
-    final maledata =
-        await FirebaseFirestore.instance.collection('users').doc(maleUid).get();
-    final femaledata = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(femaleUid)
-        .get();
-    maleNickname(maledata.data()!['nickname'].toString());
-    femaleNickname(femaledata.data()!['nickname'].toString());
+  void setDiaryList() {
+    diaryList[0].bindStream(getDiaryList('all'));
+    diaryList[1].bindStream(getDiaryList('1travel'));
+    diaryList[2].bindStream(getDiaryList('2meal'));
+    diaryList[3].bindStream(getDiaryList('3activity'));
+    diaryList[4].bindStream(getDiaryList('4culture'));
+    diaryList[5].bindStream(getDiaryList('5study'));
+    diaryList[6].bindStream(getDiaryList('6etc'));
   }
 
-  Stream<List<DiaryModel>> getDiaryList(String type) {
-    // AuthController.to.saveGroupData();
+  Stream<List<DiaryModel>> getDiaryList(String category) {
     final GroupModel groupModel = AuthController.to.group.value;
-    // final GroupModel groupModel = await AuthController.to.group.value;
-    print('현재 그룹 (buk page cont)${groupModel.uid}');
-    // print('현재 유저 (buk page cont)${myGroup.value.uid}');
-
-    return DiaryRepository(groupModel: groupModel)
-        .getallDiary();
-
+    if (category == 'all') {
+      return DiaryRepository(groupModel: groupModel).getAllDiary();
+    } else {
+      return DiaryRepository(groupModel: groupModel).getCategoryDiary(category);
+    }
   }
+
+  // getNickname() async {
+  //   final String femaleUid = AuthController.to.group.value.femaleUid!;
+  //   final String maleUid = AuthController.to.group.value.maleUid!;
+  //   final maledata =
+  //       await FirebaseFirestore.instance.collection('users').doc(maleUid).get();
+  //   final femaledata = await FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(femaleUid)
+  //       .get();
+  //   maleNickname(maledata.data()!['nickname'].toString());
+  //   femaleNickname(femaledata.data()!['nickname'].toString());
+  // }
 
   @override
   // void onNotification(ScrollNotification notification) {
@@ -105,7 +106,7 @@ class DiaryPageController extends GetxController
   // }
 
   void onClose() {
-    tabDiaryController.dispose();
+    diaryTabController.dispose();
     super.onClose();
   }
 

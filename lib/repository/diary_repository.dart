@@ -1,31 +1,54 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
-import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
-import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class DiaryRepository {
   final GroupModel groupModel;
 
   DiaryRepository({required this.groupModel});
 
-  Stream<List<DiaryModel>> getallDiary() {
-    return FirebaseFirestore.instance.collection('groups')
+  Stream<List<DiaryModel>> getAllDiary() {
+    return FirebaseFirestore.instance
+        .collection('groups')
         .doc(groupModel.uid)
-        .collection('diary').orderBy('date', descending: true).
-    snapshots().map((event) {
-      List<DiaryModel> DiaryList = [];
-      for (var Diary in event.docs) {
-        DiaryList.add(DiaryModel.fromJson(Diary.data()));
+        .collection('diary')
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map((event) {
+      List<DiaryModel> diaryList = [];
+      for (var diary in event.docs) {
+        diaryList.add(
+          DiaryModel.fromJson(
+            diary.data(),
+          ),
+        );
       }
-      return DiaryList;
+      return diaryList;
     });
   }
 
-  
+  Stream<List<DiaryModel>> getCategoryDiary(String category) {
+    return FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupModel.uid)
+        .collection('diary')
+        .where('category', isEqualTo: category)
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map((event) {
+      List<DiaryModel> diaryList = [];
+      for (var diary in event.docs) {
+        diaryList.add(
+          DiaryModel.fromJson(
+            diary.data(),
+          ),
+        );
+      }
+      return diaryList;
+    });
+  }
+
   static Future<void> setGroupDiary(
       DiaryModel diaryData, String diaryId) async {
     await FirebaseFirestore.instance
@@ -35,7 +58,6 @@ class DiaryRepository {
         .doc(diaryId)
         .set(diaryData.toJson());
   }
-
 
   // static Future<void> setSuggestionBukkungList(BukkungListModel bukkungLisData,
   //     String listId) async {

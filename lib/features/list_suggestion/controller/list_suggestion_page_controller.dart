@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:flutter/material.dart';
@@ -176,7 +175,7 @@ class ListSuggestionPageController extends GetxController
     if (category == 'all') {
       return ListSuggestionRepository().getAllBukkungList();
     } else {
-      return ListSuggestionRepository().getTypeBukkungList(category);
+      return ListSuggestionRepository().getCategoryBukkungList(category);
     }
   }
 

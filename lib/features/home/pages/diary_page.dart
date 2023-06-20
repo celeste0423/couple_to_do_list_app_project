@@ -1,4 +1,3 @@
-import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
@@ -19,8 +18,6 @@ class DiaryPageTest extends GetView<DiaryPageController> {
   Widget _diarySliver() {
     const double maxHeaderHeight = 350;
     const double minHeaderHeight = kToolbarHeight + 170;
-    const double maxDiarySize = 130;
-    const double minDiarySize = 40;
 
     return CustomScrollView(
       // controller: controller.sliverScrollController,
@@ -28,10 +25,9 @@ class DiaryPageTest extends GetView<DiaryPageController> {
         SliverPersistentHeader(
           delegate: SliverPersistentDelegate(
             controller,
+            controller.diaryTabController.index,
             maxHeaderHeight,
             minHeaderHeight,
-            maxDiarySize,
-            minDiarySize,
           ),
         ),
         SliverToBoxAdapter(
@@ -53,30 +49,55 @@ class DiaryPageTest extends GetView<DiaryPageController> {
                   ),
                   //Todo: 색상 입력 안해도 되도록 기본값 넣어뒀는데도 오류가 발생하는 이유..?
                   child: CategorySelectTabBar(
-                    tabController: controller.tabDiaryController,
+                    tabController: controller.diaryTabController,
                     selectedColor: CustomColors.darkGrey,
                     unselectedColor: CustomColors.grey.withOpacity(0.5),
                   ),
                 ),
-                Obx(
-                  () => Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: ListView.builder(
-                        itemCount: controller.diarylist.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return myListTile(controller.diarylist[index]);
-                        },
-                      ),
-                    ),
-                  ),
-                ),
+                _diaryListTabView(),
               ],
             ),
           ),
         ),
       ],
     );
+  }
+
+  Widget _diaryListTabView() {
+    return Obx(
+      () => Expanded(
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: TabBarView(
+              controller: controller.diaryTabController,
+              children: [
+                _diaryList(0),
+                _diaryList(1),
+                _diaryList(2),
+                _diaryList(3),
+                _diaryList(4),
+                _diaryList(5),
+                _diaryList(6),
+              ],
+            )),
+      ),
+    );
+  }
+
+  Widget _diaryList(int tabIndex) {
+    return controller.diaryList[tabIndex].length == 0
+        ? Padding(
+            padding: const EdgeInsets.only(bottom: 240),
+            child: Center(
+              child: Text('아직 다이어리가 없습니다'),
+            ),
+          )
+        : ListView.builder(
+            itemCount: controller.diaryList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return myListTile(controller.diaryList[tabIndex][index]);
+            },
+          );
   }
 
   Widget myListTile(DiaryModel diaryModel) {
@@ -210,17 +231,16 @@ class DiaryPageTest extends GetView<DiaryPageController> {
 class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
   DiaryPageController controller;
 
+  int tabIndex;
+
   final double maxHeaderHeight;
   final double minHeaderHeight;
-  final double maxDiarySize;
-  final double minDiarySize;
 
   SliverPersistentDelegate(
     this.controller,
+    this.tabIndex,
     this.maxHeaderHeight,
     this.minHeaderHeight,
-    this.maxDiarySize,
-    this.minDiarySize,
   );
 
   @override
@@ -273,24 +293,33 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                   ],
                 ),
                 child: Obx(() {
-                  if (controller.diarylist.isEmpty) {
-                    //todo: 여기 프로그래스 인디케이터 넣자
+                  if (controller.diaryList[tabIndex].isEmpty) {
                     return Center(
-                      child: SizedBox(
-                        width: 50 * percent,
-                        height: 50 * percent,
-                        child: CircularProgressIndicator(
-                          color: CustomColors.mainPink,
+                      child: Container(
+                        width: 150 * percent,
+                        height: 170 * percent,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: CustomColors.backgroundLightGrey,
                         ),
                       ),
                     );
+                    // //todo: 여기 프로그래스 인디케이터 넣자
+                    // return Center(
+                    //   child: SizedBox(
+                    //     width: 50 * percent,
+                    //     height: 50 * percent,
+                    //     child: CircularProgressIndicator(
+                    //       color: CustomColors.mainPink,
+                    //     ),
+                    //   ),
+                    // );
                   } else {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          controller.selectedDiary.value!.title ??
-                              controller.diarylist[0].title!,
+                          controller.selectedDiary.value!.title!,
                           style: TextStyle(fontSize: 35),
                         ),
                         Container(
@@ -300,11 +329,7 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                             borderRadius: BorderRadius.circular(25),
                             image: DecorationImage(
                               image: NetworkImage(
-                                //Todo : 기본 selectedDiary 설정하기
-                                controller.selectedDiary.value != null
-                                    ? controller
-                                        .selectedDiary.value!.imgUrlList![0]
-                                    : 'https://post-phinf.pstatic.net/MjAxNzEwMjBfNjYg/MDAxNTA4NDY0NzkxMDc3.BXMDJ0jGbaunHr6TRI6N4NOBiGOXAlXbzlmgaZYHMkQg.P6Rbnq9YTv9CCqH5Vgu6JCSEGZC_wOZ25onOnoT4AAAg.PNG/11.png?type=w1200',
+                                controller.selectedDiary.value!.imgUrlList![0],
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -318,11 +343,8 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                           // ),
                         ),
                         Text(
-                          controller.selectedDiary.value!.date != null
-                              ? DateFormat('yyyy-MM-dd')
-                                  .format(controller.selectedDiary.value!.date!)
-                              : DateFormat('yyyy-MM-dd')
-                                  .format(controller.diarylist[0].date!),
+                          DateFormat('yyyy-MM-dd')
+                              .format(controller.selectedDiary.value!.date!),
                           style: TextStyle(fontSize: 15),
                         ),
                       ],

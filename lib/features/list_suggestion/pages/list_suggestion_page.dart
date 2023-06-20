@@ -415,12 +415,12 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
-  Widget _suggestionListTab() {
+  Widget _suggestionListTabView() {
     return Expanded(
       child: TabBarView(
         controller: controller.suggestionListTabController,
         children: [
-          _suggestionTestList(0),
+          _suggestionAllList(0),
           _suggestionList(1),
           _suggestionList(2),
           _suggestionList(3),
@@ -459,7 +459,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   //   );
   // }
 
-  Widget _suggestionTestList(int index) {
+  Widget _suggestionAllList(int index) {
     return StreamBuilder(
       stream: controller.streamController.stream,
       builder: (BuildContext context,
@@ -759,7 +759,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             Column(
               children: [
                 _background(),
-                _suggestionListTab(),
+                _suggestionListTabView(),
               ],
             ),
             Column(
