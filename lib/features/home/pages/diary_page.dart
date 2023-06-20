@@ -97,12 +97,11 @@ class DiaryPageTest extends GetView<DiaryPageController> {
             itemBuilder: (BuildContext context, int index) {
               return Obx(() {
                 // print(controller.diaryList[tabIndex].length);
-                if (index != controller.diaryList[tabIndex].length) {
+                if (index != controller.diaryList[tabIndex].length - 1) {
                   return myListTile(controller.diaryList[tabIndex][index]);
                 } else {
-                  SizedBox(height: 200);
+                  return SizedBox(height: 270);
                 }
-                return Container();
               });
             },
           );
@@ -115,6 +114,13 @@ class DiaryPageTest extends GetView<DiaryPageController> {
     return GestureDetector(
       onTap: () {
         controller.indexSelection(diaryModel);
+      },
+      onDoubleTap: () {
+        controller.indexSelection(diaryModel);
+        Get.to(
+          () => ReadDiaryPage(),
+          arguments: controller.selectedDiary.value,
+        );
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 5),
