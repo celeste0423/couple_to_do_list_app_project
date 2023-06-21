@@ -10,6 +10,7 @@ import 'package:couple_to_do_list_app/widgets/short_h_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DiaryPageTest extends GetView<DiaryPageController> {
   const DiaryPageTest({super.key});
@@ -304,68 +305,71 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                     ),
                   ],
                 ),
-                child: Obx(() {
-                  if (controller.diaryList[tabIndex].isEmpty) {
-                    return Center(
-                      child: Container(
-                        width: 150 * percent,
-                        height: 170 * percent,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: CustomColors.backgroundLightGrey,
-                        ),
-                      ),
-                    );
-                    // //todo: 여기 프로그래스 인디케이터 넣자
-                    // return Center(
-                    //   child: SizedBox(
-                    //     width: 50 * percent,
-                    //     height: 50 * percent,
-                    //     child: CircularProgressIndicator(
-                    //       color: CustomColors.mainPink,
-                    //     ),
-                    //   ),
-                    // );
-                  } else {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        MarqueeAbleText(
-                          text: controller.selectedDiary.value!.title!,
-                          maxLength: 10,
-                          style: TextStyle(
-                            fontSize: 35 * percent,
-                          ),
-                        ),
-                        Container(
-                          width: 150 * percent,
-                          height: 170 * percent,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                controller.selectedDiary.value!.imgUrlList![0],
+                child: controller.selectedDiary.value == null
+                    ? Center(
+                        child: controller.diaryList.isNotEmpty
+                            ? Shimmer.fromColors(
+                                baseColor: CustomColors.lightGrey,
+                                highlightColor:
+                                    CustomColors.backgroundLightGrey,
+                                child: Container(
+                                  width: 150 * percent,
+                                  height: 170 * percent,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    color: CustomColors.backgroundLightGrey,
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                width: 150 * percent,
+                                height: 170 * percent,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: CustomColors.backgroundLightGrey,
+                                ),
                               ),
-                              fit: BoxFit.cover,
+                      )
+                    : Obx(() {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            MarqueeAbleText(
+                              text: controller.selectedDiary.value!.title!,
+                              maxLength: 10,
+                              style: TextStyle(
+                                fontSize: 35 * percent,
+                              ),
                             ),
-                          ),
+                            Container(
+                              width: 150 * percent,
+                              height: 170 * percent,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    controller
+                                        .selectedDiary.value!.imgUrlList![0],
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
 
-                          //사진이 없을경우 기본 이미지 꼬물이로
-                          // child: Image.asset(
-                          //   'assets/images/ggomool.png',
-                          //   width: 170,
-                          //   height: 170,
-                          // ),
-                        ),
-                        Text(
-                          DateFormat('yyyy-MM-dd')
-                              .format(controller.selectedDiary.value!.date!),
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ],
-                    );
-                  }
-                }),
+                              //사진이 없을경우 기본 이미지 꼬물이로
+                              // child: Image.asset(
+                              //   'assets/images/ggomool.png',
+                              //   width: 170,
+                              //   height: 170,
+                              // ),
+                            ),
+                            Text(
+                              DateFormat('yyyy-MM-dd').format(
+                                  controller.selectedDiary.value!.date!),
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ],
+                        );
+                      }),
               ),
             ),
           ],

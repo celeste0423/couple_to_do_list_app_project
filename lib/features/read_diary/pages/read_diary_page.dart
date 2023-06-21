@@ -239,7 +239,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
               ),
             ),
             //top+height 하면 됨
-            Positioned(right: 0, top: 205, child: _bottombuttons())
+            Positioned(right: 0, top: 205, child: _bottomButtons())
           ],
         ),
       );
@@ -258,7 +258,8 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                     });
                   },
                   child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 40),
                       decoration: BoxDecoration(
                           color: CustomColors.mainPink,
                           borderRadius: BorderRadius.only(
@@ -287,7 +288,8 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
               top: 35,
               child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10), color: Colors.white),
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white),
                 height: 170,
                 width: Get.width - 60,
                 child: Row(
@@ -308,20 +310,19 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
               ),
             ),
             //top+height 하면 됨
-            Positioned(right: 0, top: 205, child: _bottombuttons())
+            Positioned(right: 0, top: 205, child: _bottomButtons())
           ],
         ),
       );
     }
   }
 
-  Widget _bottombuttons() {
+  Widget _bottomButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
             onPressed: () {
-              print('edit button');
               Get.off(() => UploadDiaryPage(), arguments: selectedDiaryModel);
             },
             icon: Icon(Icons.edit, size: 25, color: CustomColors.lightPink)),

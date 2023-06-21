@@ -1,5 +1,8 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
+import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
+import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/category_to_text.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
@@ -172,7 +175,17 @@ class _ReadBukkungListPageState extends State<ReadBukkungListPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          DiaryModel diaryModel = DiaryModel.init(AuthController.to.user.value);
+          DiaryModel updatedDiaryModel = diaryModel.copyWith(
+            title: widget.bukkungListModel.title,
+            category: widget.bukkungListModel.category,
+            location: widget.bukkungListModel.category,
+            date: widget.bukkungListModel.date,
+            updatedAt: DateTime.now(),
+          );
+          Get.off(() => UploadDiaryPage(), arguments: updatedDiaryModel);
+        },
         child: Container(
           width: 140,
           height: 50,

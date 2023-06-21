@@ -116,4 +116,6 @@ class BukkungListRepository {
       openAlertDialog(title: '이미지 삭제 오류 $e');
     }
   }
+
+  //사진 업로드 관려
 }

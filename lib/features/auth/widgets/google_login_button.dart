@@ -39,12 +39,12 @@ class GoogleLoginButton extends StatelessWidget {
           openAlertDialog(title: '로그인 실패');
         } else {
           print('로그인 진행(구글버튼)');
-
         }
       },
       child: Image.asset(
         //Todo: 이미지 해상도를 올려야 할듯
-        'assets/images/google_login_btn.png',
+        'assets/images/google_login_btn_res.png',
+        height: 80,
       ),
     );
   }

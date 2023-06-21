@@ -93,6 +93,7 @@ class DiaryPageController extends GetxController
           updatedAt: diary[0].updatedAt,
         );
         selectedDiary.value = updatedDiary;
+        subscription?.cancel();
       }
     });
   }

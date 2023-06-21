@@ -39,8 +39,7 @@ class ListSuggestionPageController extends GetxController
     suggestionListTabController = TabController(length: 8, vsync: this);
     suggestionListTabController.addListener(() {
       //Todo: 탭 인덱스 변화에 따른 리스트 새로고침 테스트
-      print('탭 변화 감지중');
-      _onTabChanged;
+      _onTabChanged();
     });
     searchBarController.addListener(onTextChanged);
     _initSelectedBukkungList();
@@ -77,6 +76,7 @@ class ListSuggestionPageController extends GetxController
           viewCount: list[0].viewCount,
         );
         selectedList(updatedList);
+        print('리스트 변경 제목${list[0].listId}');
         if (selectedList.value.likedUsers != null &&
             selectedList.value.likedUsers!
                 .contains(AuthController.to.user.value.uid)) {

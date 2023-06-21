@@ -46,7 +46,6 @@ class UploadBukkungListController extends GetxController {
 
   Uint8List? listImage = null;
 
-
   Rx<bool> isImage = false.obs;
   Rx<bool> isSelectedImage = false.obs;
 
@@ -56,6 +55,23 @@ class UploadBukkungListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _checkIsBukkungListSelected();
+    _checkCompleted();
+    titleController.addListener(_checkCompleted);
+    listCategory.listen((_) {
+      _checkCompleted();
+    });
+    locationController.addListener(_checkCompleted);
+    listDateTime.listen((_) {
+      _checkCompleted();
+    });
+    contentController.addListener(_checkCompleted);
+
+    contentScrollController.addListener(scrollToContent);
+    bukkungList = BukkungListModel.init(AuthController.to.user.value);
+  }
+
+  void _checkIsBukkungListSelected() {
     if (selectedBukkungListModel != null) {
       titleController.text = selectedBukkungListModel!.title!;
       listCategory(selectedBukkungListModel!.category!);
@@ -73,19 +89,6 @@ class UploadBukkungListController extends GetxController {
         isSelectedImage(true);
       }
     }
-    _checkCompleted();
-    titleController.addListener(_checkCompleted);
-    listCategory.listen((_) {
-      _checkCompleted();
-    });
-    locationController.addListener(_checkCompleted);
-    listDateTime.listen((_) {
-      _checkCompleted();
-    });
-    contentController.addListener(_checkCompleted);
-
-    contentScrollController.addListener(scrollToContent);
-    bukkungList = BukkungListModel.init(AuthController.to.user.value);
   }
 
   void _checkCompleted() {
@@ -98,6 +101,15 @@ class UploadBukkungListController extends GetxController {
     } else {
       isCompleted.value = false;
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    titleController.dispose();
+    locationController.dispose();
+    contentController.dispose();
+    contentScrollController.dispose();
   }
 
   void changeCategory(String category) {
@@ -174,17 +186,6 @@ class UploadBukkungListController extends GetxController {
     listImage = image;
   }
 
-// Future pickImageFromCamera(BuildContext context) async {
-//   Navigator.of(context).pop();
-//   try {
-//     final image = await ImagePicker().pickImage(source: ImageSource.camera);
-//     imageCamera = File(image!.path);
-//     imageGallery = null;
-//   } catch (e) {
-//     openAlertDialog(content: e.toString(), title: '오류');
-//   }
-// }
-
   Future<void> uploadBukkungList() async {
     FocusManager.instance.primaryFocus?.unfocus();
     var uuid = Uuid();
@@ -194,15 +195,12 @@ class UploadBukkungListController extends GetxController {
 
     if (selectedBukkungListModel == null && listImage != null) {
       //선택 안함, 사진 있음
-      print('선택 안함, 사진 있음(로컬)');
-      print('업로드 준비 완료(upl cont)');
       var task = uploadFile(listImage!, 'group_bukkunglist',
           '${AuthController.to.user.value.groupId}/${filename}');
 
       task.snapshotEvents.listen((event) async {
         if (event.bytesTransferred == event.totalBytes &&
             event.state == TaskState.success) {
-          print('업로드 시작 (upl cont)');
           var downloadUrl = await event.ref.getDownloadURL();
           var updatedBukkungList = bukkungList!.copyWith(
             listId: listId,
@@ -219,7 +217,6 @@ class UploadBukkungListController extends GetxController {
       });
     } else if (selectedBukkungListModel == null) {
       // 선택 안함, 사진 없음
-      print('선택안함, 사진 없음');
       var updatedBukkungList = bukkungList!.copyWith(
         listId: listId,
         category: listCategory.value,
@@ -235,7 +232,6 @@ class UploadBukkungListController extends GetxController {
         isSelectedImage.value == true &&
         listImage == null) {
       // 선택함, 사진 있음(웹사진)
-      print('선택함 사진 있음(웹)');
       String sourcePath = '${selectedBukkungListModel!.imgId}.jpg';
       String destinationPath =
           '${AuthController.to.user.value.groupId}/$filename';
@@ -266,13 +262,11 @@ class UploadBukkungListController extends GetxController {
       _submitBukkungList(updatedBukkungList, listId, true);
     } else if (selectedBukkungListModel != null && listImage != null) {
       //선택함, 사진 있음(로컬사진)
-      print('선택함 사진 있음(로컬)');
       var task = uploadFile(listImage!, 'group_bukkunglist',
           '${AuthController.to.user.value.groupId}/${filename}');
       task.snapshotEvents.listen((event) async {
         if (event.bytesTransferred == event.totalBytes &&
             event.state == TaskState.success) {
-          print('업로드 시작 (upl cont)');
           var downloadUrl = await event.ref.getDownloadURL();
           var updatedBukkungList = bukkungList!.copyWith(
             listId: listId,
@@ -290,7 +284,6 @@ class UploadBukkungListController extends GetxController {
         listImage == null &&
         isSelectedImage == false) {
       //선택함, 사진 없음(로컬, 웹 둘다)
-      print('선택함, 사진없음');
       var updatedBukkungList = bukkungList!.copyWith(
         listId: listId,
         category: listCategory.value,

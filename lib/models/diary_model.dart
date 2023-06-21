@@ -32,7 +32,7 @@ class DiaryModel {
 
   factory DiaryModel.init(UserModel userInfo) {
     return DiaryModel(
-      diaryId: '',
+      diaryId: null,
       title: '',
       category: '',
       location: '',
@@ -56,14 +56,23 @@ class DiaryModel {
       imgUrlList: json['imgUrlList'] == null
           ? []
           : List<String>.from(json['imgUrlList'] as List<dynamic>),
-      creatorSogam: json['creatorSogam'] == null ? null : json['creatorSogam'] as String,
+      creatorSogam:
+          json['creatorSogam'] == null ? null : json['creatorSogam'] as String,
       bukkungSogam:
-      json['bukkungSogam'] == null ? null : json['bukkungSogam'] as String,
+          json['bukkungSogam'] == null ? null : json['bukkungSogam'] as String,
       date: json['date'] == null ? null : (json['date'] as Timestamp).toDate(),
-      creatorUserID: json['creatorUserID'] == null ? null : json['creatorUserID'] as String,
-      createdAt: json['createdAt'] == null ? null : (json['createdAt'] as Timestamp).toDate(),
-      lastUpdatorID: json['lastUpdatorID'] == null ? null : json['lastUpdatorID'] as String,
-      updatedAt: json['updatedAt'] == null ? null : (json['updatedAt'] as Timestamp).toDate(),
+      creatorUserID: json['creatorUserID'] == null
+          ? null
+          : json['creatorUserID'] as String,
+      createdAt: json['createdAt'] == null
+          ? null
+          : (json['createdAt'] as Timestamp).toDate(),
+      lastUpdatorID: json['lastUpdatorID'] == null
+          ? null
+          : json['lastUpdatorID'] as String,
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : (json['updatedAt'] as Timestamp).toDate(),
     );
   }
 

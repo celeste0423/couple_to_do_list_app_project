@@ -1,6 +1,5 @@
 import 'package:couple_to_do_list_app/features/upload_diary/controller/upload_diary_controller.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
-import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/auxiliary_button.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
@@ -12,13 +11,23 @@ import 'package:intl/intl.dart';
 //Todo: controller 가 이 페이지 꺼지면 바로 꺼지게 해야 함
 
 class UploadDiaryPage extends GetView<UploadDiaryController> {
-  final DiaryModel? selectedDiaryModel = Get.arguments;
-
   UploadDiaryPage({super.key});
 
   PreferredSizeWidget _appBar() {
     return AppBar(
       backgroundColor: CustomColors.lightPink,
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 35,
+          ),
+        ),
+      ),
       title: Center(
         child: TextField(
           controller: controller.titleController,
@@ -36,9 +45,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
             errorBorder: InputBorder.none,
             disabledBorder: InputBorder.none,
             contentPadding: EdgeInsets.only(left: 15),
-            hintText: selectedDiaryModel != null
-                ? selectedDiaryModel!.title!
-                : '제목을 입력하세요',
+            hintText: '제목을 입력하세요',
             suffixIcon: Icon(
               Icons.edit,
               size: 23,
@@ -101,7 +108,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       return SizedBox(
         height: 170,
         child: ListView.builder(
-          itemCount: selectedDiaryModel!.imgUrlList!.length + 1,
+          itemCount: controller.selectedDiaryModel!.imgUrlList!.length + 1,
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
@@ -113,11 +120,14 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                 height: 170,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                            selectedDiaryModel!.imgUrlList![index - 1]))),
+                  borderRadius: BorderRadius.circular(25),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                      controller.selectedDiaryModel!.imgUrlList![index - 1],
+                    ),
+                  ),
+                ),
               );
             }
           },
@@ -127,8 +137,9 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       return SizedBox(
         height: 170,
         child: ListView.builder(
+          //Todo: 이렇게 만드는 건 문제가 있을 것 같은데.. 고민이 필요하겠군요
           itemCount: controller.selectedImages.length +
-              selectedDiaryModel!.imgUrlList!.length +
+              controller.selectedDiaryModel!.imgUrlList!.length +
               1,
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
@@ -138,17 +149,20 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
             if (index == 0) {
               return chooseImageContainer();
             } else if (index >= 1 &&
-                index <= selectedDiaryModel!.imgUrlList!.length) {
+                index <= controller.selectedDiaryModel!.imgUrlList!.length) {
               return Container(
                 width: 170,
                 height: 170,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                            selectedDiaryModel!.imgUrlList![index - 1]))),
+                  borderRadius: BorderRadius.circular(25),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                      controller.selectedDiaryModel!.imgUrlList![index - 1],
+                    ),
+                  ),
+                ),
               );
             } else {
               return Container(
@@ -156,12 +170,16 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                 height: 170,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: FileImage(controller.selectedImages[index -
-                            1 -
-                            selectedDiaryModel!.imgUrlList!.length]))),
+                  borderRadius: BorderRadius.circular(25),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: FileImage(
+                      controller.selectedImages[index -
+                          1 -
+                          controller.selectedDiaryModel!.imgUrlList!.length],
+                    ),
+                  ),
+                ),
               );
             }
           },
@@ -218,13 +236,14 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   }
 
   Widget myImagePickerContainer() {
+    //Todo: 2개로 굳이 분리할 필요가 있을까?
     //완전 새로 작성하는 다이어리야?
-    if (selectedDiaryModel == null) {
+    if (controller.selectedDiaryModel == null) {
       //yes 새로작성하는 다이어리야~
       return Obx(() => _myGridView1());
     } else {
       //imgurllist가 notempty야?
-      if (selectedDiaryModel!.imgUrlList!.isEmpty) {
+      if (controller.selectedDiaryModel!.imgUrlList!.isEmpty) {
         return Obx(() => _myGridView1());
       } else {
         return Obx(() => _myGridView2());
@@ -261,11 +280,23 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _categoryCard(
-                              'airplane', '여행', CustomColors.travel, '1travel'),
-                          _categoryCard('running', '액티비티',
-                              CustomColors.activity, '3activity'),
+                            'airplane',
+                            '여행',
+                            CustomColors.travel,
+                            '1travel',
+                          ),
                           _categoryCard(
-                              'study', '자기계발', CustomColors.study, '5study'),
+                            'running',
+                            '액티비티',
+                            CustomColors.activity,
+                            '3activity',
+                          ),
+                          _categoryCard(
+                            'study',
+                            '자기계발',
+                            CustomColors.study,
+                            '5study',
+                          ),
                         ],
                       ),
                     ),
@@ -277,11 +308,23 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _categoryCard(
-                              'food', '식사', CustomColors.meal, '2meal'),
-                          _categoryCard('singer', '문화활동', CustomColors.culture,
-                              '4culture'),
+                            'food',
+                            '식사',
+                            CustomColors.meal,
+                            '2meal',
+                          ),
                           _categoryCard(
-                              'filter-file', '기타', CustomColors.etc, '6etc'),
+                            'singer',
+                            '문화활동',
+                            CustomColors.culture,
+                            '4culture',
+                          ),
+                          _categoryCard(
+                            'filter-file',
+                            '기타',
+                            CustomColors.etc,
+                            '6etc',
+                          ),
                         ],
                       ),
                     )
@@ -345,8 +388,10 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   return Container(
                     width: (Get.width - 110 - holeDiameter - 20) * 1 / 2,
                     decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(color: CustomColors.grey))),
+                      border: Border(
+                        bottom: BorderSide(color: CustomColors.grey),
+                      ),
+                    ),
                     child: Text(
                       controller.diaryDateTime.value == null
                           ? '날짜'

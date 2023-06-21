@@ -1,6 +1,6 @@
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
-import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/bukkung_list_detail_page.dart';
+import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/setting/pages/setting_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
