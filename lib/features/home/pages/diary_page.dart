@@ -226,7 +226,7 @@ class DiaryPageTest extends GetView<DiaryPageController> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: IconButton(
               onPressed: () {
-                Get.to(() => UploadDiaryPage());
+                Get.to(() => UploadDiaryPage(), arguments: null);
               },
               icon: Image.asset(
                 'assets/icons/plus.png',

@@ -20,8 +20,9 @@ class UploadDiaryController extends GetxController {
 
   Uint8List? diaryImage = null;
 
-   final DiaryModel? selectedDiaryModel = Get.arguments;
-//Rx<DiaryModel?> selectedDiaryModel =Get.arguments.obs;
+   final DiaryModel? selectedDiaryModelArgument = Get.arguments;
+
+  Rx<DiaryModel?> selectedDiaryModel = Get.arguments== null? (null as DiaryModel?).obs: Get.arguments.obs;
   TextEditingController locationController = TextEditingController();
   List<AutoCompletePrediction> placePredictions = [];
 
@@ -55,15 +56,15 @@ class UploadDiaryController extends GetxController {
   }
 
   void _checkIsDiarySelected() {
-    if (selectedDiaryModel != null) {
-      titleController.text = selectedDiaryModel!.title!;
-      diaryCategory(selectedDiaryModel!.category!);
-      diaryDateTime(selectedDiaryModel!.date);
-      if (selectedDiaryModel!.location != null) {
-        locationController.text = selectedDiaryModel!.location!;
+    if (selectedDiaryModel.value != null) {
+      titleController.text = selectedDiaryModel.value!.title!;
+      diaryCategory(selectedDiaryModel.value!.category!);
+      diaryDateTime(selectedDiaryModel.value!.date);
+      if (selectedDiaryModel.value!.location != null) {
+        locationController.text = selectedDiaryModel.value!.location!;
       }
-      if (selectedDiaryModel!.creatorSogam != null) {
-        contentController.text = selectedDiaryModel!.creatorSogam!;
+      if (selectedDiaryModel.value!.creatorSogam != null) {
+        contentController.text = selectedDiaryModel.value!.creatorSogam!;
       }
     }
   }
@@ -210,17 +211,17 @@ class UploadDiaryController extends GetxController {
   }
 
   makeAndSubmitDiary(String diaryId, List<String> addImgUrlList) {
-    if (selectedDiaryModel != null) {
+    if (selectedDiaryModel.value != null) {
       //기존 다이어리 수정할 경우
-      DiaryModel updatedDiary = selectedDiaryModel!.copyWith(
+      DiaryModel updatedDiary = selectedDiaryModel.value!.copyWith(
         title: titleController.text,
         category: diaryCategory.value,
         location: locationController.text,
-        imgUrlList: selectedDiaryModel!.imgUrlList! + addImgUrlList,
+        imgUrlList: selectedDiaryModel.value!.imgUrlList! + addImgUrlList,
         creatorSogam: contentController.text,
-        bukkungSogam: selectedDiaryModel == null
+        bukkungSogam: selectedDiaryModel.value == null
             ? null
-            : selectedDiaryModel!.bukkungSogam,
+            : selectedDiaryModel.value!.bukkungSogam,
         date: diaryDateTime.value,
         // 여긴selectedDiaryModel null 아닐때만이니까 이미 creatorUserID,createdAt 존재 함.
         lastUpdatorID: AuthController.to.user.value.uid,
@@ -236,9 +237,9 @@ class UploadDiaryController extends GetxController {
         location: locationController.text,
         imgUrlList: addImgUrlList,
         creatorSogam: contentController.text,
-        bukkungSogam: selectedDiaryModel == null
+        bukkungSogam: selectedDiaryModel.value == null
             ? null
-            : selectedDiaryModel!.bukkungSogam,
+            : selectedDiaryModel.value!.bukkungSogam,
         date: diaryDateTime.value,
         createdAt: DateTime.now(),
         creatorUserID: AuthController.to.user.value.uid,
@@ -254,7 +255,7 @@ class UploadDiaryController extends GetxController {
     var uuid = Uuid();
     //기존 다이어리 수정의 경우 기존 diaryId 사용하면 됨.
     String diaryId =
-        selectedDiaryModel != null ? selectedDiaryModel!.diaryId! : uuid.v1();
+        selectedDiaryModel.value != null ? selectedDiaryModel.value!.diaryId! : uuid.v1();
     String imageId = uuid.v4();
     List<String> addImgUrlList = [];
     //selectedImages 에 사진file이 있으면

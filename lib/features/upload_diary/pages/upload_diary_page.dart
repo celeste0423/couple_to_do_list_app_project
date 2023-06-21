@@ -108,7 +108,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       return SizedBox(
         height: 170,
         child: ListView.builder(
-          itemCount: controller.selectedDiaryModel!.imgUrlList!.length + 1,
+          itemCount: controller.selectedDiaryModel.value!.imgUrlList!.length + 1,
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
@@ -126,7 +126,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                     image: DecorationImage(
                       fit: BoxFit.cover,
                       image: NetworkImage(
-                        controller.selectedDiaryModel!.imgUrlList![index - 1],
+                        controller.selectedDiaryModel.value!.imgUrlList![index - 1],
                       ),
                     ),
                   ),
@@ -136,7 +136,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                     child: GestureDetector(
                       onTap: () {
                         //todo: 버그있을수도있음
-                        controller.selectedDiaryModel!.imgUrlList!
+                        controller.selectedDiaryModel.value!.imgUrlList!
                             .removeAt(index - 1);
                       },
                       child: Container(
@@ -166,7 +166,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
         child: ListView.builder(
           //Todo: 이렇게 만드는 건 문제가 있을 것 같은데.. 고민이 필요하겠군요
           itemCount: controller.selectedImages.length +
-              controller.selectedDiaryModel!.imgUrlList!.length +
+              controller.selectedDiaryModel.value!.imgUrlList!.length +
               1,
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
@@ -176,7 +176,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
             if (index == 0) {
               return chooseImageContainer();
             } else if (index >= 1 &&
-                index <= controller.selectedDiaryModel!.imgUrlList!.length) {
+                index <= controller.selectedDiaryModel.value!.imgUrlList!.length) {
               return Stack(clipBehavior: Clip.none, children: [
                 Container(
                   width: 170,
@@ -187,7 +187,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                     image: DecorationImage(
                       fit: BoxFit.cover,
                       image: NetworkImage(
-                        controller.selectedDiaryModel!.imgUrlList![index - 1],
+                        controller.selectedDiaryModel.value!.imgUrlList![index - 1],
                       ),
                     ),
                   ),
@@ -198,7 +198,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   child: GestureDetector(
                     onTap: () {
                       //todo: 버그있을수도있음
-                      controller.selectedDiaryModel!.imgUrlList!
+                      controller.selectedDiaryModel.value!.imgUrlList!
                           .removeAt(index - 1);
                     },
                     child: Container(
@@ -232,7 +232,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                       image: FileImage(
                         controller.selectedImages[index -
                             1 -
-                            controller.selectedDiaryModel!.imgUrlList!.length],
+                            controller.selectedDiaryModel.value!.imgUrlList!.length],
                       ),
                     ),
                   ),
@@ -244,7 +244,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                     onTap: () {
                       controller.selectedImages.removeAt(index -
                           1 -
-                          controller.selectedDiaryModel!.imgUrlList!.length);
+                          controller.selectedDiaryModel.value!.imgUrlList!.length);
                     },
                     child: Container(
                       height: 35,
@@ -347,12 +347,12 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   Widget myImagePickerContainer() {
     //Todo: 2개로 굳이 분리할 필요가 있을까?
     //완전 새로 작성하는 다이어리야?
-    if (controller.selectedDiaryModel == null) {
+    if (controller.selectedDiaryModel.value == null) {
       //yes 새로작성하는 다이어리야~
       return Obx(() => _myGridView1());
     } else {
       //imgurllist가 notempty야?
-      if (controller.selectedDiaryModel!.imgUrlList!.isEmpty) {
+      if (controller.selectedDiaryModel.value!.imgUrlList!.isEmpty) {
         return Obx(() => _myGridView1());
       } else {
         return Obx(() => _myGridView2());
