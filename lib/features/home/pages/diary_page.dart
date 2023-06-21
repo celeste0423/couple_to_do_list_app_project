@@ -86,7 +86,7 @@ class DiaryPageTest extends GetView<DiaryPageController> {
 
   Widget _diaryList(int tabIndex) {
     // print(tabIndex);
-    return controller.diaryList[tabIndex].length == 0
+    return controller.diaryList[tabIndex].isEmpty
         ? Padding(
             padding: const EdgeInsets.only(bottom: 240),
             child: Center(
@@ -94,14 +94,14 @@ class DiaryPageTest extends GetView<DiaryPageController> {
             ),
           )
         : ListView.builder(
-            itemCount: controller.diaryList[tabIndex].length,
+            itemCount: controller.diaryList[tabIndex].length+1,
             itemBuilder: (BuildContext context, int index) {
               return Obx(() {
                 // print(controller.diaryList[tabIndex].length);
-                if (index != controller.diaryList[tabIndex].length - 1) {
+                if (index != controller.diaryList[tabIndex].length) {
                   return myListTile(controller.diaryList[tabIndex][index]);
                 } else {
-                  return SizedBox(height: 270);
+                  return SizedBox(height: 270); //마지막 index 에서는 tabview때문에 height 준거
                 }
               });
             },
