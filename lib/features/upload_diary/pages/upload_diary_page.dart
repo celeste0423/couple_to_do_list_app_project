@@ -115,19 +115,46 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
             if (index == 0) {
               return chooseImageContainer();
             } else {
-              return Container(
-                width: 170,
-                height: 170,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      controller.selectedDiaryModel!.imgUrlList![index - 1],
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [Container(
+                  width: 170,
+                  height: 170,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                        controller.selectedDiaryModel!.imgUrlList![index - 1],
+                      ),
                     ),
                   ),
                 ),
+                Positioned(
+                    right: 0, bottom: 0,
+                    child: GestureDetector(
+                      onTap: () {
+                        //todo: 버그있을수도있음
+                        controller.selectedDiaryModel!.imgUrlList!
+                            .removeAt(index - 1);
+                      },
+                      child: Container(
+                        height: 35,
+                        width: 35,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          //shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                            child: Icon(
+                              Icons.remove,
+                              size: 35,
+                              color: Colors.red,
+                            )),
+                      ),
+                    ),)]
               );
             }
           },
@@ -150,37 +177,93 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
               return chooseImageContainer();
             } else if (index >= 1 &&
                 index <= controller.selectedDiaryModel!.imgUrlList!.length) {
-              return Container(
-                width: 170,
-                height: 170,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      controller.selectedDiaryModel!.imgUrlList![index - 1],
+              return Stack(clipBehavior: Clip.none, children: [
+                Container(
+                  width: 170,
+                  height: 170,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                        controller.selectedDiaryModel!.imgUrlList![index - 1],
+                      ),
                     ),
                   ),
                 ),
-              );
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      //todo: 버그있을수도있음
+                      controller.selectedDiaryModel!.imgUrlList!
+                          .removeAt(index - 1);
+                    },
+                    child: Container(
+                      height: 35,
+                      width: 35,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        //shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                          child: Icon(
+                        Icons.remove,
+                        size: 35,
+                        color: Colors.red,
+                      )),
+                    ),
+                  ),
+                )
+              ]);
             } else {
-              return Container(
-                width: 170,
-                height: 170,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: FileImage(
-                      controller.selectedImages[index -
-                          1 -
-                          controller.selectedDiaryModel!.imgUrlList!.length],
+              return Stack(clipBehavior: Clip.none, children: [
+                Container(
+                  width: 170,
+                  height: 170,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: FileImage(
+                        controller.selectedImages[index -
+                            1 -
+                            controller.selectedDiaryModel!.imgUrlList!.length],
+                      ),
                     ),
                   ),
                 ),
-              );
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.selectedImages.removeAt(index -
+                          1 -
+                          controller.selectedDiaryModel!.imgUrlList!.length);
+                    },
+                    child: Container(
+                      height: 35,
+                      width: 35,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        //shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                          child: Icon(
+                        Icons.remove,
+                        size: 35,
+                        color: Colors.red,
+                      )),
+                    ),
+                  ),
+                ),
+              ]);
             }
           },
         ),
@@ -216,18 +299,44 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
             if (index == 0) {
               return chooseImageContainer();
             } else {
-              return Container(
-                width: 170,
-                height: 170,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: FileImage(controller.selectedImages[index - 1]),
+              return Stack(clipBehavior: Clip.none, children: [
+                Container(
+                  width: 170,
+                  height: 170,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: FileImage(controller.selectedImages[index - 1]),
+                    ),
                   ),
                 ),
-              );
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.selectedImages.removeAt(index - 1);
+                    },
+                    child: Container(
+                      height: 35,
+                      width: 35,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        //shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                          child: Icon(
+                        Icons.remove,
+                        size: 35,
+                        color: Colors.red,
+                      )),
+                    ),
+                  ),
+                ),
+              ]);
             }
           },
         ),

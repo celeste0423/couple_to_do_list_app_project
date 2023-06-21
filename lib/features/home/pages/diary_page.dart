@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
@@ -94,14 +95,15 @@ class DiaryPageTest extends GetView<DiaryPageController> {
             ),
           )
         : ListView.builder(
-            itemCount: controller.diaryList[tabIndex].length+1,
+            itemCount: controller.diaryList[tabIndex].length + 1,
             itemBuilder: (BuildContext context, int index) {
               return Obx(() {
                 // print(controller.diaryList[tabIndex].length);
                 if (index != controller.diaryList[tabIndex].length) {
                   return myListTile(controller.diaryList[tabIndex][index]);
                 } else {
-                  return SizedBox(height: 270); //마지막 index 에서는 tabview때문에 height 준거
+                  return SizedBox(
+                      height: 270); //마지막 index 에서는 tabview때문에 height 준거
                 }
               });
             },
@@ -268,17 +270,17 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Obx(
-            //   () => RotatedBox(
-            //     quarterTurns: 135,
-            //     child: Text(
-            //       //todo: nickname 가져올것
-            //       '${controller.maleNickname} 🤍 ${controller.femaleNickname}',
-            //       style: TextStyle(
-            //           color: Colors.black.withOpacity(0.4), fontSize: 25),
-            //     ),
-            //   ),
-            // ),
+            Obx(
+              () => RotatedBox(
+                quarterTurns: 135,
+                child: Text(
+                  //todo: nickname 가져올것
+                  '${controller.maleNickname} 🤍 ${controller.femaleNickname}',
+                  style: TextStyle(
+                      color: Colors.black.withOpacity(0.4), fontSize: 25),
+                ),
+              ),
+            ),
             Padding(
               padding: EdgeInsets.only(
                 top: 10,
@@ -305,21 +307,33 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                     ),
                   ],
                 ),
-                child: controller.selectedDiary.value == null
+                child: controller.selectedDiary.value.title ==
+                        null //title==null selectedDiary는 그냥 DiaryModel()일테니까
                     ? Center(
                         child: controller.diaryList.isNotEmpty
-                            ? Shimmer.fromColors(
-                                baseColor: CustomColors.lightGrey,
-                                highlightColor:
-                                    CustomColors.backgroundLightGrey,
-                                child: Container(
-                                  width: 150 * percent,
-                                  height: 170 * percent,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    color: CustomColors.backgroundLightGrey,
+                            ? Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text('다이어리를 추가 해 보세요'),
+                                  Shimmer.fromColors(
+                                    baseColor: CustomColors.lightGrey,
+                                    highlightColor:
+                                        CustomColors.backgroundLightGrey,
+                                    child: Container(
+                                      width: 150 * percent,
+                                      height: 170 * percent,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                Constants.baseImageUrl)),
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: CustomColors.backgroundLightGrey,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  SizedBox()
+                                ],
                               )
                             : Container(
                                 width: 150 * percent,
@@ -349,22 +363,15 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                                 image: DecorationImage(
                                   image: NetworkImage(
                                     controller
-                                        .selectedDiary.value!.imgUrlList![0],
+                                        .selectedDiary.value.imgUrlList![0],
                                   ),
                                   fit: BoxFit.cover,
                                 ),
                               ),
-
-                              //사진이 없을경우 기본 이미지 꼬물이로
-                              // child: Image.asset(
-                              //   'assets/images/ggomool.png',
-                              //   width: 170,
-                              //   height: 170,
-                              // ),
                             ),
                             Text(
-                              DateFormat('yyyy-MM-dd').format(
-                                  controller.selectedDiary.value!.date!),
+                              DateFormat('yyyy-MM-dd')
+                                  .format(controller.selectedDiary.value.date!),
                               style: TextStyle(fontSize: 15),
                             ),
                           ],
@@ -376,7 +383,7 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
         ),
         Positioned(
           top: 140 * percent,
-          right: 75 + 105 * (1 - percent),
+          right: 65 + 105 * (1 - percent),
           child: CustomIconButton(
             onTap: () {
               Get.to(

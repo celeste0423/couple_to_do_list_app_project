@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
@@ -47,11 +48,10 @@ class DiaryPageController extends GetxController
     super.onInit();
 
     listCategory.value = "all";
-
     setDiaryList();
     initSelectedDiary();
+    getNickname();
 
-    // getNickname();
   }
 
   Future setDiaryList() async {
@@ -98,18 +98,18 @@ class DiaryPageController extends GetxController
     });
   }
 
-  // getNickname() async {
-  //   final String femaleUid = AuthController.to.group.value.femaleUid!;
-  //   final String maleUid = AuthController.to.group.value.maleUid!;
-  //   final maledata =
-  //       await FirebaseFirestore.instance.collection('users').doc(maleUid).get();
-  //   final femaledata = await FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(femaleUid)
-  //       .get();
-  //   maleNickname(maledata.data()!['nickname'].toString());
-  //   femaleNickname(femaledata.data()!['nickname'].toString());
-  // }
+  getNickname() async {
+    final String femaleUid = AuthController.to.group.value.femaleUid!;
+    final String maleUid = AuthController.to.group.value.maleUid!;
+    final maledata =
+        await FirebaseFirestore.instance.collection('users').doc(maleUid).get();
+    final femaledata = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(femaleUid)
+        .get();
+    maleNickname(maledata.data()!['nickname'].toString());
+    femaleNickname(femaledata.data()!['nickname'].toString());
+  }
 
   @override
   // void onNotification(ScrollNotification notification) {

@@ -329,6 +329,9 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
         IconButton(
             onPressed: () {},
             icon: Icon(Icons.share, size: 25, color: CustomColors.lightPink)),
+        IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.delete, size: 30, color: CustomColors.lightPink)),
       ],
     );
   }
