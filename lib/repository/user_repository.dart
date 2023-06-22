@@ -1,9 +1,47 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserRepository {
+  static Future<UserCredential> signInWithGoogle() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    //구글 로그인 페이지 표시
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+    if (googleUser == null) {
+      return openAlertDialog(title: '로그인에 실패했습니다');
+    }
+    //로그인 성공, 유저정보 가져오기
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+    //파이어베이스 인증 정보 로그인
+    final OAuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    // print(googleAuth.accessToken);
+    // print(googleAuth.idToken);
+    print('구글에 로그인(user repo)');
+    return await auth.signInWithCredential(credential);
+  }
+
+  static Future signOut() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    try {
+      if (AuthController.to.user.value.loginType == 'google') {
+        //이전 로그인 기록 지우기
+        await googleSignIn.signOut();
+      }
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print('로그아웃 실패${e.toString()}');
+    }
+  }
+
   static Future<UserModel?> loginUserByEmail(String email) async {
     try {
       var data = await FirebaseFirestore.instance

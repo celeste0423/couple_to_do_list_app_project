@@ -1,4 +1,5 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/setting/controller/setting_page_controller.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/basic_container.dart';
@@ -11,14 +12,9 @@ import 'package:share_plus/share_plus.dart';
 
 String playstoreurl = '';
 
-class SettingsPage extends StatefulWidget {
-  SettingsPage({super.key});
+class SettingPage extends GetView<SettingPageController> {
+  SettingPage({super.key});
 
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
   PreferredSizeWidget customAppBar() {
     return AppBar(
       backgroundColor: CustomColors.backgroundLightGrey,
@@ -217,6 +213,16 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         onTap: () {
           //Todo: 로그아웃 구현해야함
+          openAlertDialog(
+            title: '로그아웃 하시겠습니까?',
+            btnText: '로그아웃',
+            secondButtonText: '취소',
+            function: () async {
+              await controller.signOut();
+              Get.back();
+              Get.back();
+            },
+          );
         },
       ),
     );
@@ -224,6 +230,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(SettingPageController());
     double imagewidth = 35.0;
     return Scaffold(
       appBar: customAppBar(),
