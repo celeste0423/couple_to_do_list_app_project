@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class WelcomePage extends StatelessWidget {
-
   Widget _subTitle() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -122,6 +121,7 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('웰컴페이지야(wel page)');
     return Scaffold(
       backgroundColor: CustomColors.mainPink,
       body: SafeArea(

@@ -25,7 +25,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       actions: [
         IconButton(
           onPressed: () {
-            Get.to(() => SettingsPage());
+            Get.to(() => SettingPage());
           },
           icon: PngIcon(
             iconName: 'setting',

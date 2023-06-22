@@ -244,6 +244,7 @@ class SignupPageState extends State<SignupPage> {
           uid: widget.uid,
           email: widget.email,
           nickname: nicknameController.text,
+          loginType: AuthController.loginType,
           gender: gender,
           birthday: birthdayDateTime,
         );

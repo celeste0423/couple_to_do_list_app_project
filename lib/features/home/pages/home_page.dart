@@ -100,6 +100,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    print('(home page)홈페이지임');
     return Scaffold(
       body: TabBarView(
         controller: _tabController,

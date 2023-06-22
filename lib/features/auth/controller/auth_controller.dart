@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
@@ -12,10 +13,16 @@ enum GroupIdStatus { noData, hasGroup, createdGroupId }
 
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
+  static String? loginType;
+
   Rx<UserModel> user = UserModel().obs;
   // Rx<UserModel> user = UserModel(uid: 'base').obs;
   Rx<GroupModel> group = GroupModel().obs;
-  final finishedLogin = false.obs;
+  // final finishedLogin = false.obs;
+
+  Future<UserCredential> signInWithGoogle() async {
+    return await UserRepository.signInWithGoogle();
+  }
 
   Future<UserModel?> loginUser(String email) async {
     try {
@@ -38,7 +45,7 @@ class AuthController extends GetxController {
       //   //신규 유저
       //   return user.value;
       // }
-      finishedLogin.value = true;
+      // finishedLogin.value = true;
       return userData; //로딩 중 경우 null반환
     } catch (e) {
       print('loginUser 오류(cont)$e');
