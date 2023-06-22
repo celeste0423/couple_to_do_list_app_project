@@ -122,4 +122,36 @@ class DiaryModel {
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+
+  bool isEmptyDiary() {
+    return diaryId == null &&
+        title == null &&
+        category == null &&
+        location == null &&
+        imgUrlList == null &&
+        creatorSogam == null &&
+        bukkungSogam == null &&
+        date == null &&
+        creatorUserID == null &&
+        createdAt == null &&
+        lastUpdatorID == null &&
+        updatedAt == null;
+  }
+
+  DiaryModel copyDiaryModel(DiaryModel other) {
+    return DiaryModel(
+      diaryId: other.diaryId,
+      title: other.title,
+      category: other.category,
+      location: other.location,
+      imgUrlList: List.from(other.imgUrlList ?? []),
+      creatorSogam: other.creatorSogam,
+      bukkungSogam: other.bukkungSogam,
+      date: other.date,
+      creatorUserID: other.creatorUserID,
+      createdAt: other.createdAt,
+      lastUpdatorID: other.lastUpdatorID,
+      updatedAt: other.updatedAt,
+    );
+  }
 }

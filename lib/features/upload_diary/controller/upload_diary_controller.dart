@@ -20,9 +20,8 @@ class UploadDiaryController extends GetxController {
 
   Uint8List? diaryImage = null;
 
-   final DiaryModel? selectedDiaryModelArgument = Get.arguments;
+  Rx<DiaryModel?> selectedDiaryModel = (DiaryModel().copyDiaryModel(Get.arguments)).obs;
 
-  Rx<DiaryModel?> selectedDiaryModel = Get.arguments== null? (null as DiaryModel?).obs: Get.arguments.obs;
   TextEditingController locationController = TextEditingController();
   List<AutoCompletePrediction> placePredictions = [];
 
