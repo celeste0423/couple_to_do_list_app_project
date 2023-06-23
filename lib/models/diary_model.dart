@@ -138,20 +138,20 @@ class DiaryModel {
         updatedAt == null;
   }
 
-  DiaryModel copyDiaryModel(DiaryModel other) {
-    return DiaryModel(
-      diaryId: other.diaryId,
-      title: other.title,
-      category: other.category,
-      location: other.location,
-      imgUrlList: List.from(other.imgUrlList ?? []),
-      creatorSogam: other.creatorSogam,
-      bukkungSogam: other.bukkungSogam,
-      date: other.date,
-      creatorUserID: other.creatorUserID,
-      createdAt: other.createdAt,
-      lastUpdatorID: other.lastUpdatorID,
-      updatedAt: other.updatedAt,
-    );
-  }
+  // DiaryModel copyDiaryModel(DiaryModel other) {
+  //   return DiaryModel(
+  //     diaryId: other.diaryId,
+  //     title: other.title,
+  //     category: other.category,
+  //     location: other.location,
+  //     imgUrlList: List.from(other.imgUrlList ?? []),
+  //     creatorSogam: other.creatorSogam,
+  //     bukkungSogam: other.bukkungSogam,
+  //     date: other.date,
+  //     creatorUserID: other.creatorUserID,
+  //     createdAt: other.createdAt,
+  //     lastUpdatorID: other.lastUpdatorID,
+  //     updatedAt: other.updatedAt,
+  //   );
+  // }
 }

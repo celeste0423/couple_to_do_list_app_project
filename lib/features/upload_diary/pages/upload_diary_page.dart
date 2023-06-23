@@ -4,74 +4,100 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/auxiliary_button.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/main_button.dart';
+import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
-//Todo: controller 가 이 페이지 꺼지면 바로 꺼지게 해야 함
 
 class UploadDiaryPage extends GetView<UploadDiaryController> {
   UploadDiaryPage({super.key});
 
   PreferredSizeWidget _appBar() {
     return AppBar(
-      backgroundColor: CustomColors.lightPink,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 10),
-        child: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            size: 35,
-          ),
-        ),
-      ),
-      title: Center(
-        child: TextField(
-          controller: controller.titleController,
-          maxLines: 1,
-          textInputAction: TextInputAction.done,
-          textAlign: TextAlign.start,
-          style: TextStyle(
-            color: CustomColors.darkGrey,
-            fontSize: 40,
-          ),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            errorBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-            contentPadding: EdgeInsets.only(left: 15),
-            hintText: '제목을 입력하세요',
-            suffixIcon: Icon(
-              Icons.edit,
-              size: 23,
-              color: CustomColors.grey,
-            ),
-            hintStyle: TextStyle(
-              color: CustomColors.darkGrey,
-              fontSize: 40,
+        backgroundColor: CustomColors.lightPink,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 35,
             ),
           ),
         ),
-      ),
-    );
+        title: TitleText(
+          text: '다이어리',
+        ));
   }
 
   Widget _imagePicker() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-      child: myImagePickerContainer(),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      height: 210,
+      child: Obx(() {
+        return ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            Row(
+              children: List.generate(
+                controller.selectedImgFiles[0].length,
+                (index) => Stack(clipBehavior: Clip.none, children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Container(
+                      width: 170,
+                      height: 170,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image:
+                              FileImage(controller.selectedImgFiles[0][index]),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: GestureDetector(
+                      onTap: () {
+                        controller.selectedImgFiles[0].removeAt(index);
+                        controller.selectedImgFiles[1].removeAt(index);
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: CustomColors.backgroundLightGrey,
+                          borderRadius: BorderRadius.circular(30),
+                          //shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                            child: Icon(
+                          Icons.remove_circle,
+                          size: 30,
+                          color: Colors.red,
+                        )),
+                      ),
+                    ),
+                  )
+                ]),
+              ),
+            ),
+            imageAddButton(),
+          ],
+        );
+      }),
     );
   }
 
-  Widget chooseImageContainer() {
+  Widget imageAddButton() {
     return GestureDetector(
       onTap: () {
-        print('이미지 추가 버튼 누름!');
         FocusManager.instance.primaryFocus?.unfocus();
         controller.pickMultipleImages();
       },
@@ -101,264 +127,6 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
         ),
       ),
     );
-  }
-
-  Widget _myGridView2() {
-    if (controller.selectedImages.isEmpty) {
-      return SizedBox(
-        height: 170,
-        child: Obx(() => ListView.builder(
-          itemCount: controller.selectedDiaryModel.value!.imgUrlList!.length + 1,
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return chooseImageContainer();
-            } else {
-              return Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      width: 170,
-                      height: 170,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                            controller.selectedDiaryModel.value!.imgUrlList![index - 1],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 0, bottom: 0,
-                      child: GestureDetector(
-                        onTap: () {
-                          //todo: 버그있을수도있음
-                          controller.selectedDiaryModel.value!.imgUrlList!
-                              .removeAt(index - 1);
-                        },
-                        child: Container(
-                          height: 35,
-                          width: 35,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            //shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                              child: Icon(
-                                Icons.remove,
-                                size: 35,
-                                color: Colors.red,
-                              )),
-                        ),
-                      ),)]
-              );
-            }
-          },
-        ))
-      );
-    } else {
-      return SizedBox(
-        height: 170,
-        child: ListView.builder(
-          //Todo: 이렇게 만드는 건 문제가 있을 것 같은데.. 고민이 필요하겠군요
-          itemCount: controller.selectedImages.length +
-              controller.selectedDiaryModel.value!.imgUrlList!.length +
-              1,
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          // gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          //     maxCrossAxisExtent: 10, mainAxisSpacing: 20),
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return chooseImageContainer();
-            } else if (index >= 1 &&
-                index <= controller.selectedDiaryModel.value!.imgUrlList!.length) {
-              return Stack(clipBehavior: Clip.none, children: [
-                Container(
-                  width: 170,
-                  height: 170,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                        controller.selectedDiaryModel.value!.imgUrlList![index - 1],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: GestureDetector(
-                    onTap: () {
-                      //todo: 버그있을수도있음
-                      controller.selectedDiaryModel.value!.imgUrlList!
-                          .removeAt(index - 1);
-                    },
-                    child: Container(
-                      height: 35,
-                      width: 35,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        //shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                          child: Icon(
-                        Icons.remove,
-                        size: 35,
-                        color: Colors.red,
-                      )),
-                    ),
-                  ),
-                )
-              ]);
-            } else {
-              return Stack(clipBehavior: Clip.none, children: [
-                Container(
-                  width: 170,
-                  height: 170,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: FileImage(
-                        controller.selectedImages[index -
-                            1 -
-                            controller.selectedDiaryModel.value!.imgUrlList!.length],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: GestureDetector(
-                    onTap: () {
-                      controller.selectedImages.removeAt(index -
-                          1 -
-                          controller.selectedDiaryModel.value!.imgUrlList!.length);
-                    },
-                    child: Container(
-                      height: 35,
-                      width: 35,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        //shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                          child: Icon(
-                        Icons.remove,
-                        size: 35,
-                        color: Colors.red,
-                      )),
-                    ),
-                  ),
-                ),
-              ]);
-            }
-          },
-        ),
-      );
-    }
-  }
-
-  Widget _myGridView1() {
-    if (controller.selectedImages.isEmpty) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.asset(
-            'assets/icons/image.png',
-            width: 35,
-            color: Colors.black.withOpacity(0.6),
-            colorBlendMode: BlendMode.modulate,
-          ),
-          SizedBox(width: 10),
-          chooseImageContainer(),
-        ],
-      );
-    } else {
-      return SizedBox(
-        height: 170,
-        child: ListView.builder(
-          itemCount: controller.selectedImages.length + 1,
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          // gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          //     maxCrossAxisExtent: 10, mainAxisSpacing: 20),
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return chooseImageContainer();
-            } else {
-              return Stack(clipBehavior: Clip.none, children: [
-                Container(
-                  width: 170,
-                  height: 170,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: FileImage(controller.selectedImages[index - 1]),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: GestureDetector(
-                    onTap: () {
-                      controller.selectedImages.removeAt(index - 1);
-                    },
-                    child: Container(
-                      height: 35,
-                      width: 35,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        //shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                          child: Icon(
-                        Icons.remove,
-                        size: 35,
-                        color: Colors.red,
-                      )),
-                    ),
-                  ),
-                ),
-              ]);
-            }
-          },
-        ),
-      );
-    }
-  }
-
-  Widget myImagePickerContainer() {
-    //Todo: 2개로 굳이 분리할 필요가 있을까?
-    //완전 새로 작성하는 다이어리야?
-    if (controller.selectedDiaryModel.value == null) {
-      //yes 새로작성하는 다이어리야~
-      return Obx(() => _myGridView1());
-    } else {
-      //imgurllist가 notempty야?
-      if (controller.selectedDiaryModel.value!.imgUrlList!.isEmpty) {
-        return Obx(() => _myGridView1());
-      } else {
-        return Obx(() => _myGridView2());
-      }
-    }
   }
 
   Widget _categoryDialog() {
@@ -487,6 +255,35 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(
+            height: 50,
+            width: (Get.width - 100 - holeDiameter) * 11 / 16,
+            child: TextField(
+              controller: controller.titleController,
+              maxLines: 1,
+              textInputAction: TextInputAction.done,
+              textAlign: TextAlign.start,
+              cursorColor: CustomColors.darkGrey,
+              cursorHeight: 40,
+              style: TextStyle(
+                color: CustomColors.darkGrey,
+                fontSize: 40,
+              ),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 15),
+                hintText: '제목을 입력하세요',
+                hintStyle: TextStyle(
+                  color: CustomColors.darkGrey,
+                  fontSize: 40,
+                ),
+              ),
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -568,6 +365,8 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
               keyboardType: TextInputType.multiline,
               maxLines: 1,
               onChanged: (value) {},
+              cursorColor: CustomColors.darkGrey,
+              cursorHeight: 20,
               style: TextStyle(
                 color: CustomColors.blackText,
                 fontSize: 25,
@@ -689,7 +488,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
           Get.back();
         }, Get.width * 1 / 4),
         mainButton(
-          '다이어리 작성',
+          controller.selectedDiaryModel == null ? '작성 완료' : '수정 완료',
           () async {
             if (controller.isButtonDisabled) {
               print('버튼 비활성화');

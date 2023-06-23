@@ -12,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 //Todo: onDelete 함수 어떻게 불러오는거징
@@ -20,7 +21,10 @@ class UploadDiaryController extends GetxController {
 
   Uint8List? diaryImage = null;
 
-  Rx<DiaryModel?> selectedDiaryModel = (DiaryModel().copyDiaryModel(Get.arguments)).obs;
+  DiaryModel? selectedDiaryModel = Get.arguments;
+
+  // Rx<DiaryModel?> selectedDiaryModel =
+  //     (DiaryModel().copyDiaryModel(Get.arguments)).obs;
 
   TextEditingController locationController = TextEditingController();
   List<AutoCompletePrediction> placePredictions = [];
@@ -42,8 +46,7 @@ class UploadDiaryController extends GetxController {
     "6etc": "기타",
   };
 
-  RxList<File> selectedImages = <File>[].obs; // List of selected image
-  final picker = ImagePicker(); // Instance of Image picker
+  List<RxList<dynamic>> selectedImgFiles = [<File>[].obs, <String>[].obs];
 
   bool isButtonDisabled = false;
 
@@ -55,16 +58,36 @@ class UploadDiaryController extends GetxController {
   }
 
   void _checkIsDiarySelected() {
-    if (selectedDiaryModel.value != null) {
-      titleController.text = selectedDiaryModel.value!.title!;
-      diaryCategory(selectedDiaryModel.value!.category!);
-      diaryDateTime(selectedDiaryModel.value!.date);
-      if (selectedDiaryModel.value!.location != null) {
-        locationController.text = selectedDiaryModel.value!.location!;
+    if (selectedDiaryModel != null) {
+      titleController.text = selectedDiaryModel!.title!;
+      diaryCategory(selectedDiaryModel!.category!);
+      diaryDateTime(selectedDiaryModel!.date);
+      locationController.text = selectedDiaryModel!.location!;
+      contentController.text = selectedDiaryModel!.creatorSogam!;
+      if (selectedDiaryModel!.imgUrlList != []) {
+        _addNetworkImgToFile();
       }
-      if (selectedDiaryModel.value!.creatorSogam != null) {
-        contentController.text = selectedDiaryModel.value!.creatorSogam!;
+    }
+  }
+
+  Future<void> _addNetworkImgToFile() async {
+    final storage = FirebaseStorage.instance;
+    for (final imgUrl in selectedDiaryModel!.imgUrlList!) {
+      //임시 경로 지정
+      var uuid = Uuid();
+      final tempDir = await getTemporaryDirectory();
+      final tempPath = '${tempDir.path}/${uuid.v4()}.jpg';
+      print('tempPath $tempPath');
+      try {
+        await storage.refFromURL(imgUrl).writeToFile(File(tempPath));
+      } catch (e) {
+        print(e.toString());
       }
+
+      final imgFile = File(tempPath);
+
+      selectedImgFiles[0].add(imgFile);
+      selectedImgFiles[1].add(imgUrl);
     }
   }
 
@@ -155,25 +178,23 @@ class UploadDiaryController extends GetxController {
   }
 
   Future pickMultipleImages() async {
-    print('pickMultipleImages function start');
-    final pickedFile = await picker.pickMultiImage(
-        imageQuality: 100, // To set quality of images
-        maxHeight: 1000, // To set maxheight of images that you want in your app
-        maxWidth: 1000); // To set maxheight of images that you want in your app
-    List<XFile> xfilePick = pickedFile;
+    final pickerImgList = await ImagePicker().pickMultiImage(
+      imageQuality: 80, // To set quality of images
+      maxHeight: 1000, // To set maxheight of images that you want in your app
+      maxWidth: 1000,
+    ); // To set maxheight of images that you want in your app
 
     // if atleast 1 images is selected it will add
     // all images in selectedImages
     // variable so that we can easily show them in UI
-    if (xfilePick.isNotEmpty) {
-      for (var i = 0; i < xfilePick.length; i++) {
-        selectedImages.add(File(xfilePick[i].path));
+    if (pickerImgList.isNotEmpty) {
+      for (var pickerImgIndex = 0;
+          pickerImgIndex < pickerImgList.length;
+          pickerImgIndex++) {
+        selectedImgFiles[0].add(File(pickerImgList[pickerImgIndex].path));
+        selectedImgFiles[1].add(null);
       }
-      print(selectedImages[0].path);
-      print(selectedImages.length);
     } else {
-      // If no image is selected it will show a
-      // snackbar saying nothing is selected
       //Todo: 색이 너무 다름
       Get.snackbar('사진 고르기 취소', 'Nothing is selected');
     }
@@ -183,44 +204,48 @@ class UploadDiaryController extends GetxController {
     await DiaryRepository.setGroupDiary(diaryData, diaryId);
   }
 
-  UploadTask uploadFile(File file, String location, String filename) {
-    final metadata = SettableMetadata(
-      contentType: 'image/jpeg',
-    );
-    var ref = FirebaseStorage.instance
-        .ref()
-        .child('group_diary')
-        .child('${AuthController.to.user.value.groupId}/${filename}');
-    return ref.putFile(file, metadata);
-  }
+  uploadSelectedImages() async {
+    List<String> imgUrlList = <String>[];
+    var uuid = Uuid();
 
-  uploadSelectedImages(String imageId) async {
-    List<String> addImgUrlList = <String>[];
-    for (var imgIndex = 0; imgIndex < selectedImages.length; imgIndex++) {
-      String filename = '$imageId$imgIndex.jpg';
-      var uploadTask = await FirebaseStorage.instance
-          .ref()
-          .child('group_diary')
-          .child('${AuthController.to.user.value.groupId}/${filename}')
-          .putFile(selectedImages[imgIndex]);
-      var downloadUrl = await uploadTask.ref.getDownloadURL();
-      addImgUrlList.add(downloadUrl);
+    for (var imgIndex = 0; imgIndex < selectedImgFiles[0].length; imgIndex++) {
+      if (selectedImgFiles[1][imgIndex] == null) {
+        //새로 업로드할 이미지 => 업로드
+        String imageId = uuid.v4();
+        String filename = '$imageId.jpg';
+        var uploadTask = await FirebaseStorage.instance
+            .ref()
+            .child('group_diary')
+            .child('${AuthController.to.user.value.groupId}/${filename}')
+            .putFile(selectedImgFiles[0][imgIndex]);
+        var downloadUrl = await uploadTask.ref.getDownloadURL();
+        imgUrlList.add(downloadUrl);
+      } else {
+        imgUrlList.add(selectedImgFiles[1][imgIndex]);
+      }
     }
-    return addImgUrlList;
+    return imgUrlList;
   }
 
-  makeAndSubmitDiary(String diaryId, List<String> addImgUrlList) {
-    if (selectedDiaryModel.value != null) {
+  makeAndSubmitDiary(String diaryId, List<String> imgUrlList) async {
+    if (selectedDiaryModel != null) {
       //기존 다이어리 수정할 경우
-      DiaryModel updatedDiary = selectedDiaryModel.value!.copyWith(
+      for (String imgUrl in selectedDiaryModel!.imgUrlList!) {
+        //기존에 있던 이미지를 이번엔 안 올릴경우
+        if (!imgUrlList.contains(imgUrl)) {
+          //스토리지에서 이미지 제거
+          await DiaryRepository().deleteDiaryImage(imgUrl);
+        }
+      }
+      DiaryModel updatedDiary = selectedDiaryModel!.copyWith(
         title: titleController.text,
         category: diaryCategory.value,
         location: locationController.text,
-        imgUrlList: selectedDiaryModel.value!.imgUrlList! + addImgUrlList,
+        imgUrlList: imgUrlList,
         creatorSogam: contentController.text,
-        bukkungSogam: selectedDiaryModel.value == null
+        bukkungSogam: selectedDiaryModel == null
             ? null
-            : selectedDiaryModel.value!.bukkungSogam,
+            : selectedDiaryModel!.bukkungSogam,
         date: diaryDateTime.value,
         // 여긴selectedDiaryModel null 아닐때만이니까 이미 creatorUserID,createdAt 존재 함.
         lastUpdatorID: AuthController.to.user.value.uid,
@@ -234,11 +259,11 @@ class UploadDiaryController extends GetxController {
         title: titleController.text,
         category: diaryCategory.value,
         location: locationController.text,
-        imgUrlList: addImgUrlList,
+        imgUrlList: imgUrlList,
         creatorSogam: contentController.text,
-        bukkungSogam: selectedDiaryModel.value == null
+        bukkungSogam: selectedDiaryModel == null
             ? null
-            : selectedDiaryModel.value!.bukkungSogam,
+            : selectedDiaryModel!.bukkungSogam,
         date: diaryDateTime.value,
         createdAt: DateTime.now(),
         creatorUserID: AuthController.to.user.value.uid,
@@ -254,13 +279,12 @@ class UploadDiaryController extends GetxController {
     var uuid = Uuid();
     //기존 다이어리 수정의 경우 기존 diaryId 사용하면 됨.
     String diaryId =
-        selectedDiaryModel.value != null ? selectedDiaryModel.value!.diaryId! : uuid.v1();
-    String imageId = uuid.v4();
-    List<String> addImgUrlList = [];
+        selectedDiaryModel != null ? selectedDiaryModel!.diaryId! : uuid.v1();
+    List<String> imgUrlList = [];
     //selectedImages 에 사진file이 있으면
-    if (selectedImages.isNotEmpty) {
-      addImgUrlList = await uploadSelectedImages(imageId);
+    if (selectedImgFiles.isNotEmpty) {
+      imgUrlList = await uploadSelectedImages();
     } //selectedImages 에 아무것도 없으면(null) 이미지 없이 그냥 diary 업로딩 한다
-    await makeAndSubmitDiary(diaryId, addImgUrlList);
+    await makeAndSubmitDiary(diaryId, imgUrlList);
   }
 }

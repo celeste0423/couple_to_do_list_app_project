@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
-import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/repository/diary_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -51,10 +50,10 @@ class DiaryPageController extends GetxController
     setDiaryList();
     initSelectedDiary();
     getNickname();
-
   }
 
   Future setDiaryList() async {
+    print('다이어리 Future(dia cont)');
     diaryList[0].bindStream(getDiaryList('all'));
     diaryList[1].bindStream(getDiaryList('1travel'));
     diaryList[2].bindStream(getDiaryList('2meal'));
@@ -65,11 +64,10 @@ class DiaryPageController extends GetxController
   }
 
   Stream<List<DiaryModel>> getDiaryList(String category) {
-    final GroupModel groupModel = AuthController.to.group.value;
     if (category == 'all') {
-      return DiaryRepository(groupModel: groupModel).getAllDiary();
+      return DiaryRepository().getAllDiary();
     } else {
-      return DiaryRepository(groupModel: groupModel).getCategoryDiary(category);
+      return DiaryRepository().getCategoryDiary(category);
     }
   }
 
@@ -112,23 +110,6 @@ class DiaryPageController extends GetxController
   }
 
   @override
-  // void onNotification(ScrollNotification notification) {
-  //   if (sliverScrollController.position.pixels !=
-  //       sliverScrollController.position.minScrollExtent) {
-  //     if (notification is ScrollUpdateNotification &&
-  //         notification.scrollDelta! < 0) {
-  //       isScrollMax(false);
-  //     }
-  //   }
-  //   if (sliverScrollController.position.pixels ==
-  //       sliverScrollController.position.minScrollExtent) {
-  //     if (notification is ScrollUpdateNotification &&
-  //         notification.scrollDelta! > 0) {
-  //       isScrollMax(false);
-  //     }
-  //   }
-  // }
-
   void onClose() {
     diaryTabController.dispose();
     super.onClose();
@@ -136,6 +117,13 @@ class DiaryPageController extends GetxController
 
   void indexSelection(DiaryModel updatedDiary) {
     selectedDiary(updatedDiary);
+  }
+
+  void deleteDiary(DiaryModel selectedDiaryModel) async {
+    for (var imgUrl in selectedDiaryModel.imgUrlList!) {
+      await DiaryRepository().deleteDiaryImage(imgUrl);
+    }
+    await DiaryRepository().deleteDiary(selectedDiaryModel.diaryId!);
   }
 
 //

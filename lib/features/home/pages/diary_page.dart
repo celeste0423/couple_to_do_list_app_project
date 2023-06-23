@@ -1,7 +1,7 @@
-import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
@@ -100,7 +100,7 @@ class DiaryPageTest extends GetView<DiaryPageController> {
               return Obx(() {
                 // print(controller.diaryList[tabIndex].length);
                 if (index != controller.diaryList[tabIndex].length) {
-                  return myListTile(controller.diaryList[tabIndex][index]);
+                  return diaryTile(controller.diaryList[tabIndex][index]);
                 } else {
                   return SizedBox(
                       height: 270); //마지막 index 에서는 tabview때문에 height 준거
@@ -110,103 +110,157 @@ class DiaryPageTest extends GetView<DiaryPageController> {
           );
   }
 
-  Widget myListTile(DiaryModel diaryModel) {
-    String dateString = diaryModel.date != null
-        ? DateFormat('yyyy-MM-dd').format(diaryModel.date!)
-        : '';
-    return GestureDetector(
-      onTap: () {
-        controller.indexSelection(diaryModel);
-      },
-      onDoubleTap: () {
-        controller.indexSelection(diaryModel);
-        Get.to(
-          () => ReadDiaryPage(),
-          arguments: controller.selectedDiary.value,
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 5),
-        height: 100,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(25),
-            bottomRight: Radius.circular(25),
-          ),
-          border: Border.all(
-            color:
-                diaryModel.diaryId! == controller.selectedDiary.value!.diaryId
+  Widget diaryTile(DiaryModel diaryModel) {
+    String dateString = DateFormat('yyyy-MM-dd').format(diaryModel.date!);
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () {
+            controller.indexSelection(diaryModel);
+          },
+          onDoubleTap: () {
+            controller.indexSelection(diaryModel);
+            Get.to(
+              () => ReadDiaryPage(),
+              arguments: controller.selectedDiary.value,
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(25),
+                bottomRight: Radius.circular(25),
+              ),
+              border: Border.all(
+                color: diaryModel.diaryId! ==
+                        controller.selectedDiary.value!.diaryId
                     ? CustomColors.grey.withOpacity(0.4)
                     : Colors.transparent,
-            width: 2,
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              height: 85,
-              width: 70,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(diaryModel.imgUrlList![0]),
-                ),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    spreadRadius: 3,
-                    blurRadius: 5,
-                    offset: Offset(5, 5), // Offset(수평, 수직)
-                  ),
-                ],
+                width: 2,
               ),
             ),
-            SizedBox(
-              width: 30,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
-                Text(
-                  diaryModel.title ?? '',
-                  style: TextStyle(fontSize: 25),
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on_outlined,
-                      size: 15,
+                Container(
+                  height: 85,
+                  width: 70,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(diaryModel.imgUrlList![0]),
                     ),
-                    SizedBox(
-                      width: 4,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
                     ),
-                    Text(
-                      diaryModel.location ?? '',
-                      style: TextStyle(fontSize: 15),
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 2,
                     ),
-                  ],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        spreadRadius: 3,
+                        blurRadius: 5,
+                        offset: Offset(5, 5), // Offset(수평, 수직)
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
-                  height: 3,
+                  width: 30,
                 ),
-                Text(
-                  dateString,
-                  style: TextStyle(fontSize: 15),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      diaryModel.title ?? '',
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 15,
+                        ),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Text(
+                          diaryModel.location ?? '',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      dateString,
+                      style: TextStyle(fontSize: 15),
+                    )
+                  ],
                 )
               ],
-            )
-          ],
+            ),
+          ),
         ),
-      ),
+        diaryModel.diaryId! == controller.selectedDiary.value!.diaryId
+            ? Positioned(
+                top: 10,
+                right: 10,
+                child: GestureDetector(
+                  onTap: () {},
+                  child: PopupMenuButton(
+                    offset: Offset(-10, 25),
+                    shape: ShapeBorder.lerp(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      1,
+                    ),
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        PopupMenuItem(
+                          onTap: () {
+                            openAlertDialog(
+                              title: '삭제',
+                              content: '이 다이어리를 지우시겠습니까?',
+                              btnText: '삭제',
+                              secondButtonText: '취소',
+                              function: () {
+                                controller.deleteDiary(
+                                    controller.selectedDiary.value);
+                              },
+                            );
+                          },
+                          height: 40,
+                          child: Text(
+                            "삭제하기",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'Yoonwoo',
+                              letterSpacing: 1,
+                              color: CustomColors.darkGrey,
+                            ),
+                          ),
+                        ),
+                      ];
+                    },
+                    child: Icon(
+                      Icons.more_vert,
+                      color: CustomColors.lightGrey,
+                      size: 25,
+                    ),
+                  ),
+                ),
+              )
+            : Container(),
+      ],
     );
   }
 
@@ -277,7 +331,9 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                   //todo: nickname 가져올것
                   '${controller.maleNickname} 🤍 ${controller.femaleNickname}',
                   style: TextStyle(
-                      color: Colors.black.withOpacity(0.4), fontSize: 25),
+                    color: Colors.black.withOpacity(0.4),
+                    fontSize: 25 * percent,
+                  ),
                 ),
               ),
             ),
@@ -307,26 +363,30 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                     ),
                   ],
                 ),
-                child: controller.selectedDiary.value.title ==
-                        null //title==null selectedDiary는 그냥 DiaryModel()일테니까
+                child: controller.selectedDiary.value.title == null
+                    //title==null selectedDiary는 그냥 DiaryModel()일테니까
                     ? Center(
                         child: controller.diaryList.isNotEmpty
                             ? Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text('다이어리를 추가 해 보세요'),
                                   Shimmer.fromColors(
-                                    baseColor: CustomColors.lightGrey,
-                                    highlightColor:
-                                        CustomColors.backgroundLightGrey,
+                                    baseColor: CustomColors.backgroundLightGrey,
+                                    highlightColor: Colors.white,
+                                    child: Container(
+                                      color: CustomColors.backgroundLightGrey,
+                                      width: 180 * percent,
+                                      height: 15 * percent,
+                                    ),
+                                  ),
+                                  Shimmer.fromColors(
+                                    baseColor: CustomColors.backgroundLightGrey,
+                                    highlightColor: Colors.white,
                                     child: Container(
                                       width: 150 * percent,
                                       height: 170 * percent,
                                       decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: NetworkImage(
-                                                Constants.baseImageUrl)),
                                         borderRadius: BorderRadius.circular(25),
                                         color: CustomColors.backgroundLightGrey,
                                       ),

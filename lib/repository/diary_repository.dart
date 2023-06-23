@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
-import 'package:couple_to_do_list_app/models/group_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class DiaryRepository {
-  final GroupModel groupModel;
+  final firestore = FirebaseFirestore.instance;
 
-  DiaryRepository({required this.groupModel});
+  DiaryRepository();
 
   Stream<List<DiaryModel>> getAllDiary() {
-    return FirebaseFirestore.instance
+    return firestore
         .collection('groups')
-        .doc(groupModel.uid)
+        .doc(AuthController.to.group.value.uid)
         .collection('diary')
         .orderBy('date', descending: true)
         .snapshots()
@@ -19,20 +20,18 @@ class DiaryRepository {
       List<DiaryModel> diaryList = [];
       for (var diary in event.docs) {
         diaryList.add(
-          DiaryModel.fromJson(
-            diary.data(),
-          ),
+          DiaryModel.fromJson(diary.data()),
         );
       }
-      print('리스트 다 가져옴');
+      print('리스트 다 가져옴(dia repo)${diaryList.length}개');
       return diaryList;
     });
   }
 
   Stream<List<DiaryModel>> getCategoryDiary(String category) {
-    return FirebaseFirestore.instance
+    return firestore
         .collection('groups')
-        .doc(groupModel.uid)
+        .doc(AuthController.to.group.value.uid)
         .collection('diary')
         .where('category', isEqualTo: category)
         .orderBy('date', descending: true)
@@ -60,34 +59,25 @@ class DiaryRepository {
         .set(diaryData.toJson());
   }
 
-  // static Future<void> setSuggestionBukkungList(BukkungListModel bukkungLisData,
-  //     String listId) async {
-  //   await FirebaseFirestore.instance
-  //       .collection('bukkungLists')
-  //       .doc(listId)
-  //       .set(bukkungLisData.toJson());
-  // }
-  //
-  // static Future<void> setGroupBukkungList(BukkungListModel bukkungLisData,
-  //     String listId) async {
-  //   await FirebaseFirestore.instance
-  //       .collection('groups')
-  //       .doc(AuthController.to.user.value.groupId)
-  //       .collection('bukkungLists')
-  //       .doc(listId)
-  //       .set(bukkungLisData.toJson());
-  // }
-  //
-  // Future<void> deleteListImage(String imagePath) async {
-  //   try {
-  //     Reference imageRef = FirebaseStorage.instance
-  //         .ref()
-  //         .child('group_bukkunglist')
-  //         .child('${AuthController.to.user.value.groupId}/$imagePath');
-  //
-  //     await imageRef.delete();
-  //   } catch (e) {
-  //     openAlertDialog(title: '이미지 삭제 오류 $e');
-  //   }
-  // }
+  Future<void> deleteDiary(String diaryId) async {
+    await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(AuthController.to.group.value.uid)
+        .collection('diary')
+        .doc(diaryId)
+        .delete();
+  }
+
+  Future<void> deleteDiaryImage(String imagePath) async {
+    try {
+      Reference imageRef = FirebaseStorage.instance
+          .ref()
+          .child('group_diary')
+          .child('${AuthController.to.user.value.groupId}/$imagePath');
+
+      await imageRef.delete();
+    } catch (e) {
+      openAlertDialog(title: '이미지 삭제 오류 $e');
+    }
+  }
 }
