@@ -107,7 +107,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
     if (controller.selectedImages.isEmpty) {
       return SizedBox(
         height: 170,
-        child: ListView.builder(
+        child: Obx(() => ListView.builder(
           itemCount: controller.selectedDiaryModel.value!.imgUrlList!.length + 1,
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
@@ -116,49 +116,50 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
               return chooseImageContainer();
             } else {
               return Stack(
-                clipBehavior: Clip.none,
-                children: [Container(
-                  width: 170,
-                  height: 170,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                        controller.selectedDiaryModel.value!.imgUrlList![index - 1],
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      width: 170,
+                      height: 170,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                            controller.selectedDiaryModel.value!.imgUrlList![index - 1],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                Positioned(
-                    right: 0, bottom: 0,
-                    child: GestureDetector(
-                      onTap: () {
-                        //todo: 버그있을수도있음
-                        controller.selectedDiaryModel.value!.imgUrlList!
-                            .removeAt(index - 1);
-                      },
-                      child: Container(
-                        height: 35,
-                        width: 35,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          //shape: BoxShape.circle,
+                    Positioned(
+                      right: 0, bottom: 0,
+                      child: GestureDetector(
+                        onTap: () {
+                          //todo: 버그있을수도있음
+                          controller.selectedDiaryModel.value!.imgUrlList!
+                              .removeAt(index - 1);
+                        },
+                        child: Container(
+                          height: 35,
+                          width: 35,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            //shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                              child: Icon(
+                                Icons.remove,
+                                size: 35,
+                                color: Colors.red,
+                              )),
                         ),
-                        child: Center(
-                            child: Icon(
-                              Icons.remove,
-                              size: 35,
-                              color: Colors.red,
-                            )),
-                      ),
-                    ),)]
+                      ),)]
               );
             }
           },
-        ),
+        ))
       );
     } else {
       return SizedBox(
