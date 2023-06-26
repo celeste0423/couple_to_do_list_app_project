@@ -8,6 +8,7 @@ import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
 
 String playstoreurl = '';
@@ -175,8 +176,15 @@ class SettingPage extends GetView<SettingPageController> {
               color: CustomColors.lightGreyText,
             ),
             //Todo: 버전정보 1.0.0 수정하기
-            onTap: () {
-              openAlertDialog(title: '버전정보', content: 'ver 1.0.0');
+            onTap: () async {
+              PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+              String appName = packageInfo.appName;
+              String packageName = packageInfo.packageName;
+              String version = packageInfo.version;
+              String buildNumber = packageInfo.buildNumber;
+              openAlertDialog(
+                  title: '버전정보', content: '버전: $version\n빌드번호: $buildNumber');
             },
           ),
         ],

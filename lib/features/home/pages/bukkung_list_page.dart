@@ -160,8 +160,10 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         return Expanded(
           child: StreamBuilder(
             stream: BukkungListPageController.to.getAllBukkungListByCategory(),
-            builder: (BuildContext context,
-                AsyncSnapshot<Map<String, dynamic>> snapshot) {
+            builder: (
+              BuildContext context,
+              AsyncSnapshot<Map<String, dynamic>> snapshot,
+            ) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child:
