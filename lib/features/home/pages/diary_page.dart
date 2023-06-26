@@ -212,50 +212,49 @@ class DiaryPageTest extends GetView<DiaryPageController> {
             ? Positioned(
                 top: 10,
                 right: 10,
-                child: GestureDetector(
-                  onTap: () {},
-                  child: PopupMenuButton(
-                    offset: Offset(-10, 25),
-                    shape: ShapeBorder.lerp(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      1,
-                    ),
-                    itemBuilder: (BuildContext context) {
-                      return [
-                        PopupMenuItem(
-                          onTap: () {
-                            openAlertDialog(
-                              title: '삭제',
-                              content: '이 다이어리를 지우시겠습니까?',
-                              btnText: '삭제',
-                              secondButtonText: '취소',
-                              function: () {
-                                controller.deleteDiary(
-                                    controller.selectedDiary.value);
-                              },
-                            );
-                          },
-                          height: 40,
-                          child: Text(
-                            "삭제하기",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'Yoonwoo',
-                              letterSpacing: 1,
-                              color: CustomColors.darkGrey,
-                            ),
+                child: PopupMenuButton(
+                  offset: Offset(-10, 25),
+                  shape: ShapeBorder.lerp(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    1,
+                  ),
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem(
+                        onTap: () {
+                          print('삭제 시작');
+                          Get.back();
+                          openAlertDialog(
+                            title: '다이어리 삭제',
+                            content: '이 다이어리를 지우시겠습니까?',
+                            btnText: '삭제',
+                            secondButtonText: '취소',
+                            function: () {
+                              controller
+                                  .deleteDiary(controller.selectedDiary.value);
+                            },
+                          );
+                        },
+                        height: 40,
+                        child: Text(
+                          "삭제하기",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Yoonwoo',
+                            letterSpacing: 1,
+                            color: CustomColors.darkGrey,
                           ),
                         ),
-                      ];
-                    },
-                    child: Icon(
-                      Icons.more_vert,
-                      color: CustomColors.lightGrey,
-                      size: 25,
-                    ),
+                      ),
+                    ];
+                  },
+                  child: Icon(
+                    Icons.more_vert,
+                    color: CustomColors.lightGrey,
+                    size: 25,
                   ),
                 ),
               )

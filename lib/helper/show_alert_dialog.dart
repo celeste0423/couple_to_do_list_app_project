@@ -40,10 +40,13 @@ openAlertDialog({
             )
           : Container(),
       TextButton(
-        onPressed: function ??
-            () {
-              Get.back();
-            },
+        onPressed: () {
+          if (function != null) {
+            function();
+          } else {
+            Get.back();
+          }
+        },
         child: Text(
           btnText ?? "확인",
           style: TextStyle(

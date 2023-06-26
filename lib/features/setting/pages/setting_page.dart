@@ -66,7 +66,7 @@ class SettingPage extends GetView<SettingPageController> {
     );
   }
 
-  Widget secondContainer(double imagewidth) {
+  Widget _notificationSetting(double imagewidth) {
     return basicContainer(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,7 +110,7 @@ class SettingPage extends GetView<SettingPageController> {
     );
   }
 
-  Widget thirdContainer(double imagewidth) {
+  Widget _appSetting(double imagewidth) {
     return basicContainer(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -192,7 +192,51 @@ class SettingPage extends GetView<SettingPageController> {
     );
   }
 
-  Widget logoutListTile(double imagewidth) {
+  Widget _logoutListTile(double imagewidth) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.7),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: Offset(1.5, 1.5), // Offset(수평, 수직)
+          ),
+        ],
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+      ),
+      child: ListTile(
+        leading: Image.asset(
+          'assets/icons/logout.png',
+          width: imagewidth,
+        ),
+        title: Text(
+          '로그아웃',
+          style: TextStyle(
+            fontSize: 25,
+            color: Colors.red,
+          ),
+        ),
+        onTap: () {
+          //Todo: 로그아웃 구현해야함
+          openAlertDialog(
+            title: '로그아웃 하시겠습니까?',
+            btnText: '로그아웃',
+            secondButtonText: '취소',
+            function: () async {
+              await controller.signOut();
+              Get.back();
+              Get.back();
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _authDeleteTile(double imagewidth) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       decoration: BoxDecoration(
@@ -246,9 +290,10 @@ class SettingPage extends GetView<SettingPageController> {
         children: [
           customDivider(),
           Hero(tag: 'addButton', child: accountListTile()),
-          secondContainer(imagewidth),
-          thirdContainer(imagewidth),
-          logoutListTile(imagewidth),
+          _notificationSetting(imagewidth),
+          _appSetting(imagewidth),
+          _logoutListTile(imagewidth),
+          _authDeleteTile(imagewidth),
         ],
       ),
     );
