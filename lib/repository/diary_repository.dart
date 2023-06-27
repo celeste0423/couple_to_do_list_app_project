@@ -68,13 +68,10 @@ class DiaryRepository {
         .delete();
   }
 
-  Future<void> deleteDiaryImage(String imagePath) async {
+  Future<void> deleteDiaryImage(String imgUrl) async {
+    String filePath = FirebaseStorage.instance.refFromURL(imgUrl).fullPath;
     try {
-      Reference imageRef = FirebaseStorage.instance
-          .ref()
-          .child('group_diary')
-          .child('${AuthController.to.user.value.groupId}/$imagePath');
-
+      Reference imageRef = FirebaseStorage.instance.ref(filePath);
       await imageRef.delete();
     } catch (e) {
       openAlertDialog(title: '이미지 삭제 오류 $e');

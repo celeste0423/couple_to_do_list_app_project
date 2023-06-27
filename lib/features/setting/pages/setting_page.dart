@@ -84,7 +84,9 @@ class SettingPage extends GetView<SettingPageController> {
               Icons.navigate_next,
               color: CustomColors.lightGreyText,
             ),
-            onTap: () {},
+            onTap: () {
+              controller.openNotice();
+            },
           ),
           Divider(
             thickness: 1,
@@ -216,11 +218,9 @@ class SettingPage extends GetView<SettingPageController> {
           '로그아웃',
           style: TextStyle(
             fontSize: 25,
-            color: Colors.red,
           ),
         ),
         onTap: () {
-          //Todo: 로그아웃 구현해야함
           openAlertDialog(
             title: '로그아웃 하시겠습니까?',
             btnText: '로그아웃',
@@ -257,7 +257,7 @@ class SettingPage extends GetView<SettingPageController> {
           width: imagewidth,
         ),
         title: Text(
-          '로그아웃',
+          '회원 탈퇴',
           style: TextStyle(
             fontSize: 25,
             color: Colors.red,
@@ -283,17 +283,17 @@ class SettingPage extends GetView<SettingPageController> {
   @override
   Widget build(BuildContext context) {
     Get.put(SettingPageController());
-    double imagewidth = 35.0;
+    double imageWidth = 35.0;
     return Scaffold(
       appBar: customAppBar(),
       body: Column(
         children: [
           customDivider(),
           Hero(tag: 'addButton', child: accountListTile()),
-          _notificationSetting(imagewidth),
-          _appSetting(imagewidth),
-          _logoutListTile(imagewidth),
-          _authDeleteTile(imagewidth),
+          _notificationSetting(imageWidth),
+          _appSetting(imageWidth),
+          _logoutListTile(imageWidth),
+          _authDeleteTile(imageWidth),
         ],
       ),
     );

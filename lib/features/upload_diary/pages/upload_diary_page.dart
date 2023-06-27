@@ -490,13 +490,13 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
         mainButton(
           controller.selectedDiaryModel == null ? '작성 완료' : '수정 완료',
           () async {
-            if (controller.isButtonDisabled) {
+            if (controller.isButtonDisabled.value) {
               print('버튼 비활성화');
               null;
             } else {
               if (controller.isValid()) {
                 print('업로드 중');
-                controller.isButtonDisabled = true;
+                controller.isButtonDisabled.value = true;
                 await controller.uploadDiary();
                 Get.back();
               } else {
@@ -517,18 +517,34 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: CustomColors.lightPink,
-        appBar: _appBar(),
-        body: Column(
-          children: [
-            _contentContainer(context),
-            _imagePicker(),
-            _buttonRow(),
-            SizedBox(height: 10)
-          ],
-        ),
+      child: Stack(
+        children: [
+          Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: CustomColors.lightPink,
+            appBar: _appBar(),
+            body: Column(
+              children: [
+                _contentContainer(context),
+                _imagePicker(),
+                _buttonRow(),
+                SizedBox(height: 10)
+              ],
+            ),
+          ),
+          Obx(
+            () => controller.isButtonDisabled.value
+                ? Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: CustomColors.mainPink,
+                      ),
+                    ),
+                  )
+                : Container(),
+          ),
+        ],
       ),
     );
   }

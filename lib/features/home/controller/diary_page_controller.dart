@@ -90,7 +90,7 @@ class DiaryPageController extends GetxController
           lastUpdatorID: diary[0].lastUpdatorID,
           updatedAt: diary[0].updatedAt,
         );
-        selectedDiary.value = updatedDiary;
+        selectedDiary(updatedDiary);
         subscription?.cancel();
       }
     });
@@ -124,6 +124,7 @@ class DiaryPageController extends GetxController
       await DiaryRepository().deleteDiaryImage(imgUrl);
     }
     await DiaryRepository().deleteDiary(selectedDiaryModel.diaryId!);
+    initSelectedDiary();
   }
 
 //

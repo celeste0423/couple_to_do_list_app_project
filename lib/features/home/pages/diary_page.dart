@@ -69,8 +69,9 @@ class DiaryPageTest extends GetView<DiaryPageController> {
   Widget _diaryListTabView() {
     return Expanded(
       child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: TabBarView(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Obx(() {
+          return TabBarView(
             controller: controller.diaryTabController,
             children: [
               _diaryList(0),
@@ -81,7 +82,9 @@ class DiaryPageTest extends GetView<DiaryPageController> {
               _diaryList(5),
               _diaryList(6),
             ],
-          )),
+          );
+        }),
+      ),
     );
   }
 
@@ -97,15 +100,12 @@ class DiaryPageTest extends GetView<DiaryPageController> {
         : ListView.builder(
             itemCount: controller.diaryList[tabIndex].length + 1,
             itemBuilder: (BuildContext context, int index) {
-              return Obx(() {
-                // print(controller.diaryList[tabIndex].length);
-                if (index != controller.diaryList[tabIndex].length) {
-                  return diaryTile(controller.diaryList[tabIndex][index]);
-                } else {
-                  return SizedBox(
-                      height: 270); //마지막 index 에서는 tabview때문에 height 준거
-                }
-              });
+              if (index != controller.diaryList[tabIndex].length) {
+                return diaryTile(controller.diaryList[tabIndex][index]);
+              } else {
+                return SizedBox(
+                    height: 270); //마지막 index 에서는 tabview때문에 height 준거
+              }
             },
           );
   }
@@ -125,86 +125,88 @@ class DiaryPageTest extends GetView<DiaryPageController> {
               arguments: controller.selectedDiary.value,
             );
           },
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 5),
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(25),
-                bottomRight: Radius.circular(25),
+          child: Obx(
+            () => Container(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(25),
+                  bottomRight: Radius.circular(25),
+                ),
+                border: Border.all(
+                  color: diaryModel.diaryId! ==
+                          controller.selectedDiary.value!.diaryId
+                      ? CustomColors.grey.withOpacity(0.4)
+                      : Colors.transparent,
+                  width: 2,
+                ),
               ),
-              border: Border.all(
-                color: diaryModel.diaryId! ==
-                        controller.selectedDiary.value!.diaryId
-                    ? CustomColors.grey.withOpacity(0.4)
-                    : Colors.transparent,
-                width: 2,
-              ),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  height: 85,
-                  width: 70,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(diaryModel.imgUrlList![0]),
-                    ),
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      bottomRight: Radius.circular(10),
-                    ),
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        spreadRadius: 3,
-                        blurRadius: 5,
-                        offset: Offset(5, 5), // Offset(수평, 수직)
+              child: Row(
+                children: [
+                  Container(
+                    height: 85,
+                    width: 70,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(diaryModel.imgUrlList![0]),
                       ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 30,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      diaryModel.title ?? '',
-                      style: TextStyle(fontSize: 25),
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 15,
-                        ),
-                        SizedBox(
-                          width: 4,
-                        ),
-                        Text(
-                          diaryModel.location ?? '',
-                          style: TextStyle(fontSize: 15),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          spreadRadius: 3,
+                          blurRadius: 5,
+                          offset: Offset(5, 5), // Offset(수평, 수직)
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      dateString,
-                      style: TextStyle(fontSize: 15),
-                    )
-                  ],
-                )
-              ],
+                  ),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        diaryModel.title ?? '',
+                        style: TextStyle(fontSize: 25),
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                            size: 15,
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Text(
+                            diaryModel.location ?? '',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 3,
+                      ),
+                      Text(
+                        dateString,
+                        style: TextStyle(fontSize: 15),
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -225,7 +227,6 @@ class DiaryPageTest extends GetView<DiaryPageController> {
                     return [
                       PopupMenuItem(
                         onTap: () {
-                          print('삭제 시작');
                           Get.back();
                           openAlertDialog(
                             title: '다이어리 삭제',
@@ -235,6 +236,7 @@ class DiaryPageTest extends GetView<DiaryPageController> {
                             function: () {
                               controller
                                   .deleteDiary(controller.selectedDiary.value);
+                              Get.back();
                             },
                           );
                         },
