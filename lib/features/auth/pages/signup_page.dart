@@ -229,31 +229,33 @@ class SignupPageState extends State<SignupPage> {
       }
     }
 
-    return mainButton('등록하기', () async {
-      if (nicknameController == null) {
-        openAlertDialog(title: '닉네임을 올바르게 작성해주세요');
-      } else if (!birthValidation()) {
-        openAlertDialog(title: '생일을 올바르게 작성해주세요');
-      } else if (gender == null) {
-        openAlertDialog(title: '성별을 기입해주세요');
-      } else {
-        DateTime birthdayDateTime = DateTime.parse(
-            '${birthdayController.text.substring(0, 4)}-${birthdayController.text.substring(4, 6)}-${birthdayController.text.substring(6, 8)}');
+    return MainButton(
+        buttonText: '등록하기',
+        onTap: () async {
+          if (nicknameController == null) {
+            openAlertDialog(title: '닉네임을 올바르게 작성해주세요');
+          } else if (!birthValidation()) {
+            openAlertDialog(title: '생일을 올바르게 작성해주세요');
+          } else if (gender == null) {
+            openAlertDialog(title: '성별을 기입해주세요');
+          } else {
+            DateTime birthdayDateTime = DateTime.parse(
+                '${birthdayController.text.substring(0, 4)}-${birthdayController.text.substring(4, 6)}-${birthdayController.text.substring(6, 8)}');
 
-        var signupUser = UserModel(
-          uid: widget.uid,
-          email: widget.email,
-          nickname: nicknameController.text,
-          loginType: AuthController.loginType,
-          gender: gender,
-          birthday: birthdayDateTime,
-        );
-        await AuthController.to.signup(signupUser);
-        Get.to(() => FindBuddyPage(
+            var signupUser = UserModel(
+              uid: widget.uid,
               email: widget.email,
-            ));
-      }
-    });
+              nickname: nicknameController.text,
+              loginType: AuthController.loginType,
+              gender: gender,
+              birthday: birthdayDateTime,
+            );
+            await AuthController.to.signup(signupUser);
+            Get.to(() => FindBuddyPage(
+                  email: widget.email,
+                ));
+          }
+        });
   }
 
   @override

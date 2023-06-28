@@ -203,9 +203,9 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
     return Positioned(
       bottom: 0,
       right: Get.width * 1 / 2 - 75,
-      child: mainButton(
-        '시작하기',
-        () async {
+      child: MainButton(
+        buttonText: '시작하기',
+        onTap: () async {
           GroupIdStatus groupIdStatus = await authController.groupCreation(
               widget.email, emailController.text);
           if (groupIdStatus == GroupIdStatus.noData) {
@@ -220,8 +220,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
             Get.offAll(() => HomePage());
           }
         },
-        150,
-        CustomColors.lightPink,
+        width: 150,
+        buttonColor: CustomColors.lightPink,
       ),
     );
   }

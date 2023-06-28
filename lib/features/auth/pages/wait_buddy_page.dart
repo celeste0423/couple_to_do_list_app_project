@@ -122,13 +122,13 @@ class WaitBuddyPage extends StatelessWidget {
                   Positioned(
                     bottom: 0,
                     right: Get.width * 1 / 2 - 75,
-                    child: mainButton(
-                      '새로고침',
-                      () {
+                    child: MainButton(
+                      buttonText: '새로고침',
+                      onTap: () {
                         print('새로고침');
                       },
-                      150,
-                      CustomColors.redbrown,
+                      width: 150,
+                      buttonColor: CustomColors.redbrown,
                     ),
                   ),
                 ],

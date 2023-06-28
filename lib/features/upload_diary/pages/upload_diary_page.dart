@@ -487,9 +487,9 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
         auxiliaryButton('취소', () {
           Get.back();
         }, Get.width * 1 / 4),
-        mainButton(
-          controller.selectedDiaryModel == null ? '작성 완료' : '수정 완료',
-          () async {
+        MainButton(
+          buttonText: controller.selectedDiaryModel == null ? '작성 완료' : '수정 완료',
+          onTap: () async {
             if (controller.isButtonDisabled.value) {
               print('버튼 비활성화');
               null;
@@ -504,7 +504,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
               }
             }
           },
-          Get.width * 5 / 8,
+          width: Get.width * 5 / 8,
         )
       ],
     );

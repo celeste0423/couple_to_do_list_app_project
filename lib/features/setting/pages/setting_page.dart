@@ -1,5 +1,6 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/setting/controller/setting_page_controller.dart';
+import 'package:couple_to_do_list_app/features/setting/pages/auth_delete_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/basic_container.dart';
@@ -264,17 +265,7 @@ class SettingPage extends GetView<SettingPageController> {
           ),
         ),
         onTap: () {
-          //Todo: 로그아웃 구현해야함
-          openAlertDialog(
-            title: '로그아웃 하시겠습니까?',
-            btnText: '로그아웃',
-            secondButtonText: '취소',
-            function: () async {
-              await controller.signOut();
-              Get.back();
-              Get.back();
-            },
-          );
+          Get.to(() => AuthDeletePage());
         },
       ),
     );
