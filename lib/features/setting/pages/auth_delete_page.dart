@@ -93,9 +93,14 @@ class AuthDeletePage extends GetView<AuthDeletePageController> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        leading: Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: CustomColors.mainPink,
+        leading: GestureDetector(
+          onTap: () {
+            Get.back();
+          },
+          child: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: CustomColors.mainPink,
+          ),
         ),
       ),
       body: Padding(
