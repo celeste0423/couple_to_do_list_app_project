@@ -325,19 +325,19 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Obx(
-              () => RotatedBox(
-                quarterTurns: 135,
-                child: Text(
-                  //todo: nickname 가져올것
-                  '${controller.maleNickname} 🤍 ${controller.femaleNickname}',
-                  style: TextStyle(
-                    color: Colors.black.withOpacity(0.4),
-                    fontSize: 25 * percent,
-                  ),
-                ),
-              ),
-            ),
+            // Obx(
+            //   () => RotatedBox(
+            //     quarterTurns: 135,
+            //     child: Text(
+            //       //todo: nickname 가져올것
+            //       '${controller.maleNickname} 🤍 ${controller.femaleNickname}',
+            //       style: TextStyle(
+            //         color: Colors.black.withOpacity(0.4),
+            //         fontSize: 25 * percent,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: EdgeInsets.only(
                 top: 10,
@@ -444,13 +444,17 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
         ),
         Positioned(
           top: 140 * percent,
-          right: 65 + 105 * (1 - percent),
+          right: 70 + 105 * (1 - percent),
           child: CustomIconButton(
             onTap: () {
-              Get.to(
-                () => ReadDiaryPage(),
-                arguments: controller.selectedDiary.value,
-              );
+              if (controller.diaryList[tabIndex].isNotEmpty) {
+                Get.to(
+                  () => ReadDiaryPage(),
+                  arguments: controller.selectedDiary.value,
+                );
+              } else {
+                openAlertDialog(title: '다이어리를 추가해주세요');
+              }
             },
           ),
         ),

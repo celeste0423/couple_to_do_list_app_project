@@ -184,7 +184,7 @@ class SignupPageState extends State<SignupPage> {
     String text,
     TextEditingController controller,
     Function()? onPressed,
-    TextInputType? numberinput,
+    TextInputType? numberInput,
   ) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -196,14 +196,16 @@ class SignupPageState extends State<SignupPage> {
       ),
       height: 50,
       child: TextFormField(
+        maxLength: 10,
         maxLengthEnforcement: MaxLengthEnforcement.enforced,
-        keyboardType: numberinput,
+        keyboardType: numberInput,
         controller: controller,
         decoration: InputDecoration(
           hintText: text,
           hintStyle: TextStyle(
             fontSize: 20,
           ),
+          counterText: '',
           suffixIcon: IconButton(
               icon: Icon(Icons.close, size: 20), onPressed: onPressed),
         ),
