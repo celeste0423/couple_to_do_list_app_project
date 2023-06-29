@@ -69,23 +69,6 @@ class BukkungListRepository {
     });
   }
 
-  // Future<List<BukkungListModel>> getAllBukkungListByDate() {
-  //   print('그룹모델(buk repo) ${groupModel.uid}');
-  //   return FirebaseFirestore.instance
-  //       .collection('groups')
-  //       .doc(groupModel.uid)
-  //       .collection('bukkungLists')
-  //       .orderBy('date')
-  //       .get()
-  //       .then((querySnapshot) {
-  //     List<BukkungListModel> bukkungLists = [];
-  //     for (var bukkungList in querySnapshot.docs) {
-  //       bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-  //     }
-  //     return bukkungLists;
-  //   });
-  // }
-
   static Future<void> setSuggestionBukkungList(
       BukkungListModel bukkungLisData, String listId) async {
     await FirebaseFirestore.instance
@@ -116,6 +99,4 @@ class BukkungListRepository {
       openAlertDialog(title: '이미지 삭제 오류 $e');
     }
   }
-
-  //사진 업로드 관려
 }

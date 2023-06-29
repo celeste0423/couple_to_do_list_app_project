@@ -4,6 +4,7 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/repository/diary_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -178,16 +179,21 @@ class UploadDiaryController extends GetxController {
   }
 
   Future pickMultipleImages() async {
+    int maxImageCount = 5;
     final pickerImgList = await ImagePicker().pickMultiImage(
-      imageQuality: 80, // To set quality of images
-      maxHeight: 1000, // To set maxheight of images that you want in your app
-      maxWidth: 1000,
+      imageQuality: 50, // To set quality of images
+      maxHeight: 500, // To set maxheight of images that you want in your app
+      maxWidth: 500,
     ); // To set maxheight of images that you want in your app
-
-    // if atleast 1 images is selected it will add
-    // all images in selectedImages
-    // variable so that we can easily show them in UI
     if (pickerImgList.isNotEmpty) {
+      if (pickerImgList.length > maxImageCount) {
+        // 이미지 개수가 최대 개수보다 많을 경우 경고 메시지 출력
+        openAlertDialog(
+          title: '이미지 개수 초과',
+          content: '최대 $maxImageCount개의 이미지를 선택할 수 있습니다.',
+        );
+        return; // 이미지 선택 종료
+      }
       for (var pickerImgIndex = 0;
           pickerImgIndex < pickerImgList.length;
           pickerImgIndex++) {
@@ -195,8 +201,10 @@ class UploadDiaryController extends GetxController {
         selectedImgFiles[1].add(null);
       }
     } else {
-      //Todo: 색이 너무 다름
-      Get.snackbar('사진 고르기 취소', 'Nothing is selected');
+      openAlertDialog(
+        title: '이미지 선택 없음',
+        content: '선택된 이미지가 없습니다.',
+      );
     }
   }
 

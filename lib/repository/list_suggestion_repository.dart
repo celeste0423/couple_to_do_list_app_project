@@ -3,6 +3,7 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/features/list_suggestion/controller/list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
+import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class ListSuggestionRepository {
@@ -191,6 +192,26 @@ class ListSuggestionRepository {
         bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
       }
       return bukkungLists;
+    });
+  }
+
+  Stream<List<int>> getMyLikeViewCount(UserModel userModel) {
+    // print('파이어스토어에서 전체 받아옴');
+    //0 번째 리스트가 likeCount
+    //1 번째 리스트가 ViewCount
+    return FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .where('userId', isEqualTo: userModel.uid)
+        .snapshots()
+        .map((event) {
+      List<int> likeViewCount = List<int>.filled(2, 0);
+      for (var bukkungList in event.docs) {
+        likeViewCount[0] +=
+            BukkungListModel.fromJson(bukkungList.data()).likeCount!;
+        likeViewCount[1] +=
+            BukkungListModel.fromJson(bukkungList.data()).viewCount!;
+      }
+      return likeViewCount;
     });
   }
 

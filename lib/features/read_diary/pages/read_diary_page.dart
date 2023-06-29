@@ -63,6 +63,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
         icon: Icon(
           Icons.arrow_back_ios_new_rounded,
           color: CustomColors.mainPink,
+          size: 30,
         ),
       ),
     );

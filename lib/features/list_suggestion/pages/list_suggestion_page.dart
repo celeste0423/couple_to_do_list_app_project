@@ -24,7 +24,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         icon: Icon(
           Icons.arrow_back_ios_new_rounded,
           color: Colors.white,
-          size: 35,
+          size: 30,
         ),
       ),
       title: TitleText(
@@ -41,7 +41,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             child: Icon(
               Icons.add,
               color: Colors.white,
-              size: 45,
+              size: 35,
             ),
           ),
         ),
