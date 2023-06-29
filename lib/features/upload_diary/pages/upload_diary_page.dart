@@ -248,7 +248,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   }
 
   Widget _contentContainer(context) {
-    double numberoFlines = 8;
+    double numberoFlines = 7;
     double holeDiameter = 16;
 
     Widget contents() {
@@ -466,7 +466,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                           keyboardType: TextInputType.multiline,
                           expands: false,
                           maxLines: numberoFlines.toInt(),
-                          maxLength: 170,
+                          maxLength: 140,
                         ),
                       ),
                     ),
