@@ -19,10 +19,12 @@ class ListSuggestionRepository {
         .map((event) {
       List<BukkungListModel> bukkungLists = [];
       for (var bukkungList in event.docs) {
-        Map<String, dynamic> data = bukkungList.data();
+        BukkungListModel bukkungListModel =
+            BukkungListModel.fromJson(bukkungList.data());
         int wordMatchCount = 0;
         for (String word in searchWords) {
-          if (data.toString().contains(word)) {
+          if (bukkungListModel.title!.contains(word) ||
+              bukkungListModel.location!.contains(word)) {
             wordMatchCount++;
           }
         }
@@ -43,43 +45,11 @@ class ListSuggestionRepository {
         }
         return matchCountB.compareTo(matchCountA);
       });
-      print(bukkungLists);
       return bukkungLists;
     });
   }
 
-  // static void fetchSuggestionBukkungList(
-  //     DocumentSnapshot<Object?>? pageKey, int pageSize) async {
-  //   QuerySnapshot<Map<String, dynamic>> loadedBukkungLists;
-  //   if (pageKey != null) {
-  //     loadedBukkungLists = await FirebaseFirestore.instance
-  //         .collection('bukkungLists')
-  //         .orderBy('likeCount', descending: true)
-  //         .orderBy('createdAt', descending: true)
-  //         .startAfterDocument(pageKey)
-  //         .limit(pageSize)
-  //         .get();
-  //   } else {
-  //     loadedBukkungLists = await FirebaseFirestore.instance
-  //         .collection('bukkungLists')
-  //         .orderBy('likeCount', descending: true)
-  //         .orderBy('createdAt', descending: true)
-  //         .limit(pageSize)
-  //         .get();
-  //   }
-  //   print('로드된 리스트 수 ${loadedBukkungLists.docs.length} (sugg repo)');
-  //   final isLastPage = loadedBukkungLists.docs.length < pageSize;
-  //   if (isLastPage) {
-  //     ListSuggestionPageController.to.pagingController
-  //         .appendLastPage(loadedBukkungLists.docs);
-  //   } else {
-  //     final nextPageKey = loadedBukkungLists.docs.last;
-  //     ListSuggestionPageController.to.pagingController
-  //         .appendPage(loadedBukkungLists.docs, nextPageKey);
-  //   }
-  // }
-
-  Future<List<BukkungListModel>> getAllTestFutureBukkungList(
+  Future<List<BukkungListModel>> getAllNewBukkungList(
     int pageSize,
     QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
     List<BukkungListModel>? prevList,
@@ -109,42 +79,6 @@ class ListSuggestionRepository {
     }
     return bukkungLists;
   }
-
-  // Stream<List<BukkungListModel>> getAllTestStreamBukkungList(
-  //   int pageSize,
-  //   QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
-  // ) {
-  //   if (keyPage != null) {
-  //     return FirebaseFirestore.instance
-  //         .collection('bukkungLists')
-  //         .orderBy('likeCount', descending: true)
-  //         .orderBy('createdAt', descending: true)
-  //         .startAfterDocument(keyPage)
-  //         .limit(pageSize)
-  //         .snapshots()
-  //         .map((querySnapshot) {
-  //       List<BukkungListModel> bukkungLists = [];
-  //       for (var bukkungList in querySnapshot.docs) {
-  //         bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-  //       }
-  //       return bukkungLists;
-  //     });
-  //   } else {
-  //     return FirebaseFirestore.instance
-  //         .collection('bukkungLists')
-  //         .orderBy('likeCount', descending: true)
-  //         .orderBy('createdAt', descending: true)
-  //         .limit(pageSize)
-  //         .snapshots()
-  //         .map((querySnapshot) {
-  //       List<BukkungListModel> bukkungLists = [];
-  //       for (var bukkungList in querySnapshot.docs) {
-  //         bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-  //       }
-  //       return bukkungLists;
-  //     });
-  //   }
-  // }
 
   Stream<List<BukkungListModel>> getAllBukkungList() {
     return FirebaseFirestore.instance
