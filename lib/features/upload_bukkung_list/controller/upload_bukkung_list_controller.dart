@@ -44,7 +44,7 @@ class UploadBukkungListController extends GetxController {
   TextEditingController contentController = TextEditingController();
   ScrollController contentScrollController = ScrollController();
 
-  Uint8List? listImage = null;
+  Uint8List? listImage;
 
   Rx<bool> isImage = false.obs;
   Rx<bool> isSelectedImage = false.obs;

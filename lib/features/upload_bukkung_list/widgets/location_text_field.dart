@@ -1,6 +1,7 @@
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class LocationTextField extends StatefulWidget {
@@ -120,6 +121,8 @@ class _LocationTextFieldState extends State<LocationTextField> {
         child: TextField(
           controller: _controller.locationController,
           focusNode: _focusNode,
+          maxLength: 20,
+          maxLengthEnforcement: MaxLengthEnforcement.enforced,
           maxLines: 1,
           onChanged: (value) {
             _controller.placeAutocomplete(value);
@@ -140,6 +143,7 @@ class _LocationTextFieldState extends State<LocationTextField> {
             errorBorder: InputBorder.none,
             disabledBorder: InputBorder.none,
             hintText: '위치',
+            counterText: '',
             hintStyle: TextStyle(
               color: CustomColors.greyText,
               fontSize: 25,

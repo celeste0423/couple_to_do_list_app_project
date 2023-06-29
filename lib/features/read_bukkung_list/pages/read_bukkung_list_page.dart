@@ -6,6 +6,7 @@ import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/category_to_text.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
+import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,6 @@ class _ReadBukkungListPageState extends State<ReadBukkungListPage> {
             return [
               PopupMenuItem(
                 onTap: () {
-                  print('페이지 이동');
                   Get.to(
                     () => UploadBukkungListPage(),
                     arguments: [widget.bukkungListModel, false],
@@ -103,8 +103,9 @@ class _ReadBukkungListPageState extends State<ReadBukkungListPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                widget.bukkungListModel.title!,
+              MarqueeAbleText(
+                text: widget.bukkungListModel.title!,
+                maxLength: 9,
                 style: TextStyle(
                   color: CustomColors.blackText,
                   fontSize: 35,
@@ -144,8 +145,9 @@ class _ReadBukkungListPageState extends State<ReadBukkungListPage> {
               Row(
                 children: [
                   PngIcon(iconName: 'location-pin'),
-                  Text(
-                    widget.bukkungListModel.location!,
+                  MarqueeAbleText(
+                    text: widget.bukkungListModel.location!,
+                    maxLength: 10,
                     style: TextStyle(
                       color: CustomColors.blackText,
                     ),

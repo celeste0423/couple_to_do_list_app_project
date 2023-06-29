@@ -6,6 +6,7 @@ import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -55,7 +56,9 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
         controller: controller.titleController,
-        maxLines: null,
+        maxLines: 2,
+        maxLength: 20,
+        maxLengthEnforcement: MaxLengthEnforcement.enforced,
         textInputAction: TextInputAction.done,
         textAlign: TextAlign.center,
         style: TextStyle(
@@ -64,6 +67,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         ),
         cursorColor: CustomColors.mainPink,
         decoration: const InputDecoration(
+          counterText: '',
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
           enabledBorder: InputBorder.none,
@@ -365,134 +369,6 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
     });
   }
 
-  // Widget _imagePicker(BuildContext context) {
-  //   return Container(
-  //     height: 45,
-  //     width: 55,
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.circular(25),
-  //       color: Colors.white,
-  //     ),
-  //     child: GestureDetector(
-  //       onTap: () {
-  //         showModalBottomSheet(
-  //           context: context,
-  //           builder: (context) {
-  //             return Column(
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: [
-  //                 ShortHBar(),
-  //                 Padding(
-  //                   padding: const EdgeInsets.symmetric(vertical: 20),
-  //                   child: Row(
-  //                     children: [
-  //                       const SizedBox(width: 20),
-  //                       const Text(
-  //                         '버꿍 리스트 사진 업로드',
-  //                         style: TextStyle(
-  //                           fontSize: 25,
-  //                         ),
-  //                       ),
-  //                       const Spacer(),
-  //                       GestureDetector(
-  //                         onTap: () => Navigator.pop(context),
-  //                         child: Icon(
-  //                           Icons.close_rounded,
-  //                           color: Colors.grey,
-  //                           size: 25,
-  //                         ),
-  //                       ),
-  //                       const SizedBox(width: 15),
-  //                     ],
-  //                   ),
-  //                 ),
-  //                 customDivider(),
-  //                 const SizedBox(height: 15),
-  //                 Row(
-  //                   children: [
-  //                     const SizedBox(width: 20),
-  //                     imagePickerIcon(
-  //                       onTap: () {
-  //                         controller.pickImageFromCamera(context);
-  //                       },
-  //                       icon: Icon(
-  //                         Icons.camera_alt_rounded,
-  //                         color: Colors.white,
-  //                         size: 35,
-  //                       ),
-  //                       text: '카메라',
-  //                     ),
-  //                     const SizedBox(width: 15),
-  //                     imagePickerIcon(
-  //                       onTap: () async {
-  //                         Navigator.pop(context);
-  //                         final image = await Navigator.of(context).push(
-  //                           MaterialPageRoute(
-  //                             builder: (context) => ImagePickerPage(),
-  //                           ),
-  //                         );
-  //                         if (image == null) return;
-  //                         controller.imageGallery = image;
-  //                         controller.imageCamera = null;
-  //                       },
-  //                       icon: Icon(
-  //                         Icons.photo_camera_back_rounded,
-  //                         color: Colors.white,
-  //                         size: 35,
-  //                       ),
-  //                       text: '갤러리',
-  //                     ),
-  //                   ],
-  //                 ),
-  //                 const SizedBox(height: 15),
-  //               ],
-  //             );
-  //           },
-  //         );
-  //       },
-  //       child: Center(
-  //         child: Image.asset(
-  //           'assets/icons/image.png',
-  //           width: 35,
-  //           color: Colors.black.withOpacity(0.6),
-  //           colorBlendMode: BlendMode.modulate,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-  //
-  // imagePickerIcon({
-  //   required VoidCallback onTap,
-  //   required Icon icon,
-  //   required String text,
-  // }) {
-  //   return Column(
-  //     children: [
-  //       GestureDetector(
-  //         onTap: onTap,
-  //         child: Container(
-  //           width: 50,
-  //           height: 50,
-  //           decoration: BoxDecoration(
-  //             color: CustomColors.lightPink,
-  //             borderRadius: BorderRadius.circular(50),
-  //           ),
-  //           child: icon,
-  //         ),
-  //       ),
-  //       const SizedBox(height: 20),
-  //       Text(
-  //         text,
-  //         style: TextStyle(
-  //           color: CustomColors.greyText,
-  //           fontSize: 20,
-  //         ),
-  //       )
-  //     ],
-  //   );
-  // }
-
   Widget _publicSwitch() {
     return Expanded(
       child: Container(
@@ -564,7 +440,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                               left: 30,
                               right: 30,
                             ),
-                            child: Get.arguments == null
+                            child: Get.arguments[0] == null
                                 ? Row(
                                     children: [
                                       _imagePicker(context),

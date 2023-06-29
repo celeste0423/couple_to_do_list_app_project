@@ -305,7 +305,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                       ],
                       image: DecorationImage(
                         image: NetworkImage(
-                            controller.selectedList.value.imgUrl ?? ''),
+                          controller.selectedList.value.imgUrl ?? '',
+                        ),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -358,7 +359,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                   Text(
                     controller.selectedList.value.content ?? '',
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 4,
+                    maxLines: 2,
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       color: Colors.white,
