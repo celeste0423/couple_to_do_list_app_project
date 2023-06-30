@@ -49,7 +49,7 @@ class UploadDiaryController extends GetxController {
 
   List<RxList<dynamic>> selectedImgFiles = [<File>[].obs, <String?>[].obs];
 
-  Rx<bool> isButtonDisabled = false.obs;
+  Rx<bool> isUploading = false.obs;
 
   @override
   void onInit() {

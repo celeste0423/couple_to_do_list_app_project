@@ -8,7 +8,6 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/utils/type_to_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
-import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
@@ -387,9 +386,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: GestureDetector(
         onTap: () {
-          Get.to(() => ReadBukkungListPage(
-                bukkungListModel: bukkungListModel,
-              ));
+          Get.to(() => ReadBukkungListPage(), arguments: bukkungListModel);
         },
         child: Row(
           children: [
@@ -427,14 +424,27 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          MarqueeAbleText(
-                            text: bukkungListModel.title!,
-                            maxLength: 10,
-                            style: TextStyle(
-                              fontSize: 25,
-                              color: CustomColors.blackText,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                bukkungListModel.title!,
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  color: CustomColors.blackText,
+                                ),
+                              ),
                             ),
                           ),
+                          // MarqueeAbleText(
+                          //   text: bukkungListModel.title!,
+                          //   maxLength: 10,
+                          //   style: TextStyle(
+                          //     fontSize: 25,
+                          //     color: CustomColors.blackText,
+                          //   ),
+                          // ),
                           Text(DateFormat('yyyy-MM-dd')
                               .format(bukkungListModel.date!)),
                           Row(
@@ -443,12 +453,22 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                                 iconName: 'location-pin',
                                 iconSize: 25,
                               ),
-                              SizedBox(width: 10),
-                              MarqueeAbleText(
-                                text: bukkungListModel.location!,
-                                maxLength: 15,
-                                style: TextStyle(
-                                  fontSize: 15,
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        bukkungListModel.location!,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],

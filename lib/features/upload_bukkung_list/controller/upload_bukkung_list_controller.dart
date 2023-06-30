@@ -18,7 +18,7 @@ class UploadBukkungListController extends GetxController {
   static UploadBukkungListController get to => Get.find();
 
   final BukkungListModel? selectedBukkungListModel = Get.arguments[0];
-  final bool? isSuggestion = Get.arguments[1];
+  final bool isSuggestion = Get.arguments[1];
 
   Rx<bool> isCompleted = false.obs;
 
@@ -51,6 +51,8 @@ class UploadBukkungListController extends GetxController {
 
   Rx<bool> isPublic = true.obs;
   BukkungListModel? bukkungList;
+
+  Rx<bool> isUploading = false.obs;
 
   @override
   void onInit() {
@@ -232,44 +234,63 @@ class UploadBukkungListController extends GetxController {
         isSelectedImage.value == true &&
         listImage == null) {
       // 선택함, 사진 있음(웹사진)
-      String sourcePath = '${selectedBukkungListModel!.imgId}.jpg';
-      String destinationPath =
-          '${AuthController.to.user.value.groupId}/$filename';
-      Reference sourceRef = FirebaseStorage.instance
-          .ref()
-          .child('suggestion_bukkunglist')
-          .child(sourcePath);
-      Reference destinationRef = FirebaseStorage.instance
-          .ref()
-          .child('group_bukkunglist')
-          .child(destinationPath);
-      Uint8List? sourceData = await sourceRef.getData()!;
-      await destinationRef.putData(sourceData!);
+      print('선택함, 사진있음(웹사진)');
+      String? downloadUrl;
+      if (isSuggestion) {
+        //수정중 => 이미지 주소 그대로 들고옴
+        print('수정중 이미지 주소 그대로 들고옴');
+        String sourcePath = '${selectedBukkungListModel!.imgId}.jpg';
+        String destinationPath =
+            '${AuthController.to.user.value.groupId}/$filename';
+        Reference sourceRef = FirebaseStorage.instance
+            .ref()
+            .child('suggestion_bukkunglist')
+            .child(sourcePath);
+        Reference destinationRef = FirebaseStorage.instance
+            .ref()
+            .child('group_bukkunglist')
+            .child(destinationPath);
+        Uint8List? sourceData = await sourceRef.getData()!;
+        await destinationRef.putData(sourceData!);
 
-      var downloadUrl = await destinationRef.getDownloadURL();
-      var updatedBukkungList = bukkungList!.copyWith(
-        listId: listId,
+        downloadUrl = await destinationRef.getDownloadURL();
+      } else {
+        downloadUrl = selectedBukkungListModel!.imgUrl;
+      }
+
+      var updatedBukkungList = selectedBukkungListModel!.copyWith(
+        listId: isSuggestion ? listId : selectedBukkungListModel!.listId,
         category: listCategory.value,
         title: titleController.text,
         content: contentController.text,
         location: locationController.text,
         imgUrl: downloadUrl,
         imgId: imageId,
-        likeCount: 0,
         date: listDateTime.value,
         // Todo:기존 제작자의 저작권을 남길 지 말지 선택
       );
-      _submitBukkungList(updatedBukkungList, listId, true);
+      if (isSuggestion) {
+        _submitBukkungList(updatedBukkungList, listId, true);
+      } else {
+        //수정할 때는 리스트 업데이트 해줄 것
+        _updateBukkungList(updatedBukkungList);
+      }
     } else if (selectedBukkungListModel != null && listImage != null) {
       //선택함, 사진 있음(로컬사진)
+      print('선택함, 사진있음(로컬사진)');
+      if (!isSuggestion) {
+        //수정중 => 기존 사진 삭제, 새 사진 업로드
+        print('기존 사진 삭제');
+        BukkungListRepository.deleteImage(selectedBukkungListModel!.imgUrl!);
+      }
       var task = uploadFile(listImage!, 'group_bukkunglist',
           '${AuthController.to.user.value.groupId}/${filename}');
       task.snapshotEvents.listen((event) async {
         if (event.bytesTransferred == event.totalBytes &&
             event.state == TaskState.success) {
           var downloadUrl = await event.ref.getDownloadURL();
-          var updatedBukkungList = bukkungList!.copyWith(
-            listId: listId,
+          var updatedBukkungList = selectedBukkungListModel!.copyWith(
+            listId: isSuggestion ? listId : selectedBukkungListModel!.listId,
             category: listCategory.value,
             title: titleController.text,
             content: contentController.text,
@@ -277,24 +298,34 @@ class UploadBukkungListController extends GetxController {
             imgUrl: downloadUrl,
             date: listDateTime.value,
           );
-          _submitBukkungList(updatedBukkungList, listId, true);
+          if (isSuggestion) {
+            _submitBukkungList(updatedBukkungList, listId, true);
+          } else {
+            //수정할 때는 리스트 업데이트 해줄 것
+            _updateBukkungList(updatedBukkungList);
+          }
         }
       });
     } else if (selectedBukkungListModel != null &&
         listImage == null &&
         isSelectedImage == false) {
       //선택함, 사진 없음(로컬, 웹 둘다)
-      var updatedBukkungList = bukkungList!.copyWith(
-        listId: listId,
+      print('선택함, 사진없음');
+      var updatedBukkungList = selectedBukkungListModel!.copyWith(
+        listId: isSuggestion ? listId : selectedBukkungListModel!.listId,
         category: listCategory.value,
         title: titleController.text,
         content: contentController.text,
         location: locationController.text,
         imgUrl: Constants.baseImageUrl,
-        likeCount: 0,
         date: listDateTime.value,
       );
-      _submitBukkungList(updatedBukkungList, listId, true);
+      if (isSuggestion) {
+        _submitBukkungList(updatedBukkungList, listId, true);
+      } else {
+        //수정할 때는 리스트 업데이트 해줄 것
+        _updateBukkungList(updatedBukkungList);
+      }
     }
   }
 
@@ -349,5 +380,9 @@ class UploadBukkungListController extends GetxController {
       await BukkungListRepository.setSuggestionBukkungList(
           bukkungListData, listId);
     }
+  }
+
+  void _updateBukkungList(BukkungListModel bukkungListModel) async {
+    await BukkungListRepository.updateGroupBukkungList(bukkungListModel);
   }
 }

@@ -490,13 +490,13 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
         MainButton(
           buttonText: controller.selectedDiaryModel == null ? '작성 완료' : '수정 완료',
           onTap: () async {
-            if (controller.isButtonDisabled.value) {
+            if (controller.isUploading.value) {
               print('버튼 비활성화');
               null;
             } else {
               if (controller.isValid()) {
                 print('업로드 중');
-                controller.isButtonDisabled.value = true;
+                controller.isUploading.value = true;
                 await controller.uploadDiary();
                 Get.back();
               } else {
@@ -533,7 +533,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
             ),
           ),
           Obx(
-            () => controller.isButtonDisabled.value
+            () => controller.isUploading.value
                 ? Container(
                     color: Colors.black.withOpacity(0.5),
                     child: Center(

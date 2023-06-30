@@ -87,6 +87,16 @@ class BukkungListRepository {
         .set(bukkungListData.toJson());
   }
 
+  static Future<void> updateGroupBukkungList(
+      BukkungListModel bukkungListModel) async {
+    await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(AuthController.to.user.value.groupId)
+        .collection('bukkungLists')
+        .doc(bukkungListModel.listId) // 업데이트할 문서의 ID
+        .update(bukkungListModel.toJson()); // 업데이트할 데이터
+  }
+
   Future<void> deleteListImage(String imagePath) async {
     try {
       Reference imageRef = FirebaseStorage.instance
@@ -95,6 +105,17 @@ class BukkungListRepository {
           .child('${AuthController.to.user.value.groupId}/$imagePath');
 
       await imageRef.delete();
+    } catch (e) {
+      openAlertDialog(title: '이미지 삭제 오류 $e');
+    }
+  }
+
+  static Future<void> deleteImage(String imgUrl) async {
+    Reference storageRef = FirebaseStorage.instance.refFromURL(imgUrl);
+    try {
+      // 이미지 삭제
+      await storageRef.delete();
+      print('이미지 삭제 완료');
     } catch (e) {
       openAlertDialog(title: '이미지 삭제 오류 $e');
     }

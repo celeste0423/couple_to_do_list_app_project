@@ -30,20 +30,36 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
             onPressed: controller.isCompleted.value == true
                 ? () async {
                     print('업로드 시작(upl page)');
+                    controller.isUploading.value = true;
                     await controller.uploadBukkungList();
-                    // Get.find<ListSuggestionPageController>().refresh();
-                    // Todo: 저장하고 나면 알아서 FutureBuilder refresh가 되도록 해야함
+                    Get.back();
                     Get.back();
                   }
                 : () {
                     openAlertDialog(title: '값을 모두 입력해 주세요');
                   },
-            child: controller.isCompleted.value == true
-                ? Text('저장', style: TextStyle(color: CustomColors.mainPink))
-                : Text(
-                    '저장',
-                    style: TextStyle(color: CustomColors.greyText),
-                  ),
+            child: controller.selectedBukkungListModel == null
+                ? controller.isCompleted.value == true
+                    ? Text('저장', style: TextStyle(color: CustomColors.mainPink))
+                    : Text(
+                        '저장',
+                        style: TextStyle(color: CustomColors.greyText),
+                      )
+                : controller.isSuggestion == true
+                    ? controller.isCompleted.value == true
+                        ? Text('내 버꿍에 추가',
+                            style: TextStyle(color: CustomColors.mainPink))
+                        : Text(
+                            '내 버꿍에 추가',
+                            style: TextStyle(color: CustomColors.greyText),
+                          )
+                    : controller.isCompleted.value == true
+                        ? Text('수정 완료',
+                            style: TextStyle(color: CustomColors.mainPink))
+                        : Text(
+                            '수정 완료',
+                            style: TextStyle(color: CustomColors.greyText),
+                          ),
           );
         }),
       ],
@@ -406,60 +422,76 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
   @override
   Widget build(BuildContext context) {
     Get.put(UploadBukkungListController());
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: CustomColors.backgroundLightGrey,
-      appBar: _appBar(),
-      body: Stack(
-        children: [
-          Positioned(
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            child: GestureDetector(
-              onTap: () {
-                FocusManager.instance.primaryFocus?.unfocus(); //키보드 자동닫힘
-              },
-              child: Column(
-                children: [
-                  _titleTextField(),
-                  customDivider(),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      controller: controller.contentScrollController,
-                      child: Column(
-                        children: [
-                          _categorySelector(context),
-                          _locationTextfield(context),
-                          _datePicker(context),
-                          _contentTextField(),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 15,
-                              left: 30,
-                              right: 30,
-                            ),
-                            child: Get.arguments[0] == null
-                                ? Row(
-                                    children: [
-                                      _imagePicker(context),
-                                      SizedBox(width: 10),
-                                      _publicSwitch(),
-                                    ],
-                                  )
-                                : _imagePicker(context),
-                          )
-                        ],
+    return Stack(
+      children: [
+        Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: CustomColors.backgroundLightGrey,
+          appBar: _appBar(),
+          body: Stack(
+            children: [
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: GestureDetector(
+                  onTap: () {
+                    FocusManager.instance.primaryFocus?.unfocus(); //키보드 자동닫힘
+                  },
+                  child: Column(
+                    children: [
+                      _titleTextField(),
+                      customDivider(),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          controller: controller.contentScrollController,
+                          child: Column(
+                            children: [
+                              _categorySelector(context),
+                              _locationTextfield(context),
+                              _datePicker(context),
+                              _contentTextField(),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 15,
+                                  left: 30,
+                                  right: 30,
+                                ),
+                                child: Get.arguments[0] == null
+                                    ? Row(
+                                        children: [
+                                          _imagePicker(context),
+                                          SizedBox(width: 10),
+                                          _publicSwitch(),
+                                        ],
+                                      )
+                                    : _imagePicker(context),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Obx(
+          () => controller.isUploading.value
+              ? Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: CustomColors.mainPink,
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+                )
+              : Container(),
+        ),
+      ],
     );
   }
 }
