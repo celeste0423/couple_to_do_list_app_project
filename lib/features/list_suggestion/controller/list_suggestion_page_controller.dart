@@ -62,19 +62,21 @@ class ListSuggestionPageController extends GetxController
     StreamSubscription<List<BukkungListModel>>? subscription;
     subscription = stream.listen((list) {
       if (list.isNotEmpty) {
-        final updatedList = selectedList.value.copyWith(
-          listId: list[0].listId,
-          title: list[0].title,
-          content: list[0].content,
-          location: list[0].location,
-          category: list[0].category,
-          imgUrl: list[0].imgUrl,
-          imgId: list[0].imgId,
-          madeBy: list[0].madeBy,
-          likeCount: list[0].likeCount,
-          likedUsers: list[0].likedUsers,
-          viewCount: list[0].viewCount,
-        );
+        final updatedList = list[0];
+        // final updatedList = selectedList.value.copyWith(
+        //   listId: list[0].listId,
+        //   title: list[0].title,
+        //   content: list[0].content,
+        //   location: list[0].location,
+        //   category: list[0].category,
+        //   imgUrl: list[0].imgUrl,
+        //   imgId: list[0].imgId,
+        //   madeBy: list[0].madeBy,
+        //   userId: list[0].userId,
+        //   likeCount: list[0].likeCount,
+        //   likedUsers: list[0].likedUsers,
+        //   viewCount: list[0].viewCount,
+        // );
         selectedList(updatedList);
         print('리스트 변경 제목${list[0].listId}');
         if (selectedList.value.likedUsers != null &&
@@ -104,15 +106,6 @@ class ListSuggestionPageController extends GetxController
     }
   }
 
-  // void _fetchSuggestionBukkungList(
-  //   DocumentSnapshot<Object?>? pageKey,
-  // ) {
-  //   return ListSuggestionRepository.fetchSuggestionBukkungList(
-  //     pageKey,
-  //     _pageSize,
-  //   );
-  // }
-
   @override
   void dispose() {
     super.dispose();
@@ -123,7 +116,6 @@ class ListSuggestionPageController extends GetxController
     searchBarController.dispose();
     suggestionListScrollController.dispose();
     streamController.close();
-    // pagingController.dispose();
   }
 
   void onTextChanged() {
@@ -158,20 +150,10 @@ class ListSuggestionPageController extends GetxController
     }
   }
 
-  // Stream<List<BukkungListModel>> getSuggestionTestBukkungList(
-  //   String category,
-  // ) {
-  //   if (category == 'all') {
-  //     return ListSuggestionRepository().getAllTestStreamBukkungList(_pageSize);
-  //   } else {
-  //     return ListSuggestionRepository().getTypeBukkungList(category);
-  //   }
-  // }
-
   Stream<List<BukkungListModel>> getSuggestionBukkungList(
     String category,
   ) {
-    print('리스트 추천 stream(sugg cont) ${category}');
+    // print('리스트 추천 stream(sugg cont) ${category}');
     if (category == 'all') {
       return ListSuggestionRepository().getAllBukkungList();
     } else {
@@ -184,6 +166,7 @@ class ListSuggestionPageController extends GetxController
   }
 
   void indexSelection(BukkungListModel updatedList, int index) {
+    print(updatedList.userId);
     selectedList(updatedList);
     selectedListIndex = index;
     if (selectedList.value.likedUsers != null &&
@@ -198,7 +181,6 @@ class ListSuggestionPageController extends GetxController
   }
 
   void toggleLike() {
-    // pagingController.refresh();
     if (selectedList.value.likedUsers != null) {
       if (selectedList.value.likedUsers!
           .contains(AuthController.to.user.value.uid)) {
@@ -268,15 +250,22 @@ class ListSuggestionPageController extends GetxController
   }
 
   void viewCount() {
-    ListSuggestionRepository().updateViewCount(
-      selectedList.value.listId!,
-      selectedList.value.viewCount! + 1,
-    );
-    //오프라인 리스트 업데이트
-    if (suggestionListTabController.index == 0) {
-      prevList![selectedListIndex].viewCount =
-          selectedList.value.viewCount! + 1;
-      streamController.add(prevList!);
+    // print(
+    //     '${selectedList.value.userId},${AuthController.to.group.value.femaleUid}');
+    if (selectedList.value.userId != AuthController.to.group.value.femaleUid &&
+        selectedList.value.userId != AuthController.to.group.value.maleUid) {
+      // print(
+      //     '${selectedList.value.userId},${AuthController.to.group.value.maleUid}');
+      ListSuggestionRepository().updateViewCount(
+        selectedList.value.listId!,
+        selectedList.value.viewCount! + 1,
+      );
+      //오프라인 리스트 업데이트
+      if (suggestionListTabController.index == 0) {
+        prevList![selectedListIndex].viewCount =
+            selectedList.value.viewCount! + 1;
+        streamController.add(prevList!);
+      }
     }
   }
 

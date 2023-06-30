@@ -37,8 +37,7 @@ class UserModel {
     return {
       'uid': uid,
       'nickname': nickname,
-      'loginType':
-          loginType, // Store the loginType as a string representation in JSON
+      'loginType': loginType,
       'email': email,
       'gender': gender,
       'birthday': birthday,

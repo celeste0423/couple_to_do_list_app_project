@@ -429,43 +429,17 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         controller: controller.suggestionListTabController,
         children: [
           _suggestionAllList(0),
-          _suggestionList(1),
-          _suggestionList(2),
-          _suggestionList(3),
-          _suggestionList(4),
-          _suggestionList(5),
-          _suggestionList(6),
+          _suggestionCategoryList(1),
+          _suggestionCategoryList(2),
+          _suggestionCategoryList(3),
+          _suggestionCategoryList(4),
+          _suggestionCategoryList(5),
+          _suggestionCategoryList(6),
           _suggestionMyList(),
         ],
       ),
     );
   }
-
-  // Widget _suggestionTest1List() {
-  //   return RefreshIndicator(
-  //     onRefresh: () => Future.sync(
-  //       () => controller.pagingController.refresh(),
-  //     ),
-  //     child: PagedListView(
-  //       physics: AlwaysScrollableScrollPhysics(),
-  //       padding: const EdgeInsets.only(top: 400, bottom: 20),
-  //       scrollController: controller.suggestionListScrollController,
-  //       pagingController: controller.pagingController,
-  //       builderDelegate: PagedChildBuilderDelegate<
-  //           QueryDocumentSnapshot<Map<String, dynamic>>>(
-  //         itemBuilder: (context, snapshots, index) {
-  //           QueryDocumentSnapshot<Map<String, dynamic>> snapshot = snapshots;
-  //           BukkungListModel bukkungList =
-  //               BukkungListModel.fromJson(snapshot.data());
-  //           return _suggestionListCard(bukkungList, index, false);
-  //         },
-  //         noItemsFoundIndicatorBuilder: (context) => Center(
-  //           child: Text('아직 리스트가 없습니다'),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget _suggestionAllList(int index) {
     return StreamBuilder(
@@ -506,7 +480,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
-  Widget _suggestionList(int index) {
+  Widget _suggestionCategoryList(int index) {
     return StreamBuilder(
       stream: controller.getSuggestionBukkungList(
         controller.tabIndexToName(index),
@@ -546,21 +520,28 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: GestureDetector(
         onTap: () {
-          final updatedList = controller.selectedList.value.copyWith(
-            listId: bukkungListModel.listId,
-            title: bukkungListModel.title,
-            content: bukkungListModel.content,
-            location: bukkungListModel.location,
-            category: bukkungListModel.category,
-            imgUrl: bukkungListModel.imgUrl,
-            imgId: bukkungListModel.imgId,
-            madeBy: bukkungListModel.madeBy,
-            likedUsers: bukkungListModel.likedUsers,
-            likeCount: bukkungListModel.likeCount,
-            viewCount: bukkungListModel.viewCount,
-          );
-          controller.indexSelection(updatedList, index);
+          // final updatedList = controller.selectedList.value.copyWith(
+          //   listId: bukkungListModel.listId,
+          //   title: bukkungListModel.title,
+          //   content: bukkungListModel.content,
+          //   location: bukkungListModel.location,
+          //   category: bukkungListModel.category,
+          //   imgUrl: bukkungListModel.imgUrl,
+          //   imgId: bukkungListModel.imgId,
+          //   madeBy: bukkungListModel.madeBy,
+          //   userId: bukkungListModel.userId,
+          //   likedUsers: bukkungListModel.likedUsers,
+          //   likeCount: bukkungListModel.likeCount,
+          //   viewCount: bukkungListModel.viewCount,
+          // );
+          controller.indexSelection(bukkungListModel, index);
           controller.viewCount();
+        },
+        onDoubleTap: () {
+          Get.to(
+            () => UploadBukkungListPage(),
+            arguments: [controller.selectedList.value, true],
+          );
         },
         child: Stack(
           children: [
@@ -646,20 +627,20 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 right: 0,
                 child: CustomIconButton(
                   onTap: () {
-                    final updatedList = controller.selectedList.value.copyWith(
-                      listId: bukkungListModel.listId,
-                      title: bukkungListModel.title,
-                      content: bukkungListModel.content,
-                      location: bukkungListModel.location,
-                      category: bukkungListModel.category,
-                      imgUrl: bukkungListModel.imgUrl,
-                      imgId: bukkungListModel.imgId,
-                      madeBy: bukkungListModel.madeBy,
-                      likedUsers: bukkungListModel.likedUsers,
-                      likeCount: bukkungListModel.likeCount,
-                      viewCount: bukkungListModel.viewCount,
-                    );
-                    controller.indexSelection(updatedList, index);
+                    // final updatedList = controller.selectedList.value.copyWith(
+                    //   listId: bukkungListModel.listId,
+                    //   title: bukkungListModel.title,
+                    //   content: bukkungListModel.content,
+                    //   location: bukkungListModel.location,
+                    //   category: bukkungListModel.category,
+                    //   imgUrl: bukkungListModel.imgUrl,
+                    //   imgId: bukkungListModel.imgId,
+                    //   madeBy: bukkungListModel.madeBy,
+                    //   likedUsers: bukkungListModel.likedUsers,
+                    //   likeCount: bukkungListModel.likeCount,
+                    //   viewCount: bukkungListModel.viewCount,
+                    // );
+                    controller.indexSelection(bukkungListModel, index);
                     openAlertDialog(
                       title: '정말로 지우시겠습니다?',
                       secondButtonText: '취소',
@@ -786,8 +767,6 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             _searchBar(),
           ],
         ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        // floatingActionButton: _listAddButton(),
       ),
     );
   }
