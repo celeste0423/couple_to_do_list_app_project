@@ -192,4 +192,19 @@ class UserRepository {
       return false;
     }
   }
+
+  static Future<String> getLoginType() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: AuthController.to.user.value.uid)
+        .get();
+    if (querySnapshot.docs.isNotEmpty) {
+      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+      String loginType = documentSnapshot.get('loginType');
+      return loginType;
+    } else {
+      // 문서를 찾지 못한 경우 또는 필드 값이 없는 경우에 대한 처리
+      return '';
+    }
+  }
 }

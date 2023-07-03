@@ -50,18 +50,38 @@ class SettingPage extends GetView<SettingPageController> {
       ),
       child: Material(
         color: Colors.transparent,
-        child: ListTile(
-          leading: Image.asset(
-            'assets/icons/google.png',
-            width: 40,
-          ),
-          title: Text(
-            '구글 계정',
-            style: TextStyle(fontSize: 25),
-          ),
-          subtitle: Text(Get.find<AuthController>().user.value.email ?? '',
-              style:
-                  TextStyle(color: CustomColors.lightGreyText, fontSize: 20)),
+        child: Obx(() {
+          switch (controller.loginType.value) {
+            case 'google':
+              return loginTypeTile('google', '구글');
+            case 'kakao':
+              return loginTypeTile('kakaos', '카카오');
+            case 'apple':
+              //Todo: apple.png 파일 가져올 것
+              return loginTypeTile('apple', '애플');
+            default:
+              return loginTypeTile('google', '구글');
+          }
+        }),
+      ),
+    );
+  }
+
+  Widget loginTypeTile(String loginType, String krLoginType) {
+    return ListTile(
+      leading: Image.asset(
+        'assets/icons/$loginType.png',
+        width: 40,
+      ),
+      title: Text(
+        '$krLoginType 계정',
+        style: TextStyle(fontSize: 25),
+      ),
+      subtitle: Text(
+        AuthController.to.user.value.email!,
+        style: TextStyle(
+          color: CustomColors.lightGreyText,
+          fontSize: 20,
         ),
       ),
     );

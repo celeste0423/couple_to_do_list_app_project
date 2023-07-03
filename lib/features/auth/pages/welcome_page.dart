@@ -31,14 +31,6 @@ class _WelcomePageState extends State<WelcomePage> {
     });
   }
 
-  void _launchURL(Uri url) async {
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
   Widget _subTitle() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -64,7 +56,12 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget _infoText() {
-    String version = packageInfo!.version;
+    String? version;
+    if (packageInfo == null) {
+      version = '';
+    } else {
+      version = packageInfo!.version;
+    }
     return Column(
       children: [
         RichText(

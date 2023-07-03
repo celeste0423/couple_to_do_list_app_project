@@ -5,7 +5,19 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingPageController extends GetxController {
+  Rx<String> loginType = ''.obs;
+
   final Uri _url = Uri.parse(Constants.noticeNotionUrl);
+
+  @override
+  void onInit() {
+    super.onInit();
+    _getLoginType();
+  }
+
+  Future<void> _getLoginType() async {
+    loginType.value = await UserRepository.getLoginType();
+  }
 
   Future<void> openNotice() async {
     try {

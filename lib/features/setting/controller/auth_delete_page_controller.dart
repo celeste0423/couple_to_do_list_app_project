@@ -24,7 +24,8 @@ class AuthDeletePageController extends GetxController {
         title: '삭제',
         content: '원활한 삭제를 위해 계정 인증 부탁드립니다.',
         function: () async {
-          if (AuthController.loginType == 'google') {
+          String loginType = await UserRepository.getLoginType();
+          if (loginType == 'google') {
             final GoogleSignIn googleSignIn = GoogleSignIn();
             //구글 로그인 페이지 표시
             final GoogleSignInAccount? googleSignInAccount =
@@ -37,6 +38,19 @@ class AuthDeletePageController extends GetxController {
             );
             await FirebaseAuth.instance.currentUser
                 ?.reauthenticateWithCredential(authCredential);
+          } else if (loginType == 'kakao') {
+            //커스텀 토큰 받아옴
+            String? customToken = await AuthController.to.signInWithKakao();
+            //파이어베이스 auth 등록
+            if (customToken == null || customToken == '') {
+              openAlertDialog(title: '로그인 실패');
+            } else {
+              AuthController.loginType = 'kakao';
+              print('(kak btn) 로그인 타입 ${AuthController.loginType}');
+              await FirebaseAuth.instance.signInWithCustomToken(customToken);
+            }
+          } else if (loginType == 'apple') {
+            //Todo: 애플 계정 로그인 제작
           }
         });
     //auth에서 삭제
