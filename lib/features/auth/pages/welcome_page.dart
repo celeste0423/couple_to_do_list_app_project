@@ -1,11 +1,44 @@
+import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/google_login_button.dart';
+import 'package:couple_to_do_list_app/features/auth/widgets/kakao_login_button.dart';
 import 'package:couple_to_do_list_app/helper/local_notification.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends StatefulWidget {
+  @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
+  PackageInfo? packageInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    initPackageInfo();
+  }
+
+  Future<void> initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      packageInfo = info;
+    });
+  }
+
+  void _launchURL(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   Widget _subTitle() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -31,6 +64,7 @@ class WelcomePage extends StatelessWidget {
   }
 
   Widget _infoText() {
+    String version = packageInfo!.version;
     return Column(
       children: [
         RichText(
@@ -49,11 +83,13 @@ class WelcomePage extends StatelessWidget {
                   color: Colors.blue,
                 ),
                 recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    Get.snackbar(
-                      '이용약관 올라가게',
-                      'this is a snackbar',
-                    );
+                  ..onTap = () async {
+                    Uri uri = Uri.parse(Constants.serviceTermsNotionUrl);
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri);
+                    } else {
+                      openAlertDialog(title: '오류 발생');
+                    }
                   },
               ),
               TextSpan(text: '및 '),
@@ -64,11 +100,13 @@ class WelcomePage extends StatelessWidget {
                   color: Colors.blue,
                 ),
                 recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    Get.snackbar(
-                      '공지사항 올라가게',
-                      'this is a snackbar',
-                    );
+                  ..onTap = () async {
+                    Uri uri = Uri.parse(Constants.noticeNotionUrl);
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri);
+                    } else {
+                      openAlertDialog(title: '오류 발생');
+                    }
                   },
               ),
               TextSpan(text: '은 눌러서 확인하세요'),
@@ -79,7 +117,7 @@ class WelcomePage extends StatelessWidget {
           height: 5,
         ),
         Text(
-          'v 0.0.0',
+          'v $version',
           style: TextStyle(
             color: CustomColors.darkGrey,
             fontSize: 20,
@@ -111,7 +149,7 @@ class WelcomePage extends StatelessWidget {
                 fontSize: 25,
               ),
             ),
-            // kakaoLoginButton(),
+            KakaoLoginButton(),
             GoogleLoginButton(),
             _infoText(),
           ],

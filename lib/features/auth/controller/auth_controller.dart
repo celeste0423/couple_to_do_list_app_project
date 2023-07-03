@@ -20,8 +20,14 @@ class AuthController extends GetxController {
   Rx<GroupModel> group = GroupModel().obs;
   // final finishedLogin = false.obs;
 
+  //구글 로그인
   Future<UserCredential> signInWithGoogle() async {
     return await UserRepository.signInWithGoogle();
+  }
+
+  //카카오로그인
+  Future<String> signInWithKakao() async {
+    return await UserRepository.signInWithKakao();
   }
 
   Future<UserModel?> loginUser(String email) async {
@@ -41,11 +47,6 @@ class AuthController extends GetxController {
           //InitBinding.additionalBinding();
         }
       }
-      // if (user.value.uid == 'base') {
-      //   //신규 유저
-      //   return user.value;
-      // }
-      // finishedLogin.value = true;
       return userData; //로딩 중 경우 null반환
     } catch (e) {
       print('loginUser 오류(cont)$e');
@@ -70,18 +71,18 @@ class AuthController extends GetxController {
     String groupId = uuid.v1();
 
     if (myData!.gender == 'male') {
-      var groupdata =
+      var groupData =
           await GroupRepository.groupSignup(groupId, myData, buddyData!);
-      group(groupdata);
+      group(groupData);
     } else if (myData!.gender == 'female') {
-      var groupdata =
+      var groupData =
           await GroupRepository.groupSignup(groupId, buddyData!, myData);
-      group(groupdata);
+      group(groupData);
     } else {
       //동성 커플고려는 아직은 하지 않는걸로
-      var groupdata =
+      var groupData =
           await GroupRepository.groupSignup(groupId, myData, buddyData!);
-      group(groupdata);
+      group(groupData);
     }
 
     if (buddyData == null || myData == null) {
@@ -101,60 +102,4 @@ class AuthController extends GetxController {
   Future<bool> findGroupId(String email) async {
     return await UserRepository.findGroupId(email);
   }
-
-  // Future<GroupModel> saveGroupData() async {
-  //   print('받아온 유저 데이터(auth cont) ${user.value.groupId}');
-  //   var groupData = await GroupRepository.groupLogin(user.value.groupId ?? '');
-  //   print('그룹 데이터 (auth cont) ${groupData!.uid}');
-  //   group(groupData);
-  //   print('그룹 데이터 저장 (auth cont) ${group.value.uid}');
-  //   return group.value;
-  // }
 }
-
-//카카오 user registration
-
-// static AuthController instance = Get.find();
-// late Rx<User?> _user;
-// FirebaseAuth authentication = FirebaseAuth.instance;
-//
-// @override
-// void onReady() {
-//   super.onReady();
-//   _user = Rx<User?>(authentication.currentUser);
-//   _user.bindStream(authentication.userChanges());
-//   ever(_user, _moveToPage);
-// }
-//
-// _moveToPage(User? user) {
-//   if (user == null) {
-//     Get.offAll(() => WelcomePage());
-//   } else {
-//     Get.offAll(() => SignupPage());
-//   }
-// }
-//
-// void register(String email, password) async {
-//   try {
-//     await authentication.createUserWithEmailAndPassword(
-//         email: email, password: password);
-//   } catch (e) {
-//     Get.snackbar(
-//       "Error message",
-//       "User message",
-//       backgroundColor: Colors.red,
-//       snackPosition: SnackPosition.BOTTOM,
-//       titleText: Text(
-//         "Registration is failed",
-//         style: TextStyle(color: Colors.white),
-//       ),
-//       messageText: Text(
-//         e.toString(),
-//         style: TextStyle(color: Colors.white),
-//       ),
-//     );
-//   }
-// }
-//
-// void logout() {
-//   authentication.signOut();

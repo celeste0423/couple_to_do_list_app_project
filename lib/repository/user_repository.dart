@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:couple_to_do_list_app/features/auth/auth_source/firebase_auth_remote_data_source.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
 class UserRepository {
   static Future<UserCredential> signInWithGoogle() async {
@@ -29,12 +31,64 @@ class UserRepository {
     return await auth.signInWithCredential(credential);
   }
 
+  static Future<String> signInWithKakao() async {
+    final firebaseAuthDataSource = FirebaseAuthRemoteDataSource();
+    bool isLogined = false;
+    kakao.User? user;
+    try {
+      bool isInstalled = await kakao.isKakaoTalkInstalled();
+      if (isInstalled) {
+        try {
+          await kakao.UserApi.instance.loginWithKakaoTalk();
+          isLogined = true;
+        } catch (e) {
+          openAlertDialog(title: e.toString());
+        }
+      } else {
+        try {
+          await kakao.UserApi.instance.loginWithKakaoAccount();
+          isLogined = true;
+        } catch (e) {
+          openAlertDialog(title: e.toString());
+        }
+      }
+      //로그인 완료 됐으면
+      if (isLogined) {
+        //커스텀 토큰 생성
+        user = await kakao.UserApi.instance.me();
+        final customToken = await firebaseAuthDataSource.createCustomToken({
+          'uid': user!.id.toString(),
+          'email': user!.kakaoAccount!.email!,
+        });
+        return customToken;
+      } else {
+        return '';
+      }
+    } catch (e) {
+      //로그인 실패
+      openAlertDialog(title: e.toString());
+      return '';
+    }
+  }
+
   static Future signOut() async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
     try {
       if (AuthController.to.user.value.loginType == 'google') {
         //이전 로그인 기록 지우기
-        await googleSignIn.signOut();
+        try {
+          await googleSignIn.signOut();
+        } catch (e) {
+          openAlertDialog(title: e.toString());
+        }
+      }
+      if (AuthController.to.user.value.loginType == 'kakao') {
+        //이전 로그인 기록 지우기
+        try {
+          await kakao.UserApi.instance.unlink();
+        } catch (e) {
+          openAlertDialog(title: e.toString());
+        }
       }
       await FirebaseAuth.instance.signOut();
     } catch (e) {

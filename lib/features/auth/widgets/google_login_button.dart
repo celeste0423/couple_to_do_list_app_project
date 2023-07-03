@@ -20,9 +20,12 @@ class GoogleLoginButton extends StatelessWidget {
         }
         Get.back();
       },
-      child: Image.asset(
-        'assets/images/google_login_btn_res.png',
-        height: 80,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        child: Image.asset(
+          'assets/images/google_login_btn_res.png',
+          height: 70,
+        ),
       ),
     );
   }

@@ -8,14 +8,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  // KakaoSdk.init(nativeAppKey: '6343b85d09998d34e9261b1c6e5f4635');
+  KakaoSdk.init(nativeAppKey: '6343b85d09998d34e9261b1c6e5f4635');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   //화면 회전 불가
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {

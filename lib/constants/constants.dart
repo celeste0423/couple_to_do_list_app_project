@@ -7,6 +7,10 @@ class Constants {
   static String noticeNotionUrl =
       "https://longhaired-canvas-3ff.notion.site/6f96cf66790c48298cf0577dc84eefdb?pvs=4";
 
+  //이용 약관 뇨션 페이지
+  static String serviceTermsNotionUrl =
+      "https://www.notion.so/d0807c83075e438abcc9d8168861a6e5?pvs=4";
+
   //카톡 채널 페이지
   static String kakaoChannel = "https://pf.kakao.com/_pTKhG";
 
