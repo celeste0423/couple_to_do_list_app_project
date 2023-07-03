@@ -157,16 +157,14 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
                 Row(
                   children: [
                     PngIcon(iconName: 'location-pin'),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          controller.bukkungListModel.location!,
-                          style: TextStyle(
-                            color: CustomColors.blackText,
-                          ),
-                          softWrap: true,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        controller.bukkungListModel.location!,
+                        style: TextStyle(
+                          color: CustomColors.blackText,
                         ),
+                        softWrap: true,
                       ),
                     ),
                   ],
