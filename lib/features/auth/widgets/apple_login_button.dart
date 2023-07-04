@@ -13,11 +13,13 @@ class AppleLoginButton extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         //Todo: 애플 로그인 구현
-        UserCredential? userCredential = await AuthController.to.signInWithApple();
-        if (null == userCredential) {
+        UserCredential? userCredential =
+            await AuthController.to.signInWithApple();
+        if (userCredential == null) {
           openAlertDialog(title: '로그인 실패');
         } else {
-          print('apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
+          print(
+              'apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
           //로그인 타입 설정
           AuthController.loginType = 'apple';
         }

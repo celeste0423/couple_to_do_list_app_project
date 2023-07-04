@@ -7,26 +7,37 @@ import 'package:couple_to_do_list_app/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 
 enum GroupIdStatus { noData, hasGroup, createdGroupId }
 
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
+
   //유저 정보
   static String? loginType;
+
   // static String? nickName;
   // static String? gender;
   // static String? birthday;
 
   Rx<UserModel> user = UserModel().obs;
+
   // Rx<UserModel> user = UserModel(uid: 'base').obs;
   Rx<GroupModel> group = GroupModel().obs;
+
   // final finishedLogin = false.obs;
 // 애플 로그인
   Future<UserCredential> signInWithApple() async {
-    return await UserRepository.signInWithApple();
+    bool isAvailable = await SignInWithApple.isAvailable();
+    if (isAvailable) {
+      return await UserRepository.signInWithApple();
+    } else {
+      return await UserRepository.appleFlutterWebAuth();
+    }
   }
+
   //구글 로그인
   Future<UserCredential> signInWithGoogle() async {
     return await UserRepository.signInWithGoogle();

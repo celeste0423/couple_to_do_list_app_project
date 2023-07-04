@@ -4,11 +4,39 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:uuid/uuid.dart';
 
 class UserRepository {
+
+  static Future<UserCredential> appleFlutterWebAuth() async{
+    final clientState = Uuid().v4();
+    final url = Uri.https('appleid.apple.com', '/auth/authorize', {
+      'response_type': 'code id_token',
+      'client_id': "com.example.coupleTodoListApp.web",
+      'response_mode': 'form_post',
+      'redirect_uri':
+      'https://bottlenose-tungsten-rumba.glitch.me/callbacks/apple/sign_in',
+      'scope': 'email name',
+      'state': clientState,
+    });
+
+    final result = await FlutterWebAuth.authenticate(
+        url: url.toString(), callbackUrlScheme: "applink");
+
+    final body = Uri.parse(result).queryParameters;
+    final oauthCredential = OAuthProvider("apple.com").credential(
+      idToken: body['id_token'],
+      accessToken: body['code'],
+    );
+    return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
+
+
+  }
   static Future<UserCredential> signInWithApple() async {
     final appleCredential = await SignInWithApple.getAppleIDCredential(
       scopes: [
