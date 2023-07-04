@@ -54,6 +54,7 @@ class UserRepository {
       idToken: appleCredential.identityToken,
       accessToken: appleCredential.authorizationCode,
     );
+    print(oauthCredential);
     return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   }
 
@@ -76,7 +77,7 @@ class UserRepository {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-
+    print(credential);
     // //사용자 정보 가져오기
     // final userInfo = await googleSignIn.currentUser;
     // AuthController.nickName = userInfo!.displayName;
@@ -89,7 +90,6 @@ class UserRepository {
     //   return response["genders"][0]["formattedValue"];
     // }
     // AuthController.gender = await getGender();
-
     return await auth.signInWithCredential(credential);
   }
 

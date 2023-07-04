@@ -12,7 +12,7 @@ class GoogleLoginButton extends StatelessWidget {
         UserCredential? userCredential =
             await AuthController.to.signInWithGoogle();
 
-        if (null == userCredential) {
+        if (userCredential==null) {
           openAlertDialog(title: '로그인 실패');
         } else {
           print('(gog but) ${AuthController.to.user.value.nickname}');
