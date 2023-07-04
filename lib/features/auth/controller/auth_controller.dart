@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 enum GroupIdStatus { noData, hasGroup, createdGroupId }
 
@@ -31,9 +32,13 @@ class AuthController extends GetxController {
 // 애플 로그인
   Future<UserCredential> signInWithApple() async {
     bool isAvailable = await SignInWithApple.isAvailable();
+   // bool isIOS = foundation.defaultTargetPlatform==foundation.TargetPlatform.iOS;
+
     if (isAvailable) {
+      print(isAvailable);
       return await UserRepository.signInWithApple();
     } else {
+      print(isAvailable);
       return await UserRepository.appleFlutterWebAuth();
     }
   }

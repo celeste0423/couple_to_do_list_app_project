@@ -16,7 +16,7 @@ class UserRepository {
     final clientState = Uuid().v4();
     final url = Uri.https('appleid.apple.com', '/auth/authorize', {
       'response_type': 'code id_token',
-      'client_id': "com.example.coupleTodoListApp.web",
+      'client_id': "com.example.coupleToDoListApp.web",
       'response_mode': 'form_post',
       'redirect_uri':
       'https://bottlenose-tungsten-rumba.glitch.me/callbacks/apple/sign_in',
@@ -44,7 +44,7 @@ class UserRepository {
         AppleIDAuthorizationScopes.fullName,
       ],
       webAuthenticationOptions: WebAuthenticationOptions(
-        clientId: "com.example.coupleTodoListApp.web",
+        clientId: "com.example.coupleToDoListApp.web",
         redirectUri: Uri.parse(
             "https://bottlenose-tungsten-rumba.glitch.me/callbacks/sign_in_with_apple"),
       ),
@@ -54,7 +54,6 @@ class UserRepository {
       idToken: appleCredential.identityToken,
       accessToken: appleCredential.authorizationCode,
     );
-
     return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   }
 
