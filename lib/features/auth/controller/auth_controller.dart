@@ -13,7 +13,11 @@ enum GroupIdStatus { noData, hasGroup, createdGroupId }
 
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
+  //유저 정보
   static String? loginType;
+  // static String? nickName;
+  // static String? gender;
+  // static String? birthday;
 
   Rx<UserModel> user = UserModel().obs;
   // Rx<UserModel> user = UserModel(uid: 'base').obs;

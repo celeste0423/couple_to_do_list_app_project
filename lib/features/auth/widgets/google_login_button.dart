@@ -20,12 +20,35 @@ class GoogleLoginButton extends StatelessWidget {
         }
         Get.back();
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
-        child: Image.asset(
-          'assets/images/google_login_btn_res.png',
-          height: 70,
-        ),
+      child: Stack(
+        children: [
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: Colors.black.withOpacity(0.2)),
+            ),
+            child: Center(
+              child: Text(
+                '구글로 로그인',
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 15,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 10,
+            top: 10,
+            child: Image.asset(
+              'assets/icons/google.png',
+              height: 30,
+            ),
+          ),
+        ],
       ),
     );
   }

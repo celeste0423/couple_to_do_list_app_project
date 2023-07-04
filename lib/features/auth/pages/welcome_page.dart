@@ -1,4 +1,5 @@
 import 'package:couple_to_do_list_app/constants/constants.dart';
+import 'package:couple_to_do_list_app/features/auth/widgets/apple_login_button.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/google_login_button.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/kakao_login_button.dart';
 import 'package:couple_to_do_list_app/helper/local_notification.dart';
@@ -126,6 +127,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Widget _buttomLoginTab(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       width: Get.width,
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -134,23 +136,22 @@ class _WelcomePageState extends State<WelcomePage> {
           topLeft: Radius.circular(45),
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'SNS 로그인',
-              style: TextStyle(
-                color: CustomColors.darkGrey,
-                fontSize: 25,
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'SNS 로그인',
+            style: TextStyle(
+              color: CustomColors.darkGrey,
+              fontSize: 17,
             ),
-            KakaoLoginButton(),
-            GoogleLoginButton(),
-            _infoText(),
-          ],
-        ),
+          ),
+          KakaoLoginButton(),
+          GoogleLoginButton(),
+          AppleLoginButton(),
+          SizedBox(height: 10),
+          _infoText(),
+        ],
       ),
     );
   }
@@ -168,7 +169,7 @@ class _WelcomePageState extends State<WelcomePage> {
             Expanded(flex: 1, child: _subTitle()),
             Expanded(flex: 1, child: _appTitle()),
             Expanded(flex: 4, child: Image.asset('assets/images/ggomool.png')),
-            Expanded(flex: 3, child: _buttomLoginTab(context)),
+            Expanded(flex: 4, child: _buttomLoginTab(context)),
           ],
         ),
       ),

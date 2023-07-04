@@ -11,6 +11,8 @@ class UserRepository {
   static Future<UserCredential> signInWithGoogle() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final GoogleSignIn googleSignIn = GoogleSignIn();
+    // final GoogleSignIn googleSignIn = GoogleSignIn(
+    //     scopes: ['email', "https://www.googleapis.com/auth/userinfo.profile"]);
     //구글 로그인 페이지 표시
     final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
@@ -25,9 +27,20 @@ class UserRepository {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    // print(googleAuth.accessToken);
-    // print(googleAuth.idToken);
-    print('구글에 로그인(user repo)');
+
+    // //사용자 정보 가져오기
+    // final userInfo = await googleSignIn.currentUser;
+    // AuthController.nickName = userInfo!.displayName;
+    // Future<String> getGender() async {
+    //   final headers = await googleSignIn.currentUser!.authHeaders;
+    //   final r = await http.get(
+    //       "https://people.googleapis.com/v1/people/me?personFields=genders&key=",
+    //       headers: {"Authorization": headers["Authorization"]});
+    //   final response = JSON.jsonDecode(r.body);
+    //   return response["genders"][0]["formattedValue"];
+    // }
+    // AuthController.gender = await getGender();
+
     return await auth.signInWithCredential(credential);
   }
 

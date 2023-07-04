@@ -1,9 +1,7 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class KakaoLoginButton extends StatelessWidget {
+class AppleLoginButton extends StatelessWidget {
   final AuthController authController = AuthController();
 
   String? userid;
@@ -12,32 +10,27 @@ class KakaoLoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        //커스텀 토큰 받아옴
-        String? customToken = await AuthController.to.signInWithKakao();
-        //파이어베이스 auth 등록
-        if (customToken == null || customToken == '') {
-          openAlertDialog(title: '로그인 실패');
-        } else {
-          AuthController.loginType = 'kakao';
-          print('(kak btn) 로그인 타입 ${AuthController.loginType}');
-          await FirebaseAuth.instance.signInWithCustomToken(customToken);
-        }
+        //Todo: 애플 로그인 구현
+
+        //로그인 타입 설정
+        AuthController.loginType = 'apple';
       },
       child: Stack(
         children: [
           Container(
             height: 50,
             decoration: BoxDecoration(
-              color: Color(0xFFFBDB3F),
+              color: Color(0xFF000000),
               borderRadius: BorderRadius.circular(15),
+              border: Border.all(),
             ),
             child: Center(
               child: Text(
-                '카카오로 로그인',
+                'Apple로 로그인',
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 15,
-                  color: Color(0xFF3A2929),
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -46,7 +39,7 @@ class KakaoLoginButton extends StatelessWidget {
             left: 5,
             top: 5,
             child: Image.asset(
-              'assets/icons/kakaos.png',
+              'assets/icons/apple.png',
               height: 40,
             ),
           ),
