@@ -37,7 +37,23 @@ class UserRepository {
 
 
   }
-  static Future<UserCredential> signInWithApple() async {
+  static Future<UserCredential> iosSignInWithApple() async {
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
+
+    final oauthCredential = OAuthProvider("apple.com").credential(
+      idToken: appleCredential.identityToken,
+      accessToken: appleCredential.authorizationCode,
+    );
+    print(oauthCredential);
+    return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+  }
+
+  static Future<UserCredential> androidSignInWithApple() async {
     final appleCredential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,

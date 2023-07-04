@@ -32,13 +32,16 @@ class AuthController extends GetxController {
 // 애플 로그인
   Future<UserCredential> signInWithApple() async {
     bool isAvailable = await SignInWithApple.isAvailable();
-   // bool isIOS = foundation.defaultTargetPlatform==foundation.TargetPlatform.iOS;
+    bool isAndroid =
+        foundation.defaultTargetPlatform == foundation.TargetPlatform.android;
 
     if (isAvailable) {
-      print(isAvailable);
-      return await UserRepository.signInWithApple();
+      if (isAndroid) {
+        return await UserRepository.androidSignInWithApple();
+      } else {
+        return await UserRepository.iosSignInWithApple();
+      }
     } else {
-      print(isAvailable);
       return await UserRepository.appleFlutterWebAuth();
     }
   }
