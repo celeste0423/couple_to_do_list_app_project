@@ -203,7 +203,7 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
           DiaryModel updatedDiaryModel = diaryModel.copyWith(
             title: controller.bukkungListModel.title,
             category: controller.bukkungListModel.category,
-            location: controller.bukkungListModel.category,
+            location: controller.bukkungListModel.location,
             date: controller.bukkungListModel.date,
             updatedAt: DateTime.now(),
           );

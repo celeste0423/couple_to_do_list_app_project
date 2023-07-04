@@ -267,7 +267,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
               cursorHeight: 40,
               style: TextStyle(
                 color: CustomColors.darkGrey,
-                fontSize: 40,
+                fontSize: 25,
               ),
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -279,7 +279,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                 hintText: '제목을 입력하세요',
                 hintStyle: TextStyle(
                   color: CustomColors.darkGrey,
-                  fontSize: 40,
+                  fontSize: 25,
                 ),
               ),
             ),
