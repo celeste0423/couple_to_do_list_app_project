@@ -63,6 +63,7 @@ dependencies:
   kakao_flutter_sdk_user: ^1.4.3
   http: ^0.13.6
   firebase_messaging: ^14.6.4
+  sign_in_with_apple: ^5.0.0
 
 flutter_native_splash:
   color: "#FAA7A7"

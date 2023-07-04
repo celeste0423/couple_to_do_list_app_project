@@ -23,7 +23,10 @@ class AuthController extends GetxController {
   // Rx<UserModel> user = UserModel(uid: 'base').obs;
   Rx<GroupModel> group = GroupModel().obs;
   // final finishedLogin = false.obs;
-
+// 애플 로그인
+  Future<UserCredential> signInWithApple() async {
+    return await UserRepository.signInWithApple();
+  }
   //구글 로그인
   Future<UserCredential> signInWithGoogle() async {
     return await UserRepository.signInWithGoogle();
