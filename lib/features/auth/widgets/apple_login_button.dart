@@ -14,7 +14,6 @@ class AppleLoginButton extends StatelessWidget {
       onTap: () async {
         //Todo: 애플 로그인 구현
         UserCredential? userCredential = await AuthController.to.signInWithApple();
-
         if (null == userCredential) {
           openAlertDialog(title: '로그인 실패');
         } else {

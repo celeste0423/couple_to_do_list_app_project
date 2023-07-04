@@ -15,6 +15,11 @@ class UserRepository {
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
       ],
+      webAuthenticationOptions: WebAuthenticationOptions(
+        clientId: "com.example.coupleTodoListApp.web",
+        redirectUri: Uri.parse(
+            "https://bottlenose-tungsten-rumba.glitch.me/callbacks/sign_in_with_apple"),
+      ),
     );
 
     final oauthCredential = OAuthProvider("apple.com").credential(
