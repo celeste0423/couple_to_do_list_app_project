@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/features/admin_management/pages/admin_management.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/signup_page.dart';
@@ -51,9 +52,10 @@ class Root extends GetView<AuthController> {
                   );
                 } else {
                   print('로그인 정보 ${controller.user.toJson()}');
-                  // if (controller.user.value.uid == null) {
-                  //   return LoadingContainer();}
-                  if (controller.user.value.groupId == null) {
+                  if (user.data!.email == 'bukkunglist@gmail.com') {
+                    print('관리자 계정으로 로그인했습니다. ManagementPage로 이동합니다.');
+                    return AdminPage();
+                  } else if (controller.user.value.groupId == null) {
                     print('groupId 값이 아직 존재하지 않습니다. FindBuddyPage로 이동합니다.');
                     return FindBuddyPage(email: user.data!.email ?? '');
                   } else {

@@ -11,8 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
-  const ListSuggestionPage({Key? key}) : super(key: key);
+class AdminListSuggestionPage
+    extends GetView<AdminListSuggestionPageController> {
+  const AdminListSuggestionPage({Key? key}) : super(key: key);
 
   PreferredSizeWidget _appBar() {
     return AppBar(
@@ -467,7 +468,7 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
                 Column(
                   children: List.generate(list.length, (index) {
                     final bukkungList = list[index];
-                    return _suggestionListCard(bukkungList, index, false);
+                    return _suggestionListCard(bukkungList, index, true);
                   }),
                 ),
                 SizedBox(height: 20),
@@ -502,7 +503,7 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
               Column(
                 children: List.generate(list.length, (index) {
                   final bukkungList = list[index];
-                  return _suggestionListCard(bukkungList, index, false);
+                  return _suggestionListCard(bukkungList, index, true);
                 }),
               ),
               SizedBox(height: 20),

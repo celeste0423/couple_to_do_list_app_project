@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingPageController extends GetxController {
+  static SettingPageController get to => Get.find();
   Rx<String> loginType = ''.obs;
 
   final Uri _url = Uri.parse(Constants.noticeNotionUrl);
