@@ -1,7 +1,6 @@
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
-import 'package:couple_to_do_list_app/features/setting/pages/setting_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -9,7 +8,6 @@ import 'package:couple_to_do_list_app/utils/type_to_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
-import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -20,18 +18,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
   PreferredSizeWidget _appBar() {
     return AppBar(
       backgroundColor: CustomColors.backgroundLightGrey,
-      title: TitleText(text: '버꿍리스트'),
-      actions: [
-        IconButton(
-          onPressed: () {
-            Get.to(() => SettingPage());
-          },
-          icon: PngIcon(
-            iconName: 'setting',
-            iconColor: Colors.white.withOpacity(0.5),
-          ),
-        ),
-      ],
+      // leading: ,
     );
   }
 
@@ -70,7 +57,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                 '여기를 눌러 버꿍리스트를 추가하세요',
                 style: TextStyle(
                   color: CustomColors.grey.withOpacity(0.5),
-                  fontSize: 20,
+                  fontSize: 18,
                 ),
               ),
             ),

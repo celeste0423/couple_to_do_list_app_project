@@ -17,7 +17,8 @@ class TitleText extends StatelessWidget {
       text,
       style: TextStyle(
         color: color ?? CustomColors.darkGrey,
-        fontSize: 35,
+        fontSize: 25,
+        fontWeight: FontWeight.w600,
       ),
     );
     ;
