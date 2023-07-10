@@ -11,15 +11,14 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 
 class UserRepository {
-
-  static Future<UserCredential> appleFlutterWebAuth() async{
+  static Future<UserCredential> appleFlutterWebAuth() async {
     final clientState = Uuid().v4();
     final url = Uri.https('appleid.apple.com', '/auth/authorize', {
       'response_type': 'code id_token',
       'client_id': "com.example.coupleToDoListApp.web",
       'response_mode': 'form_post',
       'redirect_uri':
-      'https://bottlenose-tungsten-rumba.glitch.me/callbacks/apple/sign_in',
+          'https://bottlenose-tungsten-rumba.glitch.me/callbacks/apple/sign_in',
       'scope': 'email name',
       'state': clientState,
     });
@@ -33,10 +32,8 @@ class UserRepository {
       accessToken: body['code'],
     );
     return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-
-
-
   }
+
   static Future<UserCredential> iosSignInWithApple() async {
     final appleCredential = await SignInWithApple.getAppleIDCredential(
       scopes: [
@@ -283,6 +280,18 @@ class UserRepository {
     } else {
       // 문서를 찾지 못한 경우 또는 필드 값이 없는 경우에 대한 처리
       return '';
+    }
+  }
+
+  static Future<UserModel?> getUserDataByUid(String uid) async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    if (snapshot.exists) {
+      UserModel userdata = UserModel.fromJson(snapshot.data()!);
+      return userdata;
+    } else {
+      openAlertDialog(title: '유저 정보 가져오기 실패');
+      return null;
     }
   }
 }
