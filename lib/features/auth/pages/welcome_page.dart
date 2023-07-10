@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/features/auth/widgets/kakao_login_button.d
 import 'package:couple_to_do_list_app/helper/local_notification.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,32 +28,48 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Future<void> initPackageInfo() async {
     final info = await PackageInfo.fromPlatform();
-    setState(() {
-      packageInfo = info;
-    });
+    packageInfo = info;
   }
 
   Widget _subTitle() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      width: Get.width,
-      child: const Text(
-        '내 짝꿍과 \n 이루고 싶은 버킷리스트',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 30,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 30),
+          child: Image.asset('assets/images/title_vertical.png'),
         ),
-      ),
-    );
-  }
-
-  Widget _appTitle() {
-    return Text(
-      '버꿍리스트',
-      style: TextStyle(
-        color: Colors.black,
-        fontSize: 65,
-      ),
+        RotatedBox(
+          quarterTurns: 45,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 208, top: 30),
+                child: Divider(
+                  thickness: 1,
+                  color: Colors.white,
+                ),
+              ),
+              BkText(
+                '내 짝꿍과 ',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 23,
+                ),
+              ),
+              SizedBox(height: 20),
+              BkText(
+                '이루고 싶은 버킷리스트',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 23,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -69,8 +86,7 @@ class _WelcomePageState extends State<WelcomePage> {
           text: TextSpan(
             style: TextStyle(
               color: CustomColors.darkGrey,
-              fontFamily: 'Yoonwoo',
-              fontSize: 20,
+              fontSize: 15,
             ),
             children: [
               TextSpan(text: '회원가입 시 '),
@@ -118,7 +134,7 @@ class _WelcomePageState extends State<WelcomePage> {
           'v $version',
           style: TextStyle(
             color: CustomColors.darkGrey,
-            fontSize: 20,
+            fontSize: 10,
           ),
         ),
       ],
@@ -129,6 +145,7 @@ class _WelcomePageState extends State<WelcomePage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       width: Get.width,
+      height: 280,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -143,7 +160,7 @@ class _WelcomePageState extends State<WelcomePage> {
             'SNS 로그인',
             style: TextStyle(
               color: CustomColors.darkGrey,
-              fontSize: 17,
+              fontSize: 12,
             ),
           ),
           KakaoLoginButton(),
@@ -166,10 +183,16 @@ class _WelcomePageState extends State<WelcomePage> {
         child: Column(
           children: [
             SizedBox(height: 20),
-            Expanded(flex: 1, child: _subTitle()),
-            Expanded(flex: 1, child: _appTitle()),
-            Expanded(flex: 4, child: Image.asset('assets/images/ggomool.png')),
-            Expanded(flex: 4, child: _buttomLoginTab(context)),
+            Expanded(flex: 3, child: _subTitle()),
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: Image.asset('assets/images/ggomool.png'),
+              ),
+            ),
+            SizedBox(height: 30),
+            _buttomLoginTab(context),
           ],
         ),
       ),

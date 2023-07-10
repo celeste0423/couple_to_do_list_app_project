@@ -36,7 +36,7 @@ class MainButton extends StatelessWidget {
             buttonText,
             style: TextStyle(
               color: textColor ?? Colors.white,
-              fontSize: 25,
+              fontSize: 20,
             ),
           ),
         ),

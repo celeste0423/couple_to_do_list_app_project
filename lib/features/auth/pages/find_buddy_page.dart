@@ -5,7 +5,7 @@ import 'package:couple_to_do_list_app/features/home/pages/home_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
-import 'package:couple_to_do_list_app/widgets/title_text.dart';
+import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -45,7 +45,13 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
               color: Colors.white,
             ),
           ),
-          TitleText(text: '짝꿍 찾기'),
+          PcText(
+            '짝꿍 찾기',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+            ),
+          ),
           SizedBox(
             width: 50,
           ),
@@ -99,7 +105,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
         children: [
           Text(
             useremail ?? '',
-            style: TextStyle(fontSize: 30, color: Colors.white),
+            style: TextStyle(fontSize: 20, color: Colors.white),
           ),
           SizedBox(width: 10),
           Icon(
@@ -112,10 +118,6 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
     );
   }
 
-  Widget _inviteButton() {
-    return TextButton(onPressed: () {}, child: Text('초대 메시지 보내기'));
-  }
-
   Widget _floatingContainer() {
     return Stack(
       alignment: Alignment.center,
@@ -123,7 +125,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       children: [
         Container(
           margin: EdgeInsets.all(20),
-          height: 250,
+          height: 270,
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.9),
             borderRadius: BorderRadius.circular(30.0),
@@ -136,9 +138,27 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                 color: CustomColors.grey,
                 height: 70,
               ),
-              Text(
-                '짝꿍의 이메일을 입력하세요',
-                style: TextStyle(fontSize: 30, color: CustomColors.grey),
+              RichText(
+                text: TextSpan(
+                  children: const [
+                    TextSpan(
+                      text: '짝꿍의 ',
+                      style: TextStyle(fontSize: 20, color: CustomColors.grey),
+                    ),
+                    TextSpan(
+                      text: '이메일',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: CustomColors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '을 입력하세요',
+                      style: TextStyle(fontSize: 20, color: CustomColors.grey),
+                    ),
+                  ],
+                ),
               ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 30),
@@ -168,7 +188,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       children: [
         Text(
           '내 이메일',
-          style: TextStyle(fontSize: 30, color: Colors.white),
+          style: TextStyle(fontSize: 20, color: Colors.white),
         ),
         _emailCopyButton(),
         // _inviteButton(),
@@ -179,8 +199,16 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
   Widget _emailTextField() {
     return TextField(
       controller: emailController,
+      style: TextStyle(
+        fontSize: 13,
+        fontFamily: 'Pyeongchang',
+      ),
       decoration: InputDecoration(
         hintText: 'ex) Bukkung@google.com',
+        hintStyle: TextStyle(
+          fontSize: 13,
+          fontFamily: 'Pyeongchang',
+        ),
         prefixIcon: Icon(
           Icons.email,
           color: CustomColors.greyText,
@@ -204,7 +232,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       bottom: 0,
       right: Get.width * 1 / 2 - 75,
       child: MainButton(
-        buttonText: '시작하기',
+        buttonText: '찾기',
         onTap: () async {
           GroupIdStatus groupIdStatus = await authController.groupCreation(
               widget.email, emailController.text);
@@ -221,7 +249,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           }
         },
         width: 150,
-        buttonColor: CustomColors.lightPink,
+        buttonColor: CustomColors.mainPink,
       ),
     );
   }

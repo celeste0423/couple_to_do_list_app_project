@@ -5,7 +5,7 @@ import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/main_button.dart';
-import 'package:couple_to_do_list_app/widgets/title_text.dart';
+import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -39,7 +39,13 @@ class SignupPageState extends State<SignupPage> {
         SizedBox(
           height: 20,
         ),
-        TitleText(text: '신규 등록'),
+        PcText(
+          '신규 등록',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+          ),
+        ),
         SizedBox(
           height: 15,
         ),
@@ -63,6 +69,14 @@ class SignupPageState extends State<SignupPage> {
           topRight: Radius.circular(45),
           topLeft: Radius.circular(45),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 3,
+            blurRadius: 10,
+            offset: Offset(0, -5), // 위쪽 방향으로 그림자가 만들어지도록 offset을 수정
+          ),
+        ],
       ),
       width: Get.width,
       height: Get.height * 9 / 16,
@@ -133,7 +147,7 @@ class SignupPageState extends State<SignupPage> {
       text,
       style: TextStyle(
         color: CustomColors.darkGrey,
-        fontSize: 35,
+        fontSize: 20,
       ),
     );
   }
@@ -187,7 +201,7 @@ class SignupPageState extends State<SignupPage> {
     TextInputType? numberInput,
   ) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(
@@ -200,14 +214,21 @@ class SignupPageState extends State<SignupPage> {
         maxLengthEnforcement: MaxLengthEnforcement.enforced,
         keyboardType: numberInput,
         controller: controller,
+        style: TextStyle(
+          fontSize: 20,
+          fontFamily: 'Pyeongchang',
+        ),
         decoration: InputDecoration(
           hintText: text,
           hintStyle: TextStyle(
-            fontSize: 20,
+            fontSize: 18,
+            fontFamily: 'Pyeongchang',
           ),
           counterText: '',
           suffixIcon: IconButton(
-              icon: Icon(Icons.close, size: 20), onPressed: onPressed),
+            icon: Icon(Icons.close, size: 20),
+            onPressed: onPressed,
+          ),
         ),
       ),
     );

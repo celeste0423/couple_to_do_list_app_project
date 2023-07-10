@@ -27,7 +27,7 @@ Widget RegistrationStage(int n) {
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.white,
-                  width: 2,
+                  width: 3,
                 ),
                 color: Colors.white,
                 shape: BoxShape.circle,
@@ -37,7 +37,7 @@ Widget RegistrationStage(int n) {
                   '1',
                   style: TextStyle(
                     color: CustomColors.grey,
-                    fontSize: 35,
+                    fontSize: 20,
                   ),
                 ),
               ),
@@ -51,7 +51,7 @@ Widget RegistrationStage(int n) {
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.white,
-                  width: 2,
+                  width: 3,
                 ),
                 color: n >= 2 ? Colors.white : CustomColors.mainPink,
                 shape: BoxShape.circle,
@@ -61,7 +61,7 @@ Widget RegistrationStage(int n) {
                   '2',
                   style: TextStyle(
                     color: n >= 2 ? CustomColors.grey : Colors.white,
-                    fontSize: 35,
+                    fontSize: 20,
                   ),
                 ),
               ),
@@ -75,7 +75,7 @@ Widget RegistrationStage(int n) {
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.white,
-                  width: 2,
+                  width: 3,
                 ),
                 color: n >= 3 ? Colors.white : CustomColors.mainPink,
                 shape: BoxShape.circle,
@@ -85,7 +85,7 @@ Widget RegistrationStage(int n) {
                   '3',
                   style: TextStyle(
                     color: n >= 3 ? CustomColors.grey : Colors.white,
-                    fontSize: 35,
+                    fontSize: 20,
                   ),
                 ),
               ),
