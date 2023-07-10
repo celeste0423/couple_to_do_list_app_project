@@ -65,6 +65,7 @@ dependencies:
   firebase_messaging: ^14.6.4
   sign_in_with_apple: ^5.0.0
   flutter_web_auth: ^0.5.0
+  flutter_svg: ^2.0.7
 
 flutter_native_splash:
   color: "#FAA7A7"
@@ -125,8 +126,32 @@ flutter:
         weight: 400
       - asset: assets/fonts/nanum_square/NanumSquareOTF_acB.otf
         weight: 600
+      - asset: assets/fonts/nanum_square/NanumSquareOTF_acB.otf
+        weight: 700
       - asset: assets/fonts/nanum_square/NanumSquareOTF_acEB.otf
         weight: 800
+
+    - family: Pyeongchang
+      fonts:
+      - asset: assets/fonts/pyeongchang/PyeongChangPeace-Light.ttf
+        weight: 400
+      - asset: assets/fonts/pyeongchang/PyeongChangPeace-Bold.ttf
+        weight: 700
+
+    - family: Bookk_mj
+      fonts:
+      - asset: assets/fonts/bookk_myeongjo/bookk_mj_light.ttf
+        weight: 400
+      - asset: assets/fonts/bookk_myeongjo/bookk_mj_bold.ttf
+        weight: 700
+
+    - family: Bookk_gd
+      fonts:
+      - asset: assets/fonts/bookk_godic/bookk_gd_light.ttf
+        weight: 400
+      - asset: assets/fonts/bookk_godic/bookk_gd_bold.ttf
+        weight: 700
+
 
   #   - family: Trajan Pro
   #     fonts:

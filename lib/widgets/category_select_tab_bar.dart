@@ -21,7 +21,7 @@ class CategorySelectTabBar extends StatelessWidget {
       isScrollable: true,
       controller: tabController,
       labelColor: selectedColor ?? CustomColors.darkGrey,
-      labelStyle: TextStyle(fontFamily: 'YoonWoo', fontSize: 20),
+      labelStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w200),
       unselectedLabelColor:
           unselectedColor ?? CustomColors.grey.withOpacity(0.5),
       indicator: UnderlineTabIndicator(

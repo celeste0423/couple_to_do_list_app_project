@@ -8,6 +8,8 @@ import 'package:couple_to_do_list_app/utils/type_to_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
+import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
+import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +20,11 @@ class BukkungListPage extends GetView<BukkungListPageController> {
   PreferredSizeWidget _appBar() {
     return AppBar(
       backgroundColor: CustomColors.backgroundLightGrey,
-      // leading: ,
+      leading: Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: Image(image: AssetImage('assets/images/title_horizontal.png')),
+      ),
+      leadingWidth: 190,
     );
   }
 
@@ -50,14 +56,14 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               iconColor: Colors.white.withOpacity(0.7),
               iconSize: 30,
             ),
-            SizedBox(width: 20),
+            SizedBox(width: 10),
             Material(
               type: MaterialType.transparency,
               child: Text(
                 '여기를 눌러 버꿍리스트를 추가하세요',
                 style: TextStyle(
                   color: CustomColors.grey.withOpacity(0.5),
-                  fontSize: 18,
+                  fontSize: 17,
                 ),
               ),
             ),
@@ -89,9 +95,8 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                 child: Text(
                   "카테고리 별",
                   style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Yoonwoo',
-                    letterSpacing: 1.5,
+                    fontSize: 15,
+                    fontFamily: 'Nanum',
                     color: CustomColors.darkGrey,
                   ),
                 ),
@@ -101,9 +106,8 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                 child: Text(
                   "최신 순",
                   style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Yoonwoo',
-                    letterSpacing: 1.5,
+                    fontSize: 15,
+                    fontFamily: 'Nanum',
                     color: CustomColors.darkGrey,
                   ),
                 ),
@@ -113,9 +117,8 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                 child: Text(
                   "이전 순",
                   style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Yoonwoo',
-                    letterSpacing: 1.5,
+                    fontSize: 15,
+                    fontFamily: 'Nanum',
                     color: CustomColors.darkGrey,
                   ),
                 ),
@@ -304,7 +307,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             children: const [
               CategoryIcon(category: '1travel'),
               SizedBox(width: 10),
-              Text('여행', style: TextStyle(fontSize: 25)),
+              Text('여행', style: TextStyle(fontSize: 20)),
             ],
           ),
         );
@@ -315,7 +318,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             children: const [
               CategoryIcon(category: '2meal'),
               SizedBox(width: 10),
-              Text('식사', style: TextStyle(fontSize: 25)),
+              Text('식사', style: TextStyle(fontSize: 20)),
             ],
           ),
         );
@@ -326,7 +329,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             children: const [
               CategoryIcon(category: '3activity'),
               SizedBox(width: 10),
-              Text('액티비티', style: TextStyle(fontSize: 25)),
+              Text('액티비티', style: TextStyle(fontSize: 20)),
             ],
           ),
         );
@@ -337,7 +340,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             children: const [
               CategoryIcon(category: '4culture'),
               SizedBox(width: 10),
-              Text('문화 활동', style: TextStyle(fontSize: 25)),
+              Text('문화 활동', style: TextStyle(fontSize: 20)),
             ],
           ),
         );
@@ -348,7 +351,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             children: const [
               CategoryIcon(category: '5study'),
               SizedBox(width: 10),
-              Text('자기 계발', style: TextStyle(fontSize: 25)),
+              Text('자기 계발', style: TextStyle(fontSize: 20)),
             ],
           ),
         );
@@ -359,7 +362,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             children: const [
               CategoryIcon(category: '6etc'),
               SizedBox(width: 10),
-              Text('기타', style: TextStyle(fontSize: 25)),
+              Text('기타', style: TextStyle(fontSize: 20)),
             ],
           ),
         );
@@ -415,10 +418,10 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                             padding: const EdgeInsets.only(right: 10),
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
-                              child: Text(
+                              child: PcText(
                                 bukkungListModel.title!,
                                 style: TextStyle(
-                                  fontSize: 25,
+                                  fontSize: 20,
                                   color: CustomColors.blackText,
                                 ),
                               ),
@@ -432,7 +435,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                           //     color: CustomColors.blackText,
                           //   ),
                           // ),
-                          Text(DateFormat('yyyy-MM-dd')
+                          BkText(DateFormat('yyyy-MM-dd')
                               .format(bukkungListModel.date!)),
                           Row(
                             children: [
@@ -448,7 +451,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                                     alignment: Alignment.centerLeft,
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
-                                      child: Text(
+                                      child: BkText(
                                         bukkungListModel.location!,
                                         style: TextStyle(
                                           fontSize: 15,

@@ -16,4 +16,7 @@ class Constants {
 
   //카톡 1대1 문의사항
   static String kakaoQuestionChat = "https://pf.kakao.com/_pTKhG/chat";
+
+  //플레이 스토어 링크
+  static String playstoreurl = '';
 }

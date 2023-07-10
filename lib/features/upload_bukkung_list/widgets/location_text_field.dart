@@ -133,7 +133,7 @@ class _LocationTextFieldState extends State<LocationTextField> {
           textInputAction: TextInputAction.search,
           style: TextStyle(
             color: CustomColors.blackText,
-            fontSize: 25,
+            fontSize: 20,
           ),
           cursorColor: CustomColors.darkGrey,
           decoration: const InputDecoration(
@@ -146,7 +146,7 @@ class _LocationTextFieldState extends State<LocationTextField> {
             counterText: '',
             hintStyle: TextStyle(
               color: CustomColors.greyText,
-              fontSize: 25,
+              fontSize: 20,
             ),
           ),
         ),

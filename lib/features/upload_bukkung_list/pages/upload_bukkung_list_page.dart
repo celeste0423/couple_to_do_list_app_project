@@ -78,9 +78,9 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         textInputAction: TextInputAction.done,
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: CustomColors.blackText,
-          fontSize: 30,
-        ),
+            color: CustomColors.blackText,
+            fontSize: 18,
+            fontFamily: "Pyeongchang"),
         cursorColor: CustomColors.mainPink,
         decoration: const InputDecoration(
           counterText: '',
@@ -141,7 +141,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                                     null
                                 ? CustomColors.greyText
                                 : CustomColors.blackText,
-                            fontSize: 25,
+                            fontSize: 20,
                           ),
                         ),
                       ],
@@ -172,7 +172,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
               children: [
                 Text(
                   '카테고리',
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 25),
                 ),
                 SizedBox(height: 20),
                 Row(
@@ -242,7 +242,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
             SizedBox(height: 10),
             Text(
               text,
-              style: TextStyle(fontSize: 25, color: CustomColors.blackText),
+              style: TextStyle(fontSize: 15, color: Colors.white),
             ),
           ],
         ),
@@ -299,7 +299,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                 ),
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 11, horizontal: 20),
                   child: Obx(() {
                     return Text(
                       controller.listDateTime.value == null
@@ -310,7 +310,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                         color: controller.listDateTime.value == null
                             ? CustomColors.greyText
                             : CustomColors.blackText,
-                        fontSize: 25,
+                        fontSize: 20,
                       ),
                     );
                   }),
@@ -339,7 +339,8 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         onChanged: (value) {},
         style: TextStyle(
           color: CustomColors.blackText,
-          fontSize: 25,
+          fontSize: 18,
+          fontFamily: 'Bookk_mj',
         ),
         cursorColor: CustomColors.darkGrey,
         decoration: const InputDecoration(
@@ -350,9 +351,9 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           disabledBorder: InputBorder.none,
           hintText: '계획을 작성해 주세요',
           hintStyle: TextStyle(
-            color: CustomColors.greyText,
-            fontSize: 25,
-          ),
+              color: CustomColors.greyText,
+              fontSize: 18,
+              fontFamily: 'Bookk_mj'),
         ),
       ),
     );
@@ -401,7 +402,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
               '버꿍 리스트 공개 여부 설정',
               style: TextStyle(
                 color: CustomColors.greyText,
-                fontSize: 18,
+                fontSize: 15,
               ),
             ),
             Obx(() {

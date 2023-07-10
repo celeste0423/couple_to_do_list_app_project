@@ -11,91 +11,76 @@ ThemeData baseTheme() {
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         labelMedium: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         labelSmall: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         titleLarge: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         titleMedium: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         titleSmall: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         headlineLarge: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         headlineMedium: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         headlineSmall: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         displayLarge: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         displayMedium: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         displaySmall: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         bodySmall: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         bodyLarge: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
         bodyMedium: TextStyle(
           color: CustomColors.darkGrey,
           fontSize: 15,
           fontFamily: 'nanum',
-          letterSpacing: 1.5,
         ),
       ),
       appBarTheme: AppBarTheme(
@@ -105,7 +90,6 @@ ThemeData baseTheme() {
           color: CustomColors.darkGrey,
           fontSize: 20,
           fontFamily: 'nanum',
-          letterSpacing: 2,
         ),
         centerTitle: true,
         iconTheme: IconThemeData(
@@ -155,7 +139,7 @@ ThemeData baseTheme() {
       inputDecorationTheme: InputDecorationTheme(
         hintStyle: TextStyle(
           fontSize: 15,
-          fontFamily: 'YoonWoo',
+          fontFamily: 'Nanum',
         ),
       ),
       datePickerTheme: DatePickerThemeData(

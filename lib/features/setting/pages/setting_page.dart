@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/basic_container.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
+import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,7 +13,7 @@ import 'package:launch_review/launch_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
 
-String playstoreurl = '';
+//Todo: 리스트타일 없이 만들어야 할 듯, 높이 조절이 너무 불편함
 
 class SettingPage extends GetView<SettingPageController> {
   SettingPage({super.key});
@@ -75,13 +76,13 @@ class SettingPage extends GetView<SettingPageController> {
       ),
       title: Text(
         '$krLoginType 계정',
-        style: TextStyle(fontSize: 25),
+        style: TextStyle(fontSize: 20),
       ),
-      subtitle: Text(
+      subtitle: PcText(
         AuthController.to.user.value.email!,
         style: TextStyle(
           color: CustomColors.lightGreyText,
-          fontSize: 20,
+          fontSize: 15,
         ),
       ),
     );
@@ -99,11 +100,7 @@ class SettingPage extends GetView<SettingPageController> {
             ),
             title: Text(
               '공지사항',
-              style: TextStyle(fontSize: 25),
-            ),
-            trailing: Icon(
-              Icons.navigate_next,
-              color: CustomColors.lightGreyText,
+              style: TextStyle(fontSize: 20),
             ),
             onTap: () {
               controller.openNotice();
@@ -120,11 +117,7 @@ class SettingPage extends GetView<SettingPageController> {
             ),
             title: Text(
               '알림',
-              style: TextStyle(fontSize: 25),
-            ),
-            trailing: Icon(
-              Icons.navigate_next,
-              color: CustomColors.lightGreyText,
+              style: TextStyle(fontSize: 20),
             ),
             onTap: () {},
           ),
@@ -145,11 +138,7 @@ class SettingPage extends GetView<SettingPageController> {
             ),
             title: Text(
               '앱 공유',
-              style: TextStyle(fontSize: 25),
-            ),
-            trailing: Icon(
-              Icons.navigate_next,
-              color: CustomColors.lightGreyText,
+              style: TextStyle(fontSize: 20),
             ),
             onTap: () async {
               //Todo: FlutterShare package ios installation 필요 https://pub.dev/packages/share_plus
@@ -170,11 +159,7 @@ class SettingPage extends GetView<SettingPageController> {
             ),
             title: Text(
               '후기 남기기',
-              style: TextStyle(fontSize: 25),
-            ),
-            trailing: Icon(
-              Icons.navigate_next,
-              color: CustomColors.lightGreyText,
+              style: TextStyle(fontSize: 20),
             ),
             onTap: () {
               //Todo: LauchReview package ios install 할때 할것 https://pub.dev/packages/launch_review
@@ -192,11 +177,7 @@ class SettingPage extends GetView<SettingPageController> {
             ),
             title: Text(
               '버전정보',
-              style: TextStyle(fontSize: 25),
-            ),
-            trailing: Icon(
-              Icons.navigate_next,
-              color: CustomColors.lightGreyText,
+              style: TextStyle(fontSize: 20),
             ),
             //Todo: 버전정보 1.0.0 수정하기
             onTap: () async {
@@ -230,71 +211,103 @@ class SettingPage extends GetView<SettingPageController> {
         ],
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
-      child: ListTile(
-        leading: Image.asset(
-          'assets/icons/logout.png',
-          width: imagewidth,
-        ),
-        title: Text(
-          '로그아웃',
-          style: TextStyle(
-            fontSize: 25,
-          ),
-        ),
-        onTap: () {
-          openAlertDialog(
-            title: '로그아웃 하시겠습니까?',
-            btnText: '로그아웃',
-            secondButtonText: '취소',
-            function: () async {
-              await controller.signOut();
-              Get.back();
-              Get.back();
+      child: Column(
+        children: [
+          ListTile(
+            leading: Image.asset(
+              'assets/icons/logout.png',
+              width: imagewidth,
+            ),
+            title: Text(
+              '로그아웃',
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+            onTap: () {
+              openAlertDialog(
+                title: '로그아웃 하시겠습니까?',
+                btnText: '로그아웃',
+                secondButtonText: '취소',
+                function: () async {
+                  await controller.signOut();
+                  Get.back();
+                  Get.back();
+                },
+              );
             },
-          );
-        },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Divider(
+              thickness: 1,
+              color: CustomColors.grey,
+            ),
+          ),
+          GestureDetector(
+            child: Container(
+              height: 50,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 70),
+                  child: Text(
+                    '탈퇴하기',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            onTap: () {
+              Get.to(() => AuthDeletePage());
+            },
+          ),
+        ],
       ),
     );
   }
 
-  Widget _authDeleteTile(double imagewidth) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.7),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: Offset(1.5, 1.5), // Offset(수평, 수직)
-          ),
-        ],
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      child: ListTile(
-        leading: Image.asset(
-          'assets/icons/logout.png',
-          width: imagewidth,
-        ),
-        title: Text(
-          '회원 탈퇴',
-          style: TextStyle(
-            fontSize: 25,
-            color: Colors.red,
-          ),
-        ),
-        onTap: () {
-          Get.to(() => AuthDeletePage());
-        },
-      ),
-    );
-  }
+  // Widget _authDeleteTile(double imagewidth) {
+  //   return Container(
+  //     margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.grey.withOpacity(0.7),
+  //           spreadRadius: 1,
+  //           blurRadius: 3,
+  //           offset: Offset(1.5, 1.5), // Offset(수평, 수직)
+  //         ),
+  //       ],
+  //       borderRadius: BorderRadius.all(Radius.circular(20)),
+  //     ),
+  //     child: ListTile(
+  //       leading: Image.asset(
+  //         'assets/icons/logout.png',
+  //         width: imagewidth,
+  //       ),
+  //       title: Text(
+  //         '탈퇴하기',
+  //         style: TextStyle(
+  //           fontSize: 20,
+  //           color: Colors.red,
+  //         ),
+  //       ),
+  //       onTap: () {
+  //         Get.to(() => AuthDeletePage());
+  //       },
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     Get.put(SettingPageController());
-    double imageWidth = 35.0;
+    double imageWidth = 33.0;
     return Scaffold(
       appBar: customAppBar(),
       body: Column(
@@ -304,7 +317,6 @@ class SettingPage extends GetView<SettingPageController> {
           _notificationSetting(imageWidth),
           _appSetting(imageWidth),
           _logoutListTile(imageWidth),
-          _authDeleteTile(imageWidth),
         ],
       ),
     );

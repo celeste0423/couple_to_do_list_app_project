@@ -6,7 +6,8 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
-import 'package:couple_to_do_list_app/widgets/title_text.dart';
+import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
+import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -27,16 +28,33 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
           size: 30,
         ),
       ),
-      title: TitleText(
-        text: '추천 리스트',
-        color: Colors.white,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '추천',
+            style: TextStyle(
+              fontWeight: FontWeight.w200,
+              color: Colors.white,
+              fontSize: 25,
+            ),
+          ),
+          Text(
+            ' 버꿍리스트',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontSize: 25,
+            ),
+          )
+        ],
       ),
       actions: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: GestureDetector(
             onTap: () {
-              Get.to(() => UploadBukkungListPage(), arguments: [null, null]);
+              Get.to(() => UploadBukkungListPage(), arguments: [null, true]);
             },
             child: Icon(
               Icons.add,
@@ -80,7 +98,6 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
                   controller: controller.searchBarController,
                   style: TextStyle(
                     color: CustomColors.darkGrey,
-                    fontFamily: 'Yoonwoo',
                     fontSize: 20,
                   ),
                   cursorColor: CustomColors.darkGrey,
@@ -239,7 +256,7 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
                     text: bukkungListModel.title!,
                     maxLength: 13,
                     style:
-                        TextStyle(fontSize: 25, color: CustomColors.blackText),
+                        TextStyle(fontSize: 20, color: CustomColors.blackText),
                   ),
                   SizedBox(height: 20),
                   Expanded(
@@ -322,7 +339,7 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
             ),
             Container(
               padding: const EdgeInsets.only(
-                top: 20,
+                top: 30,
                 left: 20,
                 right: 20,
                 bottom: 10,
@@ -333,48 +350,57 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  PcText(
+                    controller.selectedList.value.title ?? '',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  ),
                   Row(
                     children: [
                       Image.asset(
                         'assets/icons/locationPinWhite.png',
-                        width: 35,
+                        width: 20,
                         color: Colors.white.withOpacity(0.9),
                         colorBlendMode: BlendMode.modulate,
                       ),
                       Expanded(
-                        child: Text(
+                        child: PcText(
                           controller.selectedList.value.location ?? '',
-                          overflow: TextOverflow.fade,
-                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 25,
+                            fontSize: 15,
                           ),
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: 20),
-                  Text(
+                  BkText(
                     controller.selectedList.value.content ?? '',
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+                    maxLines: 3,
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 25,
+                      fontSize: 17,
                     ),
                   ),
                   SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'by: ${controller.selectedList.value.madeBy}',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.9),
-                          fontSize: 15,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'by: ${controller.selectedList.value.madeBy}',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 15,
+                          ),
                         ),
                       ),
                       GestureDetector(
@@ -413,8 +439,8 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
         },
         size: 60,
         icon: Icon(
-          Icons.play_arrow_rounded,
-          size: 60,
+          Icons.document_scanner,
+          size: 40,
           color: Colors.white,
         ),
         shadowOffset: Offset(5, 5),
@@ -568,14 +594,18 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
                     )),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    MarqueeAbleText(
-                      text: bukkungListModel.title!,
-                      maxLength: 10,
-                      style: TextStyle(
-                          fontSize: 25, color: CustomColors.blackText),
+                    SizedBox(height: 10),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: PcText(
+                        bukkungListModel.title!,
+                        style: TextStyle(
+                            fontSize: 18, color: CustomColors.blackText),
+                      ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -673,12 +703,12 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
         image == null
             ? Icon(
                 Icons.favorite_border,
-                size: 20,
+                size: 18,
                 color: Colors.black.withOpacity(0.5),
               )
             : Image.asset(
                 'assets/icons/$image',
-                width: 25,
+                width: 20,
                 color: CustomColors.grey.withOpacity(0.5),
                 colorBlendMode: BlendMode.modulate,
               ),
@@ -687,13 +717,14 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
                 text: text,
                 maxLength: 5,
                 style: TextStyle(
-                  fontSize: 15,
+                  fontFamily: 'Bookk_mj',
+                  fontSize: 13,
                 ),
               )
-            : Text(
+            : BkText(
                 text,
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 13,
                 ),
               ),
       ],
