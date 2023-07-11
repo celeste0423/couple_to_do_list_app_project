@@ -6,8 +6,10 @@ import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
-import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:couple_to_do_list_app/widgets/short_h_bar.dart';
+import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
+import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
+import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -177,7 +179,7 @@ class DiaryPageTest extends GetView<DiaryPageController> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      PcText(
                         diaryModel.title ?? '',
                         style: TextStyle(fontSize: 25),
                       ),
@@ -190,7 +192,7 @@ class DiaryPageTest extends GetView<DiaryPageController> {
                           SizedBox(
                             width: 4,
                           ),
-                          Text(
+                          BkText(
                             diaryModel.location ?? '',
                             style: TextStyle(fontSize: 15),
                           ),
@@ -199,7 +201,7 @@ class DiaryPageTest extends GetView<DiaryPageController> {
                       SizedBox(
                         height: 3,
                       ),
-                      Text(
+                      BkText(
                         dateString,
                         style: TextStyle(fontSize: 15),
                       )
@@ -210,57 +212,59 @@ class DiaryPageTest extends GetView<DiaryPageController> {
             ),
           ),
         ),
-        diaryModel.diaryId! == controller.selectedDiary.value!.diaryId
-            ? Positioned(
-                top: 10,
-                right: 10,
-                child: PopupMenuButton(
-                  offset: Offset(-10, 25),
-                  shape: ShapeBorder.lerp(
-                    RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
-                    RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
-                    1,
-                  ),
-                  itemBuilder: (BuildContext context) {
-                    return [
-                      PopupMenuItem(
-                        onTap: () {
-                          Get.back();
-                          openAlertDialog(
-                            title: '다이어리 삭제',
-                            content: '이 다이어리를 지우시겠습니까?',
-                            btnText: '삭제',
-                            secondButtonText: '취소',
-                            function: () {
-                              controller
-                                  .deleteDiary(controller.selectedDiary.value);
-                              Get.back();
-                            },
-                          );
-                        },
-                        height: 40,
-                        child: Text(
-                          "삭제하기",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: 'Yoonwoo',
-                            letterSpacing: 1,
-                            color: CustomColors.darkGrey,
+        Obx(
+          () => diaryModel.diaryId! == controller.selectedDiary.value!.diaryId
+              ? Positioned(
+                  top: 10,
+                  right: 10,
+                  child: PopupMenuButton(
+                    offset: Offset(-10, 25),
+                    shape: ShapeBorder.lerp(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      1,
+                    ),
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        PopupMenuItem(
+                          onTap: () {
+                            Get.back();
+                            openAlertDialog(
+                              title: '다이어리 삭제',
+                              content: '이 다이어리를 지우시겠습니까?',
+                              btnText: '삭제',
+                              secondButtonText: '취소',
+                              function: () {
+                                controller.deleteDiary(
+                                    controller.selectedDiary.value);
+                                Get.back();
+                              },
+                            );
+                          },
+                          height: 40,
+                          child: Text(
+                            "삭제하기",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'Nanum',
+                              letterSpacing: 1,
+                              color: CustomColors.darkGrey,
+                            ),
                           ),
                         ),
-                      ),
-                    ];
-                  },
-                  child: Icon(
-                    Icons.more_vert,
-                    color: CustomColors.lightGrey,
-                    size: 25,
+                      ];
+                    },
+                    child: Icon(
+                      Icons.more_vert,
+                      color: CustomColors.lightGrey,
+                      size: 25,
+                    ),
                   ),
-                ),
-              )
-            : Container(),
+                )
+              : Container(),
+        ),
       ],
     );
   }
@@ -272,9 +276,8 @@ class DiaryPageTest extends GetView<DiaryPageController> {
       backgroundColor: CustomColors.lightPink,
       appBar: AppBar(
         backgroundColor: CustomColors.lightPink,
-        title: Text(
-          '다이어리',
-          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+        title: TitleText(
+          text: '다이어리',
         ),
         actions: [
           Padding(
@@ -409,11 +412,10 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            MarqueeAbleText(
-                              text: controller.selectedDiary.value!.title!,
-                              maxLength: 10,
+                            PcText(
+                              controller.selectedDiary.value!.title!,
                               style: TextStyle(
-                                fontSize: 35 * percent,
+                                fontSize: 22 * percent,
                               ),
                             ),
                             Container(
@@ -430,10 +432,10 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                                 ),
                               ),
                             ),
-                            Text(
+                            BkText(
                               DateFormat('yyyy-MM-dd')
                                   .format(controller.selectedDiary.value.date!),
-                              style: TextStyle(fontSize: 15),
+                              style: TextStyle(fontSize: 13),
                             ),
                           ],
                         );

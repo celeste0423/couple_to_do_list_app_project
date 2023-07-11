@@ -70,9 +70,11 @@ dependencies:
 flutter_native_splash:
   color: "#FAA7A7"
   image: assets/images/bukkung_list_icon.png
+  background_image: assets/images/splash.png
   android_12:
     color: "#FAA7A7"
     image: assets/images/bukkung_list_icon.png
+    background_image: assets/images/splash.png
     icon_background_color: "#FAA7A7"
 
 dev_dependencies:

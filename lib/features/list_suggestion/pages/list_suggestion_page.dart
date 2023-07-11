@@ -304,7 +304,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   Widget _selectedImage() {
     return Obx(() {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Stack(
           children: [
             controller.selectedList.value.imgUrl == null
@@ -318,7 +318,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                   )
                 : Container(
                     margin: const EdgeInsets.only(top: 10),
-                    width: Get.width - 60,
+                    width: Get.width - 50,
                     height: 230,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
@@ -340,7 +340,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                   ),
             Container(
               margin: const EdgeInsets.only(top: 10),
-              width: Get.width - 60,
+              width: Get.width - 50,
               height: 230,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
