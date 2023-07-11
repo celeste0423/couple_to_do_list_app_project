@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/auth_source/firebase_auth_remote_data_source.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
@@ -11,13 +12,13 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 
 class UserRepository {
-  static Stream<UserModel> streamUserDataByUid(String uid) {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .snapshots()
-        .map((snapshot) => UserModel.fromJson(snapshot.data()!));
-  }
+  // static Stream<UserModel> streamUserDataByUid(String uid) {
+  //   return FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(uid)
+  //       .snapshots()
+  //       .map((snapshot) => UserModel.fromJson(snapshot.data()!));
+  // }
 
   static Future<UserCredential> appleFlutterWebAuth() async {
     final clientState = Uuid().v4();
@@ -312,5 +313,18 @@ class UserRepository {
       openAlertDialog(title: '유저 정보 가져오기 실패');
       return null;
     }
+  }
+
+  static Future<List<BukkungListModel>> getMyBukkungList() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .where('userId', isEqualTo: AuthController.to.user.value.uid)
+        .get();
+
+    List<BukkungListModel> bukkungLists = snapshot.docs.map((doc) {
+      return BukkungListModel.fromJson(doc.data() as Map<String, dynamic>);
+    }).toList();
+
+    return bukkungLists;
   }
 }

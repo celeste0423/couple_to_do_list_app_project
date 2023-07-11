@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/repository/group_repository.dart';
@@ -92,7 +94,13 @@ class AuthController extends GetxController {
           print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
           group(groupData);
           print('그룹 정보(auth cont)${group.value.uid}');
-          //InitBinding.additionalBinding();
+          InitBinding.additionalBinding();
+          //expPoint계산
+          int expPoint = await _getExpPoint();
+          UserModel updatedData = user.value.copyWith(
+            expPoint: expPoint,
+          );
+          user(updatedData);
         }
       }
       return userData; //로딩 중 경우 null반환
@@ -101,6 +109,24 @@ class AuthController extends GetxController {
       openAlertDialog(title: '로그인 오류${e.toString()}');
       return null;
     }
+  }
+
+  //expPoint계산 해주는 함수
+  Future<int> _getExpPoint() async {
+    int viewCount = 0;
+    int likeCount = 0;
+    List<BukkungListModel> bukkungLists =
+        await UserRepository.getMyBukkungList();
+    int expPoint = 0;
+
+    for (BukkungListModel bukkunglist in bukkungLists) {
+      viewCount += bukkunglist.viewCount!.toInt();
+      likeCount += bukkunglist.likeCount!.toInt();
+    }
+    //조회수는 1점, 좋아요는 5점
+    expPoint = viewCount * 1 + likeCount * 5;
+    print('exp계산중(auth cont) 총 $expPoint점');
+    return expPoint;
   }
 
   Future signup(UserModel signupUser) async {

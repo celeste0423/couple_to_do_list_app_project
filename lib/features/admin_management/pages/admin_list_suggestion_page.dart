@@ -1,4 +1,4 @@
-import 'package:couple_to_do_list_app/features/list_suggestion/controller/list_suggestion_page_controller.dart';
+import 'package:couple_to_do_list_app/features/admin_management/controller/admin_list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';

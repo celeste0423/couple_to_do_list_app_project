@@ -63,7 +63,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                 '여기를 눌러 버꿍리스트를 추가하세요',
                 style: TextStyle(
                   color: CustomColors.grey.withOpacity(0.5),
-                  fontSize: 17,
+                  fontSize: 14,
                 ),
               ),
             ),
@@ -514,7 +514,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Hero(tag: 'search_bar', child: _listAddButton()),
+          _listAddButton(),
           _listTypeSelector(),
           customDivider(),
           _bukkungListView(),

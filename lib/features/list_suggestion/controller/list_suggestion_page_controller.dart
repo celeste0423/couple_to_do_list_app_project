@@ -9,11 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rxdart/subjects.dart';
 
-class AdminListSuggestionPageController extends GetxController
+class ListSuggestionPageController extends GetxController
     with GetTickerProviderStateMixin {
   late TabController suggestionListTabController;
 
-  static AdminListSuggestionPageController get to => Get.find();
+  static ListSuggestionPageController get to => Get.find();
 
   TextEditingController searchBarController = TextEditingController();
   List<String> _searchWord = [];

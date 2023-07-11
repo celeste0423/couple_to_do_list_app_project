@@ -244,7 +244,8 @@ class MyPage extends GetView<MyPageController> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.w200,
                                         fontSize: 18,
-                                        color: CustomColors.blackText,
+                                        color: CustomColors.blackText
+                                            .withOpacity(0.8),
                                       ),
                                     ),
                                     TextSpan(
@@ -252,7 +253,7 @@ class MyPage extends GetView<MyPageController> {
                                           .toString(),
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         color: CustomColors.blackText,
                                       ),
                                     ),
@@ -260,7 +261,7 @@ class MyPage extends GetView<MyPageController> {
                                       text: '일째',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         color: CustomColors.blackText,
                                       ),
                                     ),
@@ -288,15 +289,178 @@ class MyPage extends GetView<MyPageController> {
   }
 
   Widget _achievement() {
-    return Container();
+    return Container(
+      width: 300,
+      height: 105,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            offset: Offset(0, 5),
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _achievementDetail(
+                '리스트', controller.bukkungListCount.value.toString()),
+            _achievementDetail('조회수', controller.viewCount.value.toString()),
+            _achievementDetail('좋아요', controller.likeCount.value.toString()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _achievementDetail(String title, String content) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 15,
+          ),
+        ),
+        Text(
+          content,
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.w800,
+            decoration: TextDecoration.underline,
+            height: 2,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _levelCircularBar() {
-    return Container();
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 30),
+      child: Container(
+        height: 200,
+        width: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(240),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              offset: Offset(0, 15),
+              blurRadius: 10,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              offset: Offset(0, -15),
+              blurRadius: 10,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              offset: Offset(15, 0),
+              blurRadius: 10,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              offset: Offset(-15, 0),
+              blurRadius: 10,
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            Center(
+              child: SizedBox(
+                height: 180,
+                width: 180,
+                child: CircularProgressIndicator(
+                  strokeWidth: 8,
+                  value: (controller.expPoint.value % 100) / 100,
+                  color: CustomColors.mainPink,
+                ),
+              ),
+            ),
+            Center(
+              child: Container(
+                height: 180,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'LV.${((controller.expPoint.value - (controller.expPoint.value % 100)) / 100).toInt().toString()}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 30,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      '${(controller.expPoint.value % 100).toString()}%',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _chatButton() {
-    return Container();
+    return GestureDetector(
+      onTap: () {
+        controller.openChatUrl();
+      },
+      child: Container(
+        height: 50,
+        width: 350,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: CustomColors.backgroundLightGrey,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white.withOpacity(0.2),
+              offset: Offset(0, -5),
+              blurRadius: 5,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              offset: Offset(0, 5),
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(width: 30),
+            Icon(
+              Icons.chat,
+              size: 30,
+              color: CustomColors.darkGrey,
+            ),
+            SizedBox(width: 20),
+            Text(
+              '1:1 문의사항 (카카오톡 문의하기)',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override

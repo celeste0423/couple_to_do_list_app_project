@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
+class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   const ListSuggestionPage({Key? key}) : super(key: key);
 
   PreferredSizeWidget _appBar() {
@@ -78,35 +78,38 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
   }
 
   Widget _searchBar() {
-    return Hero(
-      tag: 'search_bar',
-      child: Material(
-        type: MaterialType.transparency,
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25),
-            color: Colors.white,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                height: 50,
-                padding: EdgeInsets.symmetric(horizontal: 10),
+    return Material(
+      type: MaterialType.transparency,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: Colors.white,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 50,
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+              child: Center(
                 child: TextField(
                   controller: controller.searchBarController,
                   style: TextStyle(
                     color: CustomColors.darkGrey,
-                    fontSize: 20,
+                    fontSize: 14,
                   ),
                   cursorColor: CustomColors.darkGrey,
                   decoration: InputDecoration(
                     hintText: '다양한 버꿍리스트를 찾아보세요',
                     border: InputBorder.none,
+                    hintStyle: TextStyle(
+                      color: CustomColors.grey.withOpacity(0.5),
+                      fontSize: 14,
+                    ),
                     prefixIcon: Icon(
                       Icons.search_rounded,
-                      size: 35,
+                      size: 30,
                       color: CustomColors.darkGrey,
                     ),
                     suffixIcon: controller.isTextEmpty
@@ -114,7 +117,7 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
                         : IconButton(
                             icon: Icon(
                               Icons.close,
-                              size: 20,
+                              size: 25,
                               color: CustomColors.darkGrey,
                             ),
                             onPressed: () {
@@ -133,59 +136,59 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
                   },
                 ),
               ),
-              Obx(() {
-                if (controller.isSearchResult.value) {
-                  return GetBuilder<AdminListSuggestionPageController>(
-                    id: 'searchResult',
-                    builder: (ListSuggestionPageController) {
-                      return ConstrainedBox(
-                        constraints: BoxConstraints(maxHeight: 300),
-                        child: controller.isTextEmpty
-                            ? Center(
-                                child: Text('검색어를 입력하세요'),
-                              )
-                            : StreamBuilder(
-                                stream: controller.getSearchedBukkungList(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<List<BukkungListModel>>
-                                        bukkungLists) {
-                                  if (!bukkungLists.hasData) {
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                          color: CustomColors.mainPink),
-                                    );
-                                  } else if (bukkungLists.hasError) {
-                                    openAlertDialog(title: '에러 발생');
-                                  } else {
-                                    final list = bukkungLists.data!;
-                                    return ListView(
-                                      physics: AlwaysScrollableScrollPhysics(),
-                                      children: [
-                                        Column(
-                                          children: List.generate(list.length,
-                                              (index) {
-                                            final bukkungList = list[index];
-                                            return _searchListCard(
-                                              bukkungList,
-                                              index,
-                                              context,
-                                            );
-                                          }),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                  return Center(child: Text('아직 버꿍리스트가 없습니다'));
-                                },
-                              ),
-                      );
-                    },
-                  );
-                }
-                return Container();
-              })
-            ],
-          ),
+            ),
+            Obx(() {
+              if (controller.isSearchResult.value) {
+                return GetBuilder<ListSuggestionPageController>(
+                  id: 'searchResult',
+                  builder: (ListSuggestionPageController) {
+                    return ConstrainedBox(
+                      constraints: BoxConstraints(maxHeight: 300),
+                      child: controller.isTextEmpty
+                          ? Center(
+                              child: Text('검색어를 입력하세요'),
+                            )
+                          : StreamBuilder(
+                              stream: controller.getSearchedBukkungList(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<BukkungListModel>>
+                                      bukkungLists) {
+                                if (!bukkungLists.hasData) {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                        color: CustomColors.mainPink),
+                                  );
+                                } else if (bukkungLists.hasError) {
+                                  openAlertDialog(title: '에러 발생');
+                                } else {
+                                  final list = bukkungLists.data!;
+                                  return ListView(
+                                    physics: AlwaysScrollableScrollPhysics(),
+                                    children: [
+                                      Column(
+                                        children:
+                                            List.generate(list.length, (index) {
+                                          final bukkungList = list[index];
+                                          return _searchListCard(
+                                            bukkungList,
+                                            index,
+                                            context,
+                                          );
+                                        }),
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return Center(child: Text('아직 버꿍리스트가 없습니다'));
+                              },
+                            ),
+                    );
+                  },
+                );
+              }
+              return Container();
+            })
+          ],
         ),
       ),
     );
@@ -249,40 +252,47 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
                 ),
               ),
               SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MarqueeAbleText(
-                    text: bukkungListModel.title!,
-                    maxLength: 13,
-                    style:
-                        TextStyle(fontSize: 20, color: CustomColors.blackText),
-                  ),
-                  SizedBox(height: 20),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _iconText(
-                          'location-pin.png',
-                          bukkungListModel.location ?? '',
-                          true,
-                        ),
-                        _iconText(
-                          'preview.png',
-                          '$formattedViewCount회',
-                          false,
-                        ),
-                        _iconText(
-                          null,
-                          '${bukkungListModel.likeCount.toString()}개',
-                          false,
-                        ),
-                      ],
+              SizedBox(
+                width: 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SizedBox(height: 10),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: PcText(
+                        bukkungListModel.title!,
+                        style: TextStyle(
+                            fontSize: 18, color: CustomColors.blackText),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                ],
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _iconText(
+                            'location-pin.png',
+                            bukkungListModel.location ?? '',
+                            true,
+                          ),
+                          _iconText(
+                            'preview.png',
+                            '$formattedViewCount회',
+                            false,
+                          ),
+                          _iconText(
+                            null,
+                            '${bukkungListModel.likeCount.toString()}개',
+                            false,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
               ),
             ],
           ),
@@ -765,7 +775,7 @@ class ListSuggestionPage extends GetView<AdminListSuggestionPageController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(AdminListSuggestionPageController());
+    Get.put(ListSuggestionPageController());
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();

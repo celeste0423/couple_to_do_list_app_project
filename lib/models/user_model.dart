@@ -8,6 +8,7 @@ class UserModel {
   final String? gender;
   final DateTime? birthday;
   final String? groupId;
+  final int? expPoint;
 
   UserModel({
     this.uid,
@@ -17,6 +18,7 @@ class UserModel {
     this.gender,
     this.birthday,
     this.groupId,
+    this.expPoint,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -30,6 +32,7 @@ class UserModel {
           ? null
           : (json['birthday'] as Timestamp).toDate(),
       groupId: json['groupId'] == null ? null : json['groupId'] as String,
+      expPoint: json['expPoint'] == null ? null : json['expPoint'] as int,
     );
   }
 
@@ -42,6 +45,7 @@ class UserModel {
       'gender': gender,
       'birthday': birthday,
       'groupId': groupId,
+      'expPoint': expPoint,
     };
   }
 
@@ -53,6 +57,7 @@ class UserModel {
     String? gender,
     DateTime? birthday,
     String? groupId,
+    int? expPoint,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
@@ -62,6 +67,7 @@ class UserModel {
       gender: gender ?? this.gender,
       birthday: birthday ?? this.birthday,
       groupId: groupId ?? this.groupId,
+      expPoint: expPoint ?? this.expPoint,
     );
   }
 }

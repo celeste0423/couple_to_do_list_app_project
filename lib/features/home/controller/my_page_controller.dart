@@ -1,4 +1,7 @@
+import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/repository/group_repository.dart';
@@ -6,6 +9,7 @@ import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyPageController extends GetxController {
   Rx<String> myNickname = ''.obs;
@@ -17,15 +21,21 @@ class MyPageController extends GetxController {
   Rx<bool> isDayMet = false.obs;
   Rx<int> togetherDate = 0.obs;
 
+  Rx<int> bukkungListCount = 0.obs;
+  Rx<int> viewCount = 0.obs;
+  Rx<int> likeCount = 0.obs;
+  Rx<int> expPoint = 0.obs;
+
   @override
   void onInit() {
     super.onInit();
 
-    getNickname();
-    getDayMet();
+    _getNickname();
+    _getDayMet();
+    _getAchievement();
   }
 
-  void getNickname() async {
+  void _getNickname() async {
     if (AuthController.to.user.value.gender == 'male') {
       UserModel? buddyData = await UserRepository.getUserDataByUid(
           AuthController.to.group.value.femaleUid!);
@@ -39,7 +49,7 @@ class MyPageController extends GetxController {
     }
   }
 
-  void getDayMet() {
+  void _getDayMet() {
     if (AuthController.to.group.value.dayMet != null) {
       isDayMet(true);
 
@@ -49,6 +59,19 @@ class MyPageController extends GetxController {
       int diffDays = difference.inDays;
       togetherDate(diffDays);
     }
+  }
+
+  void _getAchievement() async {
+    List<BukkungListModel> bukkungLists =
+        await UserRepository.getMyBukkungList();
+
+    for (BukkungListModel bukkunglist in bukkungLists) {
+      viewCount.value += bukkunglist.viewCount!.toInt();
+      likeCount.value += bukkunglist.likeCount!.toInt();
+    }
+    bukkungListCount(bukkungLists.length);
+    print('이게 점수야 ${AuthController.to.user.value.expPoint}');
+    expPoint(AuthController.to.user.value.expPoint);
   }
 
   @override
@@ -68,7 +91,7 @@ class MyPageController extends GetxController {
     );
     AuthController.to.user(updatedData);
     UserRepository.updateNickname(nicknameController.text);
-    getNickname();
+    _getNickname();
     isChangeNickname(false);
   }
 
@@ -107,6 +130,15 @@ class MyPageController extends GetxController {
       //파이어베이스 값 업데이트
       GroupRepository.updateGroupDayMet(selectedDate!);
     }
-    getDayMet();
+    _getDayMet();
+  }
+
+  Future<void> openChatUrl() async {
+    Uri uri = Uri.parse(Constants.kakaoQuestionChat);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      openAlertDialog(title: '오류 발생');
+    }
   }
 }

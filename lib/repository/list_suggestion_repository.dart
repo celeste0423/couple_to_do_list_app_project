@@ -70,12 +70,12 @@ class ListSuggestionRepository {
     //키페이지 설정
     QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
         querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
-    AdminListSuggestionPageController.to.keyPage = lastDocument;
+    ListSuggestionPageController.to.keyPage = lastDocument;
     //이전 리스트 저장
-    AdminListSuggestionPageController.to.prevList = bukkungLists;
+    ListSuggestionPageController.to.prevList = bukkungLists;
     //마지막 페이지인지 여부 확인
     if (querySnapshot.docs.length < pageSize) {
-      AdminListSuggestionPageController.to.isLastPage = true;
+      ListSuggestionPageController.to.isLastPage = true;
     }
     return bukkungLists;
   }
