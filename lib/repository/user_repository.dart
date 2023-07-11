@@ -11,6 +11,14 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 
 class UserRepository {
+  static Stream<UserModel> streamUserDataByUid(String uid) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .snapshots()
+        .map((snapshot) => UserModel.fromJson(snapshot.data()!));
+  }
+
   static Future<UserCredential> appleFlutterWebAuth() async {
     final clientState = Uuid().v4();
     final url = Uri.https('appleid.apple.com', '/auth/authorize', {
@@ -245,6 +253,17 @@ class UserRepository {
             .update({'groupId': groupId});
       });
     });
+  }
+
+  static Future<void> updateNickname(String nickname) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(AuthController.to.user.value.uid)
+          .update({'nickname': nickname});
+    } catch (e) {
+      openAlertDialog(title: '닉네임 업데이트 중 오류가 발생했습니다.', content: e.toString());
+    }
   }
 
   static Future<bool> findGroupId(String email) async {

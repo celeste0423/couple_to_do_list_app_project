@@ -1,8 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 
 class GroupRepository {
+  static Stream<GroupModel> streamGroupDataByUid(String groupId) {
+    return FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
+        .snapshots()
+        .map((snapshot) => GroupModel.fromJson(snapshot.data()!));
+  }
+
   static Future<GroupModel> groupSignup(
     String uid,
     UserModel male,
@@ -37,5 +46,13 @@ class GroupRepository {
       return null;
     }
     return GroupModel.fromJson(snapshot.data()!);
+  }
+
+  static updateGroupDayMet(DateTime selectedDate) async {
+    String groupId = AuthController.to.group.value.uid!;
+    await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
+        .update({'dayMet': selectedDate});
   }
 }

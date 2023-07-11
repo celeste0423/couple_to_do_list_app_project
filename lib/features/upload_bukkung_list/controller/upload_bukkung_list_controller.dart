@@ -140,27 +140,30 @@ class UploadBukkungListController extends GetxController {
 
   void datePicker(BuildContext context) async {
     final selectedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100),
-        initialEntryMode: DatePickerEntryMode.calendarOnly,
-        locale: const Locale('ko', ''),
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-                colorScheme: ColorScheme.light(
-                  primary: Colors.white,
-                  onPrimary: CustomColors.mainPink,
-                  onSurface: Colors.white,
-                ),
-                textButtonTheme: TextButtonThemeData(
-                    style: TextButton.styleFrom(
-                  foregroundColor: Colors.white,
-                ))),
-            child: child!,
-          );
-        });
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      locale: const Locale('ko', ''),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Colors.white,
+              onPrimary: CustomColors.mainPink,
+              onSurface: Colors.white,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
     if (selectedDate != null) {
       listDateTime(selectedDate);
     }

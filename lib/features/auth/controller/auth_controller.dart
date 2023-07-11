@@ -6,10 +6,10 @@ import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:get/get.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter/foundation.dart' as foundation;
 
 enum GroupIdStatus { noData, hasGroup, createdGroupId }
 
@@ -19,16 +19,38 @@ class AuthController extends GetxController {
   //유저 정보
   static String? loginType;
 
-  // static String? nickName;
-  // static String? gender;
-  // static String? birthday;
-
   Rx<UserModel> user = UserModel().obs;
-
-  // Rx<UserModel> user = UserModel(uid: 'base').obs;
   Rx<GroupModel> group = GroupModel().obs;
 
-  // final finishedLogin = false.obs;
+  // StreamController<UserModel> streamUserController =
+  //     StreamController<UserModel>();
+  // late Stream<UserModel> streamUser = streamUserController.stream;
+  // StreamController<GroupModel> streamGroupController =
+  //     StreamController<GroupModel>();
+  // late Stream<GroupModel> streamGroup = streamGroupController.stream;
+  //
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   _initUserData();
+  //   _initGroupData();
+  // }
+  //
+  // void _initUserData() {
+  //   streamUser = UserRepository.streamUserDataByUid(user.value.uid!);
+  // }
+  //
+  // void _initGroupData() {
+  //   streamGroup = GroupRepository.streamGroupDataByUid(group.value.uid!);
+  // }
+  //
+  // @override
+  // void onClose() {
+  //   super.onClose();
+  //   streamUserController.close();
+  //   streamGroupController.close();
+  // }
+
 // 애플 로그인
   Future<UserCredential> signInWithApple() async {
     bool isAvailable = await SignInWithApple.isAvailable();

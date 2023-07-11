@@ -214,8 +214,9 @@ class SignupPageState extends State<SignupPage> {
         maxLengthEnforcement: MaxLengthEnforcement.enforced,
         keyboardType: numberInput,
         controller: controller,
+        cursorColor: Colors.black.withOpacity(0.5),
         style: TextStyle(
-          fontSize: 20,
+          fontSize: 18,
           fontFamily: 'Pyeongchang',
         ),
         decoration: InputDecoration(
