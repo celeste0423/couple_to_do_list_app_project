@@ -58,10 +58,9 @@ class SettingPage extends GetView<SettingPageController> {
             case 'kakao':
               return loginTypeTile('kakaos', '카카오');
             case 'apple':
-              //Todo: apple.png 파일 가져올 것
               return loginTypeTile('apple', '애플');
             default:
-              return loginTypeTile('google', '구글');
+              return loginTypeTile('ggomool', '버꿍리스트');
           }
         }),
       ),
