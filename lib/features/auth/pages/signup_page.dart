@@ -1,3 +1,4 @@
+import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
@@ -218,12 +219,14 @@ class SignupPageState extends State<SignupPage> {
         style: TextStyle(
           fontSize: 18,
           fontFamily: 'Pyeongchang',
+          color: CustomColors.blackText,
         ),
         decoration: InputDecoration(
           hintText: text,
           hintStyle: TextStyle(
             fontSize: 18,
             fontFamily: 'Pyeongchang',
+            color: CustomColors.greyText,
           ),
           counterText: '',
           suffixIcon: IconButton(
@@ -290,7 +293,8 @@ class SignupPageState extends State<SignupPage> {
       },
       child: Scaffold(
         backgroundColor: CustomColors.mainPink,
-        body: SafeArea(
+        body: ColorfulSafeArea(
+          bottomColor: Colors.white.withOpacity(0.9),
           child: Stack(
             children: [
               _topBackground(),

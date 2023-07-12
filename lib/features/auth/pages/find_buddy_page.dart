@@ -1,3 +1,4 @@
+import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
@@ -287,7 +288,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       child: Scaffold(
         // resizeToAvoidBottomInset: false,
         backgroundColor: CustomColors.mainPink,
-        body: SafeArea(
+        body: ColorfulSafeArea(
+          bottomColor: CustomColors.redbrown,
           child: Stack(
             children: [
               Column(

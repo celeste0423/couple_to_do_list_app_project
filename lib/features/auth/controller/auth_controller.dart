@@ -80,10 +80,10 @@ class AuthController extends GetxController {
     return await UserRepository.signInWithKakao();
   }
 
-  Future<UserModel?> loginUser(String email) async {
+  Future<UserModel?> loginUser(String uid) async {
     try {
       //email과 맞는 유저 데이터를 firebase 에서 가져온다.
-      var userData = await UserRepository.loginUserByEmail(email);
+      var userData = await UserRepository.loginUserByUid(uid);
       //신규 유저일 경우 userData에 null값 반환됨
       if (userData != null) {
         //컨트롤러에 유저정보를 전달해 놓는다

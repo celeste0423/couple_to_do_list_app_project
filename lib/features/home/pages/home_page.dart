@@ -1,7 +1,7 @@
 import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/features/home/pages/bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/diary_page.dart';
-import 'package:couple_to_do_list_app/features/home/pages/kkomul_page.dart';
+import 'package:couple_to_do_list_app/features/home/pages/ggomul_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/my_page.dart';
 import 'package:couple_to_do_list_app/features/home/widgets/circle_tab_indicator.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage>
         children: [
           BukkungListPage(),
           DiaryPageTest(),
-          KkomulPage(),
+          GgomulPage(),
           MyPage(),
         ],
       ),

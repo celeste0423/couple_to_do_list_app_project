@@ -26,14 +26,13 @@ class Root extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    //Todo: 앱 실행시 if문들 들어갔다 나옴, 전부 로딩창으로 정리 필요
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext _, AsyncSnapshot<User?> user) {
         if (user.hasData) {
           print('유저 이메일(root)${user.data!.email}');
           return FutureBuilder<UserModel?>(
-            future: controller.loginUser(user.data!.email ?? ''),
+            future: controller.loginUser(user.data!.uid ?? ''),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 print('로그인 기다리는 중(root)');
