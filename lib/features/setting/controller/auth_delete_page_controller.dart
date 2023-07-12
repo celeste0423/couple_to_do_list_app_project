@@ -45,12 +45,20 @@ class AuthDeletePageController extends GetxController {
             if (customToken == null || customToken == '') {
               openAlertDialog(title: '로그인 실패');
             } else {
-              AuthController.loginType = 'kakao';
+             // AuthController.loginType = 'kakao';
               print('(kak btn) 로그인 타입 ${AuthController.loginType}');
               await FirebaseAuth.instance.signInWithCustomToken(customToken);
             }
           } else if (loginType == 'apple') {
-            //Todo: 애플 계정 로그인 제작
+            UserCredential? userCredential = await AuthController.to.signInWithApple();
+            if (userCredential == null) {
+              openAlertDialog(title: '로그인 실패');
+            } else {
+              print(
+                  'apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
+              //로그인 타입 설정
+             // AuthController.loginType = 'apple';
+            }
           }
         });
     //auth에서 삭제

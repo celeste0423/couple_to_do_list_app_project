@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 import '../../../widgets/main_button.dart';
 
 class FindBuddyPage extends StatefulWidget {
-  FindBuddyPage({Key? key, required this.email}) : super(key: key);
+  const FindBuddyPage({Key? key, required this.email}) : super(key: key);
   final String email;
 
   @override
@@ -35,10 +35,9 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           IconButton(
             padding: EdgeInsets.only(left: 20),
             onPressed: () {
-              //
               UserRepository.googleAccountDeletion();
               //만약 회원 가입 중간에 다시 되돌아갈 경우 구글 계정 다시 로그인하게 함
-              Get.to(() => WelcomePage());
+               Get.to(() => WelcomePage());
             },
             icon: Icon(
               Icons.arrow_back_ios,

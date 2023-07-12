@@ -1,5 +1,6 @@
 import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/apple_login_button.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/google_login_button.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/kakao_login_button.dart';
@@ -25,6 +26,7 @@ class _WelcomePageState extends State<WelcomePage> {
   void initState() {
     super.initState();
     initPackageInfo();
+   print(AuthController.to.user.value.email);
   }
 
   Future<void> initPackageInfo() async {

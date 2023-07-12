@@ -78,6 +78,7 @@ class UserRepository {
     );
     print(oauthCredential);
     return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
   }
 
   static Future<UserCredential> signInWithGoogle() async {
@@ -160,6 +161,7 @@ class UserRepository {
     try {
       if (AuthController.to.user.value.loginType == 'google') {
         //이전 로그인 기록 지우기
+        //todo: 해보니까 이전 로그인 기록 지워지지 않은것 같은데 그럼 왜 await googleSignIn.signOut();가 필요한거지?일단 앱 돌아가는데 아무 문제 없으니 스킵.
         try {
           await googleSignIn.signOut();
         } catch (e) {
@@ -174,7 +176,15 @@ class UserRepository {
           openAlertDialog(title: e.toString());
         }
       }
+      if (AuthController.to.user.value.loginType == 'apple') {
+        try {
+          //apple 은 굳이 unlink 할 필요 없을듯?
+        } catch (e) {
+          openAlertDialog(title: e.toString());
+        }
+      }
       await FirebaseAuth.instance.signOut();
+      print("로그아웃 성공! AuthController.to.user.value.email = ${AuthController.to.user.value.email}");
     } catch (e) {
       print('로그아웃 실패${e.toString()}');
     }
@@ -238,8 +248,15 @@ class UserRepository {
   }
 
   static Future<void> googleAccountDeletion() async {
+    final _auth = FirebaseAuth.instance;
+   // credential = GoogleAuthProvider.credential();
+    //await FirebaseAuth.instance.currentUser?.reauthenticateWithCredential(credential);
+    await _auth.currentUser?.delete();
+    print('_auth.currentUser!.delete(); 완료');
+    await _auth.signOut();
+    print('_auth.signOut(); 완료');
     await GoogleSignIn().signOut();
-    await FirebaseAuth.instance.currentUser?.delete();
+    print('google signout 완료');
   }
 
   static Future<void> updateGroupId(UserModel user, String groupId) async {
