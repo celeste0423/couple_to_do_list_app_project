@@ -181,20 +181,21 @@ class DiaryPageTest extends GetView<DiaryPageController> {
                     children: [
                       PcText(
                         diaryModel.title ?? '',
-                        style: TextStyle(fontSize: 25),
+                        style: TextStyle(fontSize: 22),
                       ),
                       Row(
                         children: [
                           Icon(
                             Icons.location_on_outlined,
-                            size: 15,
+                            size: 20,
+                            color: CustomColors.grey,
                           ),
                           SizedBox(
                             width: 4,
                           ),
                           BkText(
                             diaryModel.location ?? '',
-                            style: TextStyle(fontSize: 15),
+                            style: TextStyle(fontSize: 13),
                           ),
                         ],
                       ),
@@ -203,7 +204,7 @@ class DiaryPageTest extends GetView<DiaryPageController> {
                       ),
                       BkText(
                         dateString,
-                        style: TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: 13),
                       )
                     ],
                   )
