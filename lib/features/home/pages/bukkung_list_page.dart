@@ -255,7 +255,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       } else {
         return Expanded(
           child: StreamBuilder(
-            stream: BukkungListPageController.to.getAllBukkungList(
+            stream: controller.getAllBukkungList(
               controller.currentType.value!,
             ),
             builder: (BuildContext context,

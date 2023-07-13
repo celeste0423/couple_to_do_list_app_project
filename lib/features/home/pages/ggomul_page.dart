@@ -1,9 +1,16 @@
 import 'package:couple_to_do_list_app/features/home/controller/ggomul_page_controller.dart';
+import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_completed_list_page.dart';
+import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/utils/type_to_color.dart';
+import 'package:couple_to_do_list_app/widgets/png_icons.dart';
+import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class GgomulPage extends GetView<GgomulPageController> {
   const GgomulPage({Key? key}) : super(key: key);
@@ -135,6 +142,177 @@ class GgomulPage extends GetView<GgomulPageController> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(25),
+        ),
+        child: StreamBuilder(
+          stream: controller.getAllCompletedList(),
+          builder: (BuildContext context,
+              AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+            if (!bukkungLists.hasData) {
+              return Center(
+                child: CircularProgressIndicator(color: CustomColors.mainPink),
+              );
+            } else if (bukkungLists.hasError) {
+              openAlertDialog(title: '에러 발생');
+            } else {
+              final list = bukkungLists.data!;
+              // print('리스트 출력(buk page)${list.length}');
+              if (list.isNotEmpty) {
+                return ListView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  children: [
+                    Column(
+                      children: List.generate(list.length, (index) {
+                        final bukkungList = list[index];
+                        return _completedListCard(bukkungList);
+                      }),
+                    ),
+                    SizedBox(height: 100),
+                  ],
+                );
+              } else {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 40),
+                  child: Center(child: Text('완료한 버꿍리스트가 없습니다')),
+                );
+              }
+            }
+            return Center(child: Text('완료한 버꿍리스트가 없습니다'));
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _completedListCard(BukkungListModel bukkungListModel) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: GestureDetector(
+        onTap: () {
+          Get.to(() => ReadCompletedListPage(), arguments: bukkungListModel);
+        },
+        child: Row(
+          children: [
+            Expanded(
+              flex: 12,
+              child: Container(
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          bottomLeft: Radius.circular(25),
+                        ),
+                        child: Image.network(
+                          '${bukkungListModel.imgUrl}',
+                          height: 150,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      flex: 7,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: PcText(
+                                bukkungListModel.title!,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: CustomColors.blackText,
+                                ),
+                              ),
+                            ),
+                          ),
+                          // MarqueeAbleText(
+                          //   text: bukkungListModel.title!,
+                          //   maxLength: 10,
+                          //   style: TextStyle(
+                          //     fontSize: 25,
+                          //     color: CustomColors.blackText,
+                          //   ),
+                          // ),
+                          BkText(DateFormat('yyyy-MM-dd')
+                              .format(bukkungListModel.date!)),
+                          Row(
+                            children: [
+                              PngIcon(
+                                iconName: 'location-pin',
+                                iconSize: 25,
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: BkText(
+                                        bukkungListModel.location!,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                height: 120,
+                decoration: BoxDecoration(
+                  color: TypeToColor.typeToColor(bukkungListModel.category),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                  ),
+                ),
+                width: 30,
+                child: GestureDetector(
+                  onTap: () {
+                    openAlertDialog(
+                        title: '정말로 지우시겠습니다?',
+                        secondButtonText: '취소',
+                        function: () {
+                          controller.deleteCompletedList(bukkungListModel);
+                          Get.back();
+                        });
+                  },
+                  child: Icon(
+                    Icons.delete_outline,
+                    size: 25,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
