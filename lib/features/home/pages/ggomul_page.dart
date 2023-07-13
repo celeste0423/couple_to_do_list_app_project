@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_to_do_list_app/features/home/controller/ggomul_page_controller.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_completed_list_page.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
@@ -35,7 +36,7 @@ class GgomulPage extends GetView<GgomulPageController> {
           ),
         ),
         Text(
-          '(2/3)',
+          '(${controller.completedListCount.value}/10)',
           style: TextStyle(
             fontSize: 12,
             color: CustomColors.darkGrey,
@@ -61,20 +62,22 @@ class GgomulPage extends GetView<GgomulPageController> {
             ),
             Positioned(
               bottom: 0,
-              child: AnimatedContainer(
-                height: 210,
-                width: 25,
-                duration: Duration(milliseconds: 500),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      CustomColors.lightPink.withOpacity(0.8),
-                      CustomColors.mainPink
-                    ],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
+              child: Obx(
+                () => AnimatedContainer(
+                  height: (controller.completedListCount.value / 10) * 300,
+                  width: 25,
+                  duration: Duration(milliseconds: 500),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        CustomColors.lightPink.withOpacity(0.8),
+                        CustomColors.mainPink
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                    ),
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
             ),
@@ -253,8 +256,8 @@ class GgomulPage extends GetView<GgomulPageController> {
                       flex: 3,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(25),
-                        child: Image.network(
-                          '${bukkungListModel.imgUrl}',
+                        child: CachedNetworkImage(
+                          imageUrl: '${bukkungListModel.imgUrl}',
                           fit: BoxFit.cover,
                         ),
                       ),

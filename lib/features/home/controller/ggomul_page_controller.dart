@@ -14,6 +14,8 @@ class GgomulPageController extends GetxController {
   }
 
   Future<int> _updateCompletedListCount() async {
+    //딜레이 1초 -> 애니메이션
+    await Future.delayed(Duration(milliseconds: 500));
     List<BukkungListModel> data =
         await ListCompletedRepository().getFutureCompletedBukkungListByDate();
     return data.length;
