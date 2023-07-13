@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
@@ -15,8 +16,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
-class DiaryPageTest extends GetView<DiaryPageController> {
-  const DiaryPageTest({super.key});
+class DiaryPage extends GetView<DiaryPageController> {
+  const DiaryPage({super.key});
 
   //ToDo: 파이어베이스에서 가져온 정보로 채워 넣을 것
 
@@ -152,7 +153,8 @@ class DiaryPageTest extends GetView<DiaryPageController> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: NetworkImage(diaryModel.imgUrlList![0]),
+                        image: CachedNetworkImageProvider(
+                            diaryModel.imgUrlList![0]),
                       ),
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(10),
@@ -425,10 +427,8 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                    controller
-                                        .selectedDiary.value.imgUrlList![0],
-                                  ),
+                                  image: CachedNetworkImageProvider(controller
+                                      .selectedDiary.value.imgUrlList![0]),
                                   fit: BoxFit.cover,
                                 ),
                               ),

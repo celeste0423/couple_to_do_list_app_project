@@ -1,4 +1,3 @@
-import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/features/home/pages/bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/diary_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/ggomul_page.dart';
@@ -22,7 +21,7 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    InitBinding.additionalBinding();
+    // InitBinding.additionalBinding();
   }
 
   Widget _CustomTabBar() {
@@ -107,7 +106,7 @@ class _HomePageState extends State<HomePage>
         physics: NeverScrollableScrollPhysics(),
         children: [
           BukkungListPage(),
-          DiaryPageTest(),
+          DiaryPage(),
           GgomulPage(),
           MyPage(),
         ],
