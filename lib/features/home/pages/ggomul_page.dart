@@ -36,7 +36,7 @@ class GgomulPage extends GetView<GgomulPageController> {
           ),
         ),
         Text(
-          '(${controller.completedListCount.value}/10)',
+          '(${controller.completedListCount.value % 10}/10)',
           style: TextStyle(
             fontSize: 12,
             color: CustomColors.darkGrey,
@@ -122,7 +122,7 @@ class GgomulPage extends GetView<GgomulPageController> {
                 style: TextStyle(fontSize: 35),
               ),
               Text(
-                '1단계',
+                '${((controller.completedListCount.value - (controller.completedListCount.value % 10)) / 10 + 1).toInt()}단계',
                 style: TextStyle(
                   fontSize: 18,
                 ),

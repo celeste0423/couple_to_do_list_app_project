@@ -1,11 +1,9 @@
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
-import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/repository/group_repository.dart';
-import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
@@ -63,16 +61,24 @@ class MyPageController extends GetxController {
   }
 
   void _getAchievement() async {
-    List<BukkungListModel> bukkungLists =
-        await ListSuggestionRepository().getFutureMyBukkungList();
+    // viewCount(0);
+    // likeCount(0);
+    // List<BukkungListModel> bukkungLists =
+    //     await ListSuggestionRepository().getFutureMyBukkungList();
+    //
+    // for (BukkungListModel bukkunglist in bukkungLists) {
+    //   viewCount.value += bukkunglist.viewCount!.toInt();
+    //   likeCount.value += bukkunglist.likeCount!.toInt();
+    // }
+    // bukkungListCount(bukkungLists.length);
+    // print('이게 점수야 ${AuthController.to.user.value.expPoint}');
+    // if()
+    // expPoint(AuthController.to.user.value.expPoint);
 
-    for (BukkungListModel bukkunglist in bukkungLists) {
-      viewCount.value += bukkunglist.viewCount!.toInt();
-      likeCount.value += bukkunglist.likeCount!.toInt();
-    }
-    bukkungListCount(bukkungLists.length);
-    print('이게 점수야 ${AuthController.to.user.value.expPoint}');
-    expPoint(AuthController.to.user.value.expPoint);
+    List<int> listExpViewLikeCount = await AuthController().getExpPoint();
+    expPoint(listExpViewLikeCount[0]);
+    viewCount(listExpViewLikeCount[1]);
+    likeCount(listExpViewLikeCount[2]);
   }
 
   @override
@@ -132,6 +138,10 @@ class MyPageController extends GetxController {
       GroupRepository.updateGroupDayMet(selectedDate!);
     }
     _getDayMet();
+  }
+
+  void refreshAchievement() {
+    _getAchievement();
   }
 
   Future<void> openChatUrl() async {

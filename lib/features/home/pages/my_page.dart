@@ -305,15 +305,17 @@ class MyPage extends GetView<MyPageController> {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _achievementDetail(
-                '리스트', controller.bukkungListCount.value.toString()),
-            _achievementDetail('조회수', controller.viewCount.value.toString()),
-            _achievementDetail('좋아요', controller.likeCount.value.toString()),
-          ],
+        child: Obx(
+          () => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _achievementDetail(
+                  '리스트', controller.bukkungListCount.value.toString()),
+              _achievementDetail('조회수', controller.viewCount.value.toString()),
+              _achievementDetail('좋아요', controller.likeCount.value.toString()),
+            ],
+          ),
         ),
       ),
     );
@@ -373,45 +375,59 @@ class MyPage extends GetView<MyPageController> {
             ),
           ],
         ),
-        child: Stack(
-          children: [
-            Center(
-              child: SizedBox(
-                height: 180,
-                width: 180,
-                child: CircularProgressIndicator(
-                  strokeWidth: 8,
-                  value: (controller.expPoint.value % 100) / 100,
-                  color: CustomColors.mainPink,
+        child: Obx(
+          () => Stack(
+            children: [
+              Center(
+                child: SizedBox(
+                  height: 180,
+                  width: 180,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 8,
+                    value: (controller.expPoint.value % 100) / 100,
+                    color: CustomColors.mainPink,
+                  ),
                 ),
               ),
-            ),
-            Center(
-              child: Container(
-                height: 180,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'LV.${((controller.expPoint.value - (controller.expPoint.value % 100)) / 100).toInt().toString()}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 30,
+              Center(
+                child: Container(
+                  height: 180,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        'LV.${((controller.expPoint.value - (controller.expPoint.value % 100)) / 100).toInt().toString()}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 30,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      '${(controller.expPoint.value % 100).toString()}%',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
+                      SizedBox(height: 10),
+                      Text(
+                        '${(controller.expPoint.value % 100).toString()}%',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: () {
+                          controller.refreshAchievement();
+                        },
+                        child: Icon(
+                          Icons.refresh,
+                          size: 30,
+                          color: CustomColors.darkGrey,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -465,7 +481,7 @@ class MyPage extends GetView<MyPageController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(MyPageController());
+    // Get.put(MyPageController());
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();

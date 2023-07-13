@@ -97,7 +97,7 @@ class AuthController extends GetxController {
           print('그룹 정보(auth cont)${group.value.uid}');
           InitBinding.additionalBinding();
           //expPoint계산
-          int expPoint = await _getExpPoint();
+          int expPoint = (await getExpPoint())[0];
           UserModel updatedData = user.value.copyWith(
             expPoint: expPoint,
           );
@@ -113,21 +113,22 @@ class AuthController extends GetxController {
   }
 
   //expPoint계산 해주는 함수
-  Future<int> _getExpPoint() async {
-    int viewCount = 0;
-    int likeCount = 0;
+  Future<List<int>> getExpPoint() async {
+    //0번이 exp
+    //1번이 view
+    //2번이 like
+    List<int> expLikeViewCount = List<int>.filled(3, 0);
     List<BukkungListModel> bukkungLists =
         await ListSuggestionRepository().getFutureMyBukkungList();
-    int expPoint = 0;
 
     for (BukkungListModel bukkunglist in bukkungLists) {
-      viewCount += bukkunglist.viewCount!.toInt();
-      likeCount += bukkunglist.likeCount!.toInt();
+      expLikeViewCount[1] += bukkunglist.viewCount!.toInt();
+      expLikeViewCount[2] += bukkunglist.likeCount!.toInt();
     }
     //조회수는 1점, 좋아요는 5점
-    expPoint = viewCount * 1 + likeCount * 5;
-    print('exp계산중(auth cont) 총 $expPoint점');
-    return expPoint;
+    expLikeViewCount[0] = expLikeViewCount[1] * 1 + expLikeViewCount[2] * 5;
+    print('exp계산중(auth cont) 총 ${expLikeViewCount[0]}점');
+    return expLikeViewCount;
   }
 
   Future signup(UserModel signupUser) async {

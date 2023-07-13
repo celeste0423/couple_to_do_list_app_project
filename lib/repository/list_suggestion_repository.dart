@@ -134,7 +134,7 @@ class ListSuggestionRepository {
         .collection('bukkungLists')
         .where('userId', isEqualTo: AuthController.to.user.value.uid)
         .get();
-
+    print('리스트 가져오는 중');
     List<BukkungListModel> bukkungLists = snapshot.docs.map((doc) {
       return BukkungListModel.fromJson(doc.data() as Map<String, dynamic>);
     }).toList();
