@@ -160,13 +160,45 @@ class GgomulPage extends GetView<GgomulPageController> {
                 return ListView(
                   physics: AlwaysScrollableScrollPhysics(),
                   children: [
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle_outline,
+                            size: 30,
+                            color: CustomColors.darkGrey,
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '완료한 버킷리스트',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Obx(() => Text(
+                                    '${controller.completedListCount.value}개',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                    ),
+                                  )),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
                     Column(
                       children: List.generate(list.length, (index) {
                         final bukkungList = list[index];
                         return _completedListCard(bukkungList);
                       }),
                     ),
-                    SizedBox(height: 100),
                   ],
                 );
               } else {
@@ -185,7 +217,7 @@ class GgomulPage extends GetView<GgomulPageController> {
 
   Widget _completedListCard(BukkungListModel bukkungListModel) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: GestureDetector(
         onTap: () {
           Get.to(() => ReadCompletedListPage(), arguments: bukkungListModel);
@@ -193,33 +225,41 @@ class GgomulPage extends GetView<GgomulPageController> {
         child: Row(
           children: [
             Expanded(
-              flex: 12,
+              flex: 10,
               child: Container(
-                height: 120,
+                height: 90,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(25),
                     bottomLeft: Radius.circular(25),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 5),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.05),
+                    ),
+                    BoxShadow(
+                      offset: Offset(-5, 0),
+                      blurRadius: 3,
+                      color: Colors.black.withOpacity(0.05),
+                    ),
+                  ],
                 ),
                 child: Row(
                   children: [
                     Expanded(
                       flex: 3,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          bottomLeft: Radius.circular(25),
-                        ),
+                        borderRadius: BorderRadius.circular(25),
                         child: Image.network(
                           '${bukkungListModel.imgUrl}',
-                          height: 150,
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 10),
                     Expanded(
                       flex: 7,
                       child: Column(
@@ -232,6 +272,7 @@ class GgomulPage extends GetView<GgomulPageController> {
                               fit: BoxFit.scaleDown,
                               child: PcText(
                                 bukkungListModel.title!,
+                                maxLines: 2,
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: CustomColors.blackText,
@@ -247,13 +288,21 @@ class GgomulPage extends GetView<GgomulPageController> {
                           //     color: CustomColors.blackText,
                           //   ),
                           // ),
-                          BkText(DateFormat('yyyy-MM-dd')
-                              .format(bukkungListModel.date!)),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: BkText(
+                              DateFormat('yyyy-MM-dd')
+                                  .format(bukkungListModel.date!),
+                              style: TextStyle(
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
                           Row(
                             children: [
                               PngIcon(
                                 iconName: 'location-pin',
-                                iconSize: 25,
+                                iconSize: 20,
                               ),
                               Expanded(
                                 child: Padding(
@@ -265,6 +314,7 @@ class GgomulPage extends GetView<GgomulPageController> {
                                       fit: BoxFit.scaleDown,
                                       child: BkText(
                                         bukkungListModel.location!,
+                                        maxLines: 2,
                                         style: TextStyle(
                                           fontSize: 15,
                                         ),
@@ -285,24 +335,37 @@ class GgomulPage extends GetView<GgomulPageController> {
             Expanded(
               flex: 1,
               child: Container(
-                height: 120,
+                height: 90,
                 decoration: BoxDecoration(
                   color: TypeToColor.typeToColor(bukkungListModel.category),
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(25),
                     bottomRight: Radius.circular(25),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 5),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.05),
+                    ),
+                    BoxShadow(
+                      offset: Offset(5, 0),
+                      blurRadius: 3,
+                      color: Colors.black.withOpacity(0.05),
+                    ),
+                  ],
                 ),
-                width: 30,
                 child: GestureDetector(
                   onTap: () {
                     openAlertDialog(
-                        title: '정말로 지우시겠습니다?',
-                        secondButtonText: '취소',
-                        function: () {
-                          controller.deleteCompletedList(bukkungListModel);
-                          Get.back();
-                        });
+                      title: '정말로 지우시겠습니까?',
+                      content: '지운 내용은 복구할 수 없습니다',
+                      secondButtonText: '취소',
+                      function: () {
+                        controller.deleteCompletedList(bukkungListModel);
+                        Get.back();
+                      },
+                    );
                   },
                   child: Icon(
                     Icons.delete_outline,

@@ -1,4 +1,8 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
+import 'package:couple_to_do_list_app/models/diary_model.dart';
+import 'package:couple_to_do_list_app/repository/list_completed_repository.dart';
 import 'package:get/get.dart';
 
 class ReadBukkungListPageController extends GetxController {
@@ -10,5 +14,21 @@ class ReadBukkungListPageController extends GetxController {
   void onInit() {
     super.onInit();
     imgUrl(bukkungListModel.imgUrl);
+  }
+
+  Future<DiaryModel> listCompleted() async {
+    await ListCompletedRepository.setCompletedBukkungList(bukkungListModel);
+    BukkungListPageController.to.deleteBukkungList(bukkungListModel, false);
+
+    DiaryModel diaryModel = DiaryModel.init(AuthController.to.user.value);
+    DiaryModel updatedDiaryModel = diaryModel.copyWith(
+      title: bukkungListModel.title,
+      category: bukkungListModel.category,
+      location: bukkungListModel.location,
+      date: bukkungListModel.date,
+      updatedAt: DateTime.now(),
+    );
+
+    return updatedDiaryModel;
   }
 }

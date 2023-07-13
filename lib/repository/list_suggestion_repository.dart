@@ -129,6 +129,20 @@ class ListSuggestionRepository {
     });
   }
 
+  Future<List<BukkungListModel>> getFutureMyBukkungList() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .where('userId', isEqualTo: AuthController.to.user.value.uid)
+        .get();
+
+    List<BukkungListModel> bukkungLists = snapshot.docs.map((doc) {
+      return BukkungListModel.fromJson(doc.data() as Map<String, dynamic>);
+    }).toList();
+
+    return bukkungLists;
+  }
+
+  //Todo: 마이페이지 좋아요, 조회수 스트림으로 처리할 것
   Stream<List<int>> getMyLikeViewCount(UserModel userModel) {
     // print('파이어스토어에서 전체 받아옴');
     //0 번째 리스트가 likeCount

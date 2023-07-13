@@ -6,6 +6,7 @@ import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/repository/group_repository.dart';
+import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' as foundation;
@@ -116,7 +117,7 @@ class AuthController extends GetxController {
     int viewCount = 0;
     int likeCount = 0;
     List<BukkungListModel> bukkungLists =
-        await UserRepository.getMyBukkungList();
+        await ListSuggestionRepository().getFutureMyBukkungList();
     int expPoint = 0;
 
     for (BukkungListModel bukkunglist in bukkungLists) {

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
@@ -64,17 +63,16 @@ class BukkungListPageController extends GetxController {
     }
   }
 
-  void deleteBukkungList(BukkungListModel bukkungListModel) async {
+  void deleteBukkungList(
+      BukkungListModel bukkungListModel, bool isDeleteImage) async {
     final GroupModel groupModel = AuthController.to.group.value;
-    if (Constants.baseImageUrl != bukkungListModel.imgUrl) {
-      await BukkungListRepository(groupModel: groupModel)
-          .deleteListImage('${bukkungListModel.imgId}.jpg');
+    if (isDeleteImage) {
+      if (Constants.baseImageUrl != bukkungListModel.imgUrl) {
+        await BukkungListRepository(groupModel: groupModel)
+            .deleteListImage('${bukkungListModel.imgId}.jpg');
+      }
     }
-    FirebaseFirestore.instance
-        .collection('groups')
-        .doc('${AuthController.to.user.value.groupId}')
-        .collection('bukkungLists')
-        .doc('${bukkungListModel.listId}')
-        .delete();
+    await BukkungListRepository(groupModel: groupModel)
+        .deleteList(bukkungListModel);
   }
 }

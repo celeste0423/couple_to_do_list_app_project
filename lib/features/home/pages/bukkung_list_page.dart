@@ -485,12 +485,13 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                 child: GestureDetector(
                   onTap: () {
                     openAlertDialog(
-                        title: '정말로 지우시겠습니다?',
-                        secondButtonText: '취소',
-                        function: () {
-                          controller.deleteBukkungList(bukkungListModel);
-                          Get.back();
-                        });
+                      title: '정말로 지우시겠습니까?',
+                      secondButtonText: '취소',
+                      function: () {
+                        controller.deleteBukkungList(bukkungListModel, true);
+                        Get.back();
+                      },
+                    );
                   },
                   child: Icon(
                     Icons.delete_outline,

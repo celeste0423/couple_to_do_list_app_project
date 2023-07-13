@@ -1,10 +1,7 @@
-import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/controller/read_bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
-import 'package:couple_to_do_list_app/repository/list_completed_repository.dart';
 import 'package:couple_to_do_list_app/utils/category_to_text.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
@@ -193,20 +190,8 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: GestureDetector(
-        onTap: () {
-          ListCompletedRepository.setCompletedBukkungList(
-              controller.bukkungListModel);
-          BukkungListPageController.to
-              .deleteBukkungList(controller.bukkungListModel);
-
-          DiaryModel diaryModel = DiaryModel.init(AuthController.to.user.value);
-          DiaryModel updatedDiaryModel = diaryModel.copyWith(
-            title: controller.bukkungListModel.title,
-            category: controller.bukkungListModel.category,
-            location: controller.bukkungListModel.location,
-            date: controller.bukkungListModel.date,
-            updatedAt: DateTime.now(),
-          );
+        onTap: () async {
+          DiaryModel updatedDiaryModel = await controller.listCompleted();
           Get.off(() => UploadDiaryPage(), arguments: updatedDiaryModel);
         },
         child: Container(

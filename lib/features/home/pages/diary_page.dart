@@ -272,7 +272,7 @@ class DiaryPageTest extends GetView<DiaryPageController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(DiaryPageController());
+    // Get.put(DiaryPageController());
     return Scaffold(
       backgroundColor: CustomColors.lightPink,
       appBar: AppBar(

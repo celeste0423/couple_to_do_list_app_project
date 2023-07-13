@@ -13,6 +13,10 @@ openAlertDialog({
   return Get.dialog(AlertDialog(
     title: Text(
       title,
+      style: TextStyle(
+        color: CustomColors.blackText,
+        fontSize: 18,
+      ),
     ),
     content: content == null
         ? null
@@ -20,7 +24,7 @@ openAlertDialog({
             content,
             style: TextStyle(
               color: CustomColors.darkGrey,
-              fontSize: 15,
+              fontSize: 13,
             ),
           ),
     contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -33,7 +37,7 @@ openAlertDialog({
               child: Text(
                 secondButtonText,
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 13,
                   color: CustomColors.greyText,
                 ),
               ),
@@ -50,7 +54,7 @@ openAlertDialog({
         child: Text(
           btnText ?? "확인",
           style: TextStyle(
-            fontSize: 15,
+            fontSize: 13,
             color: CustomColors.mainPink,
           ),
         ),

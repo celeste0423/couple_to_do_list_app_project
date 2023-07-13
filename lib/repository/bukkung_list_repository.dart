@@ -97,6 +97,15 @@ class BukkungListRepository {
         .update(bukkungListModel.toJson()); // 업데이트할 데이터
   }
 
+  Future<void> deleteList(BukkungListModel bukkungListModel) async {
+    await FirebaseFirestore.instance
+        .collection('groups')
+        .doc('${AuthController.to.user.value.groupId}')
+        .collection('bukkungLists')
+        .doc('${bukkungListModel.listId}')
+        .delete();
+  }
+
   Future<void> deleteListImage(String imagePath) async {
     try {
       Reference imageRef = FirebaseStorage.instance

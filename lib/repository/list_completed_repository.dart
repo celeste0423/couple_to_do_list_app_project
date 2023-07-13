@@ -22,6 +22,30 @@ class ListCompletedRepository {
     });
   }
 
+  Future<List<BukkungListModel>> getFutureCompletedBukkungListByDate() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(AuthController.to.group.value.uid)
+        .collection('completedBukkungLists')
+        .orderBy('date', descending: true)
+        .get();
+
+    final bukkungLists = snapshot.docs.map((doc) {
+      return BukkungListModel.fromJson(doc.data() as Map<String, dynamic>);
+    }).toList();
+
+    return bukkungLists;
+  }
+
+  Future<void> deleteCompletedList(BukkungListModel bukkungListModel) async {
+    await FirebaseFirestore.instance
+        .collection('groups')
+        .doc('${AuthController.to.user.value.groupId}')
+        .collection('completedBukkungLists')
+        .doc('${bukkungListModel.listId}')
+        .delete();
+  }
+
   static Future<void> setCompletedBukkungList(
       BukkungListModel bukkungListData) async {
     await FirebaseFirestore.instance

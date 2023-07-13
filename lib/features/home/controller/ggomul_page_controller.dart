@@ -1,29 +1,38 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
-import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
-import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:couple_to_do_list_app/repository/list_completed_repository.dart';
 import 'package:get/get.dart';
 
 class GgomulPageController extends GetxController {
+  Rx<int> completedListCount = 0.obs;
+
+  @override
+  onInit() async {
+    super.onInit();
+    completedListCount.value = await _updateCompletedListCount();
+  }
+
+  Future<int> _updateCompletedListCount() async {
+    List<BukkungListModel> data =
+        await ListCompletedRepository().getFutureCompletedBukkungListByDate();
+    return data.length;
+  }
+
+  @override
+  onClose() {
+    super.onClose();
+  }
+
   Stream<List<BukkungListModel>> getAllCompletedList() {
     return ListCompletedRepository().getCompletedBukkungListByDate();
   }
 
-  //리스트 삭제 기능을 제공해..? 말아
+  //Todo:리스트 삭제 기능을 제공해..? 말아?
   void deleteCompletedList(BukkungListModel bukkungListModel) async {
-    final GroupModel groupModel = AuthController.to.group.value;
     if (Constants.baseImageUrl != bukkungListModel.imgUrl) {
-      await BukkungListRepository(groupModel: groupModel)
-          .deleteListImage('${bukkungListModel.imgId}.jpg');
+      await BukkungListRepository.deleteImage(bukkungListModel.imgUrl!);
     }
-    FirebaseFirestore.instance
-        .collection('groups')
-        .doc('${AuthController.to.user.value.groupId}')
-        .collection('completedBukkungLists')
-        .doc('${bukkungListModel.listId}')
-        .delete();
+    await ListCompletedRepository().deleteCompletedList(bukkungListModel);
   }
 }

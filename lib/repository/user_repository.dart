@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/auth_source/firebase_auth_remote_data_source.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
-import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
@@ -78,7 +77,6 @@ class UserRepository {
     );
     print(oauthCredential);
     return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-
   }
 
   static Future<UserCredential> signInWithGoogle() async {
@@ -184,7 +182,8 @@ class UserRepository {
         }
       }
       await FirebaseAuth.instance.signOut();
-      print("로그아웃 성공! AuthController.to.user.value.email = ${AuthController.to.user.value.email}");
+      print(
+          "로그아웃 성공! AuthController.to.user.value.email = ${AuthController.to.user.value.email}");
     } catch (e) {
       print('로그아웃 실패${e.toString()}');
     }
@@ -249,7 +248,7 @@ class UserRepository {
 
   static Future<void> googleAccountDeletion() async {
     final _auth = FirebaseAuth.instance;
-   // credential = GoogleAuthProvider.credential();
+    // credential = GoogleAuthProvider.credential();
     //await FirebaseAuth.instance.currentUser?.reauthenticateWithCredential(credential);
     await _auth.currentUser?.delete();
     print('_auth.currentUser!.delete(); 완료');
@@ -331,18 +330,5 @@ class UserRepository {
       openAlertDialog(title: '유저 정보 가져오기 실패');
       return null;
     }
-  }
-
-  static Future<List<BukkungListModel>> getMyBukkungList() async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('bukkungLists')
-        .where('userId', isEqualTo: AuthController.to.user.value.uid)
-        .get();
-
-    List<BukkungListModel> bukkungLists = snapshot.docs.map((doc) {
-      return BukkungListModel.fromJson(doc.data() as Map<String, dynamic>);
-    }).toList();
-
-    return bukkungLists;
   }
 }
