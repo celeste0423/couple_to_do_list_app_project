@@ -37,7 +37,7 @@ class AdminListSuggestionPage
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: GestureDetector(
             onTap: () {
-              Get.to(() => UploadBukkungListPage(), arguments: [null, null]);
+              Get.to(() => UploadBukkungListPage(), arguments: [null, true]);
             },
             child: Icon(
               Icons.add,
