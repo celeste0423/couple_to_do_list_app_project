@@ -79,7 +79,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         textAlign: TextAlign.center,
         style: TextStyle(
             color: CustomColors.blackText,
-            fontSize: 18,
+            fontSize: 30,
             fontFamily: "Pyeongchang"),
         cursorColor: CustomColors.mainPink,
         decoration: const InputDecoration(
