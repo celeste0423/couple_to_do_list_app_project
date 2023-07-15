@@ -340,6 +340,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
         style: TextStyle(
           color: CustomColors.blackText,
           fontSize: 18,
+          height: 1.2,
           fontFamily: 'Bookk_mj',
         ),
         cursorColor: CustomColors.darkGrey,
