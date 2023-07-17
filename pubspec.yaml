@@ -68,6 +68,8 @@ dependencies:
   flutter_svg: ^2.0.7
   colorful_safe_area: ^1.0.0
   cached_network_image: ^3.2.3
+  tutorial_coach_mark: ^1.2.9
+  shared_preferences: ^2.2.0
 
 flutter_native_splash:
   color: "#FAA7A7"

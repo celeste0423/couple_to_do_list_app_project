@@ -1,5 +1,5 @@
 import 'package:couple_to_do_list_app/features/upload_diary/controller/upload_diary_controller.dart';
-import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/main_button.dart';

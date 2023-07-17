@@ -8,9 +8,17 @@ import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class ListSuggestionPageController extends GetxController
     with GetTickerProviderStateMixin {
+  TutorialCoachMark? tutorialCoachMark;
+  List<TargetFocus> targets = [];
+
+  GlobalKey addKey = GlobalKey();
+  GlobalKey likeKey = GlobalKey();
+  GlobalKey copyKey = GlobalKey();
+
   late TabController suggestionListTabController;
 
   static ListSuggestionPageController get to => Get.find();
@@ -50,7 +58,53 @@ class ListSuggestionPageController extends GetxController
     // pagingController.addPageRequestListener((pageKey) {
     //   _fetchSuggestionBukkungList(pageKey);
     // });
+    Future.delayed(const Duration(seconds: 1), () {
+      // _showTutorialCoachMark();
+    });
   }
+
+  // void _showTutorialCoachMark() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   bool hasShownSuggestionTutorial =
+  //       prefs.getBool('hasShownSuggestionTutorial') ?? false;
+  //   if (hasShownSuggestionTutorial) {
+  //     //이미 튜토리얼을 진행했으면 튜토리얼 종료
+  //     // return;
+  //   }
+  //   _initTarget(); //타겟 더하기
+  //   tutorialCoachMark = TutorialCoachMark(
+  //       targets: targets,
+  //       showSkipInLastTarget: false,
+  //       hideSkip: true,
+  //       onClickTarget: (target) {})
+  //     ..show(context: context);
+  //   await prefs.setBool('hasShownTutorial', true);
+  // }
+  //
+  // void _initTarget() {
+  //   targets = [
+  //     TargetFocus(
+  //       identify: "list_suggestion_key",
+  //       keyTarget: BukkungListPageController.to.listSuggestionKey,
+  //       shape: ShapeLightFocus.RRect,
+  //       contents: [
+  //         TargetContent(
+  //           align: ContentAlign.bottom,
+  //           builder: (context, controller) {
+  //             return CoachmarkDesc(
+  //               text: "여기서 버꿍리스트를 새로 만들거나 추천 버꿍리스트를 가져올 수 있습니다",
+  //               onNext: () {
+  //                 controller.next();
+  //               },
+  //               onSkip: () {
+  //                 controller.skip();
+  //               },
+  //             );
+  //           },
+  //         )
+  //       ],
+  //     ),];
+  // }
 
   void _onTabChanged() {
     _initSelectedBukkungList();

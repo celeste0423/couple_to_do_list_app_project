@@ -1,5 +1,5 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,7 +12,7 @@ class GoogleLoginButton extends StatelessWidget {
         UserCredential? userCredential =
             await AuthController.to.signInWithGoogle();
 
-        if (userCredential==null) {
+        if (userCredential == null) {
           openAlertDialog(title: '로그인 실패');
         } else {
           print('(gog but) ${AuthController.to.user.value.nickname}');

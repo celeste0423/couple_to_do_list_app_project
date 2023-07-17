@@ -5,10 +5,14 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BukkungListPageController extends GetxController {
   static BukkungListPageController get to => Get.find();
+
+  GlobalKey listSuggestionKey = GlobalKey();
+  GlobalKey bukkungListKey = GlobalKey();
 
   // Rx<GroupModel> myGroup = GroupModel().obs;
   Rx<BukkungListModel> bukkungList = BukkungListModel().obs;

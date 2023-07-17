@@ -15,7 +15,7 @@ openAlertDialog({
       title,
       style: TextStyle(
         color: CustomColors.blackText,
-        fontSize: 18,
+        fontSize: 15,
       ),
     ),
     content: content == null

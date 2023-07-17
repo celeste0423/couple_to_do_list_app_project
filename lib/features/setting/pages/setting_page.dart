@@ -1,7 +1,7 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/setting/controller/setting_page_controller.dart';
 import 'package:couple_to_do_list_app/features/setting/pages/auth_delete_page.dart';
-import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/basic_container.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
@@ -118,7 +118,9 @@ class SettingPage extends GetView<SettingPageController> {
               '알림',
               style: TextStyle(fontSize: 20),
             ),
-            onTap: () {},
+            onTap: () {
+              openAlertDialog(title: '알림 기능 구현 예정입니다.');
+            },
           ),
         ],
       ),

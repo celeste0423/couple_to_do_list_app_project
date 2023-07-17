@@ -5,7 +5,7 @@ import 'package:couple_to_do_list_app/features/auth/widgets/apple_login_button.d
 import 'package:couple_to_do_list_app/features/auth/widgets/google_login_button.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/kakao_login_button.dart';
 import 'package:couple_to_do_list_app/helper/local_notification.dart';
-import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:flutter/gestures.dart';
@@ -26,7 +26,7 @@ class _WelcomePageState extends State<WelcomePage> {
   void initState() {
     super.initState();
     initPackageInfo();
-   print(AuthController.to.user.value.email);
+    print(AuthController.to.user.value.email);
   }
 
   Future<void> initPackageInfo() async {

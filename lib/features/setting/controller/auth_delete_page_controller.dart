@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/helper/show_alert_dialog.dart';
+import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,19 +45,20 @@ class AuthDeletePageController extends GetxController {
             if (customToken == null || customToken == '') {
               openAlertDialog(title: '로그인 실패');
             } else {
-             // AuthController.loginType = 'kakao';
+              // AuthController.loginType = 'kakao';
               print('(kak btn) 로그인 타입 ${AuthController.loginType}');
               await FirebaseAuth.instance.signInWithCustomToken(customToken);
             }
           } else if (loginType == 'apple') {
-            UserCredential? userCredential = await AuthController.to.signInWithApple();
+            UserCredential? userCredential =
+                await AuthController.to.signInWithApple();
             if (userCredential == null) {
               openAlertDialog(title: '로그인 실패');
             } else {
               print(
                   'apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
               //로그인 타입 설정
-             // AuthController.loginType = 'apple';
+              // AuthController.loginType = 'apple';
             }
           }
         });
