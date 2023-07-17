@@ -4,7 +4,6 @@ import 'package:couple_to_do_list_app/features/home/controller/diary_page_contro
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
-import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -55,7 +54,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
   PreferredSizeWidget _customAppBar(String? title) {
     return AppBar(
       backgroundColor: CustomColors.backgroundLightGrey,
-      title: TitleText(text: title ?? ''),
+      title: Text(title ?? ''),
       leading: IconButton(
         onPressed: () {
           Get.back();
@@ -139,7 +138,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
       children: [
         Text(
           date != null ? DateFormat('yyyy-MM-dd').format(date) : '',
-          style: TextStyle(fontSize: 20, color: CustomColors.greyText),
+          style: TextStyle(fontSize: 15, color: CustomColors.greyText),
         ),
         SizedBox(
           width: 5,
@@ -327,12 +326,12 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
               Get.off(() => UploadDiaryPage(), arguments: selectedDiaryModel);
             },
             icon: Icon(Icons.edit, size: 25, color: CustomColors.lightPink)),
-        IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.share, size: 25, color: CustomColors.lightPink)),
-        IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.delete, size: 30, color: CustomColors.lightPink)),
+        // IconButton(
+        //     onPressed: () {},
+        //     icon: Icon(Icons.share, size: 25, color: CustomColors.lightPink)),
+        // IconButton(
+        //     onPressed: () {},
+        //     icon: Icon(Icons.delete, size: 30, color: CustomColors.lightPink)),
       ],
     );
   }

@@ -132,6 +132,7 @@ class DiaryPage extends GetView<DiaryPageController> {
             () => Container(
               padding: const EdgeInsets.symmetric(vertical: 5),
               height: 100,
+              width: Get.width - 20,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(25),
@@ -177,39 +178,50 @@ class DiaryPage extends GetView<DiaryPageController> {
                   SizedBox(
                     width: 30,
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PcText(
-                        diaryModel.title ?? '',
-                        style: TextStyle(fontSize: 22),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.location_on_outlined,
-                            size: 20,
-                            color: CustomColors.grey,
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: PcText(
+                              diaryModel.title ?? '',
+                              style: TextStyle(fontSize: 22),
+                            ),
                           ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          BkText(
-                            diaryModel.location ?? '',
-                            style: TextStyle(fontSize: 13),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 3,
-                      ),
-                      BkText(
-                        dateString,
-                        style: TextStyle(fontSize: 13),
-                      )
-                    ],
-                  )
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on_outlined,
+                              size: 20,
+                              color: CustomColors.grey,
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: BkText(
+                                diaryModel.location ?? '',
+                                style: TextStyle(fontSize: 13),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        BkText(
+                          dateString,
+                          style: TextStyle(fontSize: 13),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 10),
                 ],
               ),
             ),
@@ -415,10 +427,15 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            PcText(
-                              controller.selectedDiary.value!.title!,
-                              style: TextStyle(
-                                fontSize: 22 * percent,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: PcText(
+                                controller.selectedDiary.value!.title!,
+                                style: TextStyle(
+                                  fontSize: 22 * percent,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             Container(

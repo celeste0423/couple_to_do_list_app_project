@@ -10,20 +10,28 @@ def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
-
+//버전 설정
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
 }
-
+//버전 이름 설정
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = '0.1'
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+// start of Gradle 서명 구성 시작
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if(keystorePropertiesFile.exists()){
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+// end of Gradle 서명 구성
 
 android {
     namespace "com.example.couple_to_do_list_app"
@@ -44,8 +52,9 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.teambukkung.bukkunglist"
+        // application Id 설정
+        applicationId "com.example.couple_to_do_list_app"
+//        applicationId "com.teambukkung.bukkunglist"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 21
@@ -54,11 +63,39 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+        debug{
+            storeFile file(keystoreProperties['storeFileDebug'])
+            storePassword keystoreProperties['storePasswordDebug']
+            keyAlias keystoreProperties['keyAliasDebug']
+            keyPassword keystoreProperties['keyPasswordDebug']
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+
+            //release 속성으로 변경
+            signingConfig signingConfigs.release
+            debug{
+                signingConfig signingConfigs.debug
+            }
+
+            //start of 코드 난독화 및 사이즈 축소
+            minifyEnabled true
+            shrinkResources true
+            //그래들 7.0.0부터 proguard없어진듯..?
+            //useProguard true
+            // ProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //end of 코드난독화 및 사이즈 축소
         }
     }
 }
