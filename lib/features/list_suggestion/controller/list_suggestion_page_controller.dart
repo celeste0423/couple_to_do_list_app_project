@@ -65,11 +65,11 @@ class ListSuggestionPageController extends GetxController
     //   _fetchSuggestionBukkungList(pageKey);
     // });
     Future.delayed(const Duration(seconds: 1), () {
-      _showTutorialCoachMark();
+      _showTutorialCoachMark(Get.context!);
     });
   }
 
-  void _showTutorialCoachMark() async {
+  void _showTutorialCoachMark(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool hasShownSuggestionTutorial =
         prefs.getBool('hasShownSuggestionTutorial') ?? false;
@@ -83,7 +83,7 @@ class ListSuggestionPageController extends GetxController
         showSkipInLastTarget: false,
         hideSkip: true,
         onClickTarget: (target) {})
-      ..show(context: Get.context!);
+      ..show(context: context);
     await prefs.setBool('hasShownTutorial', true);
   }
 
