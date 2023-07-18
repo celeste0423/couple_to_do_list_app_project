@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
+import 'package:couple_to_do_list_app/widgets/level_icon.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
@@ -57,6 +58,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               Get.to(() => UploadBukkungListPage(), arguments: [null, true]);
             },
             child: Icon(
+              key: controller.addKey,
               Icons.add,
               color: Colors.white,
               size: 35,
@@ -405,12 +407,18 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     children: [
                       FittedBox(
                         fit: BoxFit.scaleDown,
-                        child: Text(
-                          'by: ${controller.selectedList.value.madeBy}',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
-                            fontSize: 15,
-                          ),
+                        child: Row(
+                          children: [
+                            Text(
+                              'by: ${controller.selectedList.value.madeBy}',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 15,
+                              ),
+                            ),
+                            SizedBox(width: 5),
+                            LevelIcon(exp: controller.userLevel.value)
+                          ],
                         ),
                       ),
                       GestureDetector(
@@ -418,6 +426,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                           controller.toggleLike();
                         },
                         child: Icon(
+                          key: controller.likeKey,
                           controller.isLiked.value
                               ? Icons.favorite
                               : Icons.favorite_border,
@@ -438,6 +447,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
 
   Widget _listPlayButton() {
     return Positioned(
+      key: controller.copyKey,
       top: 340,
       left: Get.width / 2 - 30,
       child: CustomIconButton(

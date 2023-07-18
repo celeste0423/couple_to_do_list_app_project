@@ -3,11 +3,15 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/tutorial_coach_mark/pages/coachmark_desc.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
+import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
+import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class ListSuggestionPageController extends GetxController
@@ -29,6 +33,7 @@ class ListSuggestionPageController extends GetxController
   Rx<bool> isSearchResult = false.obs;
 
   Rx<bool> isLiked = false.obs;
+  Rx<int> userLevel = 0.obs;
 
   Rx<BukkungListModel> selectedList = Rx<BukkungListModel>(BukkungListModel());
   int selectedListIndex = 0;
@@ -39,6 +44,7 @@ class ListSuggestionPageController extends GetxController
   QueryDocumentSnapshot<Map<String, dynamic>>? keyPage;
   List<BukkungListModel>? prevList;
   bool isLastPage = false;
+  //페이지네이션 페이지 로딩 크기
   int _pageSize = 5;
 
   @override
@@ -59,52 +65,53 @@ class ListSuggestionPageController extends GetxController
     //   _fetchSuggestionBukkungList(pageKey);
     // });
     Future.delayed(const Duration(seconds: 1), () {
-      // _showTutorialCoachMark();
+      _showTutorialCoachMark();
     });
   }
 
-  // void _showTutorialCoachMark() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   bool hasShownSuggestionTutorial =
-  //       prefs.getBool('hasShownSuggestionTutorial') ?? false;
-  //   if (hasShownSuggestionTutorial) {
-  //     //이미 튜토리얼을 진행했으면 튜토리얼 종료
-  //     // return;
-  //   }
-  //   _initTarget(); //타겟 더하기
-  //   tutorialCoachMark = TutorialCoachMark(
-  //       targets: targets,
-  //       showSkipInLastTarget: false,
-  //       hideSkip: true,
-  //       onClickTarget: (target) {})
-  //     ..show(context: context);
-  //   await prefs.setBool('hasShownTutorial', true);
-  // }
-  //
-  // void _initTarget() {
-  //   targets = [
-  //     TargetFocus(
-  //       identify: "list_suggestion_key",
-  //       keyTarget: BukkungListPageController.to.listSuggestionKey,
-  //       shape: ShapeLightFocus.RRect,
-  //       contents: [
-  //         TargetContent(
-  //           align: ContentAlign.bottom,
-  //           builder: (context, controller) {
-  //             return CoachmarkDesc(
-  //               text: "여기서 버꿍리스트를 새로 만들거나 추천 버꿍리스트를 가져올 수 있습니다",
-  //               onNext: () {
-  //                 controller.next();
-  //               },
-  //               onSkip: () {
-  //                 controller.skip();
-  //               },
-  //             );
-  //           },
-  //         )
-  //       ],
-  //     ),];
-  // }
+  void _showTutorialCoachMark() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasShownSuggestionTutorial =
+        prefs.getBool('hasShownSuggestionTutorial') ?? false;
+    if (hasShownSuggestionTutorial) {
+      //이미 튜토리얼을 진행했으면 튜토리얼 종료
+      // return;
+    }
+    _initTarget(); //타겟 더하기
+    tutorialCoachMark = TutorialCoachMark(
+        targets: targets,
+        showSkipInLastTarget: false,
+        hideSkip: true,
+        onClickTarget: (target) {})
+      ..show(context: Get.context!);
+    await prefs.setBool('hasShownTutorial', true);
+  }
+
+  void _initTarget() {
+    targets = [
+      TargetFocus(
+        identify: "add_key",
+        keyTarget: addKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text: "여기서 버꿍리스트를 새로 만들거나 추천 버꿍리스트를 가져올 수 있습니다",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+    ];
+  }
 
   void _onTabChanged() {
     _initSelectedBukkungList();
@@ -114,25 +121,16 @@ class ListSuggestionPageController extends GetxController
     final stream = getSuggestionBukkungList(
         tabIndexToName(suggestionListTabController.index));
     StreamSubscription<List<BukkungListModel>>? subscription;
-    subscription = stream.listen((list) {
+    subscription = stream.listen((list) async {
       if (list.isNotEmpty) {
         final updatedList = list[0];
-        // final updatedList = selectedList.value.copyWith(
-        //   listId: list[0].listId,
-        //   title: list[0].title,
-        //   content: list[0].content,
-        //   location: list[0].location,
-        //   category: list[0].category,
-        //   imgUrl: list[0].imgUrl,
-        //   imgId: list[0].imgId,
-        //   madeBy: list[0].madeBy,
-        //   userId: list[0].userId,
-        //   likeCount: list[0].likeCount,
-        //   likedUsers: list[0].likedUsers,
-        //   viewCount: list[0].viewCount,
-        // );
         selectedList(updatedList);
-        print('리스트 변경 제목${list[0].listId}');
+        // print('리스트 변경 제목${list[0].listId}');
+        // 리스트 레벨 가져오기
+        UserModel? userData =
+            await UserRepository.getUserDataByUid(updatedList.userId!);
+        final int? expPoint = userData!.expPoint;
+        userLevel(expPoint == null ? 0 : (expPoint - expPoint % 100) ~/ 100);
         if (selectedList.value.likedUsers != null &&
             selectedList.value.likedUsers!
                 .contains(AuthController.to.user.value.uid)) {
@@ -219,8 +217,11 @@ class ListSuggestionPageController extends GetxController
     return ListSuggestionRepository().getMyBukkungList();
   }
 
-  void indexSelection(BukkungListModel updatedList, int index) {
-    print(updatedList.userId);
+  void indexSelection(BukkungListModel updatedList, int index) async {
+    UserModel? userData =
+        await UserRepository.getUserDataByUid(updatedList.userId!);
+    int expPoint = userData!.expPoint!;
+    userLevel(((expPoint - expPoint % 100) / 100).toInt());
     selectedList(updatedList);
     selectedListIndex = index;
     if (selectedList.value.likedUsers != null &&

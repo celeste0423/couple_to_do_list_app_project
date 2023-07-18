@@ -30,4 +30,10 @@ class CustomColors {
   static const Color culture = Color(0xFFD7DA72);
   static const Color study = Color(0xFF859EC9);
   static const Color etc = Color(0xFFE1CDAE);
+
+  //레벨 색상
+  static const Color level1 = Color(0xFF2EB573);
+  static const Color level2 = Color(0xFF2D5CC7);
+  static const Color level3 = Color(0xFFFFA710);
+  static const Color level4 = Color(0xFFFF6337);
 }
