@@ -53,7 +53,7 @@ android {
 
     defaultConfig {
         // application Id 설정
-        applicationId "com.example.coupleToDoListApp"
+        applicationId "com.example.com.example.couple_to_do_list_app"
 //        applicationId "com.teambukkung.bukkunglist"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
