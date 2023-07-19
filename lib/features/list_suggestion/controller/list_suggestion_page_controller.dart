@@ -16,6 +16,8 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class ListSuggestionPageController extends GetxController
     with GetTickerProviderStateMixin {
+  final BuildContext context;
+  ListSuggestionPageController(this.context);
   TutorialCoachMark? tutorialCoachMark;
   List<TargetFocus> targets = [];
 
@@ -32,6 +34,14 @@ class ListSuggestionPageController extends GetxController
   bool isTextEmpty = true;
   Rx<bool> isSearchResult = false.obs;
 
+  Map<String, String> categoryToString = {
+    "1travel": "여행",
+    "2meal": "식사",
+    "3activity": "액티비티",
+    "4culture": "문화 활동",
+    "5study": "자기 계발",
+    "6etc": "기타",
+  };
   Rx<bool> isLiked = false.obs;
   Rx<int> userLevel = 0.obs;
 
@@ -61,30 +71,28 @@ class ListSuggestionPageController extends GetxController
     suggestionListScrollController.addListener(() {
       loadMoreBukkungLists();
     });
-    // pagingController.addPageRequestListener((pageKey) {
-    //   _fetchSuggestionBukkungList(pageKey);
-    // });
     Future.delayed(const Duration(seconds: 1), () {
-      _showTutorialCoachMark(Get.context!);
+      _showTutorialCoachMark();
     });
   }
 
-  void _showTutorialCoachMark(BuildContext context) async {
+  void _showTutorialCoachMark() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool hasShownSuggestionTutorial =
         prefs.getBool('hasShownSuggestionTutorial') ?? false;
     if (hasShownSuggestionTutorial) {
       //이미 튜토리얼을 진행했으면 튜토리얼 종료
-      // return;
+      return;
     }
     _initTarget(); //타겟 더하기
-    tutorialCoachMark = TutorialCoachMark(
+    if (context!.mounted) {
+      tutorialCoachMark = TutorialCoachMark(
         targets: targets,
-        showSkipInLastTarget: false,
         hideSkip: true,
-        onClickTarget: (target) {})
-      ..show(context: context);
-    await prefs.setBool('hasShownTutorial', true);
+        onClickTarget: (target) {},
+      )..show(context: context);
+      await prefs.setBool('hasShownSuggestionTutorial', true);
+    }
   }
 
   void _initTarget() {
@@ -92,13 +100,52 @@ class ListSuggestionPageController extends GetxController
       TargetFocus(
         identify: "add_key",
         keyTarget: addKey,
-        shape: ShapeLightFocus.RRect,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
             builder: (context, controller) {
               return CoachmarkDesc(
-                text: "여기서 버꿍리스트를 새로 만들거나 추천 버꿍리스트를 가져올 수 있습니다",
+                text: "버튼을 눌러 나만의 버꿍리스트를 만들 수 있습니다.",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+      TargetFocus(
+        identify: "copy_key",
+        keyTarget: copyKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text: "마음에 드는 추천리스트가 있다면 우리의 버꿍리스트로 가져오세요!",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+      TargetFocus(
+        identify: "like_key",
+        keyTarget: likeKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text: "잘 만든 것 같다면 좋아요 꾹!",
                 onNext: () {
                   controller.next();
                 },
@@ -218,10 +265,6 @@ class ListSuggestionPageController extends GetxController
   }
 
   void indexSelection(BukkungListModel updatedList, int index) async {
-    UserModel? userData =
-        await UserRepository.getUserDataByUid(updatedList.userId!);
-    int expPoint = userData!.expPoint!;
-    userLevel(((expPoint - expPoint % 100) / 100).toInt());
     selectedList(updatedList);
     selectedListIndex = index;
     if (selectedList.value.likedUsers != null &&
@@ -233,6 +276,15 @@ class ListSuggestionPageController extends GetxController
       // print('좋아요 없음 (sug cont)');
       isLiked(false);
     }
+    int expPoint = 0;
+    UserModel? userData =
+        await UserRepository.getUserDataByUid(updatedList.userId!);
+    print('유저 exp${userData!.expPoint}');
+    if (userData.expPoint != null) {
+      expPoint = userData.expPoint!;
+    }
+    userLevel((expPoint - expPoint % 100) ~/ 100);
+    print('레벨${userLevel.value}');
   }
 
   void toggleLike() {

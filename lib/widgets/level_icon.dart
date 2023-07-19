@@ -2,18 +2,17 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
 
 class LevelIcon extends StatelessWidget {
-  final int exp;
+  final int level;
   final double? size;
 
   const LevelIcon({
     Key? key,
-    required this.exp,
+    required this.level,
     this.size,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final int level = (exp - exp % 100) ~/ 100;
     return Container(
       width: size ?? 15,
       height: size ?? 15,

@@ -44,14 +44,11 @@ class _HomePageState extends State<HomePage>
     bool hasShownTutorial = prefs.getBool('hasShownTutorial') ?? false;
     if (hasShownTutorial) {
       //이미 튜토리얼을 진행했으면 튜토리얼 종료
-      // return;
+      return;
     }
     _initTarget(); //타겟 더하기
     tutorialCoachMark = TutorialCoachMark(
-        targets: targets,
-        showSkipInLastTarget: false,
-        hideSkip: true,
-        onClickTarget: (target) {})
+        targets: targets, hideSkip: true, onClickTarget: (target) {})
       ..show(context: context);
     await prefs.setBool('hasShownTutorial', true);
   }

@@ -3,6 +3,7 @@ import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/level_icon.dart';
@@ -362,11 +363,44 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  PcText(
-                    controller.selectedList.value.title ?? '',
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: PcText(
+                              controller.selectedList.value.title ?? '',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style:
+                                  TextStyle(fontSize: 24, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Row(
+                        children: [
+                          CategoryIcon(
+                            category:
+                                controller.selectedList.value.category ?? '',
+                            size: 25,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            controller.categoryToString[
+                                controller.selectedList.value.category]!,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                   Row(
                     children: [
@@ -417,7 +451,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                               ),
                             ),
                             SizedBox(width: 5),
-                            LevelIcon(exp: controller.userLevel.value)
+                            LevelIcon(level: controller.userLevel.value)
                           ],
                         ),
                       ),
@@ -785,7 +819,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ListSuggestionPageController());
+    Get.put(ListSuggestionPageController(context));
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
