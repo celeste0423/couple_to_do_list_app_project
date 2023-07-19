@@ -230,7 +230,9 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
       child: GestureDetector(
         onTap: () {
           openAlertDialog(
-            title: '버꿍리스트를 완료하셨습니까?',
+            title: '버꿍리스트를 완료하셨나요?',
+            btnText: '네',
+            secondButtonText: '아니요',
             function: () async {
               DiaryModel updatedDiaryModel = await controller.listCompleted();
               Get.off(() => UploadDiaryPage(), arguments: updatedDiaryModel);

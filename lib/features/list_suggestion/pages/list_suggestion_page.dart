@@ -730,7 +730,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     // );
                     controller.indexSelection(bukkungListModel, index);
                     openAlertDialog(
-                      title: '정말로 지우시겠습니다?',
+                      title: '정말로 지우시겠습니까?',
                       secondButtonText: '취소',
                       function: () {
                         controller.listDelete();
