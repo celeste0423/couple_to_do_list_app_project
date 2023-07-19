@@ -1,11 +1,14 @@
 import 'package:couple_to_do_list_app/features/read_bukkung_list/controller/read_bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
+import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/category_to_text.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
+import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
+import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -80,13 +83,16 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Row(
                 children: [
-                  CategoryIcon(category: controller.bukkungListModel.category!),
+                  CategoryIcon(
+                    category: controller.bukkungListModel.category!,
+                    size: 35,
+                  ),
                   SizedBox(width: 10),
                   Text(
                     CategoryToText(controller.bukkungListModel.category!),
                     style: TextStyle(
-                      color: CustomColors.blackText,
-                      fontSize: 25,
+                      color: CustomColors.greyText,
+                      fontSize: 18,
                     ),
                   ),
                 ],
@@ -97,43 +103,47 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
               children: [
                 Expanded(
                   flex: 3,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      controller.bukkungListModel.title!,
-                      style: TextStyle(
-                        color: CustomColors.blackText,
-                        fontSize: 35,
-                      ),
-                      softWrap: true,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 10, right: 10, top: 10),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
-                      child: Text(
-                        controller.bukkungListModel.date!
-                            .toString()
-                            .substring(0, 10),
+                      child: PcText(
+                        controller.bukkungListModel.title!,
                         style: TextStyle(
-                          color: CustomColors.greyText,
+                          color: CustomColors.blackText,
+                          fontSize: 35,
                         ),
+                        softWrap: true,
                       ),
                     ),
                   ),
                 ),
+                SizedBox(width: 20),
+                // Expanded(
+                //   flex: 1,
+                //   child: Padding(
+                //     padding:
+                //         const EdgeInsets.only(left: 10, right: 10, top: 10),
+                //     child: FittedBox(
+                //       fit: BoxFit.scaleDown,
+                //       child: Text(
+                //         controller.bukkungListModel.date!
+                //             .toString()
+                //             .substring(0, 10),
+                //         style: TextStyle(
+                //           color: CustomColors.greyText,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20, left: 20, bottom: 20),
               child: Obx(
                 () => Container(
-                  height: 350,
+                  height: 250,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(50),
@@ -150,32 +160,60 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
               ),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    PngIcon(iconName: 'location-pin'),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        controller.bukkungListModel.location!,
-                        style: TextStyle(
-                          color: CustomColors.blackText,
+                Expanded(
+                  child: Row(
+                    children: [
+                      PngIcon(
+                        iconName: 'location-pin',
+                        iconSize: 35,
+                      ),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: BkText(
+                          controller.bukkungListModel.location!,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: CustomColors.blackText,
+                          ),
+                          softWrap: true,
                         ),
-                        softWrap: true,
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 10, top: 10),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: BkText(
+                        controller.bukkungListModel.date!
+                            .toString()
+                            .substring(0, 10),
+                        style: TextStyle(
+                          color: CustomColors.greyText,
+                        ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
+            SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Align(
                 alignment: Alignment.topLeft,
-                child: Text(
+                child: BkText(
                   controller.bukkungListModel.content!,
                   style: TextStyle(
+                    fontSize: 18,
                     color: CustomColors.blackText,
+                    height: 1.3,
                   ),
                 ),
               ),
@@ -190,9 +228,14 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: GestureDetector(
-        onTap: () async {
-          DiaryModel updatedDiaryModel = await controller.listCompleted();
-          Get.off(() => UploadDiaryPage(), arguments: updatedDiaryModel);
+        onTap: () {
+          openAlertDialog(
+            title: '버꿍리스트를 완료하셨습니까?',
+            function: () async {
+              DiaryModel updatedDiaryModel = await controller.listCompleted();
+              Get.off(() => UploadDiaryPage(), arguments: updatedDiaryModel);
+            },
+          );
         },
         child: Container(
           width: 140,

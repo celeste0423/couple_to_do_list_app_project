@@ -28,18 +28,22 @@ class GgomulPage extends GetView<GgomulPageController> {
   Widget _listCount() {
     return Column(
       children: [
-        Text(
-          '66%',
-          style: TextStyle(
-            fontSize: 15,
-            color: CustomColors.blackText,
+        Obx(
+          () => Text(
+            '${(controller.completedListCount.value % 8) / 8 * 100}%',
+            style: TextStyle(
+              fontSize: 15,
+              color: CustomColors.blackText,
+            ),
           ),
         ),
-        Text(
-          '(${controller.completedListCount.value % 10}/10)',
-          style: TextStyle(
-            fontSize: 12,
-            color: CustomColors.darkGrey,
+        Obx(
+          () => Text(
+            '(${controller.completedListCount.value % 8}/8)',
+            style: TextStyle(
+              fontSize: 12,
+              color: CustomColors.darkGrey,
+            ),
           ),
         ),
         Stack(
@@ -64,7 +68,7 @@ class GgomulPage extends GetView<GgomulPageController> {
               bottom: 0,
               child: Obx(
                 () => AnimatedContainer(
-                  height: (controller.completedListCount.value / 10) * 300,
+                  height: (controller.completedListCount.value / 8) * 300,
                   width: 25,
                   duration: Duration(milliseconds: 500),
                   decoration: BoxDecoration(
@@ -121,10 +125,12 @@ class GgomulPage extends GetView<GgomulPageController> {
                 '꼬물이',
                 style: TextStyle(fontSize: 35),
               ),
-              Text(
-                '${((controller.completedListCount.value - (controller.completedListCount.value % 10)) / 10 + 1).toInt()}단계',
-                style: TextStyle(
-                  fontSize: 18,
+              Obx(
+                () => Text(
+                  '${((controller.completedListCount.value - (controller.completedListCount.value % 8)) / 8 + 1).toInt()}단계',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
                 ),
               ),
               Image.asset(
@@ -254,11 +260,14 @@ class GgomulPage extends GetView<GgomulPageController> {
                   children: [
                     Expanded(
                       flex: 3,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(25),
-                        child: CachedNetworkImage(
-                          imageUrl: '${bukkungListModel.imgUrl}',
-                          fit: BoxFit.cover,
+                      child: SizedBox(
+                        height: 90,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(25),
+                          child: CachedNetworkImage(
+                            imageUrl: '${bukkungListModel.imgUrl}',
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
