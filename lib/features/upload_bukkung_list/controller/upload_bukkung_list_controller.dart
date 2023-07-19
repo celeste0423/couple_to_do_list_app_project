@@ -375,7 +375,10 @@ class UploadBukkungListController extends GetxController {
   }
 
   void _submitNoImgBukkungList(
-      BukkungListModel bukkungListData, String listId, bool isSelected) async {
+    BukkungListModel bukkungListData,
+    String listId,
+    bool isSelected,
+  ) async {
     await BukkungListRepository.setGroupBukkungList(bukkungListData, listId);
 
     //공개되었을 경우

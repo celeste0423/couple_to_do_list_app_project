@@ -323,6 +323,7 @@ class UserRepository {
   static Future<UserModel?> getUserDataByUid(String uid) async {
     DocumentSnapshot<Map<String, dynamic>> snapshot =
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    print('유저 정보 가져오는 중');
     if (snapshot.exists) {
       UserModel userdata = UserModel.fromJson(snapshot.data()!);
       return userdata;

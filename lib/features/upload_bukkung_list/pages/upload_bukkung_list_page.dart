@@ -1,5 +1,4 @@
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
-import 'package:couple_to_do_list_app/features/upload_bukkung_list/widgets/location_text_field.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
@@ -36,7 +35,22 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                     Get.back();
                   }
                 : () {
-                    openAlertDialog(title: '값을 모두 입력해 주세요');
+                    print('제목${controller.titleController.text}');
+                    print('제목${controller.listCategory.value}');
+                    print('제목${controller.locationController.text}');
+                    print('제목${controller.listDateTime.value}');
+                    print('제목${controller.contentController.text}');
+                    if (controller.titleController.text == '') {
+                      openAlertDialog(title: '제목을 입력해 주세요');
+                    } else if (controller.listCategory.value == '') {
+                      openAlertDialog(title: '카테고리를 선택해주세요');
+                    } else if (controller.locationController.text == '') {
+                      openAlertDialog(title: '위치를 선택해주세요');
+                    } else if (controller.listDateTime.value == null) {
+                      openAlertDialog(title: '날짜를 선택해주세요');
+                    } else if (controller.contentController == '') {
+                      openAlertDialog(title: '세부 계획을 작성해주세요');
+                    }
                   },
             child: controller.selectedBukkungListModel == null
                 ? controller.isCompleted.value == true
@@ -124,7 +138,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Obx(() {
                     return Row(
                       children: [
@@ -268,7 +282,36 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25),
               ),
-              child: LocationTextField(),
+              // Todo: 위치 추천 기능은 추후 제공 예정
+              // child: LocationTextField(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TextField(
+                  controller: controller.locationController,
+                  maxLength: 20,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                  maxLines: 1,
+                  textInputAction: TextInputAction.search,
+                  style: TextStyle(
+                    color: CustomColors.blackText,
+                    fontSize: 20,
+                  ),
+                  cursorColor: CustomColors.darkGrey,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    hintText: '위치',
+                    counterText: '',
+                    hintStyle: TextStyle(
+                      color: CustomColors.greyText,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ],

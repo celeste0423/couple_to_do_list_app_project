@@ -3,8 +3,10 @@ import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
+import 'package:couple_to_do_list_app/widgets/level_icon.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
@@ -57,6 +59,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               Get.to(() => UploadBukkungListPage(), arguments: [null, true]);
             },
             child: Icon(
+              key: controller.addKey,
               Icons.add,
               color: Colors.white,
               size: 35,
@@ -308,7 +311,9 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         child: Stack(
           children: [
             controller.selectedList.value.imgUrl == null
-                ? Padding(
+                ? Container(
+                    width: Get.width - 50,
+                    height: 230,
                     padding: const EdgeInsets.only(top: 400),
                     child: Center(
                       child: CircularProgressIndicator(
@@ -360,11 +365,46 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  PcText(
-                    controller.selectedList.value.title ?? '',
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: controller.selectedList.value.title == null
+                            ? Container()
+                            : Align(
+                                alignment: Alignment.centerLeft,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: PcText(
+                                    controller.selectedList.value.title ?? '',
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 24, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                      ),
+                      SizedBox(width: 10),
+                      Row(
+                        children: [
+                          CategoryIcon(
+                            category: controller.selectedList.value.category ??
+                                '1travel',
+                            size: 25,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            controller.categoryToString[
+                                    controller.selectedList.value.category] ??
+                                '',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                   Row(
                     children: [
@@ -405,12 +445,18 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     children: [
                       FittedBox(
                         fit: BoxFit.scaleDown,
-                        child: Text(
-                          'by: ${controller.selectedList.value.madeBy}',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
-                            fontSize: 15,
-                          ),
+                        child: Row(
+                          children: [
+                            Text(
+                              'by: ${controller.selectedList.value.madeBy}',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 15,
+                              ),
+                            ),
+                            SizedBox(width: 5),
+                            LevelIcon(level: controller.userLevel.value)
+                          ],
                         ),
                       ),
                       GestureDetector(
@@ -418,6 +464,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                           controller.toggleLike();
                         },
                         child: Icon(
+                          key: controller.likeKey,
                           controller.isLiked.value
                               ? Icons.favorite
                               : Icons.favorite_border,
@@ -438,6 +485,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
 
   Widget _listPlayButton() {
     return Positioned(
+      key: controller.copyKey,
       top: 340,
       left: Get.width / 2 - 30,
       child: CustomIconButton(
@@ -682,7 +730,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     // );
                     controller.indexSelection(bukkungListModel, index);
                     openAlertDialog(
-                      title: '정말로 지우시겠습니다?',
+                      title: '정말로 지우시겠습니까?',
                       secondButtonText: '취소',
                       function: () {
                         controller.listDelete();
@@ -775,7 +823,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ListSuggestionPageController());
+    Get.put(ListSuggestionPageController(context));
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();

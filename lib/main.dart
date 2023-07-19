@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         Locale('ko', ''),
       ],
       initialBinding: InitBinding(),
-      title: 'Bukkung List',
+      title: 'BukkungList',
       theme: baseTheme(),
       home: Root(),
     );

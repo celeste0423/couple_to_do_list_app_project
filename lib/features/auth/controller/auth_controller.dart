@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:couple_to_do_list_app/binding/init_binding.dart';
+import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
+import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:couple_to_do_list_app/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
@@ -171,6 +173,18 @@ class AuthController extends GetxController {
       print('uuid로 가입 시작(cont) ${groupId}');
       await UserRepository.updateGroupId(myData, groupId);
       await UserRepository.updateGroupId(buddyData, groupId);
+      //기본 버꿍리스트 업로드
+      BukkungListModel initialModel = BukkungListModel.init(user.value);
+      BukkungListModel initialBukkungList = initialModel.copyWith(
+        title: '함께 버꿍리스트 앱 설치하기',
+        category: '6etc',
+        location: '버꿍리스트 앱',
+        content:
+            '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자, \n내 짝꿍아!\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
+        imgUrl: Constants.baseImageUrl,
+      );
+      await BukkungListRepository.setGroupBukkungList(
+          initialBukkungList, 'initial${group.value.uid}');
       return GroupIdStatus.createdGroupId;
     }
   }
