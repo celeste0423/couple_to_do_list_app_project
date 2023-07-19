@@ -311,7 +311,9 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         child: Stack(
           children: [
             controller.selectedList.value.imgUrl == null
-                ? Padding(
+                ? Container(
+                    width: Get.width - 50,
+                    height: 230,
                     padding: const EdgeInsets.only(top: 400),
                     child: Center(
                       child: CircularProgressIndicator(
@@ -367,32 +369,34 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: PcText(
-                              controller.selectedList.value.title ?? '',
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style:
-                                  TextStyle(fontSize: 24, color: Colors.white),
-                            ),
-                          ),
-                        ),
+                        child: controller.selectedList.value.title == null
+                            ? Container()
+                            : Align(
+                                alignment: Alignment.centerLeft,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: PcText(
+                                    controller.selectedList.value.title ?? '',
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 24, color: Colors.white),
+                                  ),
+                                ),
+                              ),
                       ),
                       SizedBox(width: 10),
                       Row(
                         children: [
                           CategoryIcon(
-                            category:
-                                controller.selectedList.value.category ?? '',
+                            category: controller.selectedList.value.category ??
+                                '1travel',
                             size: 25,
                           ),
                           SizedBox(width: 10),
                           Text(
                             controller.categoryToString[
-                                controller.selectedList.value.category]!,
+                                    controller.selectedList.value.category] ??
+                                '',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 15,
