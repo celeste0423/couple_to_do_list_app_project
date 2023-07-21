@@ -228,7 +228,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 15.0),
                       child: Text(
-                        selectedDiaryModel.creatorSogam ?? '없음',
+                        myComment ?? '없음',
                         style: TextStyle(
                             decoration: TextDecoration.underline,
                             color: CustomColors.greyText),
@@ -299,7 +299,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 15.0),
                       child: Text(
-                        selectedDiaryModel.bukkungSogam ?? '없음',
+                        bukkungComment ?? '없음',
                         style: TextStyle(
                             decoration: TextDecoration.underline,
                             color: CustomColors.greyText),

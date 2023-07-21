@@ -248,14 +248,12 @@ class UploadDiaryController extends GetxController {
         }
       }
       DiaryModel updatedDiary = selectedDiaryModel!.copyWith(
-        title: titleController.text,
+               title: titleController.text,
         category: diaryCategory.value,
         location: locationController.text,
         imgUrlList: imgUrlList,
-        creatorSogam: contentController.text,
-        bukkungSogam: selectedDiaryModel == null
-            ? null
-            : selectedDiaryModel!.bukkungSogam,
+        creatorSogam: AuthController.to.user.value.uid == selectedDiaryModel!.creatorUserID ? contentController.text: selectedDiaryModel!.creatorSogam,
+        bukkungSogam: AuthController.to.user.value.uid == selectedDiaryModel!.creatorUserID ? selectedDiaryModel!.bukkungSogam: contentController.text,
         date: diaryDateTime.value,
         // 여긴selectedDiaryModel null 아닐때만이니까 이미 creatorUserID,createdAt 존재 함.
         lastUpdatorID: AuthController.to.user.value.uid,
