@@ -32,7 +32,7 @@ class MarqueeAbleText extends StatelessWidget {
         child: Marquee(
           text: text,
           style: style,
-          velocity: 30,
+          velocity: 20,
           startPadding: 10,
           blankSpace: maxLength.toDouble() + 20,
           pauseAfterRound: Duration(seconds: 1),

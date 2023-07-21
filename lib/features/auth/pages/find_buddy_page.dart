@@ -10,6 +10,7 @@ import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:marquee/marquee.dart';
 
 import '../../../widgets/main_button.dart';
 
@@ -32,19 +33,22 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            padding: EdgeInsets.only(left: 20),
-            onPressed: () {
-              UserRepository.googleAccountDeletion();
-              //만약 회원 가입 중간에 다시 되돌아갈 경우 구글 계정 다시 로그인하게 함
-              Get.to(() => WelcomePage());
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 30,
-              color: Colors.white,
-            ),
+          SizedBox(
+            width: 50,
           ),
+          // IconButton(
+          //   padding: EdgeInsets.only(left: 20),
+          //   onPressed: () {
+          //     UserRepository.googleAccountDeletion();
+          //     //만약 회원 가입 중간에 다시 되돌아갈 경우 구글 계정 다시 로그인하게 함
+          //     Get.to(() => WelcomePage());
+          //   },
+          //   icon: Icon(
+          //     Icons.arrow_back_ios,
+          //     size: 30,
+          //     color: Colors.white,
+          //   ),
+          // ),
           PcText(
             '짝꿍 찾기',
             style: TextStyle(
@@ -84,8 +88,111 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
 
   Widget _emailCopyButton() {
     final String useremail = widget.email;
-    return TextButton(
-      onPressed: () {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(width: 15),
+        SizedBox(
+          width: Get.width - 65,
+          height: 30,
+          child: useremail.length <= 22
+              ? Text(
+                  useremail,
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                )
+              : Marquee(
+                  text: useremail,
+                  pauseAfterRound: Duration(seconds: 1),
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                  velocity: 25,
+                  scrollAxis: Axis.horizontal,
+                  blankSpace: 20.0,
+                ),
+        ),
+        SizedBox(width: 10),
+        Icon(
+          Icons.copy,
+          size: 30,
+          color: Colors.white,
+        ),
+        SizedBox(width: 10),
+      ],
+    );
+  }
+
+  Widget _floatingContainer() {
+    return Stack(
+      alignment: Alignment.center,
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          height: 540,
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 135),
+            height: 270,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.9),
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Image.asset(
+                  'assets/images/email.png',
+                  color: CustomColors.grey,
+                  height: 70,
+                ),
+                RichText(
+                  text: TextSpan(
+                    children: const [
+                      TextSpan(
+                        text: '짝꿍의 ',
+                        style:
+                            TextStyle(fontSize: 20, color: CustomColors.grey),
+                      ),
+                      TextSpan(
+                        text: '이메일',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: CustomColors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '을 입력하세요',
+                        style:
+                            TextStyle(fontSize: 20, color: CustomColors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 30),
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                  ),
+                  child: _emailTextField(),
+                ),
+                SizedBox(height: 40),
+              ],
+            ),
+          ),
+        ),
+        Positioned(bottom: 135 - 25, child: _startButton()),
+        Positioned(bottom: 0, child: _myEmail()),
+      ],
+    );
+  }
+
+  Widget _myEmail() {
+    final String useremail = widget.email;
+    return GestureDetector(
+      onTap: () {
+        print('hi');
         Clipboard.setData(
           ClipboardData(text: useremail ?? ''),
         ).then(
@@ -100,99 +207,22 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           },
         );
       },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            useremail ?? '',
-            style: TextStyle(fontSize: 20, color: Colors.white),
-          ),
-          SizedBox(width: 10),
-          Icon(
-            Icons.copy,
-            size: 30,
-          ),
-          SizedBox(width: 10),
-        ],
+      child: SizedBox(
+        width: Get.width,
+        height: 60,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              '내 이메일',
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
+            _emailCopyButton(),
+            // _inviteButton(),
+          ],
+        ),
       ),
-    );
-  }
-
-  Widget _floatingContainer() {
-    return Stack(
-      alignment: Alignment.center,
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          margin: EdgeInsets.all(20),
-          height: 270,
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Image.asset(
-                'assets/images/email.png',
-                color: CustomColors.grey,
-                height: 70,
-              ),
-              RichText(
-                text: TextSpan(
-                  children: const [
-                    TextSpan(
-                      text: '짝꿍의 ',
-                      style: TextStyle(fontSize: 20, color: CustomColors.grey),
-                    ),
-                    TextSpan(
-                      text: '이메일',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: CustomColors.grey,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextSpan(
-                      text: '을 입력하세요',
-                      style: TextStyle(fontSize: 20, color: CustomColors.grey),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 30),
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                ),
-                child: _emailTextField(),
-              ),
-              SizedBox(height: 40),
-            ],
-          ),
-        ),
-        _startButton(),
-        Positioned(bottom: -100, child: _myEmail())
-      ],
-    );
-  }
-
-  Widget _myEmail() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          '내 이메일',
-          style: TextStyle(fontSize: 20, color: Colors.white),
-        ),
-        _emailCopyButton(),
-        // _inviteButton(),
-      ],
     );
   }
 
@@ -228,29 +258,24 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
   }
 
   Widget _startButton() {
-    return Positioned(
-      bottom: 0,
-      right: Get.width * 1 / 2 - 75,
-      child: MainButton(
-        buttonText: '찾기',
-        onTap: () async {
-          GroupIdStatus groupIdStatus = await authController.groupCreation(
-              widget.email, emailController.text);
-          if (groupIdStatus == GroupIdStatus.noData) {
-            openAlertDialog(
-                title: '올바른 메일주소를 입력하였는지,\n짝꿍이 회원가입을 완료 하였는지 확인해주세요.');
-          } else if (groupIdStatus == GroupIdStatus.hasGroup) {
-            openAlertDialog(
-                title: '상대방이 이미 짝꿍이 있습니다.\n올바른 메일주소를 입력하였는지 확인해주세요.');
-          } else {
-            //BukkungListPageController initbinding을 여기다 해야 할 거 같음
-            //InitBinding.additionalBinding();
-            Get.offAll(() => HomePage());
-          }
-        },
-        width: 150,
-        buttonColor: CustomColors.mainPink,
-      ),
+    return MainButton(
+      buttonText: '찾기',
+      onTap: () async {
+        GroupIdStatus groupIdStatus = await authController.groupCreation(
+            widget.email, emailController.text);
+        if (groupIdStatus == GroupIdStatus.noData) {
+          openAlertDialog(
+              title: '올바른 메일주소를 입력하였는지,\n짝꿍이 회원가입을 완료 하였는지 확인해주세요.');
+        } else if (groupIdStatus == GroupIdStatus.hasGroup) {
+          openAlertDialog(title: '상대방이 이미 짝꿍이 있습니다.\n올바른 메일주소를 입력하였는지 확인해주세요.');
+        } else {
+          //BukkungListPageController initbinding을 여기다 해야 할 거 같음
+          //InitBinding.additionalBinding();
+          Get.offAll(() => HomePage());
+        }
+      },
+      width: 150,
+      buttonColor: CustomColors.mainPink,
     );
   }
 
