@@ -180,6 +180,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                           ],
                         ),
                       ),
+                      if(diaryModel.bukkungSogam==null)
                       Positioned(
                         child: GestureDetector(
                           onTap: () {
@@ -194,10 +195,10 @@ class DiaryPage extends GetView<DiaryPageController> {
                                 function: () {
                                   if (AuthController.to.user.value.uid ==
                                       diaryModel.creatorUserID) {
+                                    //todo: 알림 작성
+                                  } else {
                                     Get.to(() => UploadDiaryPage(),
                                         arguments: diaryModel);
-                                  } else {
-                                    //todo: 알림 작성
                                   }
                                 });
                           },
