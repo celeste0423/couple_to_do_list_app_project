@@ -27,6 +27,9 @@ void main() async {
       SystemUiOverlayStyle.dark.copyWith(
         statusBarIconBrightness: Brightness.light,
         statusBarColor: Colors.transparent,
+        systemNavigationBarDividerColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.white,
       ),
     );
   });
