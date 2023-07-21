@@ -4,7 +4,6 @@ import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
-import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/level_icon.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
@@ -206,20 +205,20 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
       child: GestureDetector(
         onTap: () {
-          final updatedList = controller.selectedList.value.copyWith(
-            listId: bukkungListModel.listId,
-            title: bukkungListModel.title,
-            content: bukkungListModel.content,
-            location: bukkungListModel.location,
-            category: bukkungListModel.category,
-            imgUrl: bukkungListModel.imgUrl,
-            imgId: bukkungListModel.imgId,
-            madeBy: bukkungListModel.madeBy,
-            likedUsers: bukkungListModel.likedUsers,
-            likeCount: bukkungListModel.likeCount,
-            viewCount: bukkungListModel.viewCount,
-          );
-          controller.indexSelection(updatedList, index);
+          // final updatedList = controller.selectedList.value.copyWith(
+          //   listId: bukkungListModel.listId,
+          //   title: bukkungListModel.title,
+          //   content: bukkungListModel.content,
+          //   location: bukkungListModel.location,
+          //   category: bukkungListModel.category,
+          //   imgUrl: bukkungListModel.imgUrl,
+          //   imgId: bukkungListModel.imgId,
+          //   madeBy: bukkungListModel.madeBy,
+          //   likedUsers: bukkungListModel.likedUsers,
+          //   likeCount: bukkungListModel.likeCount,
+          //   viewCount: bukkungListModel.viewCount,
+          // );
+          controller.indexSelection(bukkungListModel);
           controller.viewCount();
           controller.isSearchResult(false);
           FocusScope.of(context).unfocus();
@@ -507,27 +506,59 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
+  Widget _suggestionListTabBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: TabBar(
+        isScrollable: false,
+        controller: controller.suggestionListTabController,
+        labelColor: Colors.black.withOpacity(0.8),
+        labelStyle: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w200,
+          color: Colors.black.withOpacity(0.5),
+        ),
+        labelPadding: EdgeInsets.zero,
+        unselectedLabelColor: Colors.black.withOpacity(0.5),
+        indicator: UnderlineTabIndicator(
+            insets: EdgeInsets.only(left: 30, right: 30, bottom: 5),
+            borderSide: BorderSide(
+              width: 3,
+              color: Colors.black.withOpacity(0.5),
+            )),
+        tabs: [
+          Tab(text: '인기'),
+          Tab(text: '최신'),
+          Tab(text: '조회수'),
+          Tab(text: '찜'),
+          Tab(text: '내 리스트'),
+        ],
+      ),
+    );
+  }
+
   Widget _suggestionListTabView() {
     return Expanded(
       child: TabBarView(
         controller: controller.suggestionListTabController,
         children: [
-          _suggestionAllList(0),
-          _suggestionCategoryList(1),
-          _suggestionCategoryList(2),
-          _suggestionCategoryList(3),
-          _suggestionCategoryList(4),
-          _suggestionCategoryList(5),
-          _suggestionCategoryList(6),
+          _listByLike(),
+          _listByDate(),
+          _listByView(),
+          _favoriteList(),
           _suggestionMyList(),
         ],
       ),
     );
   }
 
-  Widget _suggestionAllList(int index) {
+  Widget _listByLike() {
     return StreamBuilder(
-      stream: controller.streamController.stream,
+      stream: controller.listByLikeStreamController.stream,
       builder: (BuildContext context,
           AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
         if (!bukkungLists.hasData) {
@@ -539,13 +570,13 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         } else {
           final list = bukkungLists.data!;
           return Scrollbar(
-            controller: controller.suggestionListScrollController,
+            controller: controller.listByLikeScrollController,
             thickness: 5,
             thumbVisibility: true,
             radius: Radius.circular(25),
             child: ListView(
               physics: AlwaysScrollableScrollPhysics(),
-              controller: controller.suggestionListScrollController,
+              controller: controller.listByLikeScrollController,
               children: [
                 SizedBox(height: 50),
                 Column(
@@ -559,16 +590,14 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             ),
           );
         }
-        return Center(child: Text('아직 버꿍리스트가 없습니다'));
+        return Center(child: Text('아직 추천리스트가 없습니다'));
       },
     );
   }
 
-  Widget _suggestionCategoryList(int index) {
+  Widget _listByDate() {
     return StreamBuilder(
-      stream: controller.getSuggestionBukkungList(
-        controller.tabIndexToName(index),
-      ),
+      stream: controller.listByDateStreamController.stream,
       builder: (BuildContext context,
           AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
         if (!bukkungLists.hasData) {
@@ -579,24 +608,143 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           openAlertDialog(title: '에러 발생');
         } else {
           final list = bukkungLists.data!;
-          return ListView(
-            physics: AlwaysScrollableScrollPhysics(),
-            children: [
-              SizedBox(height: 50),
-              Column(
-                children: List.generate(list.length, (index) {
-                  final bukkungList = list[index];
-                  return _suggestionListCard(bukkungList, index, false);
-                }),
-              ),
-              SizedBox(height: 20),
-            ],
+          return Scrollbar(
+            controller: controller.listByDateScrollController,
+            thickness: 5,
+            thumbVisibility: true,
+            radius: Radius.circular(25),
+            child: ListView(
+              physics: AlwaysScrollableScrollPhysics(),
+              controller: controller.listByDateScrollController,
+              children: [
+                SizedBox(height: 50),
+                Column(
+                  children: List.generate(list.length, (index) {
+                    final bukkungList = list[index];
+                    return _suggestionListCard(bukkungList, index, false);
+                  }),
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
           );
         }
-        return Center(child: Text('아직 버꿍리스트가 없습니다'));
+        return Center(child: Text('아직 추천리스트가 없습니다'));
       },
     );
   }
+
+  Widget _listByView() {
+    return StreamBuilder(
+      stream: controller.listByViewStreamController.stream,
+      builder: (BuildContext context,
+          AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+        if (!bukkungLists.hasData) {
+          return Center(
+            child: CircularProgressIndicator(color: CustomColors.mainPink),
+          );
+        } else if (bukkungLists.hasError) {
+          openAlertDialog(title: '에러 발생');
+        } else {
+          final list = bukkungLists.data!;
+          return Scrollbar(
+            controller: controller.listByViewScrollController,
+            thickness: 5,
+            thumbVisibility: true,
+            radius: Radius.circular(25),
+            child: ListView(
+              physics: AlwaysScrollableScrollPhysics(),
+              controller: controller.listByViewScrollController,
+              children: [
+                SizedBox(height: 50),
+                Column(
+                  children: List.generate(list.length, (index) {
+                    final bukkungList = list[index];
+                    return _suggestionListCard(bukkungList, index, false);
+                  }),
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
+          );
+        }
+        return Center(child: Text('아직 추천리스트가 없습니다'));
+      },
+    );
+  }
+
+  Widget _favoriteList() {
+    return StreamBuilder(
+      stream: controller.favoriteListStreamController.stream,
+      builder: (BuildContext context,
+          AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+        if (!bukkungLists.hasData) {
+          return Center(
+            child: CircularProgressIndicator(color: CustomColors.mainPink),
+          );
+        } else if (bukkungLists.hasError) {
+          openAlertDialog(title: '에러 발생');
+        } else {
+          final list = bukkungLists.data!;
+          return Scrollbar(
+            controller: controller.favoriteListScrollController,
+            thickness: 5,
+            thumbVisibility: true,
+            radius: Radius.circular(25),
+            child: ListView(
+              physics: AlwaysScrollableScrollPhysics(),
+              controller: controller.favoriteListScrollController,
+              children: [
+                SizedBox(height: 50),
+                Column(
+                  children: List.generate(list.length, (index) {
+                    final bukkungList = list[index];
+                    return _suggestionListCard(bukkungList, index, false);
+                  }),
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
+          );
+        }
+        return Center(child: Text('아직 좋아요를 누른 리스트가 없습니다'));
+      },
+    );
+  }
+
+  // Widget _suggestionCategoryList(int index) {
+  //   return StreamBuilder(
+  //     stream: controller.getSuggestionBukkungList(
+  //       controller.tabIndexToName(index),
+  //     ),
+  //     builder: (BuildContext context,
+  //         AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+  //       if (!bukkungLists.hasData) {
+  //         return Center(
+  //           child: CircularProgressIndicator(color: CustomColors.mainPink),
+  //         );
+  //       } else if (bukkungLists.hasError) {
+  //         openAlertDialog(title: '에러 발생');
+  //       } else {
+  //         final list = bukkungLists.data!;
+  //         return ListView(
+  //           physics: AlwaysScrollableScrollPhysics(),
+  //           children: [
+  //             SizedBox(height: 50),
+  //             Column(
+  //               children: List.generate(list.length, (index) {
+  //                 final bukkungList = list[index];
+  //                 return _suggestionListCard(bukkungList, index, false);
+  //               }),
+  //             ),
+  //             SizedBox(height: 20),
+  //           ],
+  //         );
+  //       }
+  //       return Center(child: Text('아직 버꿍리스트가 없습니다'));
+  //     },
+  //   );
+  // }
 
   Widget _suggestionListCard(
       BukkungListModel bukkungListModel, int index, bool isDelete) {
@@ -604,21 +752,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: GestureDetector(
         onTap: () {
-          // final updatedList = controller.selectedList.value.copyWith(
-          //   listId: bukkungListModel.listId,
-          //   title: bukkungListModel.title,
-          //   content: bukkungListModel.content,
-          //   location: bukkungListModel.location,
-          //   category: bukkungListModel.category,
-          //   imgUrl: bukkungListModel.imgUrl,
-          //   imgId: bukkungListModel.imgId,
-          //   madeBy: bukkungListModel.madeBy,
-          //   userId: bukkungListModel.userId,
-          //   likedUsers: bukkungListModel.likedUsers,
-          //   likeCount: bukkungListModel.likeCount,
-          //   viewCount: bukkungListModel.viewCount,
-          // );
-          controller.indexSelection(bukkungListModel, index);
+          controller.indexSelection(bukkungListModel);
           controller.viewCount();
         },
         onDoubleTap: () {
@@ -728,7 +862,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     //   likeCount: bukkungListModel.likeCount,
                     //   viewCount: bukkungListModel.viewCount,
                     // );
-                    controller.indexSelection(bukkungListModel, index);
+                    controller.indexSelection(bukkungListModel);
                     openAlertDialog(
                       title: '정말로 지우시겠습니까?',
                       secondButtonText: '취소',
@@ -841,14 +975,16 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               ],
             ),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 75),
-                CategorySelectTabBar(
-                  tabController: controller.suggestionListTabController,
-                  selectedColor: Colors.black.withOpacity(0.8),
-                  unselectedColor: Colors.black.withOpacity(0.5),
-                  isMyTab: true,
-                ),
+                // CategorySelectTabBar(
+                //   tabController: controller.suggestionListTabController,
+                //   selectedColor: Colors.black.withOpacity(0.8),
+                //   unselectedColor: Colors.black.withOpacity(0.5),
+                //   isMyTab: true,
+                // ),
+                _suggestionListTabBar(),
                 _selectedImage(),
               ],
             ),

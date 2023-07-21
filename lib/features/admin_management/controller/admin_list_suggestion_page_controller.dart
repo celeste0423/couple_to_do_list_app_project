@@ -91,7 +91,7 @@ class AdminListSuggestionPageController extends GetxController
 
   void loadNewBukkungLists() async {
     List<BukkungListModel> firstList = await ListSuggestionRepository()
-        .getAllNewBukkungList(_pageSize, null, null);
+        .getNewSuggestionListByLike(_pageSize, null, null);
     streamController.add(firstList);
   }
 
@@ -100,7 +100,7 @@ class AdminListSuggestionPageController extends GetxController
         suggestionListScrollController.position.maxScrollExtent) {
       if (!isLastPage) {
         List<BukkungListModel> nextList = await ListSuggestionRepository()
-            .getAllNewBukkungList(_pageSize, keyPage, prevList);
+            .getNewSuggestionListByLike(_pageSize, keyPage, prevList);
         streamController.add(nextList);
       }
     }
