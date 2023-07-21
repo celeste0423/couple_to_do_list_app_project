@@ -100,6 +100,19 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
         color: Colors.black,
         height: width - 60,
       );
+    } else if (selectedDiaryModel.imgUrlList!.length == 1) {
+      return Expanded(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: NetworkImage(
+                selectedDiaryModel.imgUrlList![0],
+              ),
+            ),
+          ),
+        ),
+      );
     } else {
       return Expanded(
         child: CarouselSlider.builder(

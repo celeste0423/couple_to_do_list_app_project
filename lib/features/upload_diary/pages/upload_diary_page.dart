@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/controller/upload_diary_controller.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -7,6 +8,8 @@ import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../../../models/diary_model.dart';
 
 class UploadDiaryPage extends GetView<UploadDiaryController> {
   UploadDiaryPage({super.key});
@@ -478,8 +481,8 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
               if (controller.isValid()) {
                 print('업로드 중');
                 controller.isUploading.value = true;
-                await controller.uploadDiary();
-                Get.back();
+                DiaryModel updatedDiary = await controller.uploadDiary();
+                Get.off(() => ReadDiaryPage(), arguments: updatedDiary);
               } else {
                 openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');
               }

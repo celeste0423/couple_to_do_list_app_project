@@ -237,7 +237,7 @@ class UploadDiaryController extends GetxController {
     return imgUrlList;
   }
 
-  makeAndSubmitDiary(String diaryId, List<String> imgUrlList) async {
+  Future<DiaryModel> makeAndSubmitDiary(String diaryId, List<String> imgUrlList) async {
     if (selectedDiaryModel != null) {
       //기존 다이어리 수정할 경우
       for (String imgUrl in selectedDiaryModel!.imgUrlList!) {
@@ -261,6 +261,7 @@ class UploadDiaryController extends GetxController {
         diaryId: diaryId,
       );
       submitDiary(updatedDiary, diaryId);
+      return updatedDiary;
     } else {
       //새로운 다이어리 작성 할 경우
       DiaryModel updatedDiary = DiaryModel(
@@ -280,10 +281,11 @@ class UploadDiaryController extends GetxController {
         diaryId: diaryId,
       );
       submitDiary(updatedDiary, diaryId);
+      return updatedDiary;
     }
   }
 
-  Future uploadDiary() async {
+  Future<DiaryModel> uploadDiary() async {
     var uuid = Uuid();
     //기존 다이어리 수정의 경우 기존 diaryId 사용하면 됨.
     String diaryId =
@@ -293,6 +295,8 @@ class UploadDiaryController extends GetxController {
     if (selectedImgFiles.isNotEmpty) {
       imgUrlList = await uploadSelectedImages();
     } //selectedImages 에 아무것도 없으면(null) 이미지 없이 그냥 diary 업로딩 한다
-    await makeAndSubmitDiary(diaryId, imgUrlList);
+    DiaryModel updatedDiary = await makeAndSubmitDiary(diaryId, imgUrlList);
+    return updatedDiary;
   }
+
 }
