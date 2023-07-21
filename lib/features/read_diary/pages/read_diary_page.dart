@@ -20,16 +20,16 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
   int? tabIndex;
   String? myNickname;
   String? bukkungNickname;
-  String? mySogam;
-  String? bukkungSogam;
+  String? myComment;
+  String? bukkungComment;
 
   getSogam() {
     if (AuthController.to.user.value.uid == selectedDiaryModel.creatorUserID) {
-      mySogam = selectedDiaryModel.creatorSogam;
-      bukkungSogam = selectedDiaryModel.bukkungSogam;
+      myComment = selectedDiaryModel.creatorSogam;
+      bukkungComment = selectedDiaryModel.bukkungSogam;
     } else {
-      bukkungSogam = selectedDiaryModel.creatorSogam;
-      mySogam = selectedDiaryModel.bukkungSogam;
+      bukkungComment = selectedDiaryModel.creatorSogam;
+      myComment = selectedDiaryModel.bukkungSogam;
     }
   }
 

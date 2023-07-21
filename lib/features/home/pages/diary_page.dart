@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
@@ -148,32 +149,71 @@ class DiaryPage extends GetView<DiaryPageController> {
               ),
               child: Row(
                 children: [
-                  Container(
-                    height: 85,
-                    width: 70,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: CachedNetworkImageProvider(
-                            diaryModel.imgUrlList![0]),
-                      ),
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
-                      ),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          spreadRadius: 3,
-                          blurRadius: 5,
-                          offset: Offset(5, 5), // Offset(수평, 수직)
+                  Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 6, top: 1),
+                        height: 85,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: CachedNetworkImageProvider(
+                                diaryModel.imgUrlList![0]),
+                          ),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            bottomRight: Radius.circular(10),
+                          ),
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              spreadRadius: 3,
+                              blurRadius: 5,
+                              offset: Offset(5, 5), // Offset(수평, 수직)
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Positioned(
+                        child: GestureDetector(
+                          onTap: () {
+                            openAlertDialog(
+                                title: '다이어리 소감 미작성',
+                                content: '다이어리 소감을 모두 작성 해 주세요',
+                                btnText: AuthController.to.user.value.uid ==
+                                        diaryModel.creatorUserID
+                                    ? '짝꿍에게 소감 작성 요청'
+                                    : '소감 작성하러 가기',
+                                secondButtonText: '돌아가기',
+                                function: () {
+                                  if (AuthController.to.user.value.uid ==
+                                      diaryModel.creatorUserID) {
+                                    Get.to(() => UploadDiaryPage(),
+                                        arguments: diaryModel);
+                                  } else {
+                                    //todo: 알림 작성
+                                  }
+                                });
+                          },
+                          child: Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                  color: Colors.red, shape: BoxShape.circle),
+                              child: Icon(
+                                Icons.question_mark,
+                                size: 10,
+                                color: Colors.white,
+                              )),
+                        ),
+                      )
+                    ],
                   ),
                   SizedBox(
                     width: 30,

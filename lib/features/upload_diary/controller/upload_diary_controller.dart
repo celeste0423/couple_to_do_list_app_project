@@ -64,7 +64,9 @@ class UploadDiaryController extends GetxController {
       diaryCategory(selectedDiaryModel!.category!);
       diaryDateTime(selectedDiaryModel!.date);
       locationController.text = selectedDiaryModel!.location!;
-      contentController.text = selectedDiaryModel!.creatorSogam!;
+      if(selectedDiaryModel!.creatorUserID == AuthController.to.user.value.uid)
+      {contentController.text = selectedDiaryModel!.creatorSogam!;}
+      else{contentController.text = selectedDiaryModel!.bukkungSogam ?? '';}
       if (selectedDiaryModel!.imgUrlList != []) {
         _addNetworkImgToFile();
       }
