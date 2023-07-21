@@ -13,12 +13,12 @@ if (flutterRoot == null) {
 //버전 설정
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = '2'
 }
 //버전 이름 설정
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '0.1'
+    flutterVersionName = '0.0.1'
 }
 
 apply plugin: 'com.android.application'
@@ -53,7 +53,8 @@ android {
 
     defaultConfig {
         // application Id 설정
-        applicationId "com.example.couple_to_do_list_app"
+        applicationId "com.teambukkung.bukkunglist"
+//        applicationId "com.example.couple_to_do_list_app"
 //        applicationId "com.teambukkung.bukkunglist"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.

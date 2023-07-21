@@ -7,50 +7,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:395268185816:android:5ed06c5b0d8594a844c1ad",
+        "mobilesdk_app_id": "1:395268185816:android:a773ed26c893145344c1ad",
         "android_client_info": {
-          "package_name": "com.example.couple_to_do_list_app"
+          "package_name": "com.teambukkung.bukkunglist"
         }
       },
       "oauth_client": [
         {
-          "client_id": "395268185816-0pidk02lcqskv8asg927rhukfrqssp7g.apps.googleusercontent.com",
+          "client_id": "395268185816-968chi3o517kusthc9ha5m8isi6g6qan.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.couple_to_do_list_app",
-            "certificate_hash": "f28d83a6abf9aee303a2e4e83194e31cb6996d40"
-          }
-        },
-        {
-          "client_id": "395268185816-7b0d8ar8e03jaej454e64cvdtk0hok6r.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.couple_to_do_list_app",
-            "certificate_hash": "763bbd586dffe48c31d9b8c4beeff25dd7bde56e"
-          }
-        },
-        {
-          "client_id": "395268185816-os06440rir7hare8e4jkqd8jit13vfq3.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.couple_to_do_list_app",
-            "certificate_hash": "eac388d0ec65d6cf7a2d4abc85cac50930601052"
-          }
-        },
-        {
-          "client_id": "395268185816-rckbdri0bslppfhpr2kof1quundbc6bi.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.couple_to_do_list_app",
-            "certificate_hash": "208886cdc185ad809745ff1b6153c58715a5ee71"
-          }
-        },
-        {
-          "client_id": "395268185816-vtm9b9n7d67hqr9rja6h5k1bfdgdi3g3.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.couple_to_do_list_app",
+            "package_name": "com.teambukkung.bukkunglist",
             "certificate_hash": "a24f74e9940df6e0c70deea62df9023479ae8bc0"
+          }
+        },
+        {
+          "client_id": "395268185816-aq4dsol6v8a8gpvpksgg5ottgig5eljk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teambukkung.bukkunglist",
+            "certificate_hash": "f28d83a6abf9aee303a2e4e83194e31cb6996d40"
           }
         },
         {
