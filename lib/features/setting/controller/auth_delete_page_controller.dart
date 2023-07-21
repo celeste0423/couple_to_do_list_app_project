@@ -18,7 +18,8 @@ class AuthDeletePageController extends GetxController {
     _uploadFeedback();
     //uid 임시저장
     String? uid = AuthController.to.user.value.uid;
-
+    String? groupId = AuthController.to.user.value.groupId;
+    String? myGender = AuthController.to.user.value.gender;
     //auth 삭제 전 재인증
     openAlertDialog(
         title: '삭제',
@@ -66,10 +67,23 @@ class AuthDeletePageController extends GetxController {
     FirebaseAuth.instance.currentUser!.delete();
     //유저 파이어스토어 삭제
     FirebaseFirestore.instance.collection('users').doc(uid).delete();
-    //Todo: 그룹 파이어스토어 삭제
 
-    //로그아웃
-    await UserRepository.signOut();
+    //짝꿍의 user data가 파이어스토어에 없는지 확인 후 group 삭제 진행
+    final snapshot1 = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
+        .get();
+    Map<String, dynamic> data = snapshot1.data() as Map<String, dynamic>;
+    String? femaleUid = data['femaleUid'];
+    String? maleUid = data['maleUid'];
+    String? bukkungUid = myGender=='male'? femaleUid : maleUid;
+    final snapshot2 = await  FirebaseFirestore.instance.collection('users').doc(bukkungUid).get();
+    if (!snapshot2.exists){
+      //짝꿍의 user data가 파이어스토어에 없을 떄 (짝꿍이 이미 탈퇴를했을 때) 그룹 삭제진행
+      FirebaseFirestore.instance.collection('groups').doc(groupId).delete();
+    }
+      //로그아웃
+      await UserRepository.signOut();
     openAlertDialog(
       title: '계정 탈퇴가 완료되었습니다.',
       function: () {
