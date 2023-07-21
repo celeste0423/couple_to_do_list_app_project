@@ -124,10 +124,8 @@ class DiaryPage extends GetView<DiaryPageController> {
           },
           onDoubleTap: () {
             controller.indexSelection(diaryModel);
-            Get.to(
-              () => ReadDiaryPage(),
-              arguments: controller.selectedDiary.value,
-            );
+            controller.diaryListTileNavigation();
+
           },
           child: Obx(
             () => Container(
@@ -153,7 +151,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                     alignment: Alignment.topRight,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(right: 6, top: 1),
+                        margin: EdgeInsets.only(right: 4, top: 1),
                         height: 85,
                         width: 70,
                         decoration: BoxDecoration(
@@ -203,15 +201,16 @@ class DiaryPage extends GetView<DiaryPageController> {
                                 });
                           },
                           child: Container(
-                              width: 20,
-                              height: 20,
+                              width: 10,
+                              height: 10,
                               decoration: BoxDecoration(
                                   color: Colors.red, shape: BoxShape.circle),
-                              child: Icon(
-                                Icons.question_mark,
-                                size: 10,
-                                color: Colors.white,
-                              )),
+                              // child: Icon(
+                              //   Icons.question_mark,
+                              //   size: 10,
+                              //   color: Colors.white,
+                              // )
+                          ),
                         ),
                       )
                     ],
@@ -509,10 +508,7 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
           child: CustomIconButton(
             onTap: () {
               if (controller.diaryList[tabIndex].isNotEmpty) {
-                Get.to(
-                  () => ReadDiaryPage(),
-                  arguments: controller.selectedDiary.value,
-                );
+                controller.diaryListTileNavigation();
               } else {
                 openAlertDialog(title: '다이어리를 추가해주세요');
               }
