@@ -844,45 +844,44 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 ),
               ),
             ),
-            if (isDelete)
-              Positioned(
-                right: 0,
-                child: CustomIconButton(
-                  onTap: () {
-                    // final updatedList = controller.selectedList.value.copyWith(
-                    //   listId: bukkungListModel.listId,
-                    //   title: bukkungListModel.title,
-                    //   content: bukkungListModel.content,
-                    //   location: bukkungListModel.location,
-                    //   category: bukkungListModel.category,
-                    //   imgUrl: bukkungListModel.imgUrl,
-                    //   imgId: bukkungListModel.imgId,
-                    //   madeBy: bukkungListModel.madeBy,
-                    //   likedUsers: bukkungListModel.likedUsers,
-                    //   likeCount: bukkungListModel.likeCount,
-                    //   viewCount: bukkungListModel.viewCount,
-                    // );
-                    controller.indexSelection(bukkungListModel);
-                    openAlertDialog(
-                      title: '정말로 지우시겠습니까?',
-                      secondButtonText: '취소',
-                      function: () {
-                        controller.listDelete();
-                        Get.back();
-                      },
-                    );
-                  },
-                  size: 30,
-                  icon: Icon(
-                    Icons.delete_outline,
-                    size: 20,
-                    color: Colors.white,
-                  ),
-                  backgroundColor: CustomColors.redbrown,
-                  shadowBlurRadius: 2,
-                  shadowOffset: Offset(1, 1),
+            Positioned(
+              right: 0,
+              child: CustomIconButton(
+                onTap: () {
+                  // final updatedList = controller.selectedList.value.copyWith(
+                  //   listId: bukkungListModel.listId,
+                  //   title: bukkungListModel.title,
+                  //   content: bukkungListModel.content,
+                  //   location: bukkungListModel.location,
+                  //   category: bukkungListModel.category,
+                  //   imgUrl: bukkungListModel.imgUrl,
+                  //   imgId: bukkungListModel.imgId,
+                  //   madeBy: bukkungListModel.madeBy,
+                  //   likedUsers: bukkungListModel.likedUsers,
+                  //   likeCount: bukkungListModel.likeCount,
+                  //   viewCount: bukkungListModel.viewCount,
+                  // );
+                  controller.indexSelection(bukkungListModel);
+                  openAlertDialog(
+                    title: '정말로 지우시겠습니까?',
+                    secondButtonText: '취소',
+                    function: () {
+                      controller.listDelete();
+                      Get.back();
+                    },
+                  );
+                },
+                size: 30,
+                icon: Icon(
+                  Icons.delete_outline,
+                  size: 20,
+                  color: Colors.white,
                 ),
+                backgroundColor: CustomColors.redbrown,
+                shadowBlurRadius: 2,
+                shadowOffset: Offset(1, 1),
               ),
+            ),
           ],
         ),
       ),
