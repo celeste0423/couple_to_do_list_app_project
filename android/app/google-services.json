@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "395268185816-l4vt2v5gif58uhrutpflmu9k8v8a6a53.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teambukkung.bukkunglist",
+            "certificate_hash": "39a40e6e794d092f7af4cdee9357235571907b02"
+          }
+        },
+        {
           "client_id": "395268185816-rpua4hh1iv5pa0mc2i675iggjsuc3dt2.apps.googleusercontent.com",
           "client_type": 3
         }
