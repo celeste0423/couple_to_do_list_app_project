@@ -187,7 +187,7 @@ class _WelcomePageState extends State<WelcomePage> {
         child: Column(
           children: [
             SizedBox(height: 20),
-            Expanded(flex: 3, child: _subTitle()),
+            Expanded(flex: 4, child: _subTitle()),
             Expanded(
               flex: 2,
               child: Padding(
