@@ -3,7 +3,6 @@ import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
-import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/level_icon.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
@@ -383,33 +382,33 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                                 ),
                               ),
                       ),
-                      SizedBox(width: 10),
-                      Row(
-                        children: [
-                          CategoryIcon(
-                            category: controller.selectedList.value.category ??
-                                '1travel',
-                            size: 25,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            controller.categoryToString[
-                                    controller.selectedList.value.category] ??
-                                '',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ],
-                      )
+                      // SizedBox(width: 10),
+                      // Row(
+                      //   children: [
+                      //     CategoryIcon(
+                      //       category: controller.selectedList.value.category ??
+                      //           '1travel',
+                      //       size: 25,
+                      //     ),
+                      //     SizedBox(width: 10),
+                      //     Text(
+                      //       controller.categoryToString[
+                      //               controller.selectedList.value.category] ??
+                      //           '',
+                      //       style: TextStyle(
+                      //         color: Colors.white,
+                      //         fontSize: 15,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // )
                     ],
                   ),
                   Row(
                     children: [
                       Image.asset(
                         'assets/icons/locationPinWhite.png',
-                        width: 20,
+                        width: 15,
                         color: Colors.white.withOpacity(0.9),
                         colorBlendMode: BlendMode.modulate,
                       ),
@@ -421,13 +420,13 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 15,
+                            fontSize: 13,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 15),
                   BkText(
                     controller.selectedList.value.content ?? '',
                     overflow: TextOverflow.ellipsis,
@@ -436,9 +435,10 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 17,
+                      height: 1.2,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -450,7 +450,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                               'by: ${controller.selectedList.value.madeBy}',
                               style: TextStyle(
                                 color: Colors.white.withOpacity(0.9),
-                                fontSize: 15,
+                                fontSize: 13,
                               ),
                             ),
                             SizedBox(width: 5),
@@ -468,7 +468,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                               ? Icons.favorite
                               : Icons.favorite_border,
                           color: Colors.white.withOpacity(0.9),
-                          size: 30,
+                          size: 25,
                         ),
                       ),
                     ],

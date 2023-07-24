@@ -4,7 +4,7 @@ import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/main_button.dart';
-import 'package:couple_to_do_list_app/widgets/title_text.dart';
+import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -16,44 +16,116 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
 
   PreferredSizeWidget _appBar() {
     return AppBar(
-        backgroundColor: CustomColors.lightPink,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 10),
+      backgroundColor: CustomColors.lightPink,
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(
+            Icons.close,
+            size: 35,
+          ),
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
           child: IconButton(
-            onPressed: () {
-              Get.back();
+            onPressed: () async {
+              if (controller.isUploading.value) {
+                print('버튼 비활성화');
+                null;
+              } else {
+                if (controller.isValid()) {
+                  print('업로드 중');
+                  controller.isUploading.value = true;
+                  DiaryModel updatedDiary = await controller.uploadDiary();
+                  Get.off(() => ReadDiaryPage(), arguments: updatedDiary);
+                } else {
+                  //Todo: 요소별로 경고 추가
+                  openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');
+                }
+              }
             },
             icon: Icon(
-              Icons.arrow_back_ios,
+              Icons.check,
               size: 35,
             ),
           ),
         ),
-        title: TitleText(
-          text: '다이어리',
-        ));
+      ],
+    );
+  }
+
+  Widget _titleTextField() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20),
+      child: TextField(
+        controller: controller.titleController,
+        maxLines: 1,
+        textInputAction: TextInputAction.done,
+        textAlign: TextAlign.start,
+        cursorColor: CustomColors.darkGrey,
+        maxLength: 15,
+        style: TextStyle(
+          color: CustomColors.darkGrey,
+          fontFamily: 'Pyeongchang',
+          fontSize: 30,
+        ),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
+          contentPadding: EdgeInsets.only(left: 15),
+          counterText: '',
+          hintText: '제목을 입력하세요',
+          hintStyle: TextStyle(
+            color: CustomColors.greyText,
+            fontFamily: 'Pyeongchang',
+            fontSize: 30,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _imagePicker() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      height: 210,
+      height: 390,
       child: Obx(() {
         return ListView(
           scrollDirection: Axis.horizontal,
           children: [
+            SizedBox(width: 30),
             Row(
               children: List.generate(
                 controller.selectedImgFiles[0].length,
                 (index) => Stack(clipBehavior: Clip.none, children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                      right: 10,
+                      bottom: 50,
+                      top: 10,
+                    ),
                     child: Container(
-                      width: 170,
-                      height: 170,
+                      width: 330,
+                      height: 330,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(60),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 15,
+                            spreadRadius: 0,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image:
@@ -63,7 +135,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                     ),
                   ),
                   Positioned(
-                    right: 0,
+                    right: 10,
                     top: 0,
                     child: GestureDetector(
                       onTap: () {
@@ -91,6 +163,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
               ),
             ),
             imageAddButton(),
+            SizedBox(width: 20),
           ],
         );
       }),
@@ -103,28 +176,230 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
         FocusManager.instance.primaryFocus?.unfocus();
         controller.pickMultipleImages();
       },
-      child: Container(
-        padding: EdgeInsets.all(10),
-        width: 170,
-        height: 170,
-        decoration: BoxDecoration(
-          color: CustomColors.lightGrey,
-          borderRadius: BorderRadius.circular(25),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 10,
+          right: 10,
+          bottom: 50,
+          top: 10,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Container(
+          width: 330,
+          height: 330,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(60),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 10,
+                spreadRadius: 0,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 60,
+                width: 60,
+                decoration: BoxDecoration(
+                  color: CustomColors.darkGrey,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 15),
+              Text(
+                '이미지 추가',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: CustomColors.darkGrey,
+                    fontWeight: FontWeight.w600),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _contentRow() {
+    return Positioned(
+      top: 410,
+      left: Get.width / 2 - 165,
+      child: Container(
+        width: 330,
+        height: 60,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(35),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              spreadRadius: 0,
+              offset: Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Row(
           children: [
-            SizedBox(
-              height: 35,
+            SizedBox(width: 20),
+            Row(
+              children: [
+                PngIcon(
+                  iconName: 'location-pin',
+                  iconSize: 30,
+                ),
+                SizedBox(width: 10),
+                Container(
+                  width: 120,
+                  child: TextField(
+                    controller: controller.locationController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 1,
+                    onChanged: (value) {},
+                    cursorColor: CustomColors.darkGrey,
+                    cursorHeight: 20,
+                    style: TextStyle(
+                      color: CustomColors.blackText,
+                      fontSize: 18,
+                      // decoration: TextDecoration.underline,
+                    ),
+                    maxLength: 20,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      counterText: '',
+                      hintText: '장소',
+                      hintStyle: TextStyle(
+                        color: CustomColors.greyText,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Image.asset(
-              'assets/icons/add.png',
-              width: 60,
+            Row(
+              children: [
+                PngIcon(
+                  iconName: 'category',
+                  iconSize: 30,
+                  iconColor: CustomColors.grey.withOpacity(0.5),
+                ),
+                SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    Get.dialog(_categoryDialog());
+                  },
+                  child: Obx(() {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        CategoryIcon(
+                          category: controller.diaryCategory.value ?? '',
+                          size: 35,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          controller.categoryToString[
+                                  controller.diaryCategory.value] ??
+                              '카테고리',
+                          style: TextStyle(
+                            color: controller.categoryToString[
+                                        controller.diaryCategory.value] ==
+                                    null
+                                ? CustomColors.greyText
+                                : CustomColors.blackText,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+              ],
             ),
-            Text(
-              '이미지 추가',
-              style: TextStyle(fontSize: 20, color: Colors.white),
-            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _contentTextField(BuildContext context) {
+    return Container(
+      color: CustomColors.backgroundLightGrey,
+      height: Get.height - 525,
+      child: Padding(
+        padding:
+            const EdgeInsets.only(left: 20, right: 20, top: 50, bottom: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: controller.contentController,
+              scrollPadding: const EdgeInsets.only(bottom: 300),
+              decoration: InputDecoration(
+                hintText: ' 소감은 어땠나요?',
+                hintStyle: TextStyle(
+                  color: CustomColors.lightGreyText,
+                  fontSize: 18,
+                  fontFamily: 'Bookk_mj',
+                ),
+                border: InputBorder.none,
+                counterText: '',
+              ),
+              cursorColor: CustomColors.darkGrey,
+              cursorHeight: 20,
+              style: TextStyle(
+                fontSize: 18,
+                fontFamily: 'Bookk_mj',
+                height: 1.2,
+              ),
+              keyboardType: TextInputType.multiline,
+              expands: false,
+              maxLines: 8,
+              maxLength: 140,
+            ),
+            GestureDetector(
+              onTap: () {
+                controller.datePicker(context);
+              },
+              child: Obx(() {
+                return Row(
+                  children: [
+                    PngIcon(
+                      iconName: 'calendar',
+                      iconColor: CustomColors.grey.withOpacity(0.5),
+                      iconSize: 25,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      controller.diaryDateTime.value == null
+                          ? '날짜'
+                          : DateFormat('yyyy-MM-dd')
+                              .format(controller.diaryDateTime.value!),
+                      style: TextStyle(
+                        color: controller.diaryDateTime.value == null
+                            ? CustomColors.greyText
+                            : CustomColors.blackText,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                );
+              }),
+            ),
           ],
         ),
       ),
@@ -233,145 +508,13 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 50,
-            width: (Get.width - holeDiameter) * 11 / 16,
-            child: TextField(
-              controller: controller.titleController,
-              maxLines: 1,
-              textInputAction: TextInputAction.done,
-              textAlign: TextAlign.start,
-              cursorColor: CustomColors.darkGrey,
-              cursorHeight: 25,
-              maxLength: 15,
-              style: TextStyle(
-                color: CustomColors.darkGrey,
-                fontSize: 25,
-              ),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 15),
-                counterText: '',
-                hintText: '제목을 입력하세요',
-                hintStyle: TextStyle(
-                  color: CustomColors.darkGrey,
-                  fontSize: 25,
-                ),
-              ),
-            ),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap: () {
-                  controller.datePicker(context);
-                },
-                child: Obx(() {
-                  return Container(
-                    width: (Get.width - 110 - holeDiameter - 20) * 1 / 2,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: CustomColors.grey),
-                      ),
-                    ),
-                    child: Text(
-                      controller.diaryDateTime.value == null
-                          ? '날짜'
-                          : DateFormat('yyyy-MM-dd')
-                              .format(controller.diaryDateTime.value!),
-                      style: TextStyle(
-                        color: controller.diaryDateTime.value == null
-                            ? CustomColors.greyText
-                            : CustomColors.blackText,
-                        fontSize: 20,
-                      ),
-                    ),
-                  );
-                }),
-              ),
               SizedBox(
                 width: 20,
               ),
-              GestureDetector(
-                onTap: () {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                  Get.dialog(_categoryDialog());
-                },
-                child: Obx(() {
-                  return Container(
-                    width: (Get.width - 110 - holeDiameter - 20) * 1 / 2,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CategoryIcon(
-                          category: controller.diaryCategory.value ?? '',
-                          size: 35,
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          controller.categoryToString[
-                                  controller.diaryCategory.value] ??
-                              '카테고리',
-                          style: TextStyle(
-                            color: controller.categoryToString[
-                                        controller.diaryCategory.value] ==
-                                    null
-                                ? CustomColors.greyText
-                                : CustomColors.blackText,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-              ),
             ],
-          ),
-          Container(
-            decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: CustomColors.grey))),
-            width: (Get.width - 100 - holeDiameter) * 11 / 16,
-            child: TextField(
-              controller: controller.locationController,
-              keyboardType: TextInputType.multiline,
-              maxLines: 1,
-              onChanged: (value) {},
-              cursorColor: CustomColors.darkGrey,
-              cursorHeight: 20,
-              style: TextStyle(
-                color: CustomColors.blackText,
-                fontSize: 18,
-                // decoration: TextDecoration.underline,
-              ),
-              maxLength: 20,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                counterText: '',
-                suffixIcon: Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Icon(
-                    Icons.location_on_outlined,
-                    color: CustomColors.lightGrey,
-                    size: 25,
-                  ),
-                ),
-                contentPadding: EdgeInsets.only(top: 20),
-                hintText: '장소/위치',
-                hintStyle: TextStyle(
-                  color: CustomColors.greyText,
-                  fontSize: 18,
-                ),
-              ),
-            ),
           ),
         ],
       );
@@ -430,10 +573,11 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                         child: TextField(
                           controller: controller.contentController,
                           decoration: InputDecoration(
-                            hintText: ' 소감 작성하기',
+                            hintText: ' 소감은 어땠나요?',
                             hintStyle: TextStyle(
                               color: CustomColors.lightGreyText,
                               fontSize: 18,
+                              fontFamily: 'Bookk_mj',
                             ),
                             border: InputBorder.none,
                           ),
@@ -441,6 +585,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                           cursorHeight: 20,
                           style: TextStyle(
                             fontSize: 18,
+                            fontFamily: 'Bookk_mj',
                           ),
                           keyboardType: TextInputType.multiline,
                           expands: false,
@@ -504,16 +649,22 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       child: Stack(
         children: [
           Scaffold(
-            resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: true,
             backgroundColor: CustomColors.lightPink,
             appBar: _appBar(),
-            body: Column(
-              children: [
-                _contentContainer(context),
-                _imagePicker(),
-                _buttonRow(),
-                SizedBox(height: 10)
-              ],
+            body: SingleChildScrollView(
+              child: Stack(
+                children: [
+                  Column(
+                    children: [
+                      _titleTextField(),
+                      _imagePicker(),
+                      _contentTextField(context),
+                    ],
+                  ),
+                  _contentRow(),
+                ],
+              ),
             ),
           ),
           Obx(
