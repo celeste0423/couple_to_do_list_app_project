@@ -92,7 +92,6 @@ class _WelcomePageState extends State<WelcomePage> {
               fontSize: 15,
             ),
             children: [
-              TextSpan(text: '회원가입 시 '),
               TextSpan(
                 text: '이용약관 ',
                 style: TextStyle(
@@ -116,6 +115,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.blue,
+                    fontSize: 20
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () async {
@@ -127,7 +127,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     }
                   },
               ),
-              TextSpan(text: '은 눌러서 확인하세요'),
+              TextSpan(text: '을 클릭하여 확인하세요'),
             ],
           ),
         ),
