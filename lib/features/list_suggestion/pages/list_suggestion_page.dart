@@ -447,7 +447,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                         child: Row(
                           children: [
                             Text(
-                              'by: ${controller.selectedList.value.madeBy}',
+                              'by: ${controller.selectedList.value.madeBy ?? ''}',
                               style: TextStyle(
                                 color: Colors.white.withOpacity(0.9),
                                 fontSize: 13,
