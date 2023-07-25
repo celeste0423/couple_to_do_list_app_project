@@ -98,6 +98,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.blue,
+                  fontSize: 20
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () async {

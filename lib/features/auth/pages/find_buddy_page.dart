@@ -96,10 +96,12 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           width: Get.width - 65,
           height: 30,
           child: useremail.length <= 22
-              ? Text(
-                  useremail,
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                )
+              ? Center(
+                child: Text(
+                    useremail,
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+              )
               : Marquee(
                   text: useremail,
                   pauseAfterRound: Duration(seconds: 1),
