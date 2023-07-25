@@ -122,6 +122,7 @@ class UserRepository {
       bool isInstalled = await kakao.isKakaoTalkInstalled();
       if (isInstalled) {
         try {
+          print('카카오 로그인 시도');
           await kakao.UserApi.instance.loginWithKakaoTalk();
           isLogined = true;
         } catch (e) {
@@ -138,7 +139,9 @@ class UserRepository {
       //로그인 완료 됐으면
       if (isLogined) {
         //커스텀 토큰 생성
+        print('커스텀 토큰 생성 시작');
         user = await kakao.UserApi.instance.me();
+        print(user!.kakaoAccount.toString());
         final customToken = await firebaseAuthDataSource.createCustomToken({
           'uid': user!.id.toString(),
           'email': user!.kakaoAccount!.email!,

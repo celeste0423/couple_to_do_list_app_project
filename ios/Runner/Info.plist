@@ -37,8 +37,17 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string></string>
-	</array>
+        <!-- common -->
+        <string>kakao${6343b85d09998d34e9261b1c6e5f4635}</string>
+
+        <!-- KakaoTalk login -->
+        <string>kakaokompassauth</string>
+        <string>storykompassauth</string>
+
+        <!-- KakaoLink -->
+        <string>kakaolink</string>
+        <string>kakaotalk-5.9.7</string>
+    </array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>

@@ -7,6 +7,7 @@ class FirebaseAuthRemoteDataSource {
 
     //user정보를 http로 전부 보내서 토큰을 받아옴
     final customTokenResponse = await http.post(Uri.parse(url), body: user);
+    print(customTokenResponse.body);
     return customTokenResponse.body;
   }
 }

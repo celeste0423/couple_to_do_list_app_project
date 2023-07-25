@@ -15,11 +15,14 @@ class KakaoLoginButton extends StatelessWidget {
         //커스텀 토큰 받아옴
         String? customToken = await AuthController.to.signInWithKakao();
         //파이어베이스 auth 등록
-        if (customToken == null || customToken == '') {
+        if (customToken == null ||
+            customToken == '' ||
+            customToken == 'Internal Server Error') {
           openAlertDialog(title: '로그인 실패');
         } else {
           AuthController.loginType = 'kakao';
           print('(kak btn) 로그인 타입 ${AuthController.loginType}');
+          print(customToken);
           await FirebaseAuth.instance.signInWithCustomToken(customToken);
         }
       },

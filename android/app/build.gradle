@@ -13,12 +13,12 @@ if (flutterRoot == null) {
 //버전 설정
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '5'
+    flutterVersionCode = '6'
 }
 //버전 이름 설정
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0.5'
+    flutterVersionName = '1.0.6'
 }
 
 apply plugin: 'com.android.application'
