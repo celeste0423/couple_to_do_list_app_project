@@ -20,5 +20,6 @@ class Constants {
   static String kakaoQuestionChat = "https://pf.kakao.com/_pTKhG/chat";
 
   //플레이 스토어 링크
-  static String playstoreurl = '';
+  static String playstoreurl =
+      'market://details?id=com.teambukkung.bukkunglist';
 }

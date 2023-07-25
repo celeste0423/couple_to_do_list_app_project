@@ -204,7 +204,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                               width: 10,
                               height: 10,
                               decoration: BoxDecoration(
-                                  color: Colors.red, shape: BoxShape.circle),
+                                  color: Colors.red, shape: BoxShape.circle,),
                               // child: Icon(
                               //   Icons.question_mark,
                               //   size: 10,
