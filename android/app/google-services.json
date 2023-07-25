@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "395268185816-2qq76ue1c5amu39gc1651g55bhmt0q5b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teambukkung.bukkunglist",
+            "certificate_hash": "d9256c8cea8bbee3e46064d52a408ea67445e6fd"
+          }
+        },
+        {
           "client_id": "395268185816-968chi3o517kusthc9ha5m8isi6g6qan.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -38,6 +46,14 @@
           }
         },
         {
+          "client_id": "395268185816-tpgjgj7mu7dv2a2v4alb7h6knemcj9e1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teambukkung.bukkunglist",
+            "certificate_hash": "763bbd586dffe48c31d9b8c4beeff25dd7bde56e"
+          }
+        },
+        {
           "client_id": "395268185816-rpua4hh1iv5pa0mc2i675iggjsuc3dt2.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -55,10 +71,11 @@
               "client_type": 3
             },
             {
-              "client_id": "395268185816-oh3kqdh07vcahvg75t6fj5j4ial3gsn9.apps.googleusercontent.com",
+              "client_id": "395268185816-0rpse44mgs8nvnk31ii9v3bft99e65it.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.coupleToDoListApp"
+                "bundle_id": "com.example.coupleToDoListApp",
+                "app_store_id": "6451405746"
               }
             }
           ]

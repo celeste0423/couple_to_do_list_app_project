@@ -243,7 +243,6 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                       child: Text(
                         myComment ?? '없음',
                         style: TextStyle(
-                            decoration: TextDecoration.underline,
                             color: CustomColors.greyText),
                       ),
                     )
@@ -314,7 +313,6 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                       child: Text(
                         bukkungComment ?? '없음',
                         style: TextStyle(
-                            decoration: TextDecoration.underline,
                             color: CustomColors.greyText),
                       ),
                     )
