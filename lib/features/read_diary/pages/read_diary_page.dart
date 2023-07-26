@@ -238,12 +238,13 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     circleHolesColumn(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 15.0),
-                      child: Text(
-                        myComment ?? '없음',
-                        style: TextStyle(
-                            color: CustomColors.greyText),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        child: Text(
+                          myComment ?? '없음',
+                          style: TextStyle(color: CustomColors.greyText),
+                        ),
                       ),
                     )
                   ],
@@ -308,14 +309,15 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     circleHolesColumn(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 15.0),
-                      child: Text(
-                        bukkungComment ?? '없음',
-                        style: TextStyle(
-                            color: CustomColors.greyText),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        child: Text(
+                          bukkungComment ?? '없음',
+                          style: TextStyle(color: CustomColors.greyText),
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
