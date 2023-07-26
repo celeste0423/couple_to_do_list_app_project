@@ -145,7 +145,7 @@ class SettingPage extends GetView<SettingPageController> {
               //Todo: FlutterShare package ios installation 필요 https://pub.dev/packages/share_plus
               //Todo : appstore link 바꿔놓기
               await Share.share(
-                  '버꿍리스트 \n https://play.google.com/store/apps/details?id=com.dentkim.balancegame&hl=ko',
+                  '버꿍리스트 \n https://play.google.com/store/apps/details?id=com.teambukkung.bukkunglist',
                   subject: '버꿍리스트');
             },
           ),
