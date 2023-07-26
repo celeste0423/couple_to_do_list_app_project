@@ -147,7 +147,7 @@ class MyPageController extends GetxController {
   Future<void> openChatUrl() async {
     Uri uri = Uri.parse(Constants.kakaoQuestionChat);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       openAlertDialog(title: '오류 발생');
     }
