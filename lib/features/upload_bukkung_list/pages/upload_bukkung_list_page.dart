@@ -35,17 +35,12 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                     Get.back();
                   }
                 : () {
-                    print('제목${controller.titleController.text}');
-                    print('제목${controller.listCategory.value}');
-                    print('제목${controller.locationController.text}');
-                    print('제목${controller.listDateTime.value}');
-                    print('제목${controller.contentController.text}');
                     if (controller.titleController.text == '') {
                       openAlertDialog(title: '제목을 입력해 주세요');
                     } else if (controller.listCategory.value == '') {
                       openAlertDialog(title: '카테고리를 선택해주세요');
                     } else if (controller.locationController.text == '') {
-                      openAlertDialog(title: '위치를 선택해주세요');
+                      openAlertDialog(title: '위치를 작성해주세요');
                     } else if (controller.listDateTime.value == null) {
                       openAlertDialog(title: '날짜를 선택해주세요');
                     } else if (controller.contentController == '') {
