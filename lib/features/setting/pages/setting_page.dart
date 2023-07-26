@@ -180,7 +180,6 @@ class SettingPage extends GetView<SettingPageController> {
               '버전정보',
               style: TextStyle(fontSize: 20),
             ),
-            //Todo: 버전정보 1.0.0 수정하기
             onTap: () async {
               PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
@@ -189,7 +188,9 @@ class SettingPage extends GetView<SettingPageController> {
               String version = packageInfo.version;
               String buildNumber = packageInfo.buildNumber;
               openAlertDialog(
-                  title: '버전정보', content: '버전: $version\n빌드번호: $buildNumber');
+                title: '버전정보',
+                content: '버전: $version\n빌드번호: $buildNumber',
+              );
             },
           ),
         ],
