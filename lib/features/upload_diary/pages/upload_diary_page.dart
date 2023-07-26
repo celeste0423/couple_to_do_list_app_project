@@ -16,6 +16,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
 
   PreferredSizeWidget _appBar() {
     return AppBar(
+
       backgroundColor: CustomColors.lightPink,
       leading: Padding(
         padding: const EdgeInsets.only(left: 10),
@@ -348,7 +349,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   Widget _contentTextField(BuildContext context) {
     return Container(
       color: CustomColors.backgroundLightGrey,
-      height: Get.height - 525,
+      // height: Get.height - 520,
       child: Padding(
         padding:
             const EdgeInsets.only(left: 20, right: 20, top: 50, bottom: 20),
@@ -661,7 +662,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
           Scaffold(
             resizeToAvoidBottomInset: true,
             backgroundColor: CustomColors.lightPink,
-            appBar: _appBar(),
+             appBar: _appBar(),
             body: SingleChildScrollView(
               child: Stack(
                 children: [
