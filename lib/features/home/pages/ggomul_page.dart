@@ -122,7 +122,7 @@ class GgomulPage extends GetView<GgomulPageController> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PcText(
-                '꼬물이',
+                '버꿍이',
                 style: TextStyle(fontSize: 35),
               ),
               Obx(

@@ -105,6 +105,7 @@ class MyPageController extends GetxController {
   void setDayMet(BuildContext context) async {
     final selectedDate = await showDatePicker(
       context: context,
+      helpText: '처음 만난 날짜를 선택하세요',
       initialDate: AuthController.to.group.value.dayMet ?? DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime(2100),
@@ -147,7 +148,7 @@ class MyPageController extends GetxController {
   Future<void> openChatUrl() async {
     Uri uri = Uri.parse(Constants.kakaoQuestionChat);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       openAlertDialog(title: '오류 발생');
     }

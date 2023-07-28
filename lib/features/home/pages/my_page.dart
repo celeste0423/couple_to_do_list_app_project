@@ -30,11 +30,12 @@ class MyPage extends GetView<MyPageController> {
 
   Widget _myPage(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 00),
       child: Stack(
         children: [
           _cardBackground(),
           Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               _nickname(context),
               _achievement(),
@@ -51,7 +52,7 @@ class MyPage extends GetView<MyPageController> {
     return Column(
       children: [
         Container(
-          height: 220,
+          height: 200,
           decoration: BoxDecoration(
             color: CustomColors.mainPink,
             borderRadius: BorderRadius.only(
@@ -87,12 +88,11 @@ class MyPage extends GetView<MyPageController> {
     return Padding(
       padding: const EdgeInsets.only(
         left: 10,
-        top: 30,
+        top: 10,
         bottom: 20,
         right: 10,
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 70,
@@ -161,6 +161,7 @@ class MyPage extends GetView<MyPageController> {
                           width: 250,
                           height: 60,
                           child: FittedBox(
+                            alignment: Alignment.centerLeft,
                             fit: BoxFit.scaleDown,
                             child: RichText(
                               text: TextSpan(
@@ -226,6 +227,7 @@ class MyPage extends GetView<MyPageController> {
                       width: 250,
                       child: controller.isDayMet.value
                           ? FittedBox(
+                        alignment: Alignment.centerLeft,
                               fit: BoxFit.scaleDown,
                               child: RichText(
                                 text: TextSpan(

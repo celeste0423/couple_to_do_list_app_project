@@ -45,7 +45,17 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   Get.off(() => ReadDiaryPage(), arguments: updatedDiary);
                 } else {
                   //Todo: 요소별로 경고 추가
-                  openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');
+                  if (controller.titleController.text == '') {
+                    openAlertDialog(title: '제목을 입력해 주세요');
+                  } else if (controller.diaryCategory.value == '') {
+                    openAlertDialog(title: '카테고리를 선택해주세요');
+                  } else if (controller.locationController.text == '') {
+                    openAlertDialog(title: '위치를 작성해주세요');
+                  } else if (controller.diaryDateTime.value == null) {
+                    openAlertDialog(title: '날짜를 선택해주세요');
+                  } else if (controller.contentController == '') {
+                    openAlertDialog(title: '소감을 작성해주세요');
+                  }
                 }
               }
             },
@@ -338,7 +348,10 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   Widget _contentTextField(BuildContext context) {
     return Container(
       color: CustomColors.backgroundLightGrey,
-      height: Get.height - 525,
+      height: Get.height -
+          494-
+          context.mediaQueryPadding.top -
+          context.mediaQueryPadding.bottom,
       child: Padding(
         padding:
             const EdgeInsets.only(left: 20, right: 20, top: 50, bottom: 20),
@@ -368,7 +381,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
               ),
               keyboardType: TextInputType.multiline,
               expands: false,
-              maxLines: 8,
+              maxLines: 5,
               maxLength: 140,
             ),
             GestureDetector(

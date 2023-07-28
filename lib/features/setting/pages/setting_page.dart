@@ -145,7 +145,7 @@ class SettingPage extends GetView<SettingPageController> {
               //Todo: FlutterShare package ios installation 필요 https://pub.dev/packages/share_plus
               //Todo : appstore link 바꿔놓기
               await Share.share(
-                  '버꿍리스트 \n https://play.google.com/store/apps/details?id=com.dentkim.balancegame&hl=ko',
+                  '버꿍리스트 \n https://play.google.com/store/apps/details?id=com.teambukkung.bukkunglist',
                   subject: '버꿍리스트');
             },
           ),
@@ -180,7 +180,6 @@ class SettingPage extends GetView<SettingPageController> {
               '버전정보',
               style: TextStyle(fontSize: 20),
             ),
-            //Todo: 버전정보 1.0.0 수정하기
             onTap: () async {
               PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
@@ -189,7 +188,9 @@ class SettingPage extends GetView<SettingPageController> {
               String version = packageInfo.version;
               String buildNumber = packageInfo.buildNumber;
               openAlertDialog(
-                  title: '버전정보', content: '버전: $version\n빌드번호: $buildNumber');
+                title: '버전정보',
+                content: '버전: $version\n빌드번호: $buildNumber',
+              );
             },
           ),
         ],

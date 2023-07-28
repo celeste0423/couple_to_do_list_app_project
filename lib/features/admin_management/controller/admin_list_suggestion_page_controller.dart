@@ -325,32 +325,32 @@ class AdminListSuggestionPageController extends GetxController
     switch (type) {
       case 'like':
         {
-          List<BukkungListModel> firstList = await ListSuggestionRepository()
-              .getNewSuggestionListByLike(_pageSize, null, null);
+          List<BukkungListModel> firstList =
+              await getNewSuggestionListByLike(_pageSize, null, null);
           listByLikeStreamController.add(firstList);
         }
       case 'date':
         {
-          List<BukkungListModel> firstList = await ListSuggestionRepository()
-              .getNewSuggestionListByDate(_pageSize, null, null);
+          List<BukkungListModel> firstList =
+              await getNewSuggestionListByDate(_pageSize, null, null);
           listByDateStreamController.add(firstList);
         }
       case 'view':
         {
-          List<BukkungListModel> firstList = await ListSuggestionRepository()
-              .getNewSuggestionListByView(_pageSize, null, null);
+          List<BukkungListModel> firstList =
+              await getNewSuggestionListByView(_pageSize, null, null);
           listByViewStreamController.add(firstList);
         }
       case 'favorite':
         {
-          List<BukkungListModel> firstList = await ListSuggestionRepository()
-              .getNewFavoriteList(_pageSize, null, null);
+          List<BukkungListModel> firstList =
+              await getNewFavoriteList(_pageSize, null, null);
           favoriteListStreamController.add(firstList);
         }
       default:
         {
-          List<BukkungListModel> firstList = await ListSuggestionRepository()
-              .getNewSuggestionListByLike(_pageSize, null, null);
+          List<BukkungListModel> firstList =
+              await getNewSuggestionListByLike(_pageSize, null, null);
           listByLikeStreamController.add(firstList);
         }
     }
@@ -363,8 +363,8 @@ class AdminListSuggestionPageController extends GetxController
           if (listByLikeScrollController.position.pixels ==
               listByLikeScrollController.position.maxScrollExtent) {
             if (!isListByLikeLastPage) {
-              List<BukkungListModel> nextList = await ListSuggestionRepository()
-                  .getNewSuggestionListByLike(
+              List<BukkungListModel> nextList =
+                  await getNewSuggestionListByLike(
                       _pageSize, listByLikeKeyPage, listByLikePrevList);
               listByLikeStreamController.add(nextList);
             }
@@ -375,8 +375,8 @@ class AdminListSuggestionPageController extends GetxController
           if (listByDateScrollController.position.pixels ==
               listByDateScrollController.position.maxScrollExtent) {
             if (!isListByDateLastPage) {
-              List<BukkungListModel> nextList = await ListSuggestionRepository()
-                  .getNewSuggestionListByDate(
+              List<BukkungListModel> nextList =
+                  await getNewSuggestionListByDate(
                       _pageSize, listByDateKeyPage, listByDatePrevList);
               listByDateStreamController.add(nextList);
             }
@@ -387,8 +387,8 @@ class AdminListSuggestionPageController extends GetxController
           if (listByViewScrollController.position.pixels ==
               listByViewScrollController.position.maxScrollExtent) {
             if (!isListByViewLastPage) {
-              List<BukkungListModel> nextList = await ListSuggestionRepository()
-                  .getNewSuggestionListByView(
+              List<BukkungListModel> nextList =
+                  await getNewSuggestionListByView(
                       _pageSize, listByViewKeyPage, listByViewPrevList);
               listByViewStreamController.add(nextList);
             }
@@ -399,8 +399,8 @@ class AdminListSuggestionPageController extends GetxController
           if (favoriteListScrollController.position.pixels ==
               favoriteListScrollController.position.maxScrollExtent) {
             if (!isListByViewLastPage) {
-              List<BukkungListModel> nextList = await ListSuggestionRepository()
-                  .getNewSuggestionListByView(
+              List<BukkungListModel> nextList =
+                  await getNewSuggestionListByView(
                       _pageSize, favoriteListKeyPage, favoriteListPrevList);
               favoriteListStreamController.add(nextList);
             }
@@ -411,14 +411,141 @@ class AdminListSuggestionPageController extends GetxController
           if (listByLikeScrollController.position.pixels ==
               listByLikeScrollController.position.maxScrollExtent) {
             if (!isListByLikeLastPage) {
-              List<BukkungListModel> nextList = await ListSuggestionRepository()
-                  .getNewSuggestionListByLike(
+              List<BukkungListModel> nextList =
+                  await getNewSuggestionListByLike(
                       _pageSize, listByLikeKeyPage, listByLikePrevList);
               listByLikeStreamController.add(nextList);
             }
           }
         }
     }
+  }
+
+  Future<List<BukkungListModel>> getNewSuggestionListByLike(
+    int pageSize,
+    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
+    List<BukkungListModel>? prevList,
+  ) async {
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .orderBy('likeCount', descending: true)
+        .orderBy('createdAt', descending: true);
+    if (keyPage != null) {
+      query = query.startAfterDocument(keyPage);
+    }
+    query = query.limit(pageSize);
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+    List<BukkungListModel> bukkungLists = prevList ?? [];
+    for (var bukkungList in querySnapshot.docs) {
+      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+    }
+    //키페이지 설정
+    QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
+        querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
+    listByLikeKeyPage = lastDocument;
+    //이전 리스트 저장
+    listByLikePrevList = bukkungLists;
+    //마지막 페이지인지 여부 확인
+    if (querySnapshot.docs.length < pageSize) {
+      isListByLikeLastPage = true;
+    }
+    return bukkungLists;
+  }
+
+  Future<List<BukkungListModel>> getNewSuggestionListByDate(
+    int pageSize,
+    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
+    List<BukkungListModel>? prevList,
+  ) async {
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .orderBy('createdAt', descending: true)
+        .orderBy('likeCount', descending: true);
+    if (keyPage != null) {
+      query = query.startAfterDocument(keyPage);
+    }
+    query = query.limit(pageSize);
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+    List<BukkungListModel> bukkungLists = prevList ?? [];
+    for (var bukkungList in querySnapshot.docs) {
+      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+    }
+    //키페이지 설정
+    QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
+        querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
+    listByDateKeyPage = lastDocument;
+    //이전 리스트 저장
+    listByDatePrevList = bukkungLists;
+    //마지막 페이지인지 여부 확인
+    if (querySnapshot.docs.length < pageSize) {
+      isListByDateLastPage = true;
+    }
+    return bukkungLists;
+  }
+
+  Future<List<BukkungListModel>> getNewSuggestionListByView(
+    int pageSize,
+    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
+    List<BukkungListModel>? prevList,
+  ) async {
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .orderBy('viewCount', descending: true)
+        .orderBy('likeCount', descending: true)
+        .orderBy('createdAt', descending: true);
+    if (keyPage != null) {
+      query = query.startAfterDocument(keyPage);
+    }
+    query = query.limit(pageSize);
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+    List<BukkungListModel> bukkungLists = prevList ?? [];
+    for (var bukkungList in querySnapshot.docs) {
+      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+    }
+    //키페이지 설정
+    QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
+        querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
+    listByViewKeyPage = lastDocument;
+    //이전 리스트 저장
+    listByViewPrevList = bukkungLists;
+    //마지막 페이지인지 여부 확인
+    if (querySnapshot.docs.length < pageSize) {
+      isListByViewLastPage = true;
+    }
+    return bukkungLists;
+  }
+
+  Future<List<BukkungListModel>> getNewFavoriteList(
+    int pageSize,
+    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
+    List<BukkungListModel>? prevList,
+  ) async {
+    String currentUserUid = AuthController.to.user.value.uid!;
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .where('likedUsers', arrayContains: currentUserUid)
+        .orderBy('likeCount', descending: true)
+        .orderBy('createdAt', descending: true);
+    if (keyPage != null) {
+      query = query.startAfterDocument(keyPage);
+    }
+    query = query.limit(pageSize);
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+    List<BukkungListModel> bukkungLists = prevList ?? [];
+    for (var bukkungList in querySnapshot.docs) {
+      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+    }
+    //키페이지 설정
+    QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
+        querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
+    favoriteListKeyPage = lastDocument;
+    //이전 리스트 저장
+    favoriteListPrevList = bukkungLists;
+    //마지막 페이지인지 여부 확인
+    if (querySnapshot.docs.length < pageSize) {
+      isfavoriteListLastPage = true;
+    }
+    return bukkungLists;
   }
 
   @override
