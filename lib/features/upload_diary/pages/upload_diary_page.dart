@@ -16,7 +16,6 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
 
   PreferredSizeWidget _appBar() {
     return AppBar(
-
       backgroundColor: CustomColors.lightPink,
       leading: Padding(
         padding: const EdgeInsets.only(left: 10),
@@ -349,7 +348,10 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   Widget _contentTextField(BuildContext context) {
     return Container(
       color: CustomColors.backgroundLightGrey,
-      // height: Get.height - 520,
+      height: Get.height -
+          494-
+          context.mediaQueryPadding.top -
+          context.mediaQueryPadding.bottom,
       child: Padding(
         padding:
             const EdgeInsets.only(left: 20, right: 20, top: 50, bottom: 20),
@@ -379,7 +381,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
               ),
               keyboardType: TextInputType.multiline,
               expands: false,
-              maxLines: 8,
+              maxLines: 5,
               maxLength: 140,
             ),
             GestureDetector(
@@ -662,7 +664,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
           Scaffold(
             resizeToAvoidBottomInset: true,
             backgroundColor: CustomColors.lightPink,
-             appBar: _appBar(),
+            appBar: _appBar(),
             body: SingleChildScrollView(
               child: Stack(
                 children: [
