@@ -72,6 +72,12 @@ dependencies:
   shared_preferences: ^2.2.0
   rename: ^2.1.1
 
+flutter_icons:
+  ios: true
+  android: false
+  image_path: "assets/images/bukkung_list_icon_ios.png"
+  remove_alpha_ios: true
+
 flutter_native_splash:
   color: "#FAA7A7"
   image: assets/images/bukkung_list_icon.png
@@ -92,6 +98,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
