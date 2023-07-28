@@ -64,9 +64,13 @@ class UploadDiaryController extends GetxController {
       diaryCategory(selectedDiaryModel!.category!);
       diaryDateTime(selectedDiaryModel!.date);
       locationController.text = selectedDiaryModel!.location!;
-      if(selectedDiaryModel!.creatorUserID == AuthController.to.user.value.uid)
-      {contentController.text = selectedDiaryModel!.creatorSogam!;}
-      else{contentController.text = selectedDiaryModel!.bukkungSogam ?? '';}
+      if (selectedDiaryModel!.creatorUserID ==
+          AuthController.to.user.value.uid) {
+        contentController.text = selectedDiaryModel!.creatorSogam!;
+      }
+      else {
+        contentController.text = selectedDiaryModel!.bukkungSogam ?? '';
+      }
       if (selectedDiaryModel!.imgUrlList != []) {
         _addNetworkImgToFile();
       }
@@ -136,7 +140,7 @@ class UploadDiaryController extends GetxController {
   void placeAutocomplete(String query) async {
     String apiKey = 'AIzaSyASuuGiXo0mFRd2jm_vL5mHBo4r4uCTJZw';
     Uri uri =
-        Uri.https("maps.googleapis.com", 'maps/api/place/autocomplete/json', {
+    Uri.https("maps.googleapis.com", 'maps/api/place/autocomplete/json', {
       "input": query,
       "key": apiKey,
       "language": "ko",
@@ -146,7 +150,7 @@ class UploadDiaryController extends GetxController {
 
     if (response != null) {
       PlaceAutoCompleteResponse result =
-          PlaceAutoCompleteResponse.parseAutocompleteResult(response);
+      PlaceAutoCompleteResponse.parseAutocompleteResult(response);
       if (result.predictions != null) {
         placePredictions = result.predictions!;
       }
@@ -197,8 +201,8 @@ class UploadDiaryController extends GetxController {
         return; // 이미지 선택 종료
       }
       for (var pickerImgIndex = 0;
-          pickerImgIndex < pickerImgList.length;
-          pickerImgIndex++) {
+      pickerImgIndex < pickerImgList.length;
+      pickerImgIndex++) {
         selectedImgFiles[0].add(File(pickerImgList[pickerImgIndex].path));
         selectedImgFiles[1].add(null);
       }
@@ -237,7 +241,8 @@ class UploadDiaryController extends GetxController {
     return imgUrlList;
   }
 
-  Future<DiaryModel> makeAndSubmitDiary(String diaryId, List<String> imgUrlList) async {
+  Future<DiaryModel> makeAndSubmitDiary(String diaryId,
+      List<String> imgUrlList) async {
     if (selectedDiaryModel != null) {
       //기존 다이어리 수정할 경우
       for (String imgUrl in selectedDiaryModel!.imgUrlList!) {
@@ -248,12 +253,18 @@ class UploadDiaryController extends GetxController {
         }
       }
       DiaryModel updatedDiary = selectedDiaryModel!.copyWith(
-               title: titleController.text,
+        title: titleController.text,
         category: diaryCategory.value,
         location: locationController.text,
         imgUrlList: imgUrlList,
-        creatorSogam: AuthController.to.user.value.uid == selectedDiaryModel!.creatorUserID ? contentController.text: selectedDiaryModel!.creatorSogam,
-        bukkungSogam: AuthController.to.user.value.uid == selectedDiaryModel!.creatorUserID ? selectedDiaryModel!.bukkungSogam: contentController.text,
+        creatorSogam: AuthController.to.user.value.uid ==
+            selectedDiaryModel!.creatorUserID
+            ? contentController.text
+            : selectedDiaryModel!.creatorSogam,
+        bukkungSogam: AuthController.to.user.value.uid ==
+            selectedDiaryModel!.creatorUserID
+            ? selectedDiaryModel!.bukkungSogam
+            : contentController.text,
         date: diaryDateTime.value,
         // 여긴selectedDiaryModel null 아닐때만이니까 이미 creatorUserID,createdAt 존재 함.
         lastUpdatorID: AuthController.to.user.value.uid,
@@ -289,7 +300,9 @@ class UploadDiaryController extends GetxController {
     var uuid = Uuid();
     //기존 다이어리 수정의 경우 기존 diaryId 사용하면 됨.
     String diaryId =
-        selectedDiaryModel != null ? selectedDiaryModel!.diaryId! : uuid.v1();
+    selectedDiaryModel != null ? selectedDiaryModel!.diaryId != null
+        ? selectedDiaryModel!.diaryId! : uuid.v1()
+        : uuid.v1();
     List<String> imgUrlList = [];
     //selectedImages 에 사진file이 있으면
     if (selectedImgFiles.isNotEmpty) {

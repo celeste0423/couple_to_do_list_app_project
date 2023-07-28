@@ -92,17 +92,15 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(width: 15),
-        SizedBox(
-          width: Get.width - 65,
-          height: 30,
-          child: useremail.length <= 22
-              ? Center(
-                child: Text(
-                    useremail,
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
+        useremail.length <= 22
+            ? Text(
+                useremail,
+                style: TextStyle(fontSize: 20, color: Colors.white),
               )
-              : Marquee(
+            : SizedBox(
+                width: Get.width - 65,
+                height: 30,
+                child: Marquee(
                   text: useremail,
                   pauseAfterRound: Duration(seconds: 1),
                   style: TextStyle(fontSize: 20, color: Colors.white),
@@ -110,7 +108,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                   scrollAxis: Axis.horizontal,
                   blankSpace: 20.0,
                 ),
-        ),
+              ),
         SizedBox(width: 10),
         Icon(
           Icons.copy,
