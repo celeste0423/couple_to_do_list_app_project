@@ -25,13 +25,12 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
     super.initState();
-    initPackageInfo();
     print(AuthController.to.user.value.email);
   }
 
-  Future<void> initPackageInfo() async {
+  Future<String> getVersionInfo() async {
     final info = await PackageInfo.fromPlatform();
-    packageInfo = info;
+    return info.version;
   }
 
   Widget _subTitle() {
@@ -77,12 +76,6 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget _infoText() {
-    String? version;
-    if (packageInfo == null) {
-      version = '';
-    } else {
-      version = packageInfo!.version;
-    }
     return Column(
       children: [
         RichText(
@@ -95,10 +88,9 @@ class _WelcomePageState extends State<WelcomePage> {
               TextSpan(
                 text: '이용약관 ',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                  fontSize: 20
-                ),
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                    fontSize: 20),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () async {
                     Uri uri = Uri.parse(Constants.serviceTermsNotionUrl);
@@ -113,10 +105,9 @@ class _WelcomePageState extends State<WelcomePage> {
               TextSpan(
                 text: '공지사항',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                    fontSize: 20
-                ),
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                    fontSize: 20),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () async {
                     Uri uri = Uri.parse(Constants.noticeNotionUrl);
@@ -134,13 +125,18 @@ class _WelcomePageState extends State<WelcomePage> {
         SizedBox(
           height: 5,
         ),
-        Text(
-          'v $version',
-          style: TextStyle(
-            color: CustomColors.darkGrey,
-            fontSize: 10,
-          ),
-        ),
+        FutureBuilder<String>(
+            future: getVersionInfo(),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              final version = snapshot.data!;
+              return Text(
+                'v $version',
+                style: TextStyle(
+                  color: CustomColors.darkGrey,
+                  fontSize: 10,
+                ),
+              );
+            })
       ],
     );
   }

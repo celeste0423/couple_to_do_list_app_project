@@ -88,14 +88,18 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
 
   Widget _emailCopyButton() {
     final String useremail = widget.email;
+    print(useremail);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(width: 15),
-        useremail.length <= 22
-            ? Text(
-                useremail,
-                style: TextStyle(fontSize: 20, color: Colors.white),
+        useremail.length <= 24
+            ? SizedBox(
+                height: 30,
+                child: Text(
+                  useremail,
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
               )
             : SizedBox(
                 width: Get.width - 65,
