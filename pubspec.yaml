@@ -72,7 +72,7 @@ dependencies:
   shared_preferences: ^2.2.0
   rename: ^2.1.1
 
-flutter_icons:
+flutter_launcher_icons:
   ios: true
   android: false
   image_path: "assets/images/bukkung_list_icon_ios.png"
