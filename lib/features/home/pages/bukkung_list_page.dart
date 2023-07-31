@@ -512,7 +512,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
 
   @override
   Widget build(BuildContext context) {
-    //Get.put(BukkungListPageController());
+    Get.put(BukkungListPageController());
     return Scaffold(
       appBar: _appBar(),
       body: Column(

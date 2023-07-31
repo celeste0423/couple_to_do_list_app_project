@@ -227,7 +227,7 @@ class MyPage extends GetView<MyPageController> {
                       width: 250,
                       child: controller.isDayMet.value
                           ? FittedBox(
-                        alignment: Alignment.centerLeft,
+                              alignment: Alignment.centerLeft,
                               fit: BoxFit.scaleDown,
                               child: RichText(
                                 text: TextSpan(
@@ -483,7 +483,7 @@ class MyPage extends GetView<MyPageController> {
 
   @override
   Widget build(BuildContext context) {
-    // Get.put(MyPageController());
+    Get.put(MyPageController());
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();

@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
-import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
@@ -125,7 +124,6 @@ class DiaryPage extends GetView<DiaryPageController> {
           onDoubleTap: () {
             controller.indexSelection(diaryModel);
             controller.diaryListTileNavigation();
-
           },
           child: Obx(
             () => Container(
@@ -178,41 +176,43 @@ class DiaryPage extends GetView<DiaryPageController> {
                           ],
                         ),
                       ),
-                      if(diaryModel.bukkungSogam==null)
-                      Positioned(
-                        child: GestureDetector(
-                          onTap: () {
-                            openAlertDialog(
-                                title: '다이어리 소감 미작성',
-                                content: '다이어리 소감을 모두 작성 해 주세요',
-                                btnText: AuthController.to.user.value.uid ==
-                                        diaryModel.creatorUserID
-                                    ? '짝꿍에게 소감 작성 요청'
-                                    : '소감 작성하러 가기',
-                                secondButtonText: '돌아가기',
-                                function: () {
-                                  if (AuthController.to.user.value.uid ==
-                                      diaryModel.creatorUserID) {
-                                    //todo: 알림 작성
-                                  } else {
-                                    Get.to(() => UploadDiaryPage(),
-                                        arguments: diaryModel);
-                                  }
-                                });
-                          },
-                          child: Container(
+                      if (diaryModel.bukkungSogam == null)
+                        Positioned(
+                          child: GestureDetector(
+                            onTap: () {
+                              openAlertDialog(
+                                  title: '다이어리 소감 미작성',
+                                  content: '다이어리 소감을 모두 작성 해 주세요',
+                                  btnText: AuthController.to.user.value.uid ==
+                                          diaryModel.creatorUserID
+                                      ? '짝꿍에게 소감 작성 요청'
+                                      : '소감 작성하러 가기',
+                                  secondButtonText: '돌아가기',
+                                  function: () {
+                                    if (AuthController.to.user.value.uid ==
+                                        diaryModel.creatorUserID) {
+                                      //todo: 알림 작성
+                                    } else {
+                                      Get.to(() => UploadDiaryPage(),
+                                          arguments: diaryModel);
+                                    }
+                                  });
+                            },
+                            child: Container(
                               width: 10,
                               height: 10,
                               decoration: BoxDecoration(
-                                  color: Colors.red, shape: BoxShape.circle,),
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
                               // child: Icon(
                               //   Icons.question_mark,
                               //   size: 10,
                               //   color: Colors.white,
                               // )
+                            ),
                           ),
-                        ),
-                      )
+                        )
                     ],
                   ),
                   SizedBox(
@@ -326,7 +326,7 @@ class DiaryPage extends GetView<DiaryPageController> {
 
   @override
   Widget build(BuildContext context) {
-    // Get.put(DiaryPageController());
+    Get.put(DiaryPageController());
     return Scaffold(
       backgroundColor: CustomColors.lightPink,
       appBar: AppBar(

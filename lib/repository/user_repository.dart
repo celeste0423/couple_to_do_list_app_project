@@ -274,10 +274,9 @@ class UserRepository {
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(doc.id)
-            .update({'groupId': groupId});
+        FirebaseFirestore.instance.collection('users').doc(doc.id).update(
+          {'groupId': groupId},
+        );
       });
     });
   }

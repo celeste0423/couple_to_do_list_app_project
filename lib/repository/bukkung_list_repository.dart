@@ -78,13 +78,18 @@ class BukkungListRepository {
   }
 
   static Future<void> setGroupBukkungList(
-      BukkungListModel bukkungListData, String listId) async {
+    BukkungListModel bukkungListData,
+    String listId,
+    String? groupId,
+  ) async {
     await FirebaseFirestore.instance
         .collection('groups')
-        .doc(AuthController.to.user.value.groupId)
+        .doc(groupId ?? AuthController.to.user.value.groupId)
         .collection('bukkungLists')
         .doc(listId)
         .set(bukkungListData.toJson());
+    print('(buk repo) 유저그룹id ${AuthController.to.user.value.groupId}');
+    print('(buk repo) 그룹id ${AuthController.to.group.value.uid}');
   }
 
   static Future<void> updateGroupBukkungList(

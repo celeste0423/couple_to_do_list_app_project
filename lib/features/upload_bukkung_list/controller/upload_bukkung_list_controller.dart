@@ -342,7 +342,8 @@ class UploadBukkungListController extends GetxController {
 
   void _submitBukkungList(
       BukkungListModel bukkungListData, String listId, bool isSelected) async {
-    await BukkungListRepository.setGroupBukkungList(bukkungListData, listId);
+    await BukkungListRepository.setGroupBukkungList(
+        bukkungListData, listId, null);
 
     //공개되었을 경우
     if (isPublic.value == true && isSelected == false) {
@@ -379,7 +380,8 @@ class UploadBukkungListController extends GetxController {
     String listId,
     bool isSelected,
   ) async {
-    await BukkungListRepository.setGroupBukkungList(bukkungListData, listId);
+    await BukkungListRepository.setGroupBukkungList(
+        bukkungListData, listId, null);
 
     //공개되었을 경우
     if (isPublic.value == true && isSelected == false) {

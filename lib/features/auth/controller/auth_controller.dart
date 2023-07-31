@@ -174,6 +174,9 @@ class AuthController extends GetxController {
       print('uuid로 가입 시작(cont) ${groupId}');
       await UserRepository.updateGroupId(myData, groupId);
       await UserRepository.updateGroupId(buddyData, groupId);
+      user(user.value.copyWith(groupId: groupId));
+      group(group.value.copyWith(uid: groupId));
+      print(user.value.groupId);
       //기본 버꿍리스트 업로드
       BukkungListModel initialModel = BukkungListModel.init(user.value);
       BukkungListModel initialBukkungList = initialModel.copyWith(
@@ -185,7 +188,7 @@ class AuthController extends GetxController {
         imgUrl: Constants.baseImageUrl,
       );
       await BukkungListRepository.setGroupBukkungList(
-          initialBukkungList, 'initial${group.value.uid}');
+          initialBukkungList, 'initial${group.value.uid}', groupId);
       return GroupIdStatus.createdGroupId;
     }
   }
