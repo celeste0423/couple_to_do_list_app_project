@@ -126,17 +126,34 @@ class _WelcomePageState extends State<WelcomePage> {
           height: 5,
         ),
         FutureBuilder<String>(
-            future: getVersionInfo(),
-            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-              final version = snapshot.data!;
-              return Text(
-                'v $version',
-                style: TextStyle(
-                  color: CustomColors.darkGrey,
-                  fontSize: 10,
-                ),
-              );
-            })
+          future: getVersionInfo(),
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (snapshot.connectionState == ConnectionState.none ||
+                snapshot.connectionState == ConnectionState.waiting) {
+              // Future가 생성되지 않았거나 실행 중인 경우 로딩 상태를 표시할 수 있습니다.
+              return CircularProgressIndicator(); // 로딩 스피너 또는 다른 로딩 UI
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              // Future가 완료된 경우 데이터를 가져와서 표시합니다.
+              if (snapshot.hasData) {
+                final version = snapshot.data!;
+                return Text(
+                  'v $version',
+                  style: TextStyle(
+                    color: CustomColors.darkGrey,
+                    fontSize: 10,
+                  ),
+                );
+              } else {
+                // Future가 데이터를 가져오지 못한 경우에 대한 처리를 할 수 있습니다.
+                return Text('Error: Failed to get version information');
+              }
+            } else {
+              // active 상태는 실제로 FutureBuilder에서 거의 사용되지 않습니다.
+              // 따라서 필요에 따라 처리를 추가할 수 있습니다.
+              return Text('Unknown error');
+            }
+          },
+        ),
       ],
     );
   }
