@@ -235,6 +235,7 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
             secondButtonText: '아니요',
             function: () async {
               DiaryModel updatedDiaryModel = await controller.listCompleted();
+              Get.back();
               Get.off(() => UploadDiaryPage(), arguments: updatedDiaryModel);
             },
           );
