@@ -6,13 +6,14 @@ import 'package:couple_to_do_list_app/widgets/main_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AdminPage extends StatelessWidget {
   const AdminPage({Key? key}) : super(key: key);
 
-  upLoadDefaultBukkungList() async {
+  Future updateImageUrl() async {
     CollectionReference fireStorecollection =
-    FirebaseFirestore.instance.collection('bukkungLists');
+        FirebaseFirestore.instance.collection('bukkungLists');
     final storageRef = FirebaseStorage.instance.ref();
 
     for (int i = 1; i <= 150; i++) {
@@ -43,6 +44,14 @@ class AdminPage extends StatelessWidget {
     }
   }
 
+  Future uploadBukkungListWeb() async {
+    const webAppUrl =
+        'https://script.google.com/macros/s/AKfycbyhNL44tfuaZgH9EZHDLrVNhWZMAlQA6hGXDBp3F-PvaQ4EqvlfqJMLUAHL3Ws2ILFm/exec';
+    final Uri url = Uri.parse(webAppUrl);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch webapp : url = $url');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,15 +67,15 @@ class AdminPage extends StatelessWidget {
               MainButton(
                 buttonText: '기본버꿍리스트 업로드',
                 buttonColor: Colors.grey,
-                onTap: () async {
-                  await upLoadDefaultBukkungList();
-                  openAlertDialog(title: '업로드 완료');
-                },
+                onTap: uploadBukkungListWeb
               ),
               MainButton(
                 buttonText: '사진 URL: Storage->FireStore',
                 buttonColor: Colors.grey,
-                onTap: () {},
+                onTap: () async {
+                  await updateImageUrl();
+                  openAlertDialog(title: '이미지 url 업데이트 완료');
+                },
               ),
               MainButton(
                 buttonText: '추천 버꿍리스트 페이지',
