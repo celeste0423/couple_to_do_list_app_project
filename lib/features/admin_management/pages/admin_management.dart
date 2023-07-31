@@ -46,7 +46,7 @@ class AdminPage extends StatelessWidget {
 
   Future uploadBukkungListWeb() async {
     const webAppUrl =
-        'https://script.google.com/macros/s/AKfycbyhNL44tfuaZgH9EZHDLrVNhWZMAlQA6hGXDBp3F-PvaQ4EqvlfqJMLUAHL3Ws2ILFm/exec';
+        'https://script.google.com/macros/s/AKfycbwELdl7GGdOAcWe-CbzX4RSyqxcoLCYK9R5keeLxTelDOegUUi2Cfi0Y-Q5ECLy5p-i/exec';
     final Uri url = Uri.parse(webAppUrl);
     if (!await launchUrl(url)) {
       throw Exception('Could not launch webapp : url = $url');
