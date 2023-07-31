@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
@@ -97,7 +98,14 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
     double width = Get.width;
     if (selectedDiaryModel.imgUrlList!.isEmpty) {
       return Container(
-        color: Colors.black,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: NetworkImage(
+                Constants.baseImageUrl
+            ),
+          ),
+        ),
         height: width - 60,
       );
     } else if (selectedDiaryModel.imgUrlList!.length == 1) {
