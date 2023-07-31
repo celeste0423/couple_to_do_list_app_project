@@ -86,6 +86,7 @@ class AuthController extends GetxController {
   Future<UserModel?> loginUser(String uid) async {
     try {
       //email과 맞는 유저 데이터를 firebase 에서 가져온다.
+      print('(auth cont) uid ${uid}');
       var userData = await UserRepository.loginUserByUid(uid);
       //신규 유저일 경우 userData에 null값 반환됨
       if (userData != null) {

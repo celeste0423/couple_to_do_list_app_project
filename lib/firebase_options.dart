@@ -58,7 +58,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCpqmtWVVqH0zZQftdy8-NkyCQO50ayvh0',
-    appId: '1:395268185816:android:5ed06c5b0d8594a844c1ad',
+    appId: '1:395268185816:android:a773ed26c893145344c1ad',
     messagingSenderId: '395268185816',
     projectId: 'bukkunglist',
     storageBucket: 'bukkunglist.appspot.com',
@@ -70,7 +70,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '395268185816',
     projectId: 'bukkunglist',
     storageBucket: 'bukkunglist.appspot.com',
-    iosClientId: '395268185816-oh3kqdh07vcahvg75t6fj5j4ial3gsn9.apps.googleusercontent.com',
+    androidClientId: '395268185816-0pidk02lcqskv8asg927rhukfrqssp7g.apps.googleusercontent.com',
+    iosClientId: '395268185816-0rpse44mgs8nvnk31ii9v3bft99e65it.apps.googleusercontent.com',
     iosBundleId: 'com.example.coupleToDoListApp',
   );
 }

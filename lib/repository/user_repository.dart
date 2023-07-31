@@ -5,9 +5,9 @@ import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in/google_sign_in.dart' as google;
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart' as apple;
 import 'package:uuid/uuid.dart';
 
 class UserRepository {
@@ -43,10 +43,10 @@ class UserRepository {
   }
 
   static Future<UserCredential> iosSignInWithApple() async {
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
+    final appleCredential = await apple.SignInWithApple.getAppleIDCredential(
       scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
+        apple.AppleIDAuthorizationScopes.email,
+        apple.AppleIDAuthorizationScopes.fullName,
       ],
     );
 
@@ -59,12 +59,12 @@ class UserRepository {
   }
 
   static Future<UserCredential> androidSignInWithApple() async {
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
+    final appleCredential = await apple.SignInWithApple.getAppleIDCredential(
       scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
+        apple.AppleIDAuthorizationScopes.email,
+        apple.AppleIDAuthorizationScopes.fullName,
       ],
-      webAuthenticationOptions: WebAuthenticationOptions(
+      webAuthenticationOptions: apple.WebAuthenticationOptions(
         clientId: "com.example.coupleToDoListApp.web",
         redirectUri: Uri.parse(
             "https://bottlenose-tungsten-rumba.glitch.me/callbacks/sign_in_with_apple"),
@@ -81,24 +81,30 @@ class UserRepository {
 
   static Future<UserCredential> signInWithGoogle() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final google.GoogleSignIn googleSignIn = google.GoogleSignIn(
+      scopes: [
+        'email',
+      ],
+    );
     // final GoogleSignIn googleSignIn = GoogleSignIn(
     //     scopes: ['email', "https://www.googleapis.com/auth/userinfo.profile"]);
     //구글 로그인 페이지 표시
-    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    final google.GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
     if (googleUser == null) {
-      return openAlertDialog(title: '로그인에 실패했습니다');
+      return openAlertDialog(title: '로그인 정보가 없습니다.');
     }
     //로그인 성공, 유저정보 가져오기
-    final GoogleSignInAuthentication googleAuth =
+    final google.GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
+    print('(user repo) idtoken ${googleAuth.idToken}');
+    print('(user repo) accesstoken ${googleAuth.accessToken}');
     //파이어베이스 인증 정보 로그인
     final OAuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    print(credential);
+    print('(user repo) credential ${credential}');
     // //사용자 정보 가져오기
     // final userInfo = await googleSignIn.currentUser;
     // AuthController.nickName = userInfo!.displayName;
@@ -158,7 +164,7 @@ class UserRepository {
   }
 
   static Future signOut() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final google.GoogleSignIn googleSignIn = google.GoogleSignIn();
     try {
       if (AuthController.to.user.value.loginType == 'google') {
         //이전 로그인 기록 지우기
@@ -224,10 +230,10 @@ class UserRepository {
 
       if (data.size == 0) {
         //아직 회원가입이 안되었기 때문에 파이어스토어에 추가해야함
-        // print('uid 일치 데이터 없음(repo)');
+        print('uid 일치 데이터 없음(repo)');
         return null;
       } else {
-        // print('가입 이력 존재(repo)${data.docs.first.data().toString()}');
+        print('가입 이력 존재(repo)${data.docs.first.data().toString()}');
         return UserModel.fromJson(data.docs.first.data());
       }
     } catch (e) {
@@ -257,7 +263,7 @@ class UserRepository {
     print('_auth.currentUser!.delete(); 완료');
     await _auth.signOut();
     print('_auth.signOut(); 완료');
-    await GoogleSignIn().signOut();
+    await google.GoogleSignIn().signOut();
     print('google signout 완료');
   }
 
