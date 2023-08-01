@@ -756,6 +756,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           controller.viewCount();
         },
         onDoubleTap: () {
+          controller.indexSelection(bukkungListModel);
           Get.to(
             () => UploadBukkungListPage(),
             arguments: [controller.selectedList.value, true],
