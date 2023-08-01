@@ -16,4 +16,16 @@ class InitBinding extends Bindings {
     // Get.put(GgomulPageController(), permanent: true);
     Get.put(MyPageController(), permanent: true);
   }
+
+  void refreshControllers() {
+    Get.delete<BukkungListPageController>();
+    Get.delete<DiaryPageController>();
+    // Get.delete<GgomulPageController>();
+    Get.delete<MyPageController>();
+
+    Get.put(BukkungListPageController(), permanent: true);
+    Get.put(DiaryPageController(), permanent: true);
+    // Get.put(GgomulPageController(), permanent: true);
+    Get.put(MyPageController(), permanent: true);
+  }
 }

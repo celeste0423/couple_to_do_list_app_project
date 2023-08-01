@@ -5,6 +5,7 @@ ThemeData baseTheme() {
   final ThemeData base = ThemeData();
   return base.copyWith(
     scaffoldBackgroundColor: CustomColors.backgroundLightGrey,
+    brightness: Brightness.light,
     //텍스트 기본 설정
     textTheme: TextTheme(
       labelLarge: TextStyle(
@@ -159,5 +160,6 @@ ThemeData baseTheme() {
       selectionHandleColor: CustomColors.mainPink,
       selectionColor: CustomColors.mainPink,
     ),
+    canvasColor: Color.fromRGBO(10, 10, 10, 1),
   );
 }

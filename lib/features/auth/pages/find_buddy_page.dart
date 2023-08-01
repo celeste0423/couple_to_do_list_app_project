@@ -273,6 +273,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
         } else {
           //BukkungListPageController initbinding을 여기다 해야 할 거 같음
           //InitBinding.additionalBinding();
+          // InitBinding().refreshControllers();
           Get.offAll(() => HomePage());
         }
       },
@@ -295,6 +296,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
             print('그룹 찾음');
             //BukkungListPageController initbinding을 여기다 해야 할 거 같음
             //InitBinding.additionalBinding();
+            // InitBinding().refreshControllers();
             Get.offAll(() => HomePage());
           }
         },
