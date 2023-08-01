@@ -136,9 +136,10 @@ class AuthController extends GetxController {
 
   Future signup(UserModel signupUser) async {
     //회원가입 버튼에 사용
+    //todo:도성: 여기 수정해야 됨!
     var result = await UserRepository.firestoreSignup(signupUser);
     if (result) {
-      loginUser(signupUser.email!);
+      loginUser(signupUser.uid!);
     }
   }
 

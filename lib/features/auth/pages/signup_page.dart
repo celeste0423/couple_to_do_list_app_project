@@ -28,8 +28,6 @@ class SignupPageState extends State<SignupPage> {
   final List<bool> isSelected = <bool>[false, false];
   String? gender = null;
 
-  final AuthController authController = AuthController();
-
   TextEditingController nicknameController = TextEditingController();
   TextEditingController birthdayController = TextEditingController();
 
@@ -278,7 +276,7 @@ class SignupPageState extends State<SignupPage> {
               birthday: birthdayDateTime,
             );
             await AuthController.to.signup(signupUser);
-            Get.to(() => FindBuddyPage(
+            Get.off(() => FindBuddyPage(
                   email: widget.email,
                 ));
           }
