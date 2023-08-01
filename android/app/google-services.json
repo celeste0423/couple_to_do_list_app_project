@@ -54,7 +54,15 @@
           }
         },
         {
-          "client_id": "395268185816-b3gtect0uvu36l5os6915jvcp1vqtk99.apps.googleusercontent.com",
+          "client_id": "395268185816-udbgmnuv7c5fhhtr52h5eq4t4hra28v1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teambukkung.bukkunglist",
+            "certificate_hash": "eac388d0ec65d6cf7a2d4abc85cac50930601052"
+          }
+        },
+        {
+          "client_id": "395268185816-a5v7lkfvru9hlo0lbp6v99cpcn97ldu1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -67,7 +75,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "395268185816-b3gtect0uvu36l5os6915jvcp1vqtk99.apps.googleusercontent.com",
+              "client_id": "395268185816-a5v7lkfvru9hlo0lbp6v99cpcn97ldu1.apps.googleusercontent.com",
               "client_type": 3
             },
             {
