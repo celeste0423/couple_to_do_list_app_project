@@ -237,7 +237,6 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
             secondButtonText: '아니요',
             secondfunction: (){
               Get.back();//dialog back
-              Get.back();//버꿍리스트 페이지 back
             },
             mainfunction: () async {
               Get.back();//다이알로드 꺼지고,
@@ -247,17 +246,12 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
                   btnText: '네',
                   content: '버꿍이 진척도가 올라갔어요!',
                   secondButtonText: '아니요',
-                  function: () {
-                    // 네를 눌렀을 경우,
-                    Get.back();
-                    Get.off(() => UploadDiaryPage(), arguments: updatedDiaryModel);
-                  });
-              if(!ismainButtonClicked){
-                // 네를 안눌렀을 경우,
-                // 즉 Secondary button was clicked or dialog was dismissed by tapping outside the dialog box
-               //todo: tapping outside했을때 get.back 필요한가?
+                  );
+              if (ismainButtonClicked) {
+                // Main button was clicked
+                Get.off(() => UploadDiaryPage(), arguments: updatedDiaryModel);
+              }else{
                 Get.back();
-
               }
             },
           );

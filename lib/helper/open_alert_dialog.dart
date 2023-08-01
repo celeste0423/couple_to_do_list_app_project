@@ -73,7 +73,6 @@ Future<bool> openBoolAlertDialog({
   String? content,
   String? btnText,
   String? secondButtonText,
-  VoidCallback? function,
 }) async {
   bool mainButtonClicked = false;
 
@@ -120,13 +119,9 @@ Future<bool> openBoolAlertDialog({
               : Container(),
           TextButton(
             onPressed: () {
-              if (function != null) {
-                function();
-              } else {
-                mainButtonClicked =
-                    true; // Set to true when main button is pressed
-                Get.back(result: true);
-              }
+              mainButtonClicked =
+                  true; // Set to true when main button is pressed
+              Get.back(result: true);
             },
             child: Text(
               btnText ?? "확인",
