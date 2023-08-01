@@ -1,10 +1,8 @@
 import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/auth/pages/welcome_page.dart';
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/features/home/pages/home_page.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
-import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:flutter/material.dart';
@@ -291,8 +289,10 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       child: FloatingActionButton(
         elevation: 0,
         onPressed: () async {
-          print(authController.findGroupId(widget.email));
-          if (await authController.findGroupId(widget.email)) {
+          print('리프레시 버튼 이메일${widget.email}');
+          print('그룹 찾기${await authController.findGroupId(widget.email)}');
+          if (await authController.findGroupId(widget.email) ?? false) {
+            print('그룹 찾음');
             //BukkungListPageController initbinding을 여기다 해야 할 거 같음
             //InitBinding.additionalBinding();
             Get.offAll(() => HomePage());

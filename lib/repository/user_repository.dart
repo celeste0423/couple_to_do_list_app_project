@@ -292,21 +292,27 @@ class UserRepository {
     }
   }
 
-  static Future<bool> findGroupId(String email) async {
+  static Future<bool?> findGroupId(String email) async {
     try {
-      FirebaseFirestore.instance
+      var querySnapshot = await FirebaseFirestore.instance
           .collection('users')
           .where('email', isEqualTo: email)
-          .get()
-          .then((querySnapshot) {
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
         var groupId = querySnapshot.docs[0].data()['groupId'];
+        print('검색한 그룹Id (user repo) $groupId');
         if (groupId == null) {
+          print('그룹 아이디 없음(user repo)');
           return false;
         } else {
+          print('그룹 아이디 있음(user repo)');
           return true;
         }
-      });
-      return false;
+      } else {
+        // If no document is found with the given email, return false
+        return false;
+      }
     } catch (e) {
       print(e.toString());
       return false;

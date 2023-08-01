@@ -181,6 +181,7 @@ class AuthController extends GetxController {
       BukkungListModel initialModel = BukkungListModel.init(user.value);
       BukkungListModel initialBukkungList = initialModel.copyWith(
         title: '함께 버꿍리스트 앱 설치하기',
+        listId: 'initial${groupId}',
         category: '6etc',
         location: '버꿍리스트 앱',
         content:
@@ -188,12 +189,13 @@ class AuthController extends GetxController {
         imgUrl: Constants.baseImageUrl,
       );
       await BukkungListRepository.setGroupBukkungList(
-          initialBukkungList, 'initial${group.value.uid}', groupId);
+          initialBukkungList, 'initial${groupId}', groupId);
       return GroupIdStatus.createdGroupId;
     }
   }
 
-  Future<bool> findGroupId(String email) async {
+  Future<bool?> findGroupId(String email) async {
+    print('그룹 있는지 bool ${await UserRepository.findGroupId(email)}');
     return await UserRepository.findGroupId(email);
   }
 }
