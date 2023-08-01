@@ -24,7 +24,7 @@ class AuthDeletePageController extends GetxController {
     openAlertDialog(
         title: '삭제',
         content: '원활한 삭제를 위해 계정 인증 부탁드립니다.',
-        function: () async {
+        mainfunction: () async {
           String loginType = await UserRepository.getLoginType();
           if (loginType == 'google') {
             final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -86,7 +86,7 @@ class AuthDeletePageController extends GetxController {
       await UserRepository.signOut();
     openAlertDialog(
       title: '계정 탈퇴가 완료되었습니다.',
-      function: () {
+      mainfunction: () {
         SystemNavigator.pop();
       },
     );

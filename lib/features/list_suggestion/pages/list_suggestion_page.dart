@@ -866,7 +866,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     openAlertDialog(
                       title: '정말로 지우시겠습니까?',
                       secondButtonText: '취소',
-                      function: () {
+                      mainfunction: () {
                         controller.listDelete();
                         Get.back();
                       },

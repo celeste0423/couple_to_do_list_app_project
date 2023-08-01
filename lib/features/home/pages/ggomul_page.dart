@@ -373,7 +373,7 @@ class GgomulPage extends GetView<GgomulPageController> {
                       title: '정말로 지우시겠습니까?',
                       content: '지운 내용은 복구할 수 없습니다',
                       secondButtonText: '취소',
-                      function: () {
+                      mainfunction: () {
                         controller.deleteCompletedList(bukkungListModel);
                         Get.back();
                       },

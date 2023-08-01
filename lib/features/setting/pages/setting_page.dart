@@ -231,7 +231,7 @@ class SettingPage extends GetView<SettingPageController> {
                 title: '로그아웃 하시겠습니까?',
                 btnText: '로그아웃',
                 secondButtonText: '취소',
-                function: () async {
+                mainfunction: () async {
                   await controller.signOut();
                   //todo: get.back 이거 왜 2개 있는거고 애초에 갯백이 필요한가? root에 있는 streambuilder있는데... screeen stack을 없애려고 하는건가
                   Get.back();

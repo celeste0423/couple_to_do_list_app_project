@@ -188,7 +188,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                                       ? '짝꿍에게 소감 작성 요청'
                                       : '소감 작성하러 가기',
                                   secondButtonText: '돌아가기',
-                                  function: () {
+                                  mainfunction: () {
                                     if (AuthController.to.user.value.uid ==
                                         diaryModel.creatorUserID) {
                                       //todo: 알림 작성
@@ -291,7 +291,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                               content: '이 다이어리를 지우시겠습니까?',
                               btnText: '삭제',
                               secondButtonText: '취소',
-                              function: () {
+                              mainfunction: () {
                                 controller.deleteDiary(
                                     controller.selectedDiary.value);
                                 Get.back();
