@@ -274,7 +274,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           //BukkungListPageController initbinding을 여기다 해야 할 거 같음
           //InitBinding.additionalBinding();
           // InitBinding().refreshControllers();
-          Get.offAll(() => HomePage());
+          print("authcontroller에 들어갔나 ${AuthController.to.group.value.uid}");
+          Get.off(() => HomePage());
         }
       },
       width: 150,
@@ -297,7 +298,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
             //BukkungListPageController initbinding을 여기다 해야 할 거 같음
             //InitBinding.additionalBinding();
             // InitBinding().refreshControllers();
-            Get.offAll(() => HomePage());
+            Get.off(() => HomePage());
           }
         },
         child: Icon(

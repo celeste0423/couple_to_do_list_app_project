@@ -34,7 +34,7 @@ class Root extends GetView<AuthController> {
           print('user data (root)${user.data}');
           print('유저 이메일(root)${user.data!.email}');
           return FutureBuilder<UserModel?>(
-            future: controller.loginUser(user.data!.uid ?? ''),
+            future: controller.loginUser(user.data!.uid),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 print('로그인 기다리는 중(root)');
@@ -45,8 +45,11 @@ class Root extends GetView<AuthController> {
               } else {
                 if (!snapshot.hasData) {
                   print('신규 유저임(root)');
-                  // print('유저정보(root) ${controller.user.value.uid}');
-                  // print('회원가입하러(root)');
+                  print('유저정보(root) ${controller.user.value.uid}');
+                   print('user.data!.uid ${user.data!.uid}');
+                   //일단 controller에 uid와 email처음 저장
+                   controller.user(UserModel(uid: user.data!.uid, email: user.data!.email));
+                  print('유저정보(root) ${controller.user.value.uid}');
                   return SignupPage(
                     uid: user.data!.uid,
                     email: user.data!.email ?? '',
@@ -61,7 +64,7 @@ class Root extends GetView<AuthController> {
                     return FindBuddyPage(email: user.data!.email ?? '');
                   } else {
                     print('groupId 값이 존재함. homepage 가기 직전 initbinding실행');
-                    InitBinding.additionalBinding();
+                    //InitBinding.additionalBinding();
                     print('HomePage로 이동.');
                     return HomePage();
                   }

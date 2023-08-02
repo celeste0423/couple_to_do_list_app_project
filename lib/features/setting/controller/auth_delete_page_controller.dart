@@ -64,16 +64,16 @@ class AuthDeletePageController extends GetxController {
           }
         });
     //auth에서 삭제
-    FirebaseAuth.instance.currentUser!.delete();
+    await FirebaseAuth.instance.currentUser!.delete();
     //유저 파이어스토어 삭제
-    FirebaseFirestore.instance.collection('users').doc(uid).delete();
+    await FirebaseFirestore.instance.collection('users').doc(uid).delete();
 
     //짝꿍의 user data가 파이어스토어에 없는지 확인 후 group 삭제 진행
     final snapshot1 = await FirebaseFirestore.instance
         .collection('groups')
         .doc(groupId)
         .get();
-    Map<String, dynamic> data = snapshot1.data() as Map<String, dynamic>;
+    Map<String, dynamic> data = snapshot1.data as Map<String, dynamic>;
     String? femaleUid = data['femaleUid'];
     String? maleUid = data['maleUid'];
     String? bukkungUid = myGender=='male'? femaleUid : maleUid;

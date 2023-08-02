@@ -102,14 +102,15 @@ class AuthController extends GetxController {
     return expLikeViewCount;
   }
 
-  Future signup(UserModel signupUser) async {
+  signup(UserModel signupUser) async {
     //회원가입 버튼에 사용
     bool result = await UserRepository.firestoreSignup(signupUser);
     //user 정보를 firebase에 저장하고, result가 true면 유저정보가 firebase database를 넣었고 아니면 에러임
     if (result) {
       //유저정보를 파베에 넣고나서 할일
-      loginUser(signupUser.uid!);
-    }else{
+      print("싸인업 : 유저에 ${signupUser.nickname} 넣음");
+      user(signupUser);
+    } else {
       print("error: firestoreSignup");
     }
   }
@@ -139,14 +140,11 @@ class AuthController extends GetxController {
           user(updatedData);
         }
         return userData;
-      }
-      else if(userData ==false){
-        //신규유저일떄도 컨트롤러에 유저정보를 전달해 놓는다, 다만 groupdata있는지 체크 할 필요가 없다
-        //현재로는 exppoint, groupid null상태임.
-        print('서버의 유저 데이터 (cont) ${userData.toJson()}');
-        user(userData);
-        return userData;
-      }else{
+      } else if (userData == false) {
+
+        print('loginUser false');
+        return null;
+      } else {
         print('loginUser error');
         return null;
       }
@@ -156,27 +154,15 @@ class AuthController extends GetxController {
       return null;
     }
   }
+
   Future<GroupIdStatus> groupCreation(String myEmail, String buddyEmail) async {
+    //todo:mydata 이거 authcontroller정보 쓰면 더 좋을듯
+    print("mydata 이거 authcontroller정보 쓰면 더 좋을듯: ${user.value.toString()}");
     var myData = await UserRepository.loginUserByEmail(myEmail);
     var buddyData = await UserRepository.loginUserByEmail(buddyEmail);
 
     var uuid = Uuid();
     String groupId = uuid.v1();
-
-    if (myData!.gender == 'male') {
-      var groupData =
-          await GroupRepository.groupSignup(groupId, myData, buddyData!);
-      group(groupData);
-    } else if (myData!.gender == 'female') {
-      var groupData =
-          await GroupRepository.groupSignup(groupId, buddyData!, myData);
-      group(groupData);
-    } else {
-      //동성 커플고려는 아직은 하지 않는걸로
-      var groupData =
-          await GroupRepository.groupSignup(groupId, myData, buddyData!);
-      group(groupData);
-    }
 
     if (buddyData == null || myData == null) {
       print('buddyData 없음(cont) ${buddyData}');
@@ -185,12 +171,31 @@ class AuthController extends GetxController {
       print('짝꿍이 이미 다른 짝이 있음');
       return GroupIdStatus.hasGroup;
     } else {
+
+      if (myData!.gender == 'male') {
+        var groupData =
+        await GroupRepository.groupSignup(groupId, myData, buddyData!);
+        group(groupData);
+      } else if (myData!.gender == 'female') {
+        var groupData =
+        await GroupRepository.groupSignup(groupId, buddyData!, myData);
+        group(groupData);
+      } else {
+        //동성 커플고려는 아직은 하지 않는걸로
+        // var groupData =
+        //     await GroupRepository.groupSignup(groupId, myData, buddyData!);
+        // group(groupData);
+      }
+
       print('uuid로 가입 시작(cont) ${groupId}');
       await UserRepository.updateGroupId(myData, groupId);
       await UserRepository.updateGroupId(buddyData, groupId);
-      user(user.value.copyWith(groupId: groupId));
-      group(group.value.copyWith(uid: groupId));
-      print(user.value.groupId);
+      final updateduser = user.value.copyWith(groupId: groupId);
+      final updatedgroup = group.value.copyWith(uid: groupId);
+      user(updateduser);
+      print('user에 user값 넣었음 ${user.value.uid}');
+      group(updatedgroup);
+      print('group에 group값 넣었음 ${group.value.uid}');
       //기본 버꿍리스트 업로드
       BukkungListModel initialModel = BukkungListModel.init(user.value);
       BukkungListModel initialBukkungList = initialModel.copyWith(
