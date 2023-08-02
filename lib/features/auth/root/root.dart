@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/features/admin_management/pages/admin_management.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
@@ -59,7 +60,9 @@ class Root extends GetView<AuthController> {
                     print('groupId 값이 아직 존재하지 않습니다. FindBuddyPage로 이동합니다.');
                     return FindBuddyPage(email: user.data!.email ?? '');
                   } else {
-                    print('groupId 값이 존재함. HomePage로 이동합니다.');
+                    print('groupId 값이 존재함. homepage 가기 직전 initbinding실행');
+                    InitBinding.additionalBinding();
+                    print('HomePage로 이동.');
                     return HomePage();
                   }
                 }

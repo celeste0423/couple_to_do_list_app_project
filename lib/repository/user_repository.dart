@@ -219,7 +219,7 @@ class UserRepository {
     }
   }
 
-  static Future<UserModel?> loginUserByUid(String uid) async {
+  static Future loginUserByUid(String uid) async {
     try {
       // print('uid이거임(repo) $uid');
       var data = await FirebaseFirestore.instance
@@ -231,7 +231,7 @@ class UserRepository {
       if (data.size == 0) {
         //아직 회원가입이 안되었기 때문에 파이어스토어에 추가해야함
         print('uid 일치 데이터 없음(repo)');
-        return null;
+        return false;
       } else {
         print('가입 이력 존재(repo)${data.docs.first.data().toString()}');
         return UserModel.fromJson(data.docs.first.data());

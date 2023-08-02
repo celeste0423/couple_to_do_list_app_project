@@ -83,38 +83,6 @@ class AuthController extends GetxController {
     return await UserRepository.signInWithKakao();
   }
 
-  Future<UserModel?> loginUser(String uid) async {
-    try {
-      //email과 맞는 유저 데이터를 firebase 에서 가져온다.
-      print('(auth cont) uid ${uid}');
-      var userData = await UserRepository.loginUserByUid(uid);
-      //신규 유저일 경우 userData에 null값 반환됨
-      if (userData != null) {
-        //컨트롤러에 유저정보를 전달해 놓는다
-        print('서버의 유저 데이터 (cont) ${userData.toJson()}');
-        user(userData);
-        var groupData = await GroupRepository.groupLogin(userData.groupId);
-        if (groupData != null) {
-          print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
-          group(groupData);
-          print('그룹 정보(auth cont)${group.value.uid}');
-          InitBinding.additionalBinding();
-          //expPoint계산
-          int expPoint = (await getExpPoint())[0];
-          UserModel updatedData = user.value.copyWith(
-            expPoint: expPoint,
-          );
-          user(updatedData);
-        }
-      }
-      return userData; //로딩 중 경우 null반환
-    } catch (e) {
-      print('loginUser 오류(cont)$e');
-      openAlertDialog(title: '로그인 오류${e.toString()}');
-      return null;
-    }
-  }
-
   //expPoint계산 해주는 함수
   Future<List<int>> getExpPoint() async {
     //0번이 exp
@@ -136,13 +104,58 @@ class AuthController extends GetxController {
 
   Future signup(UserModel signupUser) async {
     //회원가입 버튼에 사용
-    //todo:도성: 여기 수정해야 됨!
-    var result = await UserRepository.firestoreSignup(signupUser);
+    bool result = await UserRepository.firestoreSignup(signupUser);
+    //user 정보를 firebase에 저장하고, result가 true면 유저정보가 firebase database를 넣었고 아니면 에러임
     if (result) {
+      //유저정보를 파베에 넣고나서 할일
       loginUser(signupUser.uid!);
+    }else{
+      print("error: firestoreSignup");
     }
   }
 
+  Future<UserModel?> loginUser(String uid) async {
+    try {
+      //email과 맞는 유저 데이터를 firebase 에서 가져온다.
+      print('(auth cont) uid ${uid}');
+      var userData = await UserRepository.loginUserByUid(uid);
+      //신규 유저일 경우 userData에 false값 반환됨, error났을떄는 null 반환됨
+      if (userData != null && userData != false) {
+        //신규유저가 아닐경우 컨트롤러에 유저정보를 전달해 놓는다
+        print('서버의 유저 데이터 (cont) ${userData.toJson()}');
+        user(userData);
+        var groupData = await GroupRepository.groupLogin(userData.groupId);
+        if (groupData != null) {
+          print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
+          group(groupData);
+          print('그룹 정보(auth cont)${group.value.uid}');
+          //8월2일 작성: todo: binding을 여기서 해도 되나?...homepage들어가기 전에 해야 할 것 같은데 일단 옮겨보자
+          // InitBinding.additionalBinding();
+          //expPoint계산
+          int expPoint = (await getExpPoint())[0];
+          UserModel updatedData = user.value.copyWith(
+            expPoint: expPoint,
+          );
+          user(updatedData);
+        }
+        return userData;
+      }
+      else if(userData ==false){
+        //신규유저일떄도 컨트롤러에 유저정보를 전달해 놓는다, 다만 groupdata있는지 체크 할 필요가 없다
+        //현재로는 exppoint, groupid null상태임.
+        print('서버의 유저 데이터 (cont) ${userData.toJson()}');
+        user(userData);
+        return userData;
+      }else{
+        print('loginUser error');
+        return null;
+      }
+    } catch (e) {
+      print('loginUser 오류(cont)$e');
+      openAlertDialog(title: '로그인 오류${e.toString()}');
+      return null;
+    }
+  }
   Future<GroupIdStatus> groupCreation(String myEmail, String buddyEmail) async {
     var myData = await UserRepository.loginUserByEmail(myEmail);
     var buddyData = await UserRepository.loginUserByEmail(buddyEmail);
