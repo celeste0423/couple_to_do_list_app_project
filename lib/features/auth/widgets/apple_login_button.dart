@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AppleLoginButton extends StatelessWidget {
-  final AuthController authController = AuthController();
 
   String? userid;
 

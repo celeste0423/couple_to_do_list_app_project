@@ -22,7 +22,7 @@ class FindBuddyPage extends StatefulWidget {
 
 class _FindBuddyPageState extends State<FindBuddyPage> {
   //Todo: auth
-  final AuthController authController = AuthController();
+  final AuthController authController = AuthController.to;
   TextEditingController emailController = TextEditingController();
 
   Widget _appBar() {

@@ -4,6 +4,7 @@ import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:get/get.dart';
 
 class BukkungListRepository {
   final GroupModel groupModel;
@@ -88,6 +89,7 @@ class BukkungListRepository {
         .collection('bukkungLists')
         .doc(listId)
         .set(bukkungListData.toJson());
+    print('please!!!! ${Get.find<AuthController>().user.value.groupId}');
     print('(buk repo) 유저그룹id ${AuthController.to.user.value.groupId}');
     print('(buk repo) 그룹id ${AuthController.to.group.value.uid}');
   }

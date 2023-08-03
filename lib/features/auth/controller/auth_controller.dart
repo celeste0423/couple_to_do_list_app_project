@@ -19,6 +19,7 @@ import 'package:uuid/uuid.dart';
 enum GroupIdStatus { noData, hasGroup, createdGroupId }
 
 class AuthController extends GetxController {
+
   static AuthController get to => Get.find();
 
   //유저 정보
@@ -109,7 +110,10 @@ class AuthController extends GetxController {
     if (result) {
       //유저정보를 파베에 넣고나서 할일
       print("싸인업 : 유저에 ${signupUser.nickname} 넣음");
+      print('1 ${user.value.uid}');
+      print('1nickname ${user.value.nickname}');
       user(signupUser);
+      print('sdfsdf ${user.value.uid}');
       print('gkgkgk ${AuthController.to.user.value.uid}');
     } else {
       print("error: firestoreSignup");
@@ -157,7 +161,7 @@ class AuthController extends GetxController {
 
   Future<GroupIdStatus> groupCreation(String myEmail, String buddyEmail) async {
     //todo:mydata 이거 authcontroller정보 쓰면 더 좋을듯
-    print("mydata 이거 authcontroller정보 쓰면 더 좋을듯: ${user.value.toString()}");
+    print("mydata 이거 authcontroller정보 쓰면 더 좋을듯: ${user.value}");
     var myData = await UserRepository.loginUserByEmail(myEmail);
     var buddyData = await UserRepository.loginUserByEmail(buddyEmail);
 
@@ -190,10 +194,20 @@ class AuthController extends GetxController {
       print('uuid로 가입 시작(cont) ${groupId}');
       await UserRepository.updateGroupId(myData, groupId);
       await UserRepository.updateGroupId(buddyData, groupId);
-      final updateduser = user.value.copyWith(groupId: groupId);
-      final updatedgroup = group.value.copyWith(uid: groupId);
+      final updateduser = myData.copyWith(groupId: groupId);
+      final updatedgroup = AuthController.to.group.value.copyWith(uid: groupId);
+      print(updateduser.uid);
+      print('user.value.uid :${user.value.uid}');
+      print('Authcontroller.to.user.value.uid : ${AuthController.to.user.value.uid}');
+      print('user.value.nickname :${user.value.nickname}');
+      print(user.value.groupId);
+      print(updatedgroup.uid);
+      print(updatedgroup.createdAt);
+      print(updateduser.groupId);
+      print(updateduser.uid);
       user(updateduser);
       print('user에 user값 넣었음 ${user.value.uid}');
+      print(user.value.groupId);
       group(updatedgroup);
       print('group에 group값 넣었음 ${group.value.uid}');
       //기본 버꿍리스트 업로드
