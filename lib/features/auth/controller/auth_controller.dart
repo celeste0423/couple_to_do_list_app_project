@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
@@ -19,7 +18,6 @@ import 'package:uuid/uuid.dart';
 enum GroupIdStatus { noData, hasGroup, createdGroupId }
 
 class AuthController extends GetxController {
-
   static AuthController get to => Get.find();
 
   //유저 정보
@@ -110,11 +108,7 @@ class AuthController extends GetxController {
     if (result) {
       //유저정보를 파베에 넣고나서 할일
       print("싸인업 : 유저에 ${signupUser.nickname} 넣음");
-      print('1 ${user.value.uid}');
-      print('1nickname ${user.value.nickname}');
       user(signupUser);
-      print('sdfsdf ${user.value.uid}');
-      print('gkgkgk ${AuthController.to.user.value.uid}');
     } else {
       print("error: firestoreSignup");
     }
@@ -124,7 +118,7 @@ class AuthController extends GetxController {
     try {
       //email과 맞는 유저 데이터를 firebase 에서 가져온다.
       print('(auth cont) uid ${uid}');
-      var userData = await UserRepository.loginUserByUid(uid);
+      UserModel? userData = await UserRepository.loginUserByUid(uid);
       //신규 유저일 경우 userData에 false값 반환됨, error났을떄는 null 반환됨
       if (userData != null && userData != false) {
         //신규유저가 아닐경우 컨트롤러에 유저정보를 전달해 놓는다
@@ -161,28 +155,31 @@ class AuthController extends GetxController {
 
   Future<GroupIdStatus> groupCreation(String myEmail, String buddyEmail) async {
     //todo:mydata 이거 authcontroller정보 쓰면 더 좋을듯
-    print("mydata 이거 authcontroller정보 쓰면 더 좋을듯: ${user.value}");
+    print("mydata 이거 authcontroller정보 쓰면 더 좋을듯: ${user.value.toString()}");
     var myData = await UserRepository.loginUserByEmail(myEmail);
+    print('내 데이터 ${myData!.uid}');
+    print('내 데이터 ${myData!.groupId}');
     var buddyData = await UserRepository.loginUserByEmail(buddyEmail);
 
     var uuid = Uuid();
     String groupId = uuid.v1();
 
     if (buddyData == null || myData == null) {
-      print('buddyData 없음(cont) ${buddyData}');
+      //아직 짝꿍이 가입 안함
       return GroupIdStatus.noData;
     } else if (buddyData.groupId != null) {
-      print('짝꿍이 이미 다른 짝이 있음');
+      //이미 다른 짝이 있음
       return GroupIdStatus.hasGroup;
     } else {
-
       if (myData!.gender == 'male') {
         var groupData =
-        await GroupRepository.groupSignup(groupId, myData, buddyData!);
+            await GroupRepository.groupSignup(groupId, myData, buddyData!);
+        print('그룹 데이터 ${groupData!.uid}');
         group(groupData);
       } else if (myData!.gender == 'female') {
         var groupData =
-        await GroupRepository.groupSignup(groupId, buddyData!, myData);
+            await GroupRepository.groupSignup(groupId, buddyData!, myData);
+        print('그룹 데이터 ${groupData!.uid}');
         group(groupData);
       } else {
         //동성 커플고려는 아직은 하지 않는걸로
@@ -194,22 +191,19 @@ class AuthController extends GetxController {
       print('uuid로 가입 시작(cont) ${groupId}');
       await UserRepository.updateGroupId(myData, groupId);
       await UserRepository.updateGroupId(buddyData, groupId);
-      final updateduser = myData.copyWith(groupId: groupId);
-      final updatedgroup = AuthController.to.group.value.copyWith(uid: groupId);
-      print(updateduser.uid);
-      print('user.value.uid :${user.value.uid}');
-      print('Authcontroller.to.user.value.uid : ${AuthController.to.user.value.uid}');
-      print('user.value.nickname :${user.value.nickname}');
-      print(user.value.groupId);
-      print(updatedgroup.uid);
-      print(updatedgroup.createdAt);
-      print(updateduser.groupId);
-      print(updateduser.uid);
-      user(updateduser);
-      print('user에 user값 넣었음 ${user.value.uid}');
-      print(user.value.groupId);
-      group(updatedgroup);
-      print('group에 group값 넣었음 ${group.value.uid}');
+      user(myData.copyWith(groupId: groupId));
+      print('현재 user${user.value.uid}');
+      print('현재 usergroupId${user.value.groupId}');
+      print('현재 group${group.value.uid}');
+      // final updateduser = user.value.copyWith(groupId: groupId);
+      // final updatedgroup = group.value.copyWith(uid: groupId);
+      // user(updateduser);
+      // print('updateduser ${updateduser.groupId}');
+      // print('user에 user값 넣었음 ${user.value.groupId}');
+      // group(updatedgroup);
+      // print('updatedgroup ${updatedgroup.uid}');
+      // print('group에 group값 넣었음 ${group.value.uid}');
+
       //기본 버꿍리스트 업로드
       BukkungListModel initialModel = BukkungListModel.init(user.value);
       BukkungListModel initialBukkungList = initialModel.copyWith(
@@ -221,8 +215,12 @@ class AuthController extends GetxController {
             '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자, \n내 짝꿍아!\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
         imgUrl: Constants.baseImageUrl,
       );
+      print('(auth cont) 기본 버꿍리스트 업로드 시작');
       await BukkungListRepository.setGroupBukkungList(
           initialBukkungList, 'initial${groupId}', groupId);
+      print('현재 user${user.value.uid}');
+      print('현재 usergroupId${user.value.groupId}');
+      print('현재 group${group.value.uid}');
       return GroupIdStatus.createdGroupId;
     }
   }

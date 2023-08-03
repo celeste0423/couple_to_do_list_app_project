@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/features/home/pages/home_page.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -275,7 +276,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           //InitBinding.additionalBinding();
           // InitBinding().refreshControllers();
           print("authcontroller에 들어갔나 ${AuthController.to.group.value.uid}");
-          Get.off(() => HomePage());
+          FirebaseAuth.instance.reactive;
+          // Get.off(() => HomePage());
         }
       },
       width: 150,
