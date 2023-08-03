@@ -155,10 +155,7 @@ class AuthController extends GetxController {
 
   Future<GroupIdStatus> groupCreation(String myEmail, String buddyEmail) async {
     //todo:mydata 이거 authcontroller정보 쓰면 더 좋을듯
-    print("mydata 이거 authcontroller정보 쓰면 더 좋을듯: ${user.value.toString()}");
     var myData = await UserRepository.loginUserByEmail(myEmail);
-    print('내 데이터 ${myData!.uid}');
-    print('내 데이터 ${myData!.groupId}');
     var buddyData = await UserRepository.loginUserByEmail(buddyEmail);
 
     var uuid = Uuid();
@@ -191,21 +188,8 @@ class AuthController extends GetxController {
       print('uuid로 가입 시작(cont) ${groupId}');
       await UserRepository.updateGroupId(myData, groupId);
       await UserRepository.updateGroupId(buddyData, groupId);
+      //user에 그룹아이디 주입
       user(myData.copyWith(groupId: groupId));
-      print('현재 user${user.value.uid}');
-      print('현재 usergroupId${user.value.groupId}');
-      print('현재 group${group.value.uid}');
-      print('현재 auth user${AuthController.to.user.value.uid}');
-      print('현재 auth usergroupId${AuthController.to.user.value.groupId}');
-      print('현재 auth group${AuthController.to.group.value.uid}');
-      // final updateduser = user.value.copyWith(groupId: groupId);
-      // final updatedgroup = group.value.copyWith(uid: groupId);
-      // user(updateduser);
-      // print('updateduser ${updateduser.groupId}');
-      // print('user에 user값 넣었음 ${user.value.groupId}');
-      // group(updatedgroup);
-      // print('updatedgroup ${updatedgroup.uid}');
-      // print('group에 group값 넣었음 ${group.value.uid}');
 
       //기본 버꿍리스트 업로드
       BukkungListModel initialModel = BukkungListModel.init(user.value);
@@ -215,15 +199,12 @@ class AuthController extends GetxController {
         category: '6etc',
         location: '버꿍리스트 앱',
         content:
-            '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자, \n내 짝꿍아!\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
+            '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자,\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
         imgUrl: Constants.baseImageUrl,
       );
       print('(auth cont) 기본 버꿍리스트 업로드 시작');
       await BukkungListRepository.setGroupBukkungList(
           initialBukkungList, 'initial${groupId}', groupId);
-      print('현재 user${user.value.uid}');
-      print('현재 usergroupId${user.value.groupId}');
-      print('현재 group${group.value.uid}');
       return GroupIdStatus.createdGroupId;
     }
   }

@@ -49,7 +49,7 @@ class GgomulPage extends GetView<GgomulPageController> {
         Stack(
           children: [
             Container(
-              height: 300,
+              height: 250,
               width: 25,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -68,7 +68,7 @@ class GgomulPage extends GetView<GgomulPageController> {
               bottom: 0,
               child: Obx(
                 () => AnimatedContainer(
-                  height: (controller.completedListCount.value / 8) * 300,
+                  height: (controller.completedListCount.value / 8) * 250,
                   width: 25,
                   duration: Duration(milliseconds: 500),
                   decoration: BoxDecoration(
@@ -93,7 +93,7 @@ class GgomulPage extends GetView<GgomulPageController> {
 
   Widget _ggomulCard() {
     return Container(
-      height: 320,
+      height: 300,
       width: 260,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
@@ -109,7 +109,7 @@ class GgomulPage extends GetView<GgomulPageController> {
       ),
       child: Center(
         child: Container(
-          height: 290,
+          height: 260,
           width: 220,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
@@ -411,9 +411,12 @@ class GgomulPage extends GetView<GgomulPageController> {
               ],
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 20),
           _completedList(),
-          SizedBox(height: 110),
+          SizedBox(
+              height: 50 +
+                  MediaQuery.of(context).padding.bottom +
+                  kBottomNavigationBarHeight),
         ],
       ),
     );

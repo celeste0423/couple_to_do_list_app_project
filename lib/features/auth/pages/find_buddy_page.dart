@@ -22,7 +22,6 @@ class FindBuddyPage extends StatefulWidget {
 }
 
 class _FindBuddyPageState extends State<FindBuddyPage> {
-  //Todo: auth
   final AuthController authController = AuthController.to;
   TextEditingController emailController = TextEditingController();
 
@@ -275,7 +274,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           //BukkungListPageController initbinding을 여기다 해야 할 거 같음
           //InitBinding.additionalBinding();
           // InitBinding().refreshControllers();
-          print("authcontroller에 들어갔나 ${AuthController.to.group.value.uid}");
+
+          //AuthController오류 해결
           FirebaseAuth.instance.reactive;
           Get.off(() => HomePage());
         }
