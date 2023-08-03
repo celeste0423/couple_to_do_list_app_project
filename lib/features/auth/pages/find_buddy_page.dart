@@ -277,7 +277,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           // InitBinding().refreshControllers();
           print("authcontroller에 들어갔나 ${AuthController.to.group.value.uid}");
           FirebaseAuth.instance.reactive;
-          // Get.off(() => HomePage());
+          Get.off(() => HomePage());
         }
       },
       width: 150,

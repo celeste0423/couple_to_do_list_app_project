@@ -195,6 +195,9 @@ class AuthController extends GetxController {
       print('현재 user${user.value.uid}');
       print('현재 usergroupId${user.value.groupId}');
       print('현재 group${group.value.uid}');
+      print('현재 auth user${AuthController.to.user.value.uid}');
+      print('현재 auth usergroupId${AuthController.to.user.value.groupId}');
+      print('현재 auth group${AuthController.to.group.value.uid}');
       // final updateduser = user.value.copyWith(groupId: groupId);
       // final updatedgroup = group.value.copyWith(uid: groupId);
       // user(updateduser);
