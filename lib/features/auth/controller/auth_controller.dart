@@ -110,6 +110,7 @@ class AuthController extends GetxController {
       //유저정보를 파베에 넣고나서 할일
       print("싸인업 : 유저에 ${signupUser.nickname} 넣음");
       user(signupUser);
+      print('gkgkgk ${AuthController.to.user.value.uid}');
     } else {
       print("error: firestoreSignup");
     }
@@ -141,7 +142,6 @@ class AuthController extends GetxController {
         }
         return userData;
       } else if (userData == false) {
-
         print('loginUser false');
         return null;
       } else {
