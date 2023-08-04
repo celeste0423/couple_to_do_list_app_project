@@ -32,25 +32,27 @@
 				<string>bukkunglist</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.395268185816-oh3kqdh07vcahvg75t6fj5j4ial3gsn9</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-	    <string>https</string>
-	    <string>http</string>
-
-        <!-- common -->
-        <string>kakao${6343b85d09998d34e9261b1c6e5f4635}</string>
-
-        <!-- KakaoTalk login -->
-        <string>kakaokompassauth</string>
-        <string>storykompassauth</string>
-
-        <!-- KakaoLink -->
-        <string>kakaolink</string>
-        <string>kakaotalk-5.9.7</string>
-    </array>
+		<string>https</string>
+		<string>http</string>
+		<string>kakao${6343b85d09998d34e9261b1c6e5f4635}</string>
+		<string>kakaokompassauth</string>
+		<string>storykompassauth</string>
+		<string>kakaolink</string>
+		<string>kakaotalk-5.9.7</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
