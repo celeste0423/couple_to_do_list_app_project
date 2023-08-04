@@ -64,7 +64,7 @@ class Root extends GetView<AuthController> {
                     return FindBuddyPage(email: user.data!.email ?? '');
                   } else {
                     print('groupId 값이 존재함. homepage 가기 직전 initbinding실행');
-                    //InitBinding.additionalBinding();
+                    InitBinding.additionalBinding();
                     print('HomePage로 이동.');
                     return HomePage();
                   }
