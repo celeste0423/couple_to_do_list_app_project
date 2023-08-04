@@ -76,15 +76,23 @@ class AuthDeletePageController extends GetxController {
               .collection('groups')
               .doc(groupId)
               .get();
+
           Map<String, dynamic>? data = snapshot1.data as Map<String, dynamic>?;
-          String? femaleUid = data!['femaleUid'];
-          String? maleUid = data!['maleUid'];
-          String? bukkungUid = myGender=='male'? femaleUid : maleUid;
-          final snapshot2 = await  FirebaseFirestore.instance.collection('users').doc(bukkungUid).get();
-          if (!snapshot2.exists){
-            //짝꿍의 user data가 파이어스토어에 없을 떄 (짝꿍이 이미 탈퇴를했을 때) 그룹 삭제진행
-            await FirebaseFirestore.instance.collection('groups').doc(groupId).delete();
+          if (data != null) {
+            print('반환');
+            String? femaleUid = data!['femaleUid'];
+            String? maleUid = data!['maleUid'];
+            String? bukkungUid = myGender=='male'? femaleUid : maleUid;
+            final snapshot2 = await  FirebaseFirestore.instance.collection('users').doc(bukkungUid).get();
+            print('get');
+            if (!snapshot2.exists){
+              //짝꿍의 user data가 파이어스토어에 없을 떄 (짝꿍이 이미 탈퇴를했을 때) 그룹 삭제진행
+              await FirebaseFirestore.instance.collection('groups').doc(groupId).delete();
+            }
+          } else {
+         print('null반환');
           }
+
           _uploadFeedback();
           //로그아웃
           await UserRepository.signOut();
