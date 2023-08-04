@@ -65,7 +65,7 @@ class MyPage extends GetView<MyPageController> {
           //pink 부분이 200,
           height: MediaQuery.of(context).size.height -
               MediaQuery.of(context).padding.top -
-              MediaQuery.of(context).padding.bottom-200-kBottomNavigationBarHeight-110,
+              MediaQuery.of(context).padding.bottom-200-kBottomNavigationBarHeight-120,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
