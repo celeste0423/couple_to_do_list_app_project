@@ -33,7 +33,7 @@ class MyPage extends GetView<MyPageController> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 00),
       child: Stack(
         children: [
-          _cardBackground(),
+          _cardBackground(context),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -48,7 +48,7 @@ class MyPage extends GetView<MyPageController> {
     );
   }
 
-  Widget _cardBackground() {
+  Widget _cardBackground(context) {
     return Column(
       children: [
         Container(
@@ -61,22 +61,24 @@ class MyPage extends GetView<MyPageController> {
             ),
           ),
         ),
-        Flexible(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(30),
-                bottomLeft: Radius.circular(30),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  offset: Offset(0, 8),
-                )
-              ],
+        Container(
+          //pink 부분이 200,
+          height: MediaQuery.of(context).size.height -
+              MediaQuery.of(context).padding.top -
+              MediaQuery.of(context).padding.bottom-200-kBottomNavigationBarHeight-110,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(30),
+              bottomLeft: Radius.circular(30),
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 5,
+                offset: Offset(0, 8),
+              )
+            ],
           ),
         ),
         SizedBox(height: 90),
