@@ -77,7 +77,7 @@ class AuthDeletePageController extends GetxController {
               .doc(groupId)
               .get();
 
-          Map<String, dynamic>? data = snapshot1.data as Map<String, dynamic>?;
+          Map<String, dynamic>? data = snapshot1.data();
           if (data != null) {
             print('반환');
             String? femaleUid = data!['femaleUid'];
