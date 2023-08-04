@@ -15,9 +15,6 @@ class AuthDeletePageController extends GetxController {
   Rx<bool> isFeedback = false.obs;
 
   void authDeletion() async {
-
-
-
     //auth 삭제 전 재인증
     await openAlertDialog(
         title: '삭제',
@@ -91,12 +88,10 @@ class AuthDeletePageController extends GetxController {
           _uploadFeedback();
           //로그아웃
           await UserRepository.signOut();
-          openAlertDialog(
+          await openAlertDialog(
             title: '계정 탈퇴가 완료되었습니다.',
-            mainfunction: () {
-              SystemNavigator.pop();
-            },
           );
+          SystemNavigator.pop();
         });
   }
 
