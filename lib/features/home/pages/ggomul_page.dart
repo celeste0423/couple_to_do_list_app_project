@@ -478,7 +478,8 @@ class GgomulPage extends GetView<GgomulPageController> {
           SizedBox(height: 20),
           _completedList(),
           SizedBox(
-              height: 50 +
+            //50이 뭘까
+              height:50+
                   MediaQuery.of(context).padding.bottom +
                   kBottomNavigationBarHeight),
         ],
