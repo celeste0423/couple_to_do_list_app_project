@@ -164,6 +164,7 @@ class AuthDeletePage extends GetView<AuthDeletePageController> {
               child: MainButton(
                 buttonText: '탈퇴하기',
                 buttonColor: Colors.red,
+                //todo:회원탈퇴 storage삭제(사진같은거) 삭제 해야 하나? 이거 버꿍리스트에 올라간거 있을텐데... 다이어리만 삭제해야 하나
                 onTap: () => controller.authDeletion(),
               ),
             ),

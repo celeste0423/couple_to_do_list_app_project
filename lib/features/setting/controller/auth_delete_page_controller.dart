@@ -19,7 +19,7 @@ class AuthDeletePageController extends GetxController {
     await openAlertDialog(
         title: '삭제',
         content: '원활한 삭제를 위해 계정 인증 부탁드립니다.',
-        secondButtonText:'뒤로가기',
+        secondButtonText: '뒤로가기',
         btnText: '인증 후 탈퇴하기',
         mainfunction: () async {
           //uid 임시저장
@@ -32,9 +32,9 @@ class AuthDeletePageController extends GetxController {
             final GoogleSignIn googleSignIn = GoogleSignIn();
             //구글 로그인 페이지 표시
             final GoogleSignInAccount? googleSignInAccount =
-                await googleSignIn.signIn();
+            await googleSignIn.signIn();
             GoogleSignInAuthentication googleAuth =
-                await googleSignInAccount!.authentication;
+            await googleSignInAccount!.authentication;
             AuthCredential authCredential = GoogleAuthProvider.credential(
               accessToken: googleAuth.accessToken,
               idToken: googleAuth.idToken,
@@ -54,12 +54,13 @@ class AuthDeletePageController extends GetxController {
             }
           } else if (loginType == 'apple') {
             UserCredential? userCredential =
-                await AuthController.to.signInWithApple();
+            await AuthController.to.signInWithApple();
             if (userCredential == null) {
               openAlertDialog(title: '로그인 실패');
             } else {
               print(
-                  'apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
+                  'apple login 성공: nickname = ${AuthController.to.user.value
+                      .nickname}');
               //로그인 타입 설정
               // AuthController.loginType = 'apple';
             }
@@ -68,7 +69,9 @@ class AuthDeletePageController extends GetxController {
           await FirebaseAuth.instance.currentUser!.delete();
           print('auth 삭제뒤');
           //유저 파이어스토어 삭제
-          await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+          await FirebaseFirestore.instance.collection('users')
+              .doc(uid)
+              .delete();
           print('store 삭제뒤');
 
           //짝꿍의 user data가 파이어스토어에 없는지 확인 후 group 삭제 진행
@@ -82,15 +85,40 @@ class AuthDeletePageController extends GetxController {
             print('반환');
             String? femaleUid = data!['femaleUid'];
             String? maleUid = data!['maleUid'];
-            String? bukkungUid = myGender=='male'? femaleUid : maleUid;
-            final snapshot2 = await  FirebaseFirestore.instance.collection('users').doc(bukkungUid).get();
+            String? bukkungUid = myGender == 'male' ? femaleUid : maleUid;
+            final snapshot2 = await FirebaseFirestore.instance.collection(
+                'users').doc(bukkungUid).get();
             print('get');
-            if (!snapshot2.exists){
+            if (!snapshot2.exists) {
               //짝꿍의 user data가 파이어스토어에 없을 떄 (짝꿍이 이미 탈퇴를했을 때) 그룹 삭제진행
-              await FirebaseFirestore.instance.collection('groups').doc(groupId).delete();
+
+              //이건 서브 컬랙션 없애는 매서드
+              Future deleteSubcollection(subcollection)async{
+                CollectionReference ref = FirebaseFirestore.instance.collection(
+                    'groups').doc(groupId).collection(subcollection);
+                QuerySnapshot snapshot = await ref.get();
+
+                if (snapshot.docs.isNotEmpty) {
+                  for (QueryDocumentSnapshot docSnapshot in snapshot.docs) {
+                    await docSnapshot.reference.delete();
+                  }
+                } else {
+                  print('The subcollection $subcollection does not exist.');
+                }
+              }
+
+              //subcollection 모두 없애고
+              await deleteSubcollection('bukkungLists');
+              await deleteSubcollection('completedBukkungLists');
+              await deleteSubcollection('diary');
+
+              //groups 없애고
+              await FirebaseFirestore.instance.collection('groups')
+                  .doc(groupId)
+                  .delete();
             }
           } else {
-         print('null반환');
+            print('null반환');
           }
 
           _uploadFeedback();
@@ -101,7 +129,7 @@ class AuthDeletePageController extends GetxController {
           );
           Get.back();
         });
-        SystemNavigator.pop();
+    SystemNavigator.pop();
   }
 
   void _uploadFeedback() {
@@ -111,4 +139,6 @@ class AuthDeletePageController extends GetxController {
         .doc()
         .set({'surveyResult': surveyResult.value});
   }
+
+
 }
