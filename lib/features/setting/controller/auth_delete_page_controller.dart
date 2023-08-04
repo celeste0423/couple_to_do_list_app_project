@@ -76,9 +76,9 @@ class AuthDeletePageController extends GetxController {
               .collection('groups')
               .doc(groupId)
               .get();
-          Map<String, dynamic> data = snapshot1.data as Map<String, dynamic>;
-          String? femaleUid = data['femaleUid'];
-          String? maleUid = data['maleUid'];
+          Map<String, dynamic>? data = snapshot1.data as Map<String, dynamic>?;
+          String? femaleUid = data!['femaleUid'];
+          String? maleUid = data!['maleUid'];
           String? bukkungUid = myGender=='male'? femaleUid : maleUid;
           final snapshot2 = await  FirebaseFirestore.instance.collection('users').doc(bukkungUid).get();
           if (!snapshot2.exists){
