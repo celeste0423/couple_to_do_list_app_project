@@ -99,8 +99,9 @@ class AuthDeletePageController extends GetxController {
           await openAlertDialog(
             title: '계정 탈퇴가 완료되었습니다.',
           );
-          SystemNavigator.pop();
+          Get.back();
         });
+        SystemNavigator.pop();
   }
 
   void _uploadFeedback() {
