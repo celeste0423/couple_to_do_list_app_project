@@ -300,6 +300,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
             //BukkungListPageController initbinding을 여기다 해야 할 거 같음
             //InitBinding.additionalBinding();
             // InitBinding().refreshControllers();
+            FirebaseAuth.instance.reactive;
             Get.off(() => HomePage());
           }
         },
