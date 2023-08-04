@@ -118,7 +118,7 @@ class AuthController extends GetxController {
     try {
       //email과 맞는 유저 데이터를 firebase 에서 가져온다.
       print('(auth cont) uid ${uid}');
-      UserModel? userData = await UserRepository.loginUserByUid(uid);
+      var userData = await UserRepository.loginUserByUid(uid);
       //신규 유저일 경우 userData에 false값 반환됨, error났을떄는 null 반환됨
       if (userData != null && userData != false) {
         //신규유저가 아닐경우 컨트롤러에 유저정보를 전달해 놓는다
@@ -129,9 +129,7 @@ class AuthController extends GetxController {
           print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
           group(groupData);
           print('그룹 정보(auth cont)${group.value.uid}');
-          //8월2일 작성: todo: binding을 여기서 해도 되나?...homepage들어가기 전에 해야 할 것 같은데 일단 옮겨보자
-          // InitBinding.additionalBinding();
-          //expPoint계산
+
           int expPoint = (await getExpPoint())[0];
           UserModel updatedData = user.value.copyWith(
             expPoint: expPoint,

@@ -150,7 +150,7 @@ class GgomulPage extends GetView<GgomulPageController> {
         width: 340,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: StreamBuilder(
           stream: controller.getAllCompletedList(),
@@ -169,7 +169,7 @@ class GgomulPage extends GetView<GgomulPageController> {
                 return ListView(
                   physics: AlwaysScrollableScrollPhysics(),
                   children: [
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
@@ -201,11 +201,11 @@ class GgomulPage extends GetView<GgomulPageController> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 5),
                     Column(
                       children: List.generate(list.length, (index) {
                         final bukkungList = list[index];
-                        return _completedListCard(bukkungList);
+                        return _newCompletedListCard(bukkungList);
                       }),
                     ),
                   ],
@@ -219,6 +219,70 @@ class GgomulPage extends GetView<GgomulPageController> {
             }
             return Center(child: Text('완료한 버꿍리스트가 없습니다'));
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _newCompletedListCard(BukkungListModel bukkungListModel) {
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => ReadCompletedListPage(), arguments: bukkungListModel);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border(
+            top: BorderSide(
+              color: CustomColors.lightGrey,
+              width: 1,
+            ),
+          )),
+          child: ListTile(
+            contentPadding:
+                EdgeInsets.only(left: 15, right: 5, top: 0, bottom: 0),
+            dense: true,
+            // leading: Container(
+            //   height: 50,
+            //   width: 50,
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(25),
+            //     child: CachedNetworkImage(
+            //       imageUrl: '${bukkungListModel.imgUrl}',
+            //       fit: BoxFit.cover,
+            //     ),
+            //   ),
+            // ),
+            title: Text(
+              bukkungListModel.title!,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            subtitle:
+                Text(DateFormat('yyyy-MM-dd').format(bukkungListModel.date!),
+                    style: TextStyle(
+                      fontSize: 13,
+                    )),
+            trailing: IconButton(
+              onPressed: () {
+                openAlertDialog(
+                  title: '정말로 지우시겠습니까?',
+                  content: '지운 내용은 복구할 수 없습니다',
+                  secondButtonText: '취소',
+                  mainfunction: () {
+                    try {
+                      controller.deleteCompletedList(bukkungListModel);
+                      Get.back();
+                    } catch (e) {
+                      Get.back();
+                      openAlertDialog(title: '삭제 실패하였습니다');
+                    }
+                  },
+                );
+              },
+              icon: Icon(Icons.delete, size: 25, color: CustomColors.lightGrey),
+            ),
+          ),
         ),
       ),
     );

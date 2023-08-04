@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
@@ -156,7 +157,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             image: CachedNetworkImageProvider(
-                                diaryModel.imgUrlList![0]),
+                                diaryModel.imgUrlList!.isEmpty ? Constants.baseImageUrl:diaryModel.imgUrlList![0]),
                           ),
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(10),
@@ -484,7 +485,10 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
                                 image: DecorationImage(
-                                  image: CachedNetworkImageProvider(controller
+                                  image: CachedNetworkImageProvider(
+                                      controller
+                                          .selectedDiary.value.imgUrlList!.isEmpty? Constants.baseImageUrl:
+                                      controller
                                       .selectedDiary.value.imgUrlList![0]),
                                   fit: BoxFit.cover,
                                 ),
