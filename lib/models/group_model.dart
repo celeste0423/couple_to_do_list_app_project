@@ -15,6 +15,22 @@ class GroupModel {
     this.dayMet,
   });
 
+  factory GroupModel.fromDocumentSnapshot(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+    return GroupModel(
+      maleUid: data['maleUid'] as String?,
+      femaleUid: data['femaleUid'] as String?,
+      uid: data['uid'] as String?,
+      createdAt: data['createdAt'] == null
+          ? null
+          : (data['createdAt'] as Timestamp).toDate(),
+      dayMet: data['dayMet'] == null
+          ? null
+          : (data['dayMet'] as Timestamp).toDate(),
+    );
+  }
+
   factory GroupModel.fromJson(Map<String, dynamic> json) {
     return GroupModel(
       maleUid: json['maleUid'] == null ? null : json['maleUid'] as String,

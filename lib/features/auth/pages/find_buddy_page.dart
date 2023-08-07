@@ -3,6 +3,7 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/features/home/pages/home_page.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
+import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -294,14 +295,19 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
         elevation: 0,
         onPressed: () async {
           print('리프레시 버튼 이메일${widget.email}');
-          print('그룹 찾기${await authController.findGroupId(widget.email)}');
-          if (await authController.findGroupId(widget.email) ?? false) {
+          print('그룹 찾기${await authController.getGroupModel(widget.email)}');
+         GroupModel? group = await authController.getGroupModel(widget.email);
+          if (group!=null) {
             print('그룹 찾음');
-            //BukkungListPageController initbinding을 여기다 해야 할 거 같음
-            //InitBinding.additionalBinding();
-            // InitBinding().refreshControllers();
+            print('1authController.user.value.uid ${authController.user.value.uid}');
+            print('1authController.group.value.uid ${authController.group.value.uid}');
+            authController.group(group);
+            print('2authController.user.value.uid ${authController.user.value.uid}');
+            print('2authController.group.value.uid ${authController.group.value.uid}');
             FirebaseAuth.instance.reactive;
             Get.off(() => HomePage());
+          }else{
+            print('그룹아이디 못찾음');
           }
         },
         child: Icon(

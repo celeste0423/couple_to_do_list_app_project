@@ -207,8 +207,8 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<bool?> findGroupId(String email) async {
-    print('그룹 있는지 bool ${await UserRepository.findGroupId(email)}');
-    return await UserRepository.findGroupId(email);
+  Future<GroupModel?> getGroupModel(String email) async {
+    print('그룹 있는지 bool ${await UserRepository.getGroupModel(email)}');
+    return await UserRepository.getGroupModel(email);
   }
 }

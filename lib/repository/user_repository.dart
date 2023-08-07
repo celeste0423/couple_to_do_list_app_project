@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/auth_source/firebase_auth_remote_data_source.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
+import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
@@ -292,7 +293,7 @@ class UserRepository {
     }
   }
 
-  static Future<bool?> findGroupId(String email) async {
+  static Future<GroupModel?> getGroupModel(String email) async {
     try {
       var querySnapshot = await FirebaseFirestore.instance
           .collection('users')
@@ -300,22 +301,36 @@ class UserRepository {
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        var groupId = querySnapshot.docs[0].data()['groupId'];
+        //나에게 group이 있다면
+        String? groupId = querySnapshot.docs[0].data()['groupId'];
         print('검색한 그룹Id (user repo) $groupId');
         if (groupId == null) {
           print('그룹 아이디 없음(user repo)');
-          return false;
+          return null;
         } else {
+          print(
+              'AuthController.to.user.value.nickname ${AuthController.to.user.value.nickname}');
+          AuthController.to
+              .user(AuthController.to.user.value.copyWith(groupId: groupId));
+          print(
+              'AuthController.to.user.value.groupId ${AuthController.to.user.value.groupId}');
+          var snapshot = await FirebaseFirestore.instance
+              .collection('groups')
+              .doc(groupId)
+              .get();
           print('그룹 아이디 있음(user repo)');
-          return true;
+          if (!snapshot.exists) {
+            print('에러 그룹 없음(gro repo)');
+            return null;
+          }
+          return GroupModel.fromJson(snapshot.data()!);
         }
       } else {
-        // If no document is found with the given email, return false
-        return false;
+        return null;
       }
     } catch (e) {
       print(e.toString());
-      return false;
+      return null;
     }
   }
 
