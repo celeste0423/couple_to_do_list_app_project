@@ -394,7 +394,7 @@ class UserRepository {
       UserModel userdata = UserModel.fromJson(snapshot.data()!);
       return userdata;
     } else {
-      openAlertDialog(title: '유저 정보 가져오기 실패');
+      print('(user repo) 유저정보 가져오기 실패');
       return null;
     }
   }
