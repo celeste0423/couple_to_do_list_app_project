@@ -55,6 +55,11 @@ class AuthController extends GetxController {
   //   streamGroupController.close();
   // }
 
+  //이메일 비밀번호 로그인
+  Future signInWithEmailAndPassword(String email, String password) async {
+    await UserRepository().signUpWithEmailAndPassword(email, password);
+  }
+
 // 애플 로그인
   Future<UserCredential> signInWithApple() async {
     bool isAvailable = await SignInWithApple.isAvailable();

@@ -33,6 +33,9 @@ class _WelcomePageState extends State<WelcomePage> {
     return info.version;
   }
 
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   Widget _subTitle() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,7 +93,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.blue,
-                    fontSize: 20),
+                    fontSize: 15),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () async {
                     Uri uri = Uri.parse(Constants.serviceTermsNotionUrl);
@@ -107,7 +110,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.blue,
-                    fontSize: 20),
+                    fontSize: 15),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () async {
                     Uri uri = Uri.parse(Constants.noticeNotionUrl);
@@ -162,7 +165,7 @@ class _WelcomePageState extends State<WelcomePage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       width: Get.width,
-      height: 280,
+      height: 320,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -183,9 +186,75 @@ class _WelcomePageState extends State<WelcomePage> {
           KakaoLoginButton(),
           GoogleLoginButton(),
           AppleLoginButton(),
+          SizedBox(height: 5),
+          _customLoginButton(),
           SizedBox(height: 10),
           _infoText(),
         ],
+      ),
+    );
+  }
+
+  Widget _customLoginButton() {
+    return GestureDetector(
+      onTap: () {
+        Get.dialog(_registerDialog());
+      },
+      child: Text(
+        '게스트로 로그인',
+        style: TextStyle(
+          fontSize: 15,
+          color: CustomColors.greyText,
+        ),
+      ),
+    );
+  }
+
+  Widget _registerDialog() {
+    return Dialog(
+      child: Container(
+        height: 260,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 10,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Column(
+          children: [
+            TextField(
+              controller: emailController,
+              decoration: InputDecoration(labelText: '이메일'),
+            ),
+            TextField(
+              controller: passwordController,
+              decoration: InputDecoration(labelText: '비밀번호'),
+              obscureText: true,
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                AuthController.loginType = 'guest';
+                AuthController.to.signInWithEmailAndPassword(
+                  emailController.text,
+                  passwordController.text,
+                );
+                Get.back();
+              },
+              child: Text('회원가입 또는 로그인'),
+            ),
+            SizedBox(height: 10),
+            Text(
+              '(주의) 이메일과 비밀번호를 분실하신 경우에는 계정을 새로 만드셔야 합니다.',
+              style: TextStyle(
+                color: CustomColors.greyText,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -201,7 +270,7 @@ class _WelcomePageState extends State<WelcomePage> {
         child: Column(
           children: [
             SizedBox(height: 20),
-            Expanded(flex: 4, child: _subTitle()),
+            Expanded(flex: 3, child: _subTitle()),
             Expanded(
               flex: 2,
               child: Padding(

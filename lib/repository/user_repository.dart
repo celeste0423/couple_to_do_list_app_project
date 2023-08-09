@@ -20,6 +20,43 @@ class UserRepository {
   //       .map((snapshot) => UserModel.fromJson(snapshot.data()!));
   // }
 
+  Future signUpWithEmailAndPassword(String email, String password) async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (userCredential.user != null) {
+        // 로그인 성공 시 처리
+      } else {
+        // 로그인 실패 시 처리
+        print('Login failed');
+      }
+    } catch (e) {
+      print(e.toString());
+      if (e is FirebaseAuthException) {
+        if (e.code == 'user-not-found') {
+          // 등록된 사용자 없음 -> 회원가입으로 처리
+          try {
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: password,
+            );
+            // 회원가입 성공 시 처리
+          } catch (e) {
+            // 회원가입 실패 시 처리
+            print('Error during sign up: $e');
+          }
+        } else {
+          // 다른 에러 처리
+          print('Error: $e');
+        }
+      }
+    }
+  }
+
   static Future<UserCredential> appleFlutterWebAuth() async {
     final clientState = Uuid().v4();
     final url = Uri.https('appleid.apple.com', '/auth/authorize', {

@@ -59,6 +59,8 @@ class SettingPage extends GetView<SettingPageController> {
               return loginTypeTile('kakaos', '카카오');
             case 'apple':
               return loginTypeTile('apple', '애플');
+            case 'guest':
+              return loginTypeTile('ggomool', '게스트');
             default:
               return loginTypeTile('ggomool', '버꿍리스트');
           }
