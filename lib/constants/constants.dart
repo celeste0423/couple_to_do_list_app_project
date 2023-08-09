@@ -22,4 +22,7 @@ class Constants {
   //플레이 스토어 링크
   static String playstoreurl =
       'market://details?id=com.teambukkung.bukkunglist';
+
+  static String adminWebAppUrl =
+      'https://script.google.com/macros/s/AKfycby0Xh2pfxxn5vw923_QPxOvl7Pok24O08PQcJ7qja88yMiolE_8xeYs1VorJyMaZDTe/exec';
 }

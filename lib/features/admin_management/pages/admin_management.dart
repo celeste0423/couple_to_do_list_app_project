@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/admin_management/pages/admin_list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
@@ -11,6 +12,13 @@ import 'package:url_launcher/url_launcher.dart';
 class AdminPage extends StatelessWidget {
   const AdminPage({Key? key}) : super(key: key);
 
+  Future uploadBukkungListWeb() async {
+    final Uri url = Uri.parse(Constants.adminWebAppUrl);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch webapp : url = $url');
+    }
+  }
+
   Future updateImageUrl() async {
     CollectionReference fireStorecollection =
         FirebaseFirestore.instance.collection('bukkungLists');
@@ -18,7 +26,7 @@ class AdminPage extends StatelessWidget {
 
     for (int i = 1; i <= 150; i++) {
       String paddedIndex = i.toString().padLeft(3, '0');
-      String docName = 'defaultBukkungList' + i.toString().padLeft(3, '0');
+      String docName = 'defaultBukkungList$paddedIndex';
 
       String imageUrl; // Declare imageUrl outside the first try block
 
@@ -36,7 +44,7 @@ class AdminPage extends StatelessWidget {
 
       // Move the second try block inside the first try block's scope
       try {
-        await fireStorecollection.doc(docName).set({'imgUrl': imageUrl});
+        await fireStorecollection.doc(docName).update({'imgUrl': imageUrl});
         print("URL for $docName uploaded successfully.");
       } catch (e) {
         print("Error updating Firestore document for $docName: $e");
@@ -44,15 +52,22 @@ class AdminPage extends StatelessWidget {
     }
   }
 
-  Future uploadBukkungListWeb() async {
-    const webAppUrl =
-        'https://script.google.com/macros/s/AKfycbwELdl7GGdOAcWe-CbzX4RSyqxcoLCYK9R5keeLxTelDOegUUi2Cfi0Y-Q5ECLy5p-i/exec';
-    final Uri url = Uri.parse(webAppUrl);
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch webapp : url = $url');
+  Future<void> deleteBukkungListsInRange(int start, int end) async {
+    final fireStorecollection =
+    FirebaseFirestore.instance.collection('bukkungLists');
+
+    for (int i = start; i <= end; i++) {
+      String paddedIndex = i.toString().padLeft(3, '0');
+      String docName = 'defaultBukkungList$paddedIndex';
+
+      try {
+        await fireStorecollection.doc(docName).delete();
+        print("Document $docName deleted successfully.");
+      } catch (e) {
+        print("Error deleting Firestore document $docName: $e");
+      }
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +90,44 @@ class AdminPage extends StatelessWidget {
                 onTap: () async {
                   await updateImageUrl();
                   openAlertDialog(title: '이미지 url 업데이트 완료');
+                },
+              ),
+              MainButton(
+                buttonText: '버꿍리스트 deletion',
+                buttonColor: Colors.grey,
+                onTap: () async {
+                  int start = 1; // Initialize the start value
+                  int end = 91;   // Initialize the end value
+                  // Show a dialog to get the start and end integers from the user
+                  Get.dialog(
+                    AlertDialog(
+                      title: Text('Enter Range'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            decoration: InputDecoration(labelText: 'Start'),
+                            keyboardType: TextInputType.number,
+                            onChanged: (value) => start = int.parse(value),
+                          ),
+                          TextField(
+                            decoration: InputDecoration(labelText: 'End'),
+                            keyboardType: TextInputType.number,
+                            onChanged: (value) => end = int.parse(value),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Get.back(); // Close the dialog
+                            deleteBukkungListsInRange(start, end);
+                          },
+                          child: Text('Delete'),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
               MainButton(
