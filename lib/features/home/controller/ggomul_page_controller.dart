@@ -21,10 +21,6 @@ class GgomulPageController extends GetxController {
     return data.length;
   }
 
-  @override
-  onClose() {
-    super.onClose();
-  }
 
   Stream<List<BukkungListModel>> getAllCompletedList() {
     return ListCompletedRepository().getCompletedBukkungListByDate();

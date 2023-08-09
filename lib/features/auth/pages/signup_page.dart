@@ -26,7 +26,7 @@ class SignupPage extends StatefulWidget {
 
 class SignupPageState extends State<SignupPage> {
   final List<bool> isSelected = <bool>[false, false];
-  String? gender = null;
+  String? gender;
 
   TextEditingController nicknameController = TextEditingController();
   TextEditingController birthdayController = TextEditingController();

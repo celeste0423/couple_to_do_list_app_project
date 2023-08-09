@@ -20,7 +20,7 @@ import 'package:uuid/uuid.dart';
 class UploadDiaryController extends GetxController {
   static UploadDiaryController get to => Get.find();
 
-  Uint8List? diaryImage = null;
+  Uint8List? diaryImage;
 
   DiaryModel? selectedDiaryModel = Get.arguments;
 
@@ -230,7 +230,7 @@ class UploadDiaryController extends GetxController {
         var uploadTask = await FirebaseStorage.instance
             .ref()
             .child('group_diary')
-            .child('${AuthController.to.user.value.groupId}/${filename}')
+            .child('${AuthController.to.user.value.groupId}/$filename')
             .putFile(selectedImgFiles[0][imgIndex]);
         var downloadUrl = await uploadTask.ref.getDownloadURL();
         imgUrlList.add(downloadUrl);

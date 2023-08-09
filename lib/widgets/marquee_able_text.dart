@@ -6,7 +6,7 @@ class MarqueeAbleText extends StatelessWidget {
   final int maxLength;
   late final TextStyle? style;
 
-  MarqueeAbleText({
+  const MarqueeAbleText({
     Key? key,
     required this.text,
     required this.maxLength,

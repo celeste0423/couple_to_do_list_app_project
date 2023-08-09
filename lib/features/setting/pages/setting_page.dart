@@ -16,7 +16,7 @@ import 'package:share_plus/share_plus.dart';
 //Todo: 리스트타일 없이 만들어야 할 듯, 높이 조절이 너무 불편함
 
 class SettingPage extends GetView<SettingPageController> {
-  SettingPage({super.key});
+  const SettingPage({super.key});
 
   PreferredSizeWidget customAppBar() {
     return AppBar(

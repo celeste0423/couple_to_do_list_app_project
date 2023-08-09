@@ -7,6 +7,8 @@ class AppleLoginButton extends StatelessWidget {
 
   String? userid;
 
+  AppleLoginButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
