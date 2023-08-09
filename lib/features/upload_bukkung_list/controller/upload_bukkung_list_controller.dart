@@ -201,7 +201,7 @@ class UploadBukkungListController extends GetxController {
     if (selectedBukkungListModel == null && listImage != null) {
       //선택 안함, 사진 있음
       var task = uploadFile(listImage!, 'group_bukkunglist',
-          '${AuthController.to.user.value.groupId}/$filename');
+          '${AuthController.to.user.value.groupId}/${filename}');
 
       task.snapshotEvents.listen((event) async {
         if (event.bytesTransferred == event.totalBytes &&
@@ -253,7 +253,7 @@ class UploadBukkungListController extends GetxController {
             .ref()
             .child('group_bukkunglist')
             .child(destinationPath);
-        Uint8List? sourceData = await sourceRef.getData();
+        Uint8List? sourceData = await sourceRef.getData()!;
         await destinationRef.putData(sourceData!);
 
         downloadUrl = await destinationRef.getDownloadURL();
@@ -287,7 +287,7 @@ class UploadBukkungListController extends GetxController {
         BukkungListRepository.deleteImage(selectedBukkungListModel!.imgUrl!);
       }
       var task = uploadFile(listImage!, 'group_bukkunglist',
-          '${AuthController.to.user.value.groupId}/$filename');
+          '${AuthController.to.user.value.groupId}/${filename}');
       task.snapshotEvents.listen((event) async {
         if (event.bytesTransferred == event.totalBytes &&
             event.state == TaskState.success) {
@@ -352,7 +352,7 @@ class UploadBukkungListController extends GetxController {
       String imageId = uuid.v4();
       var filename = '$imageId.jpg';
       var task =
-          uploadFile(listImage!, 'suggestion_bukkunglist', filename);
+          uploadFile(listImage!, 'suggestion_bukkunglist', '${filename}');
 
       task.snapshotEvents.listen((event) async {
         if (event.bytesTransferred == event.totalBytes &&

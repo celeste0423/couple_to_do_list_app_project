@@ -7,8 +7,6 @@ class KakaoLoginButton extends StatelessWidget {
 
   String? userid;
 
-  KakaoLoginButton({super.key});
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -16,7 +14,8 @@ class KakaoLoginButton extends StatelessWidget {
         //커스텀 토큰 받아옴
         String? customToken = await AuthController.to.signInWithKakao();
         //파이어베이스 auth 등록
-        if (customToken == '' ||
+        if (customToken == null ||
+            customToken == '' ||
             customToken == 'Internal Server Error') {
           openAlertDialog(title: '로그인 실패');
         } else {

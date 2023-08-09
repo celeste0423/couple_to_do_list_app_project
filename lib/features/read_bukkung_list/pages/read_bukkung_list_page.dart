@@ -1,3 +1,5 @@
+import 'package:couple_to_do_list_app/features/home/pages/bukkung_list_page.dart';
+import 'package:couple_to_do_list_app/features/home/pages/home_page.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/controller/read_bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
@@ -151,7 +153,7 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
                     ),
                     image: DecorationImage(
                       image: NetworkImage(
-                        controller.imgUrl.value,
+                        controller.imgUrl.value!,
                       ),
                       fit: BoxFit.cover,
                     ),

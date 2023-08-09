@@ -78,7 +78,7 @@ class DiaryPageController extends GetxController
     StreamSubscription<List<DiaryModel>>? subscription;
     subscription = stream.listen((diary) {
       if (diary.isNotEmpty) {
-        final updatedDiary = selectedDiary.value.copyWith(
+        final updatedDiary = selectedDiary.value!.copyWith(
           diaryId: diary[0].diaryId,
           title: diary[0].title,
           category: diary[0].category,

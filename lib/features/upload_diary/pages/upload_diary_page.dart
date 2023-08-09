@@ -12,7 +12,7 @@ import 'package:intl/intl.dart';
 import '../../../models/diary_model.dart';
 
 class UploadDiaryPage extends GetView<UploadDiaryController> {
-  const UploadDiaryPage({super.key});
+  UploadDiaryPage({super.key});
 
   PreferredSizeWidget _appBar() {
     return AppBar(
@@ -104,7 +104,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   }
 
   Widget _imagePicker() {
-    return SizedBox(
+    return Container(
       height: 390,
       child: Obx(() {
         return ListView(
@@ -267,7 +267,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   iconSize: 30,
                 ),
                 SizedBox(width: 10),
-                SizedBox(
+                Container(
                   width: 120,
                   child: TextField(
                     controller: controller.locationController,
@@ -424,7 +424,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25),
       ),
-      child: SizedBox(
+      child: Container(
         height: 550,
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -520,7 +520,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
     Widget contents() {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

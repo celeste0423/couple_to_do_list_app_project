@@ -147,7 +147,7 @@ class ReadCompletedListPage extends GetView<ReadCompletedListPageController> {
                     ),
                     image: DecorationImage(
                       image: NetworkImage(
-                        controller.imgUrl.value,
+                        controller.imgUrl.value!,
                       ),
                       fit: BoxFit.cover,
                     ),

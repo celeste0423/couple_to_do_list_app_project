@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class GoogleLoginButton extends StatelessWidget {
-  const GoogleLoginButton({super.key});
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -14,7 +12,7 @@ class GoogleLoginButton extends StatelessWidget {
         UserCredential? userCredential =
             await AuthController.to.signInWithGoogle();
 
-        if (userCredential == '') {
+        if (userCredential == null || userCredential == '') {
           openAlertDialog(title: '로그인 실패');
         } else {
           print('(gog but) ${AuthController.to.user.value.nickname}');

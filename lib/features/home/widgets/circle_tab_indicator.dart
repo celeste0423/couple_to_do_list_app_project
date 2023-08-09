@@ -25,8 +25,8 @@ class _CirclePainter extends BoxPainter {
       center: offset + Offset(cfg.size!.width / 2, cfg.size!.height / 2 + 37.4),
       radius: radius,
     );
-    const double startAngle = -3.141592; // 시작 각도 (반시계 방향)
-    const double sweepAngle = 3.141592; // 반원의 호도 (반시계 방향)
+    final double startAngle = -3.141592; // 시작 각도 (반시계 방향)
+    final double sweepAngle = 3.141592; // 반원의 호도 (반시계 방향)
 
     canvas.drawArc(rect, startAngle, sweepAngle, true, _paint);
   }

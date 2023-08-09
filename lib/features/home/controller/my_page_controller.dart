@@ -136,7 +136,7 @@ class MyPageController extends GetxController {
       );
       AuthController.to.group(updatedData);
       //파이어베이스 값 업데이트
-      GroupRepository.updateGroupDayMet(selectedDate);
+      GroupRepository.updateGroupDayMet(selectedDate!);
     }
     _getDayMet();
   }

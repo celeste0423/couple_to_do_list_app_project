@@ -31,7 +31,7 @@ class ListCompletedRepository {
         .get();
 
     final bukkungLists = snapshot.docs.map((doc) {
-      return BukkungListModel.fromJson(doc.data());
+      return BukkungListModel.fromJson(doc.data() as Map<String, dynamic>);
     }).toList();
 
     return bukkungLists;

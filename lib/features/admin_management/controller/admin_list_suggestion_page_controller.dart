@@ -76,7 +76,7 @@ class AdminListSuggestionPageController extends GetxController
   List<BukkungListModel>? favoriteListPrevList;
   bool isfavoriteListLastPage = false;
 
-  final int _pageSize = 5;
+  int _pageSize = 5;
 
   @override
   void onInit() {
@@ -117,7 +117,7 @@ class AdminListSuggestionPageController extends GetxController
       return;
     }
     _initTarget(); //타겟 더하기
-    if (context.mounted) {
+    if (context!.mounted) {
       tutorialCoachMark = TutorialCoachMark(
         targets: targets,
         hideSkip: true,

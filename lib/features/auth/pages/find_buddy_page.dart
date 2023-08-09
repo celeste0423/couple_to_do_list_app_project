@@ -128,7 +128,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       alignment: Alignment.center,
       clipBehavior: Clip.none,
       children: [
-        SizedBox(
+        Container(
           height: 540,
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 20, vertical: 135),

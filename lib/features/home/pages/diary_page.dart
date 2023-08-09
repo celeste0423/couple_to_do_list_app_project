@@ -138,7 +138,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                 ),
                 border: Border.all(
                   color: diaryModel.diaryId! ==
-                          controller.selectedDiary.value.diaryId
+                          controller.selectedDiary.value!.diaryId
                       ? CustomColors.grey.withOpacity(0.4)
                       : Colors.transparent,
                   width: 2,
@@ -269,7 +269,7 @@ class DiaryPage extends GetView<DiaryPageController> {
           ),
         ),
         Obx(
-          () => diaryModel.diaryId! == controller.selectedDiary.value.diaryId
+          () => diaryModel.diaryId! == controller.selectedDiary.value!.diaryId
               ? Positioned(
                   top: 10,
                   right: 10,
@@ -472,7 +472,7 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               child: PcText(
-                                controller.selectedDiary.value.title!,
+                                controller.selectedDiary.value!.title!,
                                 style: TextStyle(
                                   fontSize: 22 * percent,
                                 ),

@@ -21,10 +21,10 @@ class _LocationTextFieldState extends State<LocationTextField> {
   void initState() {
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        _overlayEntry = _createOverlayEntry();
-        Overlay.of(context).insert(_overlayEntry!);
+        this._overlayEntry = this._createOverlayEntry();
+        Overlay.of(context).insert(this._overlayEntry!);
       } else {
-        _overlayEntry!.remove();
+        this._overlayEntry!.remove();
       }
     });
     super.initState();
@@ -66,9 +66,9 @@ class _LocationTextFieldState extends State<LocationTextField> {
                                   .placePredictions[index].description!
                                   .split(',');
                               String shortLocation = parts.last.trim();
-                              _controller.locationController.text =
+                              _controller.locationController!.text =
                                   shortLocation;
-                              _overlayEntry!.remove();
+                              this._overlayEntry!.remove();
                               FocusScope.of(context).unfocus();
                             },
                           );
@@ -83,8 +83,8 @@ class _LocationTextFieldState extends State<LocationTextField> {
   }
 
   Widget _locationListTile(String? location, VoidCallback? onTap) {
-    List<String> parts = location!.split(',');
-    String shortLocation = parts.last.trim();
+    List<String> _parts = location!.split(',');
+    String _shortLocation = _parts.last.trim();
     return Column(
       children: [
         Padding(
@@ -99,7 +99,7 @@ class _LocationTextFieldState extends State<LocationTextField> {
           onTap: onTap,
           horizontalTitleGap: 0,
           title: Text(
-            shortLocation ?? '',
+            _shortLocation ?? '',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),

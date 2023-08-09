@@ -30,7 +30,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Text(
             '추천',
             style: TextStyle(
@@ -530,7 +530,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               width: 3,
               color: Colors.black.withOpacity(0.5),
             )),
-        tabs: const [
+        tabs: [
           Tab(text: '인기'),
           Tab(text: '최신'),
           Tab(text: '조회수'),
