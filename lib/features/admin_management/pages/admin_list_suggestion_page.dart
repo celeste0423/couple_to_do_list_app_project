@@ -32,7 +32,7 @@ class AdminListSuggestionPage
       ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        children: const [
           Text(
             '추천',
             style: TextStyle(
@@ -531,7 +531,7 @@ class AdminListSuggestionPage
               width: 3,
               color: Colors.black.withOpacity(0.5),
             )),
-        tabs: [
+        tabs: const [
           Tab(text: '인기'),
           Tab(text: '최신'),
           Tab(text: '조회수'),

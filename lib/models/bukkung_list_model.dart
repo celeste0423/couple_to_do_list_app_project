@@ -135,7 +135,7 @@ class BukkungListModel {
       userId: userId ?? this.userId,
       groupId: groupId ?? this.groupId,
       createdAt: createdAt ?? this.createdAt,
-      likedUsers: likedUsers ?? null,
+      likedUsers: likedUsers,
     );
   }
 }

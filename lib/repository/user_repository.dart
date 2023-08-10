@@ -142,7 +142,7 @@ class UserRepository {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    print('(user repo) credential ${credential}');
+    print('(user repo) credential $credential');
     // //사용자 정보 가져오기
     // final userInfo = await googleSignIn.currentUser;
     // AuthController.nickName = userInfo!.displayName;
@@ -185,10 +185,10 @@ class UserRepository {
         //커스텀 토큰 생성
         print('커스텀 토큰 생성 시작');
         user = await kakao.UserApi.instance.me();
-        print(user!.kakaoAccount.toString());
+        print(user.kakaoAccount.toString());
         final customToken = await firebaseAuthDataSource.createCustomToken({
-          'uid': user!.id.toString(),
-          'email': user!.kakaoAccount!.email!,
+          'uid': user.id.toString(),
+          'email': user.kakaoAccount!.email!,
         });
         return customToken;
       } else {
@@ -294,12 +294,12 @@ class UserRepository {
   }
 
   static Future<void> googleAccountDeletion() async {
-    final _auth = FirebaseAuth.instance;
+    final auth = FirebaseAuth.instance;
     // credential = GoogleAuthProvider.credential();
     //await FirebaseAuth.instance.currentUser?.reauthenticateWithCredential(credential);
-    await _auth.currentUser?.delete();
+    await auth.currentUser?.delete();
     print('_auth.currentUser!.delete(); 완료');
-    await _auth.signOut();
+    await auth.signOut();
     print('_auth.signOut(); 완료');
     await google.GoogleSignIn().signOut();
     print('google signout 완료');
@@ -311,11 +311,11 @@ class UserRepository {
         .where('email', isEqualTo: user.email)
         .get()
         .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         FirebaseFirestore.instance.collection('users').doc(doc.id).update(
           {'groupId': groupId},
         );
-      });
+      }
     });
   }
 
