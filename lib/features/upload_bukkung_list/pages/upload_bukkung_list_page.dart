@@ -362,7 +362,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
     );
   }
 
-  Widget _contentTextField() {
+  Widget _contentTextField(context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -398,7 +398,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           ),
         ),
         onTap: (){
-          controller.scrollToContent();
+          controller.scrollToContent(context);
         },
       ),
     );
@@ -497,7 +497,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
                               _categorySelector(context),
                               _locationTextfield(context),
                               _datePicker(context),
-                              _contentTextField(),
+                              _contentTextField(context),
                               Padding(
                                 padding: const EdgeInsets.only(
                                   bottom: 15,

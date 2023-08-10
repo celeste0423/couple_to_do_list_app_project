@@ -171,11 +171,13 @@ class UploadBukkungListController extends GetxController {
     }
   }
 
-  void scrollToContent() {
+  void scrollToContent(context) {
+    
+    final keyboardSize= MediaQuery.of(context).viewInsets.bottom;
     if(contentFocusNode.hasFocus){
       if (contentScrollController.hasClients) {
         contentScrollController.animateTo(
-          contentScrollController.position.maxScrollExtent - 100,
+          contentScrollController.position.maxScrollExtent-keyboardSize,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
