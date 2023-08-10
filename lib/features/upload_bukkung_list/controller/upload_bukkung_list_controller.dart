@@ -18,8 +18,8 @@ import 'package:uuid/uuid.dart';
 class UploadBukkungListController extends GetxController {
   static UploadBukkungListController get to => Get.find();
 
-  final BukkungListModel? selectedBukkungListModel = Get.arguments[0];
-  final bool isSuggestion = Get.arguments[1];
+  BukkungListModel? selectedBukkungListModel = Get.arguments[0];
+  late bool isSuggestion = Get.arguments[1];
 
   Rx<bool> isCompleted = false.obs;
 
@@ -172,7 +172,6 @@ class UploadBukkungListController extends GetxController {
   }
 
   void scrollToContent(context) {
-    
     final keyboardSize= MediaQuery.of(context).viewInsets.bottom;
     if(contentFocusNode.hasFocus){
       if (contentScrollController.hasClients) {
