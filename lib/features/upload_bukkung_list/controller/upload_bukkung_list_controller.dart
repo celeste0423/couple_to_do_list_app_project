@@ -12,6 +12,7 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class UploadBukkungListController extends GetxController {
@@ -179,16 +180,40 @@ class UploadBukkungListController extends GetxController {
     }
   }
 
+  // void pickImageFromGallery(BuildContext context) async {
+  //   // To set maxheight of images that you want in your app
+  //   final image = await Navigator.of(context)
+  //       .push(MaterialPageRoute(builder: (context) => ImagePickerPage()));
+  //   if (image == null) {
+  //     print('선택한 이미지가 없습니다(upl cont)');
+  //     isImage(false);
+  //     return;
+  //   }
+  //   isImage(true);
+  //   listImage = image;
+  // }
+
   void pickImageFromGallery(BuildContext context) async {
-    final image = await Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => ImagePickerPage()));
-    if (image == null) {
-      print('선택한 이미지가 없습니다(upl cont)');
+    final picker = ImagePicker();
+
+    try {
+      final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+      if (pickedFile == null) {
+        print('No image selected');
+        isImage(false);
+        return;
+      }
+
+      isImage(true);
+
+      // Convert PickedFile to Uint8List
+      final imageBytes = await pickedFile.readAsBytes();
+      listImage = Uint8List.fromList(imageBytes);
+    } catch (e) {
+      print('Error picking image: $e');
       isImage(false);
-      return;
     }
-    isImage(true);
-    listImage = image;
   }
 
   Future<void> uploadBukkungList() async {
