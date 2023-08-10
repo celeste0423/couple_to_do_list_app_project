@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class UploadBukkungListPage extends GetView<UploadBukkungListController> {
-  UploadBukkungListPage({Key? key}) : super(key: key);
+  const UploadBukkungListPage({Key? key}) : super(key: key);
 
   PreferredSizeWidget _appBar() {
     return AppBar(
@@ -171,7 +171,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25),
       ),
-      child: Container(
+      child: SizedBox(
         height: 550,
         child: Padding(
           padding: const EdgeInsets.all(20),

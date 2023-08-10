@@ -26,7 +26,7 @@ class SignupPage extends StatefulWidget {
 
 class SignupPageState extends State<SignupPage> {
   final List<bool> isSelected = <bool>[false, false];
-  String? gender = null;
+  String? gender;
 
   TextEditingController nicknameController = TextEditingController();
   TextEditingController birthdayController = TextEditingController();
@@ -257,29 +257,27 @@ class SignupPageState extends State<SignupPage> {
     return MainButton(
         buttonText: '등록하기',
         onTap: () async {
-          if (nicknameController == null) {
-            openAlertDialog(title: '닉네임을 올바르게 작성해주세요');
-          } else if (!birthValidation()) {
-            openAlertDialog(title: '생일을 올바르게 작성해주세요');
-          } else if (gender == null) {
-            openAlertDialog(title: '성별을 기입해주세요');
-          } else {
-            DateTime birthdayDateTime = DateTime.parse(
-                '${birthdayController.text.substring(0, 4)}-${birthdayController.text.substring(4, 6)}-${birthdayController.text.substring(6, 8)}');
+          if (!birthValidation()) {
+          openAlertDialog(title: '생일을 올바르게 작성해주세요');
+        } else if (gender == null) {
+          openAlertDialog(title: '성별을 기입해주세요');
+        } else {
+          DateTime birthdayDateTime = DateTime.parse(
+              '${birthdayController.text.substring(0, 4)}-${birthdayController.text.substring(4, 6)}-${birthdayController.text.substring(6, 8)}');
 
-            var signupUser = UserModel(
-              uid: widget.uid,
-              email: widget.email,
-              nickname: nicknameController.text,
-              loginType: AuthController.loginType,
-              gender: gender,
-              birthday: birthdayDateTime,
-            );
-            await AuthController.to.signup(signupUser);
-            Get.off(() => FindBuddyPage(
-                  email: widget.email,
-                ));
-          }
+          var signupUser = UserModel(
+            uid: widget.uid,
+            email: widget.email,
+            nickname: nicknameController.text,
+            loginType: AuthController.loginType,
+            gender: gender,
+            birthday: birthdayDateTime,
+          );
+          await AuthController.to.signup(signupUser);
+          Get.off(() => FindBuddyPage(
+                email: widget.email,
+              ));
+        }
         });
   }
 

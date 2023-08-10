@@ -46,7 +46,7 @@ class AuthDeletePageController extends GetxController {
             //커스텀 토큰 받아옴
             String? customToken = await AuthController.to.signInWithKakao();
             //파이어베이스 auth 등록
-            if (customToken == null || customToken == '') {
+            if (customToken == '') {
               openAlertDialog(title: '로그인 실패');
             } else {
               // AuthController.loginType = 'kakao';
@@ -56,15 +56,11 @@ class AuthDeletePageController extends GetxController {
           } else if (loginType == 'apple') {
             UserCredential? userCredential =
                 await AuthController.to.signInWithApple();
-            if (userCredential == null) {
-              openAlertDialog(title: '로그인 실패');
-            } else {
-              print(
-                  'apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
-              //로그인 타입 설정
-              // AuthController.loginType = 'apple';
-            }
-          }
+            print(
+                'apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
+            //로그인 타입 설정
+            // AuthController.loginType = 'apple';
+                    }
           //auth에서 삭제
           await FirebaseAuth.instance.currentUser!.delete();
           print('auth 삭제뒤');
@@ -84,8 +80,8 @@ class AuthDeletePageController extends GetxController {
           Map<String, dynamic>? data = snapshot1.data();
           if (data != null) {
             print('반환');
-            String? femaleUid = data!['femaleUid'];
-            String? maleUid = data!['maleUid'];
+            String? femaleUid = data['femaleUid'];
+            String? maleUid = data['maleUid'];
             String? bukkungUid = myGender == 'male' ? femaleUid : maleUid;
             final snapshot2 = await FirebaseFirestore.instance
                 .collection('users')

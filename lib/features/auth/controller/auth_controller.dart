@@ -122,7 +122,7 @@ class AuthController extends GetxController {
   Future<UserModel?> loginUser(String uid) async {
     try {
       //email과 맞는 유저 데이터를 firebase 에서 가져온다.
-      print('(auth cont) uid ${uid}');
+      print('(auth cont) uid $uid');
       var userData = await UserRepository.loginUserByUid(uid);
       //신규 유저일 경우 userData에 false값 반환됨, error났을떄는 null 반환됨
       if (userData != null && userData != false) {
@@ -171,15 +171,15 @@ class AuthController extends GetxController {
       //이미 다른 짝이 있음
       return GroupIdStatus.hasGroup;
     } else {
-      if (myData!.gender == 'male') {
+      if (myData.gender == 'male') {
         var groupData =
-            await GroupRepository.groupSignup(groupId, myData, buddyData!);
-        print('그룹 데이터 ${groupData!.uid}');
+            await GroupRepository.groupSignup(groupId, myData, buddyData);
+        print('그룹 데이터 ${groupData.uid}');
         group(groupData);
-      } else if (myData!.gender == 'female') {
+      } else if (myData.gender == 'female') {
         var groupData =
-            await GroupRepository.groupSignup(groupId, buddyData!, myData);
-        print('그룹 데이터 ${groupData!.uid}');
+            await GroupRepository.groupSignup(groupId, buddyData, myData);
+        print('그룹 데이터 ${groupData.uid}');
         group(groupData);
       } else {
         //동성 커플고려는 아직은 하지 않는걸로
@@ -188,7 +188,7 @@ class AuthController extends GetxController {
         // group(groupData);
       }
 
-      print('uuid로 가입 시작(cont) ${groupId}');
+      print('uuid로 가입 시작(cont) $groupId');
       await UserRepository.updateGroupId(myData, groupId);
       await UserRepository.updateGroupId(buddyData, groupId);
       //user에 그룹아이디 주입
@@ -198,7 +198,7 @@ class AuthController extends GetxController {
       BukkungListModel initialModel = BukkungListModel.init(user.value);
       BukkungListModel initialBukkungList = initialModel.copyWith(
         title: '함께 버꿍리스트 앱 설치하기',
-        listId: 'initial${groupId}',
+        listId: 'initial$groupId',
         category: '6etc',
         location: '버꿍리스트 앱',
         content:
@@ -207,7 +207,7 @@ class AuthController extends GetxController {
       );
       print('(auth cont) 기본 버꿍리스트 업로드 시작');
       await BukkungListRepository.setGroupBukkungList(
-          initialBukkungList, 'initial${groupId}', groupId);
+          initialBukkungList, 'initial$groupId', groupId);
       return GroupIdStatus.createdGroupId;
     }
   }

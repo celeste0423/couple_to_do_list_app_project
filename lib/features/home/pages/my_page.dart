@@ -394,13 +394,13 @@ class MyPage extends GetView<MyPageController> {
                 ),
               ),
               Center(
-                child: Container(
+                child: SizedBox(
                   height: 180,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        'LV.${((controller.expPoint.value - (controller.expPoint.value % 100)) / 100).toInt().toString()}',
+                        'LV.${(controller.expPoint.value - (controller.expPoint.value % 100)) ~/ 100}',
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 30,
@@ -463,7 +463,7 @@ class MyPage extends GetView<MyPageController> {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: [
+          children: const [
             SizedBox(width: 30),
             Icon(
               Icons.chat,

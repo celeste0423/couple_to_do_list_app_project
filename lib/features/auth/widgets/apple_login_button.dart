@@ -1,11 +1,12 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AppleLoginButton extends StatelessWidget {
 
   String? userid;
+
+  AppleLoginButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,15 +15,11 @@ class AppleLoginButton extends StatelessWidget {
         //Todo: 애플 로그인 구현
         UserCredential? userCredential =
             await AuthController.to.signInWithApple();
-        if (userCredential == null) {
-          openAlertDialog(title: '로그인 실패');
-        } else {
-          print(
-              'apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
-          //로그인 타입 설정
-          AuthController.loginType = 'apple';
-        }
-      },
+        print(
+            'apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
+        //로그인 타입 설정
+        AuthController.loginType = 'apple';
+            },
       child: Stack(
         children: [
           Container(
