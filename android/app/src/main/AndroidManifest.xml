@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <queries>
         <!-- If your app opens https URLs -->
         <intent>
@@ -7,6 +9,7 @@
             <data android:scheme="https" />
         </intent>
     </queries>
+
     <application
         android:label="버꿍리스트"
         android:name="${applicationName}"

@@ -266,7 +266,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   iconName: 'location-pin',
                   iconSize: 30,
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: 5),
                 SizedBox(
                   width: 120,
                   child: TextField(
@@ -305,7 +305,6 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   iconSize: 30,
                   iconColor: CustomColors.grey.withOpacity(0.5),
                 ),
-                SizedBox(width: 10),
                 GestureDetector(
                   onTap: () {
                     FocusManager.instance.primaryFocus?.unfocus();
@@ -319,7 +318,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                           category: controller.diaryCategory.value ?? '',
                           size: 35,
                         ),
-                        SizedBox(width: 10),
+                        SizedBox(width: 5),
                         Text(
                           controller.categoryToString[
                                   controller.diaryCategory.value] ??
