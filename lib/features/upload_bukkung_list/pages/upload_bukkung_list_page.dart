@@ -373,6 +373,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
       ),
       child: TextField(
         controller: controller.contentController,
+        focusNode: controller.contentFocusNode,
         keyboardType: TextInputType.multiline,
         maxLines: null,
         onChanged: (value) {},
@@ -391,10 +392,14 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           disabledBorder: InputBorder.none,
           hintText: '계획을 작성해 주세요',
           hintStyle: TextStyle(
-              color: CustomColors.greyText,
-              fontSize: 18,
-              fontFamily: 'Bookk_mj',),
+            color: CustomColors.greyText,
+            fontSize: 18,
+            fontFamily: 'Bookk_mj',
+          ),
         ),
+        onTap: (){
+          controller.scrollToContent();
+        },
       ),
     );
   }

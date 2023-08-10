@@ -42,6 +42,7 @@ class UploadBukkungListController extends GetxController {
   Rx<DateTime?> listDateTime = Rx<DateTime?>(null);
 
   TextEditingController contentController = TextEditingController();
+  FocusNode contentFocusNode = FocusNode();
   ScrollController contentScrollController = ScrollController();
 
   Uint8List? listImage;
@@ -69,7 +70,7 @@ class UploadBukkungListController extends GetxController {
     });
     contentController.addListener(_checkCompleted);
 
-    contentScrollController.addListener(scrollToContent);
+    // contentScrollController.addListener(scrollToContent);
     bukkungList = BukkungListModel.init(AuthController.to.user.value);
   }
 
@@ -170,13 +171,15 @@ class UploadBukkungListController extends GetxController {
   }
 
   void scrollToContent() {
-    // if (contentScrollController.hasClients) {
-    //   contentScrollController.animateTo(
-    //     contentScrollController.position.maxScrollExtent - 100,
-    //     duration: Duration(milliseconds: 300),
-    //     curve: Curves.easeOut,
-    //   );
-    // }
+    if(contentFocusNode.hasFocus){
+      if (contentScrollController.hasClients) {
+        contentScrollController.animateTo(
+          contentScrollController.position.maxScrollExtent - 100,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    }
   }
 
   void pickImageFromGallery(BuildContext context) async {
