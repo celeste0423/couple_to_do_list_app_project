@@ -393,7 +393,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
           hintStyle: TextStyle(
               color: CustomColors.greyText,
               fontSize: 18,
-              fontFamily: 'Bookk_mj'),
+              fontFamily: 'Bookk_mj',),
         ),
       ),
     );

@@ -170,13 +170,13 @@ class UploadBukkungListController extends GetxController {
   }
 
   void scrollToContent() {
-    if (contentScrollController.hasClients) {
-      contentScrollController.animateTo(
-        contentScrollController.position.maxScrollExtent - 100,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    }
+    // if (contentScrollController.hasClients) {
+    //   contentScrollController.animateTo(
+    //     contentScrollController.position.maxScrollExtent - 100,
+    //     duration: Duration(milliseconds: 300),
+    //     curve: Curves.easeOut,
+    //   );
+    // }
   }
 
   void pickImageFromGallery(BuildContext context) async {
