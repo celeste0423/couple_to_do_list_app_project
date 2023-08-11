@@ -405,11 +405,6 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
             fontFamily: 'Bookk_mj',
           ),
         ),
-        onTap: () {
-          //controller.scrollToContent(context);
-          print(controller.bukkungList!.title);
-          print(controller.selectedBukkungListModel!.title);
-        },
       ),
     );
   }
@@ -513,15 +508,16 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                                   left: 30,
                                   right: 30,
                                 ),
-                                child: Get.arguments[0] == null
-                                    ? Row(
-                                        children: [
-                                          _imagePicker(context),
-                                          SizedBox(width: 10),
-                                          _publicSwitch(),
-                                        ],
-                                      )
-                                    : _imagePicker(context),
+                                child:
+                                    controller.selectedBukkungListModel == null
+                                        ? Row(
+                                            children: [
+                                              _imagePicker(context),
+                                              SizedBox(width: 10),
+                                              _publicSwitch(),
+                                            ],
+                                          )
+                                        : _imagePicker(context),
                               )
                             ],
                           ),

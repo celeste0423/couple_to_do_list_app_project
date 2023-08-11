@@ -4,7 +4,6 @@ import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
-import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/image_picker_page.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
@@ -71,6 +70,9 @@ class UploadBukkungListController extends GetxController {
     });
     contentController.addListener(_checkCompleted);
 
+    contentFocusNode.addListener(() {
+      scrollToContent();
+    });
     // contentScrollController.addListener(scrollToContent);
     bukkungList = BukkungListModel.init(AuthController.to.user.value);
   }
@@ -171,12 +173,15 @@ class UploadBukkungListController extends GetxController {
     }
   }
 
-  void scrollToContent(context) {
-    final keyboardSize= MediaQuery.of(context).viewInsets.bottom;
-    if(contentFocusNode.hasFocus){
+  void scrollToContent() async {
+    await Future.delayed(Duration(milliseconds: 300));
+    print('스크롤 시작${contentFocusNode.hasFocus}');
+    if (contentFocusNode.hasFocus) {
+      print('스크롤 가능 ${contentScrollController.hasClients}');
       if (contentScrollController.hasClients) {
+        print('스크롤 중');
         contentScrollController.animateTo(
-          contentScrollController.position.maxScrollExtent-keyboardSize,
+          contentScrollController.position.maxScrollExtent - 100,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
@@ -380,8 +385,7 @@ class UploadBukkungListController extends GetxController {
       var uuid = Uuid();
       String imageId = uuid.v4();
       var filename = '$imageId.jpg';
-      var task =
-          uploadFile(listImage!, 'suggestion_bukkunglist', filename);
+      var task = uploadFile(listImage!, 'suggestion_bukkunglist', filename);
 
       task.snapshotEvents.listen((event) async {
         if (event.bytesTransferred == event.totalBytes &&
