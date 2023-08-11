@@ -158,8 +158,9 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             ) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
-                  child:
-                      CircularProgressIndicator(color: CustomColors.mainPink),
+                  child: CircularProgressIndicator(
+                    color: CustomColors.mainPink,
+                  ),
                 );
               } else if (snapshot.hasError) {
                 openAlertDialog(title: '에러 발생');

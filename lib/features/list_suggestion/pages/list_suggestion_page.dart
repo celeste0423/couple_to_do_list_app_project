@@ -435,7 +435,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 17,
-                      height: 1.2,
+                      height: 1.3,
                     ),
                   ),
                   SizedBox(height: 15),

@@ -18,7 +18,8 @@ class UploadBukkungListPage extends StatefulWidget {
 
 class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
   // Create an instance of your controller
-  final UploadBukkungListController controller = Get.put(UploadBukkungListController());
+  final UploadBukkungListController controller =
+      Get.put(UploadBukkungListController());
   PreferredSizeWidget _appBar() {
     return AppBar(
       leading: TextButton(
@@ -35,47 +36,47 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
           return TextButton(
             onPressed: controller.isCompleted.value == true
                 ? () async {
-              print('업로드 시작(upl page)');
-              controller.isUploading.value = true;
-              await controller.uploadBukkungList();
-              Get.back();
-              Get.back();
-            }
+                    print('업로드 시작(upl page)');
+                    controller.isUploading.value = true;
+                    await controller.uploadBukkungList();
+                    Get.back();
+                    Get.back();
+                  }
                 : () {
-              if (controller.titleController.text == '') {
-                openAlertDialog(title: '제목을 입력해 주세요');
-              } else if (controller.listCategory.value == '') {
-                openAlertDialog(title: '카테고리를 선택해주세요');
-              } else if (controller.locationController.text == '') {
-                openAlertDialog(title: '위치를 작성해주세요');
-              } else if (controller.listDateTime.value == null) {
-                openAlertDialog(title: '날짜를 선택해주세요');
-              } else if (controller.contentController == '') {
-                openAlertDialog(title: '세부 계획을 작성해주세요');
-              }
-            },
+                    if (controller.titleController.text == '') {
+                      openAlertDialog(title: '제목을 입력해 주세요');
+                    } else if (controller.listCategory.value == '') {
+                      openAlertDialog(title: '카테고리를 선택해주세요');
+                    } else if (controller.locationController.text == '') {
+                      openAlertDialog(title: '위치를 작성해주세요');
+                    } else if (controller.listDateTime.value == null) {
+                      openAlertDialog(title: '날짜를 선택해주세요');
+                    } else if (controller.contentController == '') {
+                      openAlertDialog(title: '세부 계획을 작성해주세요');
+                    }
+                  },
             child: controller.selectedBukkungListModel == null
                 ? controller.isCompleted.value == true
-                ? Text('저장', style: TextStyle(color: CustomColors.mainPink))
-                : Text(
-              '저장',
-              style: TextStyle(color: CustomColors.greyText),
-            )
+                    ? Text('저장', style: TextStyle(color: CustomColors.mainPink))
+                    : Text(
+                        '저장',
+                        style: TextStyle(color: CustomColors.greyText),
+                      )
                 : controller.isSuggestion == true
-                ? controller.isCompleted.value == true
-                ? Text('내 버꿍에 추가',
-                style: TextStyle(color: CustomColors.mainPink))
-                : Text(
-              '내 버꿍에 추가',
-              style: TextStyle(color: CustomColors.greyText),
-            )
-                : controller.isCompleted.value == true
-                ? Text('수정 완료',
-                style: TextStyle(color: CustomColors.mainPink))
-                : Text(
-              '수정 완료',
-              style: TextStyle(color: CustomColors.greyText),
-            ),
+                    ? controller.isCompleted.value == true
+                        ? Text('내 버꿍에 추가',
+                            style: TextStyle(color: CustomColors.mainPink))
+                        : Text(
+                            '내 버꿍에 추가',
+                            style: TextStyle(color: CustomColors.greyText),
+                          )
+                    : controller.isCompleted.value == true
+                        ? Text('수정 완료',
+                            style: TextStyle(color: CustomColors.mainPink))
+                        : Text(
+                            '수정 완료',
+                            style: TextStyle(color: CustomColors.greyText),
+                          ),
           );
         }),
       ],
@@ -150,12 +151,12 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                         SizedBox(width: 10),
                         Text(
                           controller.categoryToString[
-                          controller.listCategory.value] ??
+                                  controller.listCategory.value] ??
                               '카테고리',
                           style: TextStyle(
                             color: controller.categoryToString[
-                            controller.listCategory.value] ==
-                                null
+                                        controller.listCategory.value] ==
+                                    null
                                 ? CustomColors.greyText
                                 : CustomColors.blackText,
                             fontSize: 18,
@@ -334,7 +335,6 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                print(controller.selectedBukkungListModel!.title);
                 FocusManager.instance.primaryFocus?.unfocus();
                 controller.datePicker(context);
               },
@@ -346,13 +346,13 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                 ),
                 child: Padding(
                   padding:
-                  const EdgeInsets.symmetric(vertical: 13, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 13, horizontal: 20),
                   child: Obx(() {
                     return Text(
                       controller.listDateTime.value == null
                           ? '예상 날짜'
                           : DateFormat('yyyy-MM-dd')
-                          .format(controller.listDateTime.value!),
+                              .format(controller.listDateTime.value!),
                       style: TextStyle(
                         color: controller.listDateTime.value == null
                             ? CustomColors.greyText
@@ -405,7 +405,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
             fontFamily: 'Bookk_mj',
           ),
         ),
-        onTap: (){
+        onTap: () {
           //controller.scrollToContent(context);
           print(controller.bukkungList!.title);
           print(controller.selectedBukkungListModel!.title);
@@ -474,6 +474,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -514,12 +515,12 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                                 ),
                                 child: Get.arguments[0] == null
                                     ? Row(
-                                  children: [
-                                    _imagePicker(context),
-                                    SizedBox(width: 10),
-                                    _publicSwitch(),
-                                  ],
-                                )
+                                        children: [
+                                          _imagePicker(context),
+                                          SizedBox(width: 10),
+                                          _publicSwitch(),
+                                        ],
+                                      )
                                     : _imagePicker(context),
                               )
                             ],
@@ -534,15 +535,15 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
           ),
         ),
         Obx(
-              () => controller.isUploading.value
+          () => controller.isUploading.value
               ? Container(
-            color: Colors.black.withOpacity(0.5),
-            child: Center(
-              child: CircularProgressIndicator(
-                color: CustomColors.mainPink,
-              ),
-            ),
-          )
+                  color: Colors.black.withOpacity(0.5),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: CustomColors.mainPink,
+                    ),
+                  ),
+                )
               : Container(),
         ),
       ],
