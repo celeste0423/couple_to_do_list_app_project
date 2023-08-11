@@ -10,6 +10,7 @@ import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
@@ -41,6 +42,7 @@ class UploadBukkungListController extends GetxController {
 
   Rx<DateTime?> listDateTime = Rx<DateTime?>(null);
 
+  late Ticker _ticker;
   TextEditingController contentController = TextEditingController();
   FocusNode contentFocusNode = FocusNode();
   ScrollController contentScrollController = ScrollController();
@@ -70,9 +72,9 @@ class UploadBukkungListController extends GetxController {
     });
     contentController.addListener(_checkCompleted);
 
-    contentFocusNode.addListener(() {
-      scrollToContent();
-    });
+    // contentFocusNode.addListener(() {
+    //   scrollToContent();
+    // });
     // contentScrollController.addListener(scrollToContent);
     bukkungList = BukkungListModel.init(AuthController.to.user.value);
   }
@@ -174,7 +176,7 @@ class UploadBukkungListController extends GetxController {
   }
 
   void scrollToContent() async {
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(Duration(milliseconds: 400));
     print('스크롤 시작${contentFocusNode.hasFocus}');
     if (contentFocusNode.hasFocus) {
       print('스크롤 가능 ${contentScrollController.hasClients}');
