@@ -25,6 +25,7 @@ class FindBuddyPage extends StatefulWidget {
 class _FindBuddyPageState extends State<FindBuddyPage> {
   final AuthController authController = AuthController.to;
   TextEditingController emailController = TextEditingController();
+  FocusNode emailFocusNode = FocusNode();
 
   Widget _appBar() {
     return Padding(
@@ -140,11 +141,13 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Image.asset(
-                  'assets/images/email.png',
-                  color: CustomColors.grey,
-                  height: 70,
-                ),
+                emailFocusNode.hasFocus
+                    ? SizedBox()
+                    : Image.asset(
+                        'assets/images/email.png',
+                        color: CustomColors.grey,
+                        height: 70,
+                      ),
                 RichText(
                   text: TextSpan(
                     children: const [
@@ -232,6 +235,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
   Widget _emailTextField() {
     return TextField(
       controller: emailController,
+      focusNode: emailFocusNode,
       style: TextStyle(
         fontSize: 13,
         fontFamily: 'Pyeongchang',
@@ -296,17 +300,21 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
         onPressed: () async {
           print('리프레시 버튼 이메일${widget.email}');
           print('그룹 찾기${await authController.getGroupModel(widget.email)}');
-         GroupModel? group = await authController.getGroupModel(widget.email);
-          if (group!=null) {
+          GroupModel? group = await authController.getGroupModel(widget.email);
+          if (group != null) {
             print('그룹 찾음');
-            print('1authController.user.value.uid ${authController.user.value.uid}');
-            print('1authController.group.value.uid ${authController.group.value.uid}');
+            print(
+                '1authController.user.value.uid ${authController.user.value.uid}');
+            print(
+                '1authController.group.value.uid ${authController.group.value.uid}');
             authController.group(group);
-            print('2authController.user.value.uid ${authController.user.value.uid}');
-            print('2authController.group.value.uid ${authController.group.value.uid}');
+            print(
+                '2authController.user.value.uid ${authController.user.value.uid}');
+            print(
+                '2authController.group.value.uid ${authController.group.value.uid}');
             FirebaseAuth.instance.reactive;
             Get.off(() => HomePage());
-          }else{
+          } else {
             print('그룹아이디 못찾음');
           }
         },
