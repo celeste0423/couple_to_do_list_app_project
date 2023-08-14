@@ -6,6 +6,7 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/level_icon.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
+import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:flutter/material.dart';
@@ -302,6 +303,136 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
+  Widget _suggestionListTabBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return _categorySelectDialog();
+                },
+              );
+            },
+            child: Container(
+              width: 35,
+              height: 35,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 3, bottom: 5),
+                child: PngIcon(
+                  iconName: 'category',
+                  iconColor: Colors.black.withOpacity(0.6),
+                  iconSize: 25,
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: TabBar(
+              isScrollable: false,
+              controller: controller.suggestionListTabController,
+              labelColor: Colors.black.withOpacity(0.8),
+              labelStyle: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+              ),
+              unselectedLabelStyle: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w200,
+                color: Colors.black.withOpacity(0.5),
+              ),
+              labelPadding: EdgeInsets.zero,
+              unselectedLabelColor: Colors.black.withOpacity(0.5),
+              indicator: UnderlineTabIndicator(
+                  insets: EdgeInsets.only(left: 30, right: 30, bottom: 5),
+                  borderSide: BorderSide(
+                    width: 3,
+                    color: Colors.black.withOpacity(0.5),
+                  )),
+              tabs: const [
+                Tab(text: '인기'),
+                Tab(text: '최신'),
+                Tab(text: '조회수'),
+                Tab(text: '찜'),
+                Tab(text: '내 리스트'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _categorySelectDialog() {
+    return AlertDialog(
+      title: Text('카테고리를 선택해주세요'),
+      content: SingleChildScrollView(
+        child: Obx(
+          () => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: controller.categories.map((item) {
+              print(controller.selectedCategories);
+              return CheckboxListTile(
+                title: Text(controller.categoryToString[item]!),
+                value: controller.selectedCategories.contains(item),
+                activeColor: CustomColors.mainPink,
+                onChanged: (bool? value) {
+                  if (value!) {
+                    controller.selectedCategories.add(item);
+                  } else {
+                    controller.selectedCategories.remove(item);
+                  }
+                },
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            controller.selectedCategories.clear();
+            Get.back();
+          },
+          child: Text(
+            '취소',
+            style: TextStyle(
+              color: CustomColors.blackText,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            //Todo: 리스트 추가된 것에 따라 리스트 정리하는 함수 만들 것
+            controller.listByLikePrevList!.clear();
+            controller.listByDatePrevList!.clear();
+            controller.listByViewPrevList!.clear();
+            controller.favoriteListPrevList!.clear();
+            controller.loadNewBukkungLists('like');
+            controller.loadNewBukkungLists('date');
+            controller.loadNewBukkungLists('view');
+            controller.loadNewBukkungLists('favorite');
+            controller.initSelectedBukkungList();
+            Get.back();
+          },
+          child: Text(
+            '확인',
+            style: TextStyle(
+              color: CustomColors.mainPink,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _selectedImage() {
     return Obx(() {
       return Padding(
@@ -502,41 +633,6 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         ),
         shadowOffset: Offset(5, 5),
         shadowBlurRadius: 5,
-      ),
-    );
-  }
-
-  Widget _suggestionListTabBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TabBar(
-        isScrollable: false,
-        controller: controller.suggestionListTabController,
-        labelColor: Colors.black.withOpacity(0.8),
-        labelStyle: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-        ),
-        unselectedLabelStyle: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w200,
-          color: Colors.black.withOpacity(0.5),
-        ),
-        labelPadding: EdgeInsets.zero,
-        unselectedLabelColor: Colors.black.withOpacity(0.5),
-        indicator: UnderlineTabIndicator(
-            insets: EdgeInsets.only(left: 30, right: 30, bottom: 5),
-            borderSide: BorderSide(
-              width: 3,
-              color: Colors.black.withOpacity(0.5),
-            )),
-        tabs: const [
-          Tab(text: '인기'),
-          Tab(text: '최신'),
-          Tab(text: '조회수'),
-          Tab(text: '찜'),
-          Tab(text: '내 리스트'),
-        ],
       ),
     );
   }
@@ -985,7 +1081,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 //   unselectedColor: Colors.black.withOpacity(0.5),
                 //   isMyTab: true,
                 // ),
-                _suggestionListTabBar(),
+                _suggestionListTabBar(context),
                 _selectedImage(),
               ],
             ),

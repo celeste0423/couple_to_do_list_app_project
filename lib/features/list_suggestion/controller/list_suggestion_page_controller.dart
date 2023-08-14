@@ -34,6 +34,25 @@ class ListSuggestionPageController extends GetxController
   bool isTextEmpty = true;
   Rx<bool> isSearchResult = false.obs;
 
+  RxList<String> categories = [
+    "1travel",
+    "2meal",
+    "3activity",
+    "4culture",
+    "5study",
+    "6etc",
+  ].obs;
+  Rx<bool> isCategory = false.obs;
+  RxList<String> selectedCategories = RxList();
+  Map<String, String> stringToCategory = {
+    "여행": "1travel",
+    "식사": "2meal",
+    "액티비티": "3activity",
+    "문화 활동": "4culture",
+    "자기 계발": "5study",
+    "기타": "6etc",
+  };
+
   Map<String, String> categoryToString = {
     "1travel": "여행",
     "2meal": "식사",
@@ -86,7 +105,7 @@ class ListSuggestionPageController extends GetxController
       _onTabChanged();
     });
     searchBarController.addListener(onTextChanged);
-    _initSelectedBukkungList();
+    initSelectedBukkungList();
     loadNewBukkungLists('like');
     loadNewBukkungLists('date');
     loadNewBukkungLists('view');
@@ -193,10 +212,10 @@ class ListSuggestionPageController extends GetxController
   }
 
   void _onTabChanged() {
-    _initSelectedBukkungList();
+    initSelectedBukkungList();
   }
 
-  void _initSelectedBukkungList() {
+  void initSelectedBukkungList() {
     print(suggestionListTabController.index);
     switch (suggestionListTabController.index) {
       case 0:
@@ -326,31 +345,35 @@ class ListSuggestionPageController extends GetxController
       case 'like':
         {
           List<BukkungListModel> firstList = await ListSuggestionRepository()
-              .getNewSuggestionListByLike(_pageSize, null, null);
+              .getNewSuggestionListByLike(
+                  _pageSize, null, null, selectedCategories);
           listByLikeStreamController.add(firstList);
         }
       case 'date':
         {
           List<BukkungListModel> firstList = await ListSuggestionRepository()
-              .getNewSuggestionListByDate(_pageSize, null, null);
+              .getNewSuggestionListByDate(
+                  _pageSize, null, null, selectedCategories);
           listByDateStreamController.add(firstList);
         }
       case 'view':
         {
           List<BukkungListModel> firstList = await ListSuggestionRepository()
-              .getNewSuggestionListByView(_pageSize, null, null);
+              .getNewSuggestionListByView(
+                  _pageSize, null, null, selectedCategories);
           listByViewStreamController.add(firstList);
         }
       case 'favorite':
         {
           List<BukkungListModel> firstList = await ListSuggestionRepository()
-              .getNewFavoriteList(_pageSize, null, null);
+              .getNewFavoriteList(_pageSize, null, null, selectedCategories);
           favoriteListStreamController.add(firstList);
         }
       default:
         {
           List<BukkungListModel> firstList = await ListSuggestionRepository()
-              .getNewSuggestionListByLike(_pageSize, null, null);
+              .getNewSuggestionListByLike(
+                  _pageSize, null, null, selectedCategories);
           listByLikeStreamController.add(firstList);
         }
     }
@@ -364,8 +387,8 @@ class ListSuggestionPageController extends GetxController
               listByLikeScrollController.position.maxScrollExtent) {
             if (!isListByLikeLastPage) {
               List<BukkungListModel> nextList = await ListSuggestionRepository()
-                  .getNewSuggestionListByLike(
-                      _pageSize, listByLikeKeyPage, listByLikePrevList);
+                  .getNewSuggestionListByLike(_pageSize, listByLikeKeyPage,
+                      listByLikePrevList, selectedCategories);
               listByLikeStreamController.add(nextList);
             }
           }
@@ -376,8 +399,8 @@ class ListSuggestionPageController extends GetxController
               listByDateScrollController.position.maxScrollExtent) {
             if (!isListByDateLastPage) {
               List<BukkungListModel> nextList = await ListSuggestionRepository()
-                  .getNewSuggestionListByDate(
-                      _pageSize, listByDateKeyPage, listByDatePrevList);
+                  .getNewSuggestionListByDate(_pageSize, listByDateKeyPage,
+                      listByDatePrevList, selectedCategories);
               listByDateStreamController.add(nextList);
             }
           }
@@ -388,8 +411,8 @@ class ListSuggestionPageController extends GetxController
               listByViewScrollController.position.maxScrollExtent) {
             if (!isListByViewLastPage) {
               List<BukkungListModel> nextList = await ListSuggestionRepository()
-                  .getNewSuggestionListByView(
-                      _pageSize, listByViewKeyPage, listByViewPrevList);
+                  .getNewSuggestionListByView(_pageSize, listByViewKeyPage,
+                      listByViewPrevList, selectedCategories);
               listByViewStreamController.add(nextList);
             }
           }
@@ -400,8 +423,8 @@ class ListSuggestionPageController extends GetxController
               favoriteListScrollController.position.maxScrollExtent) {
             if (!isListByViewLastPage) {
               List<BukkungListModel> nextList = await ListSuggestionRepository()
-                  .getNewSuggestionListByView(
-                      _pageSize, favoriteListKeyPage, favoriteListPrevList);
+                  .getNewSuggestionListByView(_pageSize, favoriteListKeyPage,
+                      favoriteListPrevList, selectedCategories);
               favoriteListStreamController.add(nextList);
             }
           }
@@ -412,8 +435,8 @@ class ListSuggestionPageController extends GetxController
               listByLikeScrollController.position.maxScrollExtent) {
             if (!isListByLikeLastPage) {
               List<BukkungListModel> nextList = await ListSuggestionRepository()
-                  .getNewSuggestionListByLike(
-                      _pageSize, listByLikeKeyPage, listByLikePrevList);
+                  .getNewSuggestionListByLike(_pageSize, listByLikeKeyPage,
+                      listByLikePrevList, selectedCategories);
               listByLikeStreamController.add(nextList);
             }
           }

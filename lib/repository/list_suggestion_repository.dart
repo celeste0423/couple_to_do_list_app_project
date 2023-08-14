@@ -53,6 +53,7 @@ class ListSuggestionRepository {
     int pageSize,
     QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
     List<BukkungListModel>? prevList,
+    List<String> selectedCategories,
   ) async {
     Query<Map<String, dynamic>> query = FirebaseFirestore.instance
         .collection('bukkungLists')
@@ -62,6 +63,9 @@ class ListSuggestionRepository {
       query = query.startAfterDocument(keyPage);
     }
     query = query.limit(pageSize);
+    if (selectedCategories.isNotEmpty) {
+      query = query.where('category', whereIn: selectedCategories);
+    }
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
     List<BukkungListModel> bukkungLists = prevList ?? [];
     for (var bukkungList in querySnapshot.docs) {
@@ -84,6 +88,7 @@ class ListSuggestionRepository {
     int pageSize,
     QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
     List<BukkungListModel>? prevList,
+    List<String> selectedCategories,
   ) async {
     Query<Map<String, dynamic>> query = FirebaseFirestore.instance
         .collection('bukkungLists')
@@ -93,6 +98,9 @@ class ListSuggestionRepository {
       query = query.startAfterDocument(keyPage);
     }
     query = query.limit(pageSize);
+    if (selectedCategories.isNotEmpty) {
+      query = query.where('category', whereIn: selectedCategories);
+    }
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
     List<BukkungListModel> bukkungLists = prevList ?? [];
     for (var bukkungList in querySnapshot.docs) {
@@ -115,6 +123,7 @@ class ListSuggestionRepository {
     int pageSize,
     QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
     List<BukkungListModel>? prevList,
+    List<String> selectedCategories,
   ) async {
     Query<Map<String, dynamic>> query = FirebaseFirestore.instance
         .collection('bukkungLists')
@@ -125,6 +134,9 @@ class ListSuggestionRepository {
       query = query.startAfterDocument(keyPage);
     }
     query = query.limit(pageSize);
+    if (selectedCategories.isNotEmpty) {
+      query = query.where('category', whereIn: selectedCategories);
+    }
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
     List<BukkungListModel> bukkungLists = prevList ?? [];
     for (var bukkungList in querySnapshot.docs) {
@@ -147,6 +159,7 @@ class ListSuggestionRepository {
     int pageSize,
     QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
     List<BukkungListModel>? prevList,
+    List<String> selectedCategories,
   ) async {
     String currentUserUid = AuthController.to.user.value.uid!;
     Query<Map<String, dynamic>> query = FirebaseFirestore.instance
@@ -158,6 +171,9 @@ class ListSuggestionRepository {
       query = query.startAfterDocument(keyPage);
     }
     query = query.limit(pageSize);
+    if (selectedCategories.isNotEmpty) {
+      query = query.where('category', whereIn: selectedCategories);
+    }
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
     List<BukkungListModel> bukkungLists = prevList ?? [];
     for (var bukkungList in querySnapshot.docs) {
