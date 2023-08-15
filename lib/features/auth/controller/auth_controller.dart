@@ -216,4 +216,10 @@ class AuthController extends GetxController {
     print('그룹 있는지 bool ${await UserRepository.getGroupModel(email)}');
     return await UserRepository.getGroupModel(email);
   }
+
+  clearAuthController(){
+    loginType=null;
+    group(GroupModel());
+    user(UserModel());
+  }
 }
