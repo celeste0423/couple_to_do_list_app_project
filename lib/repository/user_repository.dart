@@ -209,6 +209,7 @@ class UserRepository {
         //todo: 해보니까 이전 로그인 기록 지워지지 않은것 같은데 그럼 왜 await googleSignIn.signOut();가 필요한거지?일단 앱 돌아가는데 아무 문제 없으니 스킵.
         try {
           await googleSignIn.signOut();
+
         } catch (e) {
           openAlertDialog(title: e.toString());
         }
@@ -217,6 +218,7 @@ class UserRepository {
         //이전 로그인 기록 지우기
         try {
           await kakao.UserApi.instance.unlink();
+
         } catch (e) {
           openAlertDialog(title: e.toString());
         }
@@ -229,11 +231,13 @@ class UserRepository {
         }
       }
       await FirebaseAuth.instance.signOut();
+      AuthController.to.clearAuthController();
       print(
           "로그아웃 성공! AuthController.to.user.value.email = ${AuthController.to.user.value.email}");
     } catch (e) {
       print('로그아웃 실패${e.toString()}');
     }
+
   }
 
   static Future<UserModel?> loginUserByEmail(String email) async {
