@@ -315,14 +315,16 @@ class SettingPage extends GetView<SettingPageController> {
     double imageWidth = 33.0;
     return Scaffold(
       appBar: customAppBar(),
-      body: Column(
-        children: [
-          customDivider(),
-          Hero(tag: 'addButton', child: accountListTile()),
-          _notificationSetting(imageWidth),
-          _appSetting(imageWidth),
-          _logoutListTile(imageWidth),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            customDivider(),
+            Hero(tag: 'addButton', child: accountListTile()),
+            _notificationSetting(imageWidth),
+            _appSetting(imageWidth),
+            _logoutListTile(imageWidth),
+          ],
+        ),
       ),
     );
   }
