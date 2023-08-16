@@ -1075,12 +1075,6 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 75),
-                // CategorySelectTabBar(
-                //   tabController: controller.suggestionListTabController,
-                //   selectedColor: Colors.black.withOpacity(0.8),
-                //   unselectedColor: Colors.black.withOpacity(0.5),
-                //   isMyTab: true,
-                // ),
                 _suggestionListTabBar(context),
                 _selectedImage(),
               ],
