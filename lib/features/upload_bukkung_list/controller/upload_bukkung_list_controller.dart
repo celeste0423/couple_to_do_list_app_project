@@ -103,8 +103,9 @@ class UploadBukkungListController extends GetxController {
     if (titleController.text.isNotEmpty &&
         listCategory.value!.isNotEmpty &&
         locationController.text.isNotEmpty &&
-        listDateTime.value != null &&
-        contentController.text.isNotEmpty) {
+        contentController.text.isNotEmpty
+        //todo: 이거 아이폰 검사 통과하기 위해 지움 && listDateTime.value != null
+    ) {
       isCompleted.value = true;
     } else {
       isCompleted.value = false;
@@ -251,7 +252,8 @@ class UploadBukkungListController extends GetxController {
             location: locationController.text,
             imgUrl: downloadUrl,
             imgId: imageId,
-            date: listDateTime.value,
+            //todo: 이거 아이폰 검사 통과용 ?? Datetime.now() 추가함
+            date: listDateTime.value ?? DateTime.now(),
           );
           _submitBukkungList(updatedBukkungList, listId, false);
         }
@@ -266,7 +268,7 @@ class UploadBukkungListController extends GetxController {
         location: locationController.text,
         imgUrl: Constants.baseImageUrl,
         likeCount: 0,
-        date: listDateTime.value,
+        date: listDateTime.value ?? DateTime.now(),
       );
       _submitNoImgBukkungList(updatedBukkungList, listId, false);
     } else if (selectedBukkungListModel != null &&
@@ -305,7 +307,7 @@ class UploadBukkungListController extends GetxController {
         location: locationController.text,
         imgUrl: downloadUrl,
         imgId: imageId,
-        date: listDateTime.value,
+        date: listDateTime.value ?? DateTime.now(),
         // Todo:기존 제작자의 저작권을 남길 지 말지 선택
       );
       if (isSuggestion) {
