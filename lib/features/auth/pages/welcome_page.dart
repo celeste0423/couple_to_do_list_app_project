@@ -169,7 +169,7 @@ class _WelcomePageState extends State<WelcomePage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       width: Get.width,
-      height: Platform.isAndroid ? 280: 320,
+      height: Platform.isAndroid ? 280 : 320,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -177,43 +177,45 @@ class _WelcomePageState extends State<WelcomePage> {
           topLeft: Radius.circular(45),
         ),
       ),
-      child:  Platform.isAndroid ? Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'SNS 로그인',
-            style: TextStyle(
-              color: CustomColors.darkGrey,
-              fontSize: 12,
+      child: Platform.isAndroid
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'SNS 로그인',
+                  style: TextStyle(
+                    color: CustomColors.darkGrey,
+                    fontSize: 12,
+                  ),
+                ),
+                KakaoLoginButton(),
+                GoogleLoginButton(),
+                //  AppleLoginButton(),
+                SizedBox(height: 5),
+                _customLoginButton(),
+                SizedBox(height: 10),
+                _infoText(),
+              ],
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'SNS 로그인',
+                  style: TextStyle(
+                    color: CustomColors.darkGrey,
+                    fontSize: 12,
+                  ),
+                ),
+                KakaoLoginButton(),
+                GoogleLoginButton(),
+                AppleLoginButton(),
+                SizedBox(height: 5),
+                _customLoginButton(),
+                SizedBox(height: 10),
+                _infoText(),
+              ],
             ),
-          ),
-          KakaoLoginButton(),
-          GoogleLoginButton(),
-        //  AppleLoginButton(),
-          SizedBox(height: 5),
-          _customLoginButton(),
-          SizedBox(height: 10),
-          _infoText(),
-        ],
-      ) : Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'SNS 로그인',
-            style: TextStyle(
-              color: CustomColors.darkGrey,
-              fontSize: 12,
-            ),
-          ),
-          KakaoLoginButton(),
-          GoogleLoginButton(),
-          AppleLoginButton(),
-          SizedBox(height: 5),
-          _customLoginButton(),
-          SizedBox(height: 10),
-          _infoText(),
-        ],
-      ),
     );
   }
 
