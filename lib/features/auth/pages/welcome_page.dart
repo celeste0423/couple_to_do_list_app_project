@@ -169,7 +169,7 @@ class _WelcomePageState extends State<WelcomePage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       width: Get.width,
-      height: Platform.isAndroid ? 280 : 320,
+      height: Platform.isAndroid ? 270 : 320,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
