@@ -439,8 +439,10 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                           //     color: CustomColors.blackText,
                           //   ),
                           // ),
-                          BkText(DateFormat('yyyy-MM-dd')
-                              .format(bukkungListModel.date!)),
+                          bukkungListModel.date == null
+                              ? BkText('(날짜 미정)')
+                              : BkText(DateFormat('yyyy-MM-dd')
+                                  .format(bukkungListModel.date!)),
                           Row(
                             children: [
                               PngIcon(

@@ -410,7 +410,6 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         ),
         TextButton(
           onPressed: () {
-            //Todo: 리스트 추가된 것에 따라 리스트 정리하는 함수 만들 것
             controller.listByLikePrevList!.clear();
             controller.listByDatePrevList!.clear();
             controller.listByViewPrevList!.clear();
@@ -620,6 +619,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       left: Get.width / 2 - 30,
       child: CustomIconButton(
         onTap: () {
+          // controller
+          //     .selectedList(controller.selectedList.value.copyWith(date: null));
           Get.to(
             () => UploadBukkungListPage(),
             arguments: [controller.selectedList.value, true],

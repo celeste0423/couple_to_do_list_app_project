@@ -84,8 +84,8 @@ class BukkungListRepository {
     String listId,
     String? groupId,
   ) async {
-    print('(buk repo) 유저그룹id ${AuthController.to.user.value.groupId}');
-    print('(buk repo) 그룹id ${AuthController.to.group.value.uid}');
+    // print('(buk repo) 유저그룹id ${AuthController.to.user.value.groupId}');
+    // print('(buk repo) 그룹id ${AuthController.to.group.value.uid}');
     await FirebaseFirestore.instance
         .collection('groups')
         .doc(groupId ?? AuthController.to.user.value.groupId)

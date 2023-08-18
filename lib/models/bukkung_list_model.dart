@@ -37,7 +37,6 @@ class BukkungListModel {
   });
 
   factory BukkungListModel.init(UserModel userInfo) {
-    var time = DateTime.now();
     return BukkungListModel(
       listId: '',
       category: '',
@@ -48,11 +47,11 @@ class BukkungListModel {
       imgId: null,
       likeCount: 0,
       viewCount: 0,
-      date: time,
+      date: null,
       madeBy: userInfo.nickname,
       userId: userInfo.uid,
       groupId: userInfo.groupId,
-      createdAt: time,
+      createdAt: DateTime.now(),
       likedUsers: [],
     );
   }
@@ -68,9 +67,7 @@ class BukkungListModel {
       imgId: json['imgId'] == null ? null : json['imgId'] as String,
       likeCount: json['likeCount'] == null ? 0 : json['likeCount'] as int,
       viewCount: json['viewCount'] == null ? 0 : json['viewCount'] as int,
-      date: json['date'] == null
-          ? DateTime.now()
-          : (json['date'] as Timestamp).toDate(),
+      date: json['date'] == null ? null : (json['date'] as Timestamp).toDate(),
       madeBy: json['madeBy'] == null ? null : json['madeBy'] as String,
       userId: json['userId'] == null ? null : json['userId'] as String,
       groupId: json['groupId'] == null ? null : json['groupId'] as String,
@@ -120,6 +117,7 @@ class BukkungListModel {
     DateTime? createdAt,
     List<String>? likedUsers,
   }) {
+    print('날짜 받는중 model $date');
     return BukkungListModel(
       listId: listId ?? this.listId,
       category: category ?? this.category,
@@ -130,7 +128,7 @@ class BukkungListModel {
       imgId: imgId ?? this.imgId,
       likeCount: likeCount ?? this.likeCount,
       viewCount: viewCount ?? this.viewCount,
-      date: date ?? this.date,
+      date: date,
       madeBy: madeBy ?? this.madeBy,
       userId: userId ?? this.userId,
       groupId: groupId ?? this.groupId,

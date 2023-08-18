@@ -20,6 +20,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
   // Create an instance of your controller
   final UploadBukkungListController controller =
       Get.put(UploadBukkungListController());
+
   PreferredSizeWidget _appBar() {
     return AppBar(
       leading: TextButton(
@@ -49,9 +50,11 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                       openAlertDialog(title: '카테고리를 선택해주세요');
                     } else if (controller.locationController.text == '') {
                       openAlertDialog(title: '위치를 작성해주세요');
-                    } else if (controller.listDateTime.value == null) {
-                      openAlertDialog(title: '날짜를 선택해주세요');
-                    } else if (controller.contentController == '') {
+                    }
+                    // else if (controller.listDateTime.value == null) {
+                    //   openAlertDialog(title: '날짜를 선택해주세요');
+                    // }
+                    else if (controller.contentController == '') {
                       openAlertDialog(title: '세부 계획을 작성해주세요');
                     }
                   },
@@ -333,35 +336,60 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
           ),
           SizedBox(width: 10),
           Expanded(
-            child: GestureDetector(
-              onTap: () {
-                FocusManager.instance.primaryFocus?.unfocus();
-                controller.datePicker(context);
-              },
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 13, horizontal: 20),
-                  child: Obx(() {
-                    return Text(
-                      controller.listDateTime.value == null
-                          ? '예상 날짜'
-                          : DateFormat('yyyy-MM-dd')
-                              .format(controller.listDateTime.value!),
-                      style: TextStyle(
-                        color: controller.listDateTime.value == null
-                            ? CustomColors.greyText
-                            : CustomColors.blackText,
-                        fontSize: 18,
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 13, horizontal: 20),
+                child: Obx(() {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            controller.datePicker(context);
+                          },
+                          child: Text(
+                            controller.listDateTime.value == null
+                                ? '예상 날짜'
+                                : DateFormat('yyyy-MM-dd')
+                                    .format(controller.listDateTime.value!),
+                            style: TextStyle(
+                              color: controller.listDateTime.value == null
+                                  ? CustomColors.greyText
+                                  : CustomColors.blackText,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
                       ),
-                    );
-                  }),
-                ),
+                      controller.listDateTime.value != null
+                          ? GestureDetector(
+                              onTap: () {
+                                controller.listDateTime.value = null;
+                                print(controller.listDateTime.value);
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Icon(
+                                  Icons.close,
+                                  size: 25,
+                                  color: CustomColors.grey,
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
+                    ],
+                  );
+                }),
               ),
             ),
           ),
