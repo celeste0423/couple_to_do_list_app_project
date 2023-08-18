@@ -80,7 +80,7 @@ class SettingPage extends GetView<SettingPageController> {
         style: TextStyle(fontSize: 20),
       ),
       subtitle: PcText(
-        AuthController.to.user.value.email!,
+        AuthController.to.user.value.email??'',
         style: TextStyle(
           color: CustomColors.lightGreyText,
           fontSize: 15,

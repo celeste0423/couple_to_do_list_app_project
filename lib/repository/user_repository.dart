@@ -231,6 +231,7 @@ class UserRepository {
         }
       }
       await FirebaseAuth.instance.signOut();
+      print('await FirebaseAuth.instance.signOut();');
       AuthController.to.clearAuthController();
       print(
           "로그아웃 성공! AuthController.to.user.value.email = ${AuthController.to.user.value.email}");

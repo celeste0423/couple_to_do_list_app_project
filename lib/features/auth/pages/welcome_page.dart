@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
@@ -167,7 +169,7 @@ class _WelcomePageState extends State<WelcomePage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       width: Get.width,
-      height: 320,
+      height: Platform.isAndroid ? 280: 320,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -175,7 +177,25 @@ class _WelcomePageState extends State<WelcomePage> {
           topLeft: Radius.circular(45),
         ),
       ),
-      child: Column(
+      child:  Platform.isAndroid ? Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'SNS 로그인',
+            style: TextStyle(
+              color: CustomColors.darkGrey,
+              fontSize: 12,
+            ),
+          ),
+          KakaoLoginButton(),
+          GoogleLoginButton(),
+        //  AppleLoginButton(),
+          SizedBox(height: 5),
+          _customLoginButton(),
+          SizedBox(height: 10),
+          _infoText(),
+        ],
+      ) : Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
