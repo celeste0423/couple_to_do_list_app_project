@@ -55,7 +55,7 @@ class MyPageController extends GetxController {
       DateTime now = DateTime.now();
       DateTime dayMet = AuthController.to.group.value.dayMet!;
       Duration difference = now.difference(dayMet);
-      int diffDays = difference.inDays;
+      int diffDays = difference.inDays+1;
       togetherDate(diffDays);
     }
   }
