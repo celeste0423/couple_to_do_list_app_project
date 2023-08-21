@@ -43,6 +43,7 @@ class MyApp extends StatelessWidget {
     FlutterNativeSplash.remove(); //앱 로딩 후 제거해주는 걸로 수정할 것
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      defaultTransition: Transition.fadeIn,
       localizationsDelegates: const [
         GlobalWidgetsLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

@@ -36,16 +36,17 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       return AnimatedContainer(
         key: controller.listSuggestionKey,
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(
+            horizontal: controller.isAnimated.value ? 8 : 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           border: Border.all(
             width: controller.isAnimated.value ? 2 : 0,
             color: controller.isAnimated.value
-                ? CustomColors.mainPink
+                ? CustomColors.lightPink
                 : Colors.transparent,
           ),
-          color: Colors.white,
+          color: CustomColors.mainPink,
         ),
         height: 50,
         duration: Duration(milliseconds: 1000),
@@ -53,10 +54,15 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            PngIcon(
-              iconName: 'plus',
-              iconColor: Colors.white.withOpacity(0.7),
-              iconSize: 30,
+            // PngIcon(
+            //   iconName: 'plus',
+            //   iconColor: Colors.white.withOpacity(0.7),
+            //   iconSize: 30,
+            // ),
+            Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 35,
             ),
             SizedBox(width: 10),
             Material(
@@ -64,7 +70,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               child: Text(
                 '여기를 눌러 버꿍리스트를 추가하세요',
                 style: TextStyle(
-                  color: CustomColors.grey.withOpacity(0.5),
+                  color: Colors.white,
                   fontSize: 14,
                 ),
               ),
