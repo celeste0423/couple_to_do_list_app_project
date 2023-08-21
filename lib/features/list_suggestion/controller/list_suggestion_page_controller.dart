@@ -153,7 +153,7 @@ class ListSuggestionPageController extends GetxController
         keyTarget: addKey,
         contents: [
           TargetContent(
-            align: ContentAlign.bottom,
+            align: ContentAlign.top,
             builder: (context, controller) {
               return CoachmarkDesc(
                 text: "버튼을 눌러 나만의 버꿍리스트를 만들 수 있습니다.",

@@ -17,6 +17,7 @@ class MyPageController extends GetxController {
   Rx<bool> isChangeNickname = false.obs;
   TextEditingController nicknameController = TextEditingController();
 
+  Rx<bool> isSolo = false.obs;
   Rx<bool> isDayMet = false.obs;
   Rx<int> togetherDate = 0.obs;
 
@@ -29,9 +30,18 @@ class MyPageController extends GetxController {
   void onInit() {
     super.onInit();
 
-    _getNickname();
+    _checkIfSolo();
     _getDayMet();
     _getAchievement();
+  }
+
+  void _checkIfSolo() {
+    if (AuthController.to.group.value.uid!.startsWith('solo')) {
+      isSolo(true);
+      myNickname(AuthController.to.user.value.nickname);
+    } else {
+      _getNickname();
+    }
   }
 
   void _getNickname() async {
@@ -55,7 +65,7 @@ class MyPageController extends GetxController {
       DateTime now = DateTime.now();
       DateTime dayMet = AuthController.to.group.value.dayMet!;
       Duration difference = now.difference(dayMet);
-      int diffDays = difference.inDays+1;
+      int diffDays = difference.inDays + 1;
       togetherDate(diffDays);
     }
   }

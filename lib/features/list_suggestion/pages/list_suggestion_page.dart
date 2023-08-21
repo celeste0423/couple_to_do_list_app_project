@@ -51,20 +51,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         ],
       ),
       actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: GestureDetector(
-            onTap: () {
-              Get.to(() => UploadBukkungListPage(), arguments: [null, true]);
-            },
-            child: Icon(
-              key: controller.addKey,
-              Icons.add,
-              color: Colors.white,
-              size: 35,
-            ),
-          ),
-        ),
+        SizedBox(width: 40),
       ],
     );
   }
@@ -1053,6 +1040,21 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
+  Widget _listAddButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        Get.to(() => UploadBukkungListPage(), arguments: [null, true]);
+      },
+      backgroundColor: CustomColors.mainPink,
+      child: Icon(
+        key: controller.addKey,
+        Icons.add,
+        color: Colors.white,
+        size: 35,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Get.put(ListSuggestionPageController(context));
@@ -1084,6 +1086,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             _searchBar(),
           ],
         ),
+        floatingActionButton: _listAddButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }

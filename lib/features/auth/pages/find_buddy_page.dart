@@ -183,7 +183,18 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                   ),
                   child: _emailTextField(),
                 ),
-                SizedBox(height: 40),
+                GestureDetector(
+                  onTap: () async {
+                    await authController.soloGroupCreation(widget.email);
+                    FirebaseAuth.instance.reactive;
+                    Get.off(() => HomePage());
+                  },
+                  child: Text(
+                    '나중에 짝꿍 추가하기',
+                    style: TextStyle(decoration: TextDecoration.underline),
+                  ),
+                ),
+                SizedBox(height: 15),
               ],
             ),
           ),

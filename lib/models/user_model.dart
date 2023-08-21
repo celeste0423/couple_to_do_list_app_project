@@ -59,9 +59,6 @@ class UserModel {
     String? groupId,
     int? expPoint,
   }) {
-    print('(user mod) groupID$groupId');
-    print('(user mod) groupID 기존 ${this.groupId}');
-    print('(user mod) uid${this.uid}');
     return UserModel(
       uid: uid ?? this.uid,
       nickname: nickname ?? this.nickname,

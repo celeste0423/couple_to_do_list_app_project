@@ -17,6 +17,9 @@ class GroupRepository {
     UserModel male,
     UserModel female,
   ) async {
+    print('그룹 signUp');
+    print('여자 uid${female.uid}');
+    print('남자 uid${male.uid}');
     GroupModel groupModel = GroupModel(
       maleUid: male.uid,
       femaleUid: female.uid,

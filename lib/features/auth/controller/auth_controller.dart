@@ -167,6 +167,9 @@ class AuthController extends GetxController {
     if (buddyData == null || myData == null) {
       //아직 짝꿍이 가입 안함
       return GroupIdStatus.noData;
+    } else if (buddyData.groupId!.startsWith("solo")) {
+      //Todo: 그룹 합치기 매커니즘 추가
+      return GroupIdStatus.createdGroupId;
     } else if (buddyData.groupId != null) {
       //이미 다른 짝이 있음
       return GroupIdStatus.hasGroup;
@@ -212,13 +215,58 @@ class AuthController extends GetxController {
     }
   }
 
+  Future soloGroupCreation(String myEmail) async {
+    UserModel? myData = await UserRepository.loginUserByEmail(myEmail);
+    UserModel? nullBuddyData = myData!.copyWith(uid: 'solo');
+    var uuid = Uuid();
+    String groupId = 'solo${uuid.v1()}';
+
+    if (myData!.gender == 'male') {
+      var groupData =
+          await GroupRepository.groupSignup(groupId, myData, nullBuddyData);
+      print('그룹 데이터 ${groupData.uid}');
+      group(groupData);
+    } else if (myData.gender == 'female') {
+      var groupData =
+          await GroupRepository.groupSignup(groupId, nullBuddyData, myData);
+      print('그룹 데이터 ${groupData.uid}');
+      group(groupData);
+    } else {
+      //동성 커플고려는 아직은 하지 않는걸로
+      // var groupData =
+      //     await GroupRepository.groupSignup(groupId, myData, buddyData!);
+      // group(groupData);
+    }
+
+    print('uuid로 solo 가입 시작(cont) $groupId');
+    await UserRepository.updateGroupId(myData, groupId);
+    //user에 그룹아이디 주입
+    user(myData.copyWith(groupId: groupId));
+
+    //기본 버꿍리스트 업로드
+    BukkungListModel initialModel = BukkungListModel.init(user.value);
+    BukkungListModel initialBukkungList = initialModel.copyWith(
+      title: '함께 버꿍리스트 앱 설치하기',
+      listId: 'initial$groupId',
+      category: '6etc',
+      location: '버꿍리스트 앱',
+      content:
+          '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자,\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
+      imgUrl: Constants.baseImageUrl,
+    );
+    print('(auth cont) 기본 버꿍리스트 업로드 시작');
+    await BukkungListRepository.setGroupBukkungList(
+        initialBukkungList, 'initial$groupId', groupId);
+    return GroupIdStatus.createdGroupId;
+  }
+
   Future<GroupModel?> getGroupModel(String email) async {
     print('그룹 있는지 bool ${await UserRepository.getGroupModel(email)}');
     return await UserRepository.getGroupModel(email);
   }
 
-  clearAuthController(){
-    loginType=null;
+  clearAuthController() {
+    loginType = null;
     group(GroupModel());
     user(UserModel());
   }

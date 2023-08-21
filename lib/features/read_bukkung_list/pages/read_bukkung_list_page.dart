@@ -111,7 +111,7 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
                         controller.bukkungListModel.title!,
                         style: TextStyle(
                           color: CustomColors.blackText,
-                          fontSize: 35,
+                          fontSize: 30,
                         ),
                         softWrap: true,
                       ),
@@ -167,14 +167,14 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
                     children: [
                       PngIcon(
                         iconName: 'location-pin',
-                        iconSize: 35,
+                        iconSize: 30,
                       ),
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: BkText(
                           controller.bukkungListModel.location!,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                             color: CustomColors.blackText,
                           ),
                           softWrap: true,
@@ -211,7 +211,7 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
                 child: BkText(
                   controller.bukkungListModel.content!,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     color: CustomColors.blackText,
                     height: 1.3,
                   ),
@@ -233,22 +233,23 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
             title: '버꿍리스트를 완료하셨나요?',
             btnText: '네',
             secondButtonText: '아니요',
-            secondfunction: (){
-              Get.back();//dialog back
+            secondfunction: () {
+              Get.back(); //dialog back
             },
             mainfunction: () async {
-              Get.back();//다이알로드 꺼지고,
-              DiaryModel updatedDiaryModel = await controller.listCompleted();//완료리스트 올라가고
-              bool ismainButtonClicked= await openBoolAlertDialog(
-                  title: '다이어리를 작성하시겠어요?',
-                  btnText: '네',
-                  content: '버꿍이 진척도가 올라갔어요!',
-                  secondButtonText: '아니요',
-                  );
+              Get.back(); //다이알로드 꺼지고,
+              DiaryModel updatedDiaryModel =
+                  await controller.listCompleted(); //완료리스트 올라가고
+              bool ismainButtonClicked = await openBoolAlertDialog(
+                title: '다이어리를 작성하시겠어요?',
+                btnText: '네',
+                content: '버꿍이 진척도가 올라갔어요!',
+                secondButtonText: '아니요',
+              );
               if (ismainButtonClicked) {
                 // Main button was clicked
                 Get.off(() => UploadDiaryPage(), arguments: updatedDiaryModel);
-              }else{
+              } else {
                 Get.back();
               }
             },
@@ -256,7 +257,7 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
         },
         child: Container(
           width: 140,
-          height: 50,
+          height: 45,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
             color: CustomColors.mainPink,
@@ -266,7 +267,7 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
               '리스트 완료',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 25,
+                fontSize: 20,
               ),
             ),
           ),

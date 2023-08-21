@@ -7,6 +7,7 @@ import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BukkungListPageController extends GetxController {
   static BukkungListPageController get to => Get.find();
@@ -30,7 +31,7 @@ class BukkungListPageController extends GetxController {
   void onInit() {
     super.onInit();
     addButtonAnimation();
-    currentType.value = "category";
+    _loadSelectedListType();
     // myGroup(AuthController.to.group.value);
   }
 
@@ -38,6 +39,16 @@ class BukkungListPageController extends GetxController {
     Timer.periodic(Duration(seconds: 2), (timer) {
       isAnimated(!isAnimated.value);
     });
+  }
+
+  void _loadSelectedListType() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    currentType(prefs.getString('selectedListType') ?? 'category');
+  }
+
+  void saveSelectedListType(String listType) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedListType', listType);
   }
 
   Stream<Map<String, dynamic>> getAllBukkungListByCategory() {

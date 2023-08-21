@@ -32,57 +32,57 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
           style: TextStyle(color: CustomColors.greyText),
         ),
       ),
-      actions: [
-        Obx(() {
-          return TextButton(
-            onPressed: controller.isCompleted.value == true
-                ? () async {
-                    print('업로드 시작(upl page)');
-                    controller.isUploading.value = true;
-                    await controller.uploadBukkungList();
-                    Get.back();
-                    Get.back();
-                  }
-                : () {
-                    if (controller.titleController.text == '') {
-                      openAlertDialog(title: '제목을 입력해 주세요');
-                    } else if (controller.listCategory.value == '') {
-                      openAlertDialog(title: '카테고리를 선택해주세요');
-                    } else if (controller.locationController.text == '') {
-                      openAlertDialog(title: '위치를 작성해주세요');
-                    }
-                    // else if (controller.listDateTime.value == null) {
-                    //   openAlertDialog(title: '날짜를 선택해주세요');
-                    // }
-                    else if (controller.contentController == '') {
-                      openAlertDialog(title: '세부 계획을 작성해주세요');
-                    }
-                  },
-            child: controller.selectedBukkungListModel == null
-                ? controller.isCompleted.value == true
-                    ? Text('저장', style: TextStyle(color: CustomColors.mainPink))
-                    : Text(
-                        '저장',
-                        style: TextStyle(color: CustomColors.greyText),
-                      )
-                : controller.isSuggestion == true
-                    ? controller.isCompleted.value == true
-                        ? Text('내 버꿍에 추가',
-                            style: TextStyle(color: CustomColors.mainPink))
-                        : Text(
-                            '내 버꿍에 추가',
-                            style: TextStyle(color: CustomColors.greyText),
-                          )
-                    : controller.isCompleted.value == true
-                        ? Text('수정 완료',
-                            style: TextStyle(color: CustomColors.mainPink))
-                        : Text(
-                            '수정 완료',
-                            style: TextStyle(color: CustomColors.greyText),
-                          ),
-          );
-        }),
-      ],
+      // actions: [
+      //   Obx(() {
+      //     return TextButton(
+      //       onPressed: controller.isCompleted.value == true
+      //           ? () async {
+      //               print('업로드 시작(upl page)');
+      //               controller.isUploading.value = true;
+      //               await controller.uploadBukkungList();
+      //               Get.back();
+      //               Get.back();
+      //             }
+      //           : () {
+      //               if (controller.titleController.text == '') {
+      //                 openAlertDialog(title: '제목을 입력해 주세요');
+      //               } else if (controller.listCategory.value == '') {
+      //                 openAlertDialog(title: '카테고리를 선택해주세요');
+      //               } else if (controller.locationController.text == '') {
+      //                 openAlertDialog(title: '위치를 작성해주세요');
+      //               }
+      //               // else if (controller.listDateTime.value == null) {
+      //               //   openAlertDialog(title: '날짜를 선택해주세요');
+      //               // }
+      //               else if (controller.contentController == '') {
+      //                 openAlertDialog(title: '세부 계획을 작성해주세요');
+      //               }
+      //             },
+      //       child: controller.selectedBukkungListModel == null
+      //           ? controller.isCompleted.value == true
+      //               ? Text('저장', style: TextStyle(color: CustomColors.mainPink))
+      //               : Text(
+      //                   '저장',
+      //                   style: TextStyle(color: CustomColors.greyText),
+      //                 )
+      //           : controller.isSuggestion == true
+      //               ? controller.isCompleted.value == true
+      //                   ? Text('내 버꿍에 추가',
+      //                       style: TextStyle(color: CustomColors.mainPink))
+      //                   : Text(
+      //                       '내 버꿍에 추가',
+      //                       style: TextStyle(color: CustomColors.greyText),
+      //                     )
+      //               : controller.isCompleted.value == true
+      //                   ? Text('수정 완료',
+      //                       style: TextStyle(color: CustomColors.mainPink))
+      //                   : Text(
+      //                       '수정 완료',
+      //                       style: TextStyle(color: CustomColors.greyText),
+      //                     ),
+      //     );
+      //   }),
+      // ],
     );
   }
 
@@ -402,7 +402,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      height: Get.height - 470,
+      height: Get.height - 520,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
         color: Colors.white,
@@ -445,7 +445,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           color: controller.isImage.value || controller.isSelectedImage.value
-              ? CustomColors.mainPink
+              ? CustomColors.mainPink.withOpacity(0.8)
               : Colors.white,
         ),
         child: GestureDetector(
@@ -493,6 +493,77 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
               );
             }),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _bottomBar() {
+    return Obx(
+      () => GestureDetector(
+        onTap: controller.isCompleted.value == true
+            ? () async {
+                print('업로드 시작(upl page)');
+                controller.isUploading.value = true;
+                await controller.uploadBukkungList();
+                Get.back();
+                Get.back();
+              }
+            : () {
+                if (controller.titleController.text == '') {
+                  openAlertDialog(title: '제목을 입력해 주세요');
+                } else if (controller.listCategory.value == '') {
+                  openAlertDialog(title: '카테고리를 선택해주세요');
+                } else if (controller.locationController.text == '') {
+                  openAlertDialog(title: '위치를 작성해주세요');
+                }
+                // else if (controller.listDateTime.value == null) {
+                //   openAlertDialog(title: '날짜를 선택해주세요');
+                // }
+                else if (controller.contentController == '') {
+                  openAlertDialog(title: '세부 계획을 작성해주세요');
+                }
+              },
+        child: Container(
+          width: Get.width - 40,
+          height: 45,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: controller.selectedBukkungListModel == null
+                ? controller.isCompleted.value == true
+                    ? CustomColors.mainPink
+                    : CustomColors.lightGrey.withOpacity(0.4)
+                : controller.isSuggestion == true
+                    ? controller.isCompleted.value == true
+                        ? CustomColors.mainPink
+                        : CustomColors.lightGrey.withOpacity(0.4)
+                    : controller.isCompleted.value == true
+                        ? CustomColors.mainPink
+                        : CustomColors.lightGrey.withOpacity(0.4),
+          ),
+          child: Center(
+            child: controller.selectedBukkungListModel == null
+                ? controller.isCompleted.value == true
+                    ? Text('저장', style: TextStyle(color: Colors.white))
+                    : Text(
+                        '저장',
+                        style: TextStyle(color: Colors.white),
+                      )
+                : controller.isSuggestion == true
+                    ? controller.isCompleted.value == true
+                        ? Text('내 버꿍에 추가',
+                            style: TextStyle(color: Colors.white))
+                        : Text(
+                            '내 버꿍에 추가',
+                            style: TextStyle(color: Colors.white),
+                          )
+                    : controller.isCompleted.value == true
+                        ? Text('수정 완료', style: TextStyle(color: Colors.white))
+                        : Text(
+                            '수정 완료',
+                            style: TextStyle(color: Colors.white),
+                          ),
+          ),
         ),
       ),
     );
@@ -546,7 +617,8 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                                             ],
                                           )
                                         : _imagePicker(context),
-                              )
+                              ),
+                              _bottomBar(),
                             ],
                           ),
                         ),

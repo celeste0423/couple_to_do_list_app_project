@@ -31,8 +31,8 @@ class Root extends GetView<AuthController> {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext _, AsyncSnapshot<User?> user) {
         if (user.hasData) {
-          print('user data (root)${user.data}');
-          print('유저 이메일(root)${user.data!.email}');
+          // print('user data (root)${user.data}');
+          // print('유저 이메일(root)${user.data!.email}');
           return FutureBuilder<UserModel?>(
             future: controller.loginUser(user.data!.uid),
             builder: (context, snapshot) {
@@ -45,17 +45,18 @@ class Root extends GetView<AuthController> {
               } else {
                 if (!snapshot.hasData) {
                   print('신규 유저임(root)');
-                  print('유저정보(root) ${controller.user.value.uid}');
-                   print('user.data!.uid ${user.data!.uid}');
-                   //일단 controller에 uid와 email처음 저장
-                   controller.user(UserModel(uid: user.data!.uid, email: user.data!.email));
-                  print('유저정보(root) ${controller.user.value.uid}');
+                  // print('유저정보(root) ${controller.user.value.uid}');
+                  // print('user.data!.uid ${user.data!.uid}');
+                  //일단 controller에 uid와 email처음 저장
+                  controller.user(
+                      UserModel(uid: user.data!.uid, email: user.data!.email));
+                  // print('유저정보(root) ${controller.user.value.uid}');
                   return SignupPage(
                     uid: user.data!.uid,
                     email: user.data!.email ?? '',
                   );
                 } else {
-                  print('로그인 정보 ${controller.user.toJson()}');
+                  // print('로그인 정보 ${controller.user.toJson()}');
                   if (user.data!.email == 'bukkunglist@gmail.com') {
                     print('관리자 계정으로 로그인했습니다. ManagementPage로 이동합니다.');
                     return AdminPage();

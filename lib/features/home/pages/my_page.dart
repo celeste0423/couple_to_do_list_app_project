@@ -65,7 +65,10 @@ class MyPage extends GetView<MyPageController> {
           //pink 부분이 200,
           height: MediaQuery.of(context).size.height -
               MediaQuery.of(context).padding.top -
-              MediaQuery.of(context).padding.bottom-200-kBottomNavigationBarHeight-120,
+              MediaQuery.of(context).padding.bottom -
+              200 -
+              kBottomNavigationBarHeight -
+              120,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -221,68 +224,82 @@ class MyPage extends GetView<MyPageController> {
                 ),
                 SizedBox(height: 10),
                 Obx(
-                  () => GestureDetector(
-                    onTap: () {
-                      controller.setDayMet(context);
-                    },
-                    child: SizedBox(
-                      width: 250,
-                      child: controller.isDayMet.value
-                          ? FittedBox(
-                              alignment: Alignment.centerLeft,
-                              fit: BoxFit.scaleDown,
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: controller.buddyNickname.value,
-                                      style: TextStyle(
-                                        fontFamily: 'Pyeongchang',
-                                        fontSize: 20,
-                                        color: CustomColors.blackText,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: ' 님과 함께한 지 ',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w200,
-                                        fontSize: 18,
-                                        color: CustomColors.blackText
-                                            .withOpacity(0.8),
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: controller.togetherDate.value
-                                          .toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color: CustomColors.blackText,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: '일째',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color: CustomColors.blackText,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : Text(
-                              '여기를 눌러 만난 날짜를 설정하세요',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: CustomColors.blackText,
-                                decoration: TextDecoration.underline,
-                              ),
+                  () => controller.isSolo.value
+                      ? GestureDetector(
+                          onTap: () {},
+                          child: Text(
+                            '여기를 눌러 짝꿍을 연결하세요',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: CustomColors.blackText,
+                              decoration: TextDecoration.underline,
                             ),
-                    ),
-                  ),
+                          ),
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            controller.setDayMet(context);
+                          },
+                          child: SizedBox(
+                            width: 250,
+                            child: controller.isDayMet.value
+                                ? FittedBox(
+                                    alignment: Alignment.centerLeft,
+                                    fit: BoxFit.scaleDown,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                controller.buddyNickname.value,
+                                            style: TextStyle(
+                                              fontFamily: 'Pyeongchang',
+                                              fontSize: 20,
+                                              color: CustomColors.blackText,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: ' 님과 함께한 지 ',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w200,
+                                              fontSize: 18,
+                                              color: CustomColors.blackText
+                                                  .withOpacity(0.8),
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: controller.togetherDate.value
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: CustomColors.blackText,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: '일째',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: CustomColors.blackText,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    '여기를 눌러 만난 날짜를 설정하세요',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: CustomColors.blackText,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                          ),
+                        ),
                 ),
               ],
             ),

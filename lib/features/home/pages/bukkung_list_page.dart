@@ -89,6 +89,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
           ),
           onSelected: (String listType) {
             controller.currentType.value = listType;
+            controller.saveSelectedListType(listType);
           },
           itemBuilder: (BuildContext context) {
             return [
