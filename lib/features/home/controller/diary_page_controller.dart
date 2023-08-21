@@ -51,7 +51,7 @@ class DiaryPageController extends GetxController
     listCategory.value = "all";
     setDiaryList();
     initSelectedDiary();
-    getNickname();
+    // getNickname();
   }
 
   Future setDiaryList() async {

@@ -185,7 +185,9 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    await authController.soloGroupCreation(widget.email);
+                    if (AuthController.to.group.value.uid == null) {
+                      await authController.soloGroupCreation(widget.email);
+                    }
                     FirebaseAuth.instance.reactive;
                     Get.off(() => HomePage());
                   },

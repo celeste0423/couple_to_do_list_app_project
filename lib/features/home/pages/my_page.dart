@@ -1,3 +1,5 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/home/controller/my_page_controller.dart';
 import 'package:couple_to_do_list_app/features/setting/pages/setting_page.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -226,7 +228,13 @@ class MyPage extends GetView<MyPageController> {
                 Obx(
                   () => controller.isSolo.value
                       ? GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Get.offAll(
+                              FindBuddyPage(
+                                email: AuthController.to.user.value.email!,
+                              ),
+                            );
+                          },
                           child: Text(
                             '여기를 눌러 짝꿍을 연결하세요',
                             style: TextStyle(

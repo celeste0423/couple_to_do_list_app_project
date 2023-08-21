@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
+import 'package:uuid/uuid.dart';
 
 class GroupRepository {
   static Stream<GroupModel> streamGroupDataByUid(String groupId) {
@@ -17,9 +18,6 @@ class GroupRepository {
     UserModel male,
     UserModel female,
   ) async {
-    print('그룹 signUp');
-    print('여자 uid${female.uid}');
-    print('남자 uid${male.uid}');
     GroupModel groupModel = GroupModel(
       maleUid: male.uid,
       femaleUid: female.uid,
@@ -29,7 +27,6 @@ class GroupRepository {
     );
 
     try {
-      print('그룹모델 생성');
       await FirebaseFirestore.instance
           .collection('groups')
           .doc(uid)
@@ -57,5 +54,225 @@ class GroupRepository {
         .collection('groups')
         .doc(groupId)
         .update({'dayMet': selectedDate});
+  }
+
+  Future<GroupModel?> updateSoloGroup(
+    UserModel noGroupUserData,
+    UserModel groupUserData,
+  ) async {
+    //그룹 데이터 받아옴
+    DocumentSnapshot groupSnapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupUserData.groupId)
+        .get();
+    GroupModel groupData =
+        GroupModel.fromJson(groupSnapshot.data()! as Map<String, dynamic>);
+    String newGid = groupData.uid!.substring(4);
+    //버꿍리스트 받아옴
+    QuerySnapshot bukkungListSnapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupUserData.groupId)
+        .collection('bukkungLists')
+        .get();
+    //다이어리 받아옴
+    QuerySnapshot diarySnapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupUserData.groupId)
+        .collection('diary')
+        .get();
+    //이전 solo그룹 삭제
+    await deleteGroup(groupUserData.groupId!);
+
+    if (groupData.femaleUid == 'solo') {
+      GroupModel updatedGroupData =
+          groupData.copyWith(uid: newGid, femaleUid: noGroupUserData.uid);
+      try {
+        await FirebaseFirestore.instance
+            .collection('groups')
+            .doc(newGid)
+            .set(updatedGroupData.toJson());
+      } catch (e) {
+        print(e.toString());
+      }
+
+      // 각 문서를 새 컬렉션에 추가
+      for (QueryDocumentSnapshot docSnapshot in bukkungListSnapshot.docs) {
+        Map<String, dynamic> docData =
+            docSnapshot.data() as Map<String, dynamic>;
+        await FirebaseFirestore.instance
+            .collection('groups')
+            .doc(newGid)
+            .collection('bukkungLists')
+            .doc(docSnapshot.id)
+            .set(docData);
+      }
+      for (QueryDocumentSnapshot docSnapshot in diarySnapshot.docs) {
+        Map<String, dynamic> docData =
+            docSnapshot.data() as Map<String, dynamic>;
+        await FirebaseFirestore.instance
+            .collection('groups')
+            .doc(newGid)
+            .collection('diary')
+            .doc(docSnapshot.id)
+            .set(docData);
+      }
+
+      return updatedGroupData;
+    } else if (groupData.maleUid == 'solo') {
+      GroupModel updatedGroupData =
+          groupData.copyWith(uid: newGid, maleUid: noGroupUserData.uid);
+      try {
+        await FirebaseFirestore.instance
+            .collection('groups')
+            .doc(newGid)
+            .set(updatedGroupData.toJson());
+      } catch (e) {
+        print(e.toString());
+      }
+
+      // 각 문서를 새 컬렉션에 추가
+      for (QueryDocumentSnapshot docSnapshot in bukkungListSnapshot.docs) {
+        Map<String, dynamic> docData =
+            docSnapshot.data() as Map<String, dynamic>;
+        await FirebaseFirestore.instance
+            .collection('groups')
+            .doc(newGid)
+            .collection('bukkungLists')
+            .doc(docSnapshot.id)
+            .set(docData);
+      }
+      for (QueryDocumentSnapshot docSnapshot in diarySnapshot.docs) {
+        Map<String, dynamic> docData =
+            docSnapshot.data() as Map<String, dynamic>;
+        await FirebaseFirestore.instance
+            .collection('groups')
+            .doc(newGid)
+            .collection('diary')
+            .doc(docSnapshot.id)
+            .set(docData);
+      }
+
+      return updatedGroupData;
+    }
+  }
+
+  Future<GroupModel?> mergeSoloGroup(
+    UserModel maleData,
+    UserModel femaleData,
+  ) async {
+    var uuid = Uuid();
+    String groupId = uuid.v1();
+    //그룹 데이터 받아옴
+    GroupModel newGroupData = await groupSignup(groupId, maleData, femaleData);
+    //버꿍리스트 받아옴
+    QuerySnapshot maleBukkungListSnapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(maleData.groupId)
+        .collection('bukkungLists')
+        .get();
+    QuerySnapshot femaleBukkungListSnapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(femaleData.groupId)
+        .collection('bukkungLists')
+        .get();
+    //다이어리 받아옴
+    QuerySnapshot maleDiarySnapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(maleData.groupId)
+        .collection('diary')
+        .get();
+    QuerySnapshot femaleDiarySnapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(femaleData.groupId)
+        .collection('diary')
+        .get();
+    //이전 solo그룹 삭제
+    await deleteGroup(maleData.groupId!);
+    await deleteGroup(femaleData.groupId!);
+
+    // 각 문서를 새 컬렉션에 추가
+    for (QueryDocumentSnapshot docSnapshot in maleBukkungListSnapshot.docs) {
+      Map<String, dynamic> docData = docSnapshot.data() as Map<String, dynamic>;
+      await FirebaseFirestore.instance
+          .collection('groups')
+          .doc(newGroupData.uid)
+          .collection('bukkungLists')
+          .doc(docSnapshot.id)
+          .set(docData);
+    }
+    for (QueryDocumentSnapshot docSnapshot in femaleBukkungListSnapshot.docs) {
+      Map<String, dynamic> docData = docSnapshot.data() as Map<String, dynamic>;
+      await FirebaseFirestore.instance
+          .collection('groups')
+          .doc(newGroupData.uid)
+          .collection('bukkungLists')
+          .doc(docSnapshot.id)
+          .set(docData);
+    }
+    for (QueryDocumentSnapshot docSnapshot in maleDiarySnapshot.docs) {
+      Map<String, dynamic> docData = docSnapshot.data() as Map<String, dynamic>;
+      await FirebaseFirestore.instance
+          .collection('groups')
+          .doc(newGroupData.uid)
+          .collection('diary')
+          .doc(docSnapshot.id)
+          .set(docData);
+    }
+    for (QueryDocumentSnapshot docSnapshot in femaleDiarySnapshot.docs) {
+      Map<String, dynamic> docData = docSnapshot.data() as Map<String, dynamic>;
+      await FirebaseFirestore.instance
+          .collection('groups')
+          .doc(newGroupData.uid)
+          .collection('diary')
+          .doc(docSnapshot.id)
+          .set(docData);
+    }
+    return newGroupData;
+  }
+
+  Future<void> deleteGroup(String groupId) async {
+    QuerySnapshot bukkungListSnapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
+        .collection('bukkungLists')
+        .get();
+
+    for (QueryDocumentSnapshot docSnapshot in bukkungListSnapshot.docs) {
+      await docSnapshot.reference.delete();
+    }
+    // 컬렉션 자체를 삭제
+    DocumentSnapshot parentSnapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
+        .collection('bukkungLists')
+        .doc('bukkungLists') // 컬렉션의 문서 ID
+        .get();
+
+    if (parentSnapshot.exists) {
+      await parentSnapshot.reference.delete();
+    }
+
+    QuerySnapshot diarySnapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
+        .collection('bukkungLists')
+        .get();
+
+    for (QueryDocumentSnapshot docSnapshot in diarySnapshot.docs) {
+      await docSnapshot.reference.delete();
+    }
+    // 컬렉션 자체를 삭제
+    DocumentSnapshot parentDiarySnapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
+        .collection('bukkungLists')
+        .doc('bukkungLists') // 컬렉션의 문서 ID
+        .get();
+
+    if (parentDiarySnapshot.exists) {
+      await parentDiarySnapshot.reference.delete();
+    }
+
+    FirebaseFirestore.instance.collection('groups').doc(groupId).delete();
   }
 }

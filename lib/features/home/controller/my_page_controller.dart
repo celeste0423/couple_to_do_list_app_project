@@ -35,7 +35,7 @@ class MyPageController extends GetxController {
     _getAchievement();
   }
 
-  void _checkIfSolo() {
+  void _checkIfSolo() async {
     if (AuthController.to.group.value.uid!.startsWith('solo')) {
       isSolo(true);
       myNickname(AuthController.to.user.value.nickname);
