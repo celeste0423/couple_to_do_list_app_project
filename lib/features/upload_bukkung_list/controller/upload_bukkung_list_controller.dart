@@ -228,7 +228,7 @@ class UploadBukkungListController extends GetxController {
   }
 
   Future<void> uploadBukkungList() async {
-    print('날짜는 현재 이거야 ${selectedBukkungListModel!.date}');
+    // print('날짜는 현재 이거야 ${selectedBukkungListModel!.date}');
     FocusManager.instance.primaryFocus?.unfocus();
     var uuid = Uuid();
     String listId = uuid.v1();
