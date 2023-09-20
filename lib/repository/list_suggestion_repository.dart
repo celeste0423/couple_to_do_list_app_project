@@ -58,7 +58,7 @@ class ListSuggestionRepository {
     Query<Map<String, dynamic>> query = FirebaseFirestore.instance
         .collection('bukkungLists')
         .orderBy('likeCount', descending: true)
-        .orderBy('createdAt', descending: true);
+        .orderBy('viewCount', descending: true);
     if (keyPage != null) {
       query = query.startAfterDocument(keyPage);
     }
