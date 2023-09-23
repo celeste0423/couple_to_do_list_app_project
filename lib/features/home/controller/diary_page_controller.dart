@@ -55,7 +55,7 @@ class DiaryPageController extends GetxController
   }
 
   Future setDiaryList() async {
-    print('다이어리 Future(dia cont)');
+    // print('다이어리 Future(dia cont)');
     diaryList[0].bindStream(getDiaryList('all'));
     diaryList[1].bindStream(getDiaryList('1travel'));
     diaryList[2].bindStream(getDiaryList('2meal'));

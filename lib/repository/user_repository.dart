@@ -32,10 +32,10 @@ class UserRepository {
         // 로그인 성공 시 처리
       } else {
         // 로그인 실패 시 처리
-        print('Login failed');
+        //print('Login failed');
       }
     } catch (e) {
-      print(e.toString());
+      //print(e.toString());
       if (e is FirebaseAuthException) {
         if (e.code == 'user-not-found') {
           // 등록된 사용자 없음 -> 회원가입으로 처리
@@ -47,11 +47,11 @@ class UserRepository {
             // 회원가입 성공 시 처리
           } catch (e) {
             // 회원가입 실패 시 처리
-            print('Error during sign up: $e');
+            //print('Error during sign up: $e');
           }
         } else {
           // 다른 에러 처리
-          print('Error: $e');
+          //print('Error: $e');
         }
       }
     }
@@ -92,7 +92,7 @@ class UserRepository {
       idToken: appleCredential.identityToken,
       accessToken: appleCredential.authorizationCode,
     );
-    print(oauthCredential);
+    //print(oauthCredential);
     return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   }
 
@@ -113,7 +113,7 @@ class UserRepository {
       idToken: appleCredential.identityToken,
       accessToken: appleCredential.authorizationCode,
     );
-    print(oauthCredential);
+    //print(oauthCredential);
     return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   }
 
@@ -135,8 +135,8 @@ class UserRepository {
     //로그인 성공, 유저정보 가져오기
     final google.GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
-    print('(user repo) idtoken ${googleAuth.idToken}');
-    print('(user repo) accesstoken ${googleAuth.accessToken}');
+    //print('(user repo) idtoken ${googleAuth.idToken}');
+    //print('(user repo) accesstoken ${googleAuth.accessToken}');
     //파이어베이스 인증 정보 로그인
     final OAuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,

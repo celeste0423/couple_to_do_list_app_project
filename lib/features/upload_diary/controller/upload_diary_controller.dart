@@ -84,11 +84,11 @@ class UploadDiaryController extends GetxController {
       var uuid = Uuid();
       final tempDir = await getTemporaryDirectory();
       final tempPath = '${tempDir.path}/${uuid.v4()}.jpg';
-      print('tempPath $tempPath');
+      // print('tempPath $tempPath');
       try {
         await storage.refFromURL(imgUrl).writeToFile(File(tempPath));
       } catch (e) {
-        print(e.toString());
+        // print(e.toString());
       }
 
       final imgFile = File(tempPath);
@@ -179,7 +179,7 @@ class UploadDiaryController extends GetxController {
         contentController.text.isNotEmpty) {
       return true;
     } else {
-      print(diaryDateTime.value);
+      //print(diaryDateTime.value);
       return false;
     }
   }

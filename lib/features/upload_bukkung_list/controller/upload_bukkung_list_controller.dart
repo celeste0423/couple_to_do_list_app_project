@@ -90,10 +90,10 @@ class UploadBukkungListController extends GetxController {
       contentController.text = selectedBukkungListModel!.content!;
       isPublic(false);
       if (selectedBukkungListModel!.imgUrl == Constants.baseImageUrl) {
-        print('사진 없음(upl cont) ${selectedBukkungListModel!.imgUrl}');
+        // print('사진 없음(upl cont) ${selectedBukkungListModel!.imgUrl}');
         isSelectedImage(false);
       } else {
-        print('사진 있음(upl cont');
+        // print('사진 있음(upl cont');
         isSelectedImage(true);
       }
     }
@@ -177,11 +177,11 @@ class UploadBukkungListController extends GetxController {
 
   void scrollToContent() async {
     await Future.delayed(Duration(milliseconds: 400));
-    print('스크롤 시작${contentFocusNode.hasFocus}');
+    //  print('스크롤 시작${contentFocusNode.hasFocus}');
     if (contentFocusNode.hasFocus) {
-      print('스크롤 가능 ${contentScrollController.hasClients}');
+      // print('스크롤 가능 ${contentScrollController.hasClients}');
       if (contentScrollController.hasClients) {
-        print('스크롤 중');
+        //  print('스크롤 중');
         contentScrollController.animateTo(
           contentScrollController.position.maxScrollExtent - 100,
           duration: Duration(milliseconds: 300),
@@ -211,7 +211,7 @@ class UploadBukkungListController extends GetxController {
       final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile == null) {
-        print('No image selected');
+        // print('No image selected');
         isImage(false);
         return;
       }
@@ -222,7 +222,7 @@ class UploadBukkungListController extends GetxController {
       final imageBytes = await pickedFile.readAsBytes();
       listImage = Uint8List.fromList(imageBytes);
     } catch (e) {
-      print('Error picking image: $e');
+      //print('Error picking image: $e');
       isImage(false);
     }
   }
@@ -274,11 +274,11 @@ class UploadBukkungListController extends GetxController {
         isSelectedImage.value == true &&
         listImage == null) {
       // 선택함, 사진 있음(웹사진)
-      print('선택함, 사진있음(웹사진)');
+      //print('선택함, 사진있음(웹사진)');
       String? downloadUrl;
       if (isSuggestion) {
         //수정중 => 이미지 주소 그대로 들고옴
-        print('수정중 이미지 주소 그대로 들고옴');
+        // print('수정중 이미지 주소 그대로 들고옴');
         String sourcePath = '${selectedBukkungListModel!.imgId}.jpg';
         String destinationPath =
             '${AuthController.to.user.value.groupId}/$filename';
@@ -309,7 +309,7 @@ class UploadBukkungListController extends GetxController {
         date: listDateTime.value,
         // Todo:기존 제작자의 저작권을 남길 지 말지 선택
       );
-      print('날짜 이거라구${updatedBukkungList.date}');
+      //print('날짜 이거라구${updatedBukkungList.date}');
       if (isSuggestion) {
         _submitBukkungList(updatedBukkungList, listId, true);
       } else {
@@ -318,10 +318,10 @@ class UploadBukkungListController extends GetxController {
       }
     } else if (selectedBukkungListModel != null && listImage != null) {
       //선택함, 사진 있음(로컬사진)
-      print('선택함, 사진있음(로컬사진)');
+      //print('선택함, 사진있음(로컬사진)');
       if (!isSuggestion) {
         //수정중 => 기존 사진 삭제, 새 사진 업로드
-        print('기존 사진 삭제');
+        //  print('기존 사진 삭제');
         BukkungListRepository.deleteImage(selectedBukkungListModel!.imgUrl!);
       }
       var task = uploadFile(listImage!, 'group_bukkunglist',
@@ -351,7 +351,7 @@ class UploadBukkungListController extends GetxController {
         listImage == null &&
         isSelectedImage == false) {
       //선택함, 사진 없음(로컬, 웹 둘다)
-      print('선택함, 사진없음');
+      // print('선택함, 사진없음');
       var updatedBukkungList = selectedBukkungListModel!.copyWith(
         listId: isSuggestion ? listId : selectedBukkungListModel!.listId,
         category: listCategory.value,
@@ -385,7 +385,7 @@ class UploadBukkungListController extends GetxController {
 
     //공개되었을 경우
     if (isPublic.value == true && isSelected == false) {
-      print('추천 리스트 공개 업로드(upl cont)');
+      // print('추천 리스트 공개 업로드(upl cont)');
       var uuid = Uuid();
       String imageId = uuid.v4();
       var filename = '$imageId.jpg';

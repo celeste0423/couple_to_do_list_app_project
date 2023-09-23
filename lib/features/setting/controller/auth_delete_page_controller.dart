@@ -50,26 +50,25 @@ class AuthDeletePageController extends GetxController {
               openAlertDialog(title: '로그인 실패');
             } else {
               // AuthController.loginType = 'kakao';
-              print('(kak btn) 로그인 타입 ${AuthController.loginType}');
+              //  print('(kak btn) 로그인 타입 ${AuthController.loginType}');
               await FirebaseAuth.instance.signInWithCustomToken(customToken);
             }
           } else if (loginType == 'apple') {
             UserCredential? userCredential =
                 await AuthController.to.signInWithApple();
-            print(
-                'apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
+            //print('apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
             //로그인 타입 설정
             // AuthController.loginType = 'apple';
                     }
           //auth에서 삭제
           await FirebaseAuth.instance.currentUser!.delete();
-          print('auth 삭제뒤');
+          //  print('auth 삭제뒤');
           //유저 파이어스토어 삭제
           await FirebaseFirestore.instance
               .collection('users')
               .doc(uid)
               .delete();
-          print('store 삭제뒤');
+          //  print('store 삭제뒤');
 
           //짝꿍의 user data가 파이어스토어에 없는지 확인 후 group 삭제 진행
           final snapshot1 = await FirebaseFirestore.instance
@@ -79,7 +78,7 @@ class AuthDeletePageController extends GetxController {
 
           Map<String, dynamic>? data = snapshot1.data();
           if (data != null) {
-            print('반환');
+            //    print('반환');
             String? femaleUid = data['femaleUid'];
             String? maleUid = data['maleUid'];
             String? bukkungUid = myGender == 'male' ? femaleUid : maleUid;
@@ -87,7 +86,7 @@ class AuthDeletePageController extends GetxController {
                 .collection('users')
                 .doc(bukkungUid)
                 .get();
-            print('get');
+            //      print('get');
             if (!snapshot2.exists) {
               //짝꿍의 user data가 파이어스토어에 없을 떄 (짝꿍이 이미 탈퇴를했을 때) 그룹 삭제진행
 
@@ -101,14 +100,14 @@ class AuthDeletePageController extends GetxController {
                   .collection('groups')
                   .doc(groupId)
                   .delete();
-              print('group deletion');
+              //   print('group deletion');
               //storage 사진들 없애고
               await deleteFolder('group_bukkunglist/$groupId/');
               await deleteFolder('group_diary/$groupId/');
-              print('stroage images deletion');
+              //       print('stroage images deletion');
             }
           } else {
-            print('null반환');
+            //       print('null반환');
           }
 
           _uploadFeedback();
@@ -144,7 +143,7 @@ Future deleteSubcollection(groupId, subcollection) async {
       await docSnapshot.reference.delete();
     }
   } else {
-    print('The subcollection $subcollection does not exist.');
+    // print('The subcollection $subcollection does not exist.');
   }
 }
 
@@ -163,6 +162,6 @@ Future<void> deleteFolder(String folderPath) async {
     // await folderRef.delete();
   } catch (e) {
     // Handle any errors that occur during the process
-    print('Error deleting folder: $e');
+    // print('Error deleting folder: $e');
   }
 }

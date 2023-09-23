@@ -36,7 +36,7 @@ class AdminPage extends StatelessWidget {
             .getDownloadURL();
       } catch (e) {
         // Handle the exception here (e.g., print a specific error message)
-        print("Error fetching download URL for $paddedIndex: $e");
+        //  print("Error fetching download URL for $paddedIndex: $e");
         break;
         // Alternatively, if you want to stop the loop immediately after the first exception,
         // you can use 'return;' instead of 'break;'.
@@ -45,9 +45,9 @@ class AdminPage extends StatelessWidget {
       // Move the second try block inside the first try block's scope
       try {
         await fireStorecollection.doc(docName).update({'imgUrl': imageUrl});
-        print("URL for $docName uploaded successfully.");
+        //   print("URL for $docName uploaded successfully.");
       } catch (e) {
-        print("Error updating Firestore document for $docName: $e");
+        //  print("Error updating Firestore document for $docName: $e");
       }
     }
   }
@@ -62,9 +62,9 @@ class AdminPage extends StatelessWidget {
 
       try {
         await fireStorecollection.doc(docName).delete();
-        print("Document $docName deleted successfully.");
+        //   print("Document $docName deleted successfully.");
       } catch (e) {
-        print("Error deleting Firestore document $docName: $e");
+        //   print("Error deleting Firestore document $docName: $e");
       }
     }
   }

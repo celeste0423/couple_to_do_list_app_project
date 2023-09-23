@@ -102,7 +102,7 @@ class AuthController extends GetxController {
     }
     //조회수는 1점, 좋아요는 5점
     expLikeViewCount[0] = expLikeViewCount[1] * 1 + expLikeViewCount[2] * 5;
-    print('exp계산중(auth cont) 총 ${expLikeViewCount[0]}점');
+    //  print('exp계산중(auth cont) 총 ${expLikeViewCount[0]}점');
     return expLikeViewCount;
   }
 
@@ -112,28 +112,28 @@ class AuthController extends GetxController {
     //user 정보를 firebase에 저장하고, result가 true면 유저정보가 firebase database를 넣었고 아니면 에러임
     if (result) {
       //유저정보를 파베에 넣고나서 할일
-      print("싸인업 : 유저에 ${signupUser.nickname} 넣음");
+      //  print("싸인업 : 유저에 ${signupUser.nickname} 넣음");
       user(signupUser);
     } else {
-      print("error: firestoreSignup");
+      //   print("error: firestoreSignup");
     }
   }
 
   Future<UserModel?> loginUser(String uid) async {
     try {
       //email과 맞는 유저 데이터를 firebase 에서 가져온다.
-      print('(auth cont) uid $uid');
+      //  print('(auth cont) uid $uid');
       var userData = await UserRepository.loginUserByUid(uid);
       //신규 유저일 경우 userData에 false값 반환됨, error났을떄는 null 반환됨
       if (userData != null && userData != false) {
         //신규유저가 아닐경우 컨트롤러에 유저정보를 전달해 놓는다
-        print('서버의 유저 데이터 (cont) ${userData.toJson()}');
+        //   print('서버의 유저 데이터 (cont) ${userData.toJson()}');
         user(userData);
         var groupData = await GroupRepository.groupLogin(userData.groupId);
         if (groupData != null) {
-          print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
+          //   print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
           group(groupData);
-          print('그룹 정보(auth cont)${group.value.uid}');
+          //  print('그룹 정보(auth cont)${group.value.uid}');
 
           int expPoint = (await getExpPoint())[0];
           UserModel updatedData = user.value.copyWith(
@@ -143,14 +143,14 @@ class AuthController extends GetxController {
         }
         return userData;
       } else if (userData == false) {
-        print('loginUser false');
+        //  print('loginUser false');
         return null;
       } else {
-        print('loginUser error');
+        //  print('loginUser error');
         return null;
       }
     } catch (e) {
-      print('loginUser 오류(cont)$e');
+      // print('loginUser 오류(cont)$e');
       openAlertDialog(title: '로그인 오류${e.toString()}');
       return null;
     }
@@ -214,12 +214,12 @@ class AuthController extends GetxController {
         if (myData.gender == 'male') {
           var groupData =
               await GroupRepository.groupSignup(groupId, myData, buddyData);
-          print('그룹 데이터 ${groupData.uid}');
+          //  print('그룹 데이터 ${groupData.uid}');
           group(groupData);
         } else if (myData.gender == 'female') {
           var groupData =
               await GroupRepository.groupSignup(groupId, buddyData, myData);
-          print('그룹 데이터 ${groupData.uid}');
+          //  print('그룹 데이터 ${groupData.uid}');
           group(groupData);
         } else {
           //동성 커플고려는 아직은 하지 않는걸로
@@ -228,7 +228,7 @@ class AuthController extends GetxController {
           // group(groupData);
         }
 
-        print('uuid로 가입 시작(cont) $groupId');
+        // print('uuid로 가입 시작(cont) $groupId');
         await UserRepository.updateGroupId(myData, groupId);
         await UserRepository.updateGroupId(buddyData, groupId);
         //user에 그룹아이디 주입
@@ -245,7 +245,7 @@ class AuthController extends GetxController {
               '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자,\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
           imgUrl: Constants.baseImageUrl,
         );
-        print('(auth cont) 기본 버꿍리스트 업로드 시작');
+        // print('(auth cont) 기본 버꿍리스트 업로드 시작');
         await BukkungListRepository.setGroupBukkungList(
             initialBukkungList, 'initial$groupId', groupId);
         return GroupIdStatus.createdGroupId;
@@ -262,12 +262,12 @@ class AuthController extends GetxController {
     if (myData!.gender == 'male') {
       var groupData =
           await GroupRepository.groupSignup(groupId, myData, nullBuddyData);
-      print('그룹 데이터 ${groupData.uid}');
+      // print('그룹 데이터 ${groupData.uid}');
       group(groupData);
     } else if (myData.gender == 'female') {
       var groupData =
           await GroupRepository.groupSignup(groupId, nullBuddyData, myData);
-      print('그룹 데이터 ${groupData.uid}');
+      // print('그룹 데이터 ${groupData.uid}');
       group(groupData);
     } else {
       //동성 커플고려는 아직은 하지 않는걸로
@@ -276,7 +276,7 @@ class AuthController extends GetxController {
       // group(groupData);
     }
 
-    print('uuid로 solo 가입 시작(cont) $groupId');
+    //print('uuid로 solo 가입 시작(cont) $groupId');
     await UserRepository.updateGroupId(myData, groupId);
     //user에 그룹아이디 주입
     user(myData.copyWith(groupId: groupId));
@@ -292,14 +292,14 @@ class AuthController extends GetxController {
           '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자,\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
       imgUrl: Constants.baseImageUrl,
     );
-    print('(auth cont) 기본 버꿍리스트 업로드 시작');
+    // print('(auth cont) 기본 버꿍리스트 업로드 시작');
     await BukkungListRepository.setGroupBukkungList(
         initialBukkungList, 'initial$groupId', groupId);
     return GroupIdStatus.createdGroupId;
   }
 
   Future<GroupModel?> getGroupModel(String email) async {
-    print('그룹 있는지 bool ${await UserRepository.getGroupModel(email)}');
+    //print('그룹 있는지 bool ${await UserRepository.getGroupModel(email)}');
     return await UserRepository.getGroupModel(email);
   }
 
