@@ -208,7 +208,7 @@ class UploadBukkungListController extends GetxController {
     final picker = ImagePicker();
 
     try {
-      final pickedFile = await picker.getImage(source: ImageSource.gallery);
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile == null) {
         print('No image selected');

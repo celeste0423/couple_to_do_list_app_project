@@ -24,5 +24,5 @@ class Constants {
       'market://details?id=com.teambukkung.bukkunglist';
 
   static String adminWebAppUrl =
-      'https://script.google.com/macros/s/AKfycbxNk_DaFAtwJIud2WoF5dKG_zXI0Y-rNimVyxyL7pNPblSk0HODo1uqQohoReJq2yhS/exec';
+      'https://script.google.com/macros/s/AKfycby0oc0lW2eZ3MamMD0cp_m6efRTFMKp1G_YEzJO_ZyLH7FL1XXSmMh3xoi7jwB-f7I/exec';
 }
