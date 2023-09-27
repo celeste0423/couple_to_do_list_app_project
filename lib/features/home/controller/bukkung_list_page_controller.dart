@@ -52,9 +52,9 @@ class BukkungListPageController extends GetxController {
   }
 
   Stream<Map<String, dynamic>> getAllBukkungListByCategory() {
-    print('리스트 로드 ${AuthController.to.group.value.uid}');
-    print('리스트 로드 ${AuthController.to.group.value.maleUid}');
-    print('리스트 로드 ${AuthController.to.group.value.femaleUid}');
+    // print('리스트 로드 ${AuthController.to.group.value.uid}');
+    // print('리스트 로드 ${AuthController.to.group.value.maleUid}');
+    // print('리스트 로드 ${AuthController.to.group.value.femaleUid}');
     final GroupModel groupModel = AuthController.to.group.value;
     return BukkungListRepository(groupModel: groupModel)
         .getGroupBukkungListByCategory();
