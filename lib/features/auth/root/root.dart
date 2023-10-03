@@ -37,14 +37,14 @@ class Root extends GetView<AuthController> {
             future: controller.loginUser(user.data!.uid),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                print('로그인 기다리는 중(root)');
+                //     print('로그인 기다리는 중(root)');
                 return loadingContainer();
               } else if (snapshot.hasError) {
-                print('로그인 오류(root)');
+                //  print('로그인 오류(root)');
                 return loadingContainer();
               } else {
                 if (!snapshot.hasData) {
-                  print('신규 유저임(root)');
+                  //   print('신규 유저임(root)');
                   // print('유저정보(root) ${controller.user.value.uid}');
                   // print('user.data!.uid ${user.data!.uid}');
                   //일단 controller에 uid와 email처음 저장
@@ -58,15 +58,15 @@ class Root extends GetView<AuthController> {
                 } else {
                   // print('로그인 정보 ${controller.user.toJson()}');
                   if (user.data!.email == 'bukkunglist@gmail.com') {
-                    print('관리자 계정으로 로그인했습니다. ManagementPage로 이동합니다.');
+                    //  print('관리자 계정으로 로그인했습니다. ManagementPage로 이동합니다.');
                     return AdminPage();
                   } else if (controller.user.value.groupId == null) {
-                    print('groupId 값이 아직 존재하지 않습니다. FindBuddyPage로 이동합니다.');
+                    //  print('groupId 값이 아직 존재하지 않습니다. FindBuddyPage로 이동합니다.');
                     return FindBuddyPage(email: user.data!.email ?? '');
                   } else {
-                    print('groupId 값이 존재함. homepage 가기 직전 initbinding실행');
+                    //  print('groupId 값이 존재함. homepage 가기 직전 initbinding실행');
                     InitBinding.additionalBinding();
-                    print('HomePage로 이동.');
+                    // print('HomePage로 이동.');
                     return HomePage();
                   }
                 }
@@ -74,7 +74,7 @@ class Root extends GetView<AuthController> {
             },
           );
         } else {
-          print('firebase가 null반환');
+          //  print('firebase가 null반환');
           return WelcomePage();
         }
       },

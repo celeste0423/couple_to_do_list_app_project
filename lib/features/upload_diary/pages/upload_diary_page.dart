@@ -35,11 +35,11 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
           child: IconButton(
             onPressed: () async {
               if (controller.isUploading.value) {
-                print('버튼 비활성화');
+                // print('버튼 비활성화');
                 null;
               } else {
                 if (controller.isValid()) {
-                  print('업로드 중');
+                  //   print('업로드 중');
                   controller.isUploading.value = true;
                   DiaryModel updatedDiary = await controller.uploadDiary();
                   Get.off(() => ReadDiaryPage(), arguments: updatedDiary);
@@ -632,11 +632,11 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
           buttonText: controller.selectedDiaryModel == null ? '작성 완료' : '수정 완료',
           onTap: () async {
             if (controller.isUploading.value) {
-              print('버튼 비활성화');
+              //print('버튼 비활성화');
               null;
             } else {
               if (controller.isValid()) {
-                print('업로드 중');
+                //print('업로드 중');
                 controller.isUploading.value = true;
                 DiaryModel updatedDiary = await controller.uploadDiary();
                 Get.off(() => ReadDiaryPage(), arguments: updatedDiary);

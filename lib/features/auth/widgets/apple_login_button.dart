@@ -15,8 +15,7 @@ class AppleLoginButton extends StatelessWidget {
         //Todo: 애플 로그인 구현
         UserCredential? userCredential =
             await AuthController.to.signInWithApple();
-        print(
-            'apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
+        // print('apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
         //로그인 타입 설정
         AuthController.loginType = 'apple';
             },

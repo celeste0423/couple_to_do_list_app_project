@@ -29,7 +29,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
     super.initState();
-    print(AuthController.to.user.value.email);
+    //print(AuthController.to.user.value.email);
   }
 
   Future<String> getVersionInfo() async {
@@ -285,7 +285,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print('웰컴페이지야(wel page)');
+    // print('웰컴페이지야(wel page)');
     LocalNotification.init();
     return Scaffold(
       backgroundColor: CustomColors.mainPink,

@@ -88,7 +88,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
 
   Widget _emailCopyButton() {
     final String useremail = widget.email;
-    print(useremail);
+    // print(useremail);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -211,7 +211,6 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
     final String useremail = widget.email;
     return GestureDetector(
       onTap: () {
-        print('hi');
         Clipboard.setData(
           ClipboardData(text: useremail ?? ''),
         ).then(
@@ -311,24 +310,16 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
       child: FloatingActionButton(
         elevation: 0,
         onPressed: () async {
-          print('리프레시 버튼 이메일${widget.email}');
-          print('그룹 찾기${await authController.getGroupModel(widget.email)}');
+          //  print('리프레시 버튼 이메일${widget.email}');
+          //   print('그룹 찾기${await authController.getGroupModel(widget.email)}');
           GroupModel? group = await authController.getGroupModel(widget.email);
           if (group != null) {
-            print('그룹 찾음');
-            print(
-                '1authController.user.value.uid ${authController.user.value.uid}');
-            print(
-                '1authController.group.value.uid ${authController.group.value.uid}');
             authController.group(group);
-            print(
-                '2authController.user.value.uid ${authController.user.value.uid}');
-            print(
-                '2authController.group.value.uid ${authController.group.value.uid}');
+
             FirebaseAuth.instance.reactive;
             Get.off(() => HomePage());
           } else {
-            print('그룹아이디 못찾음');
+            // print('그룹아이디 못찾음');
           }
         },
         child: Icon(

@@ -258,11 +258,19 @@ class GgomulPage extends GetView<GgomulPageController> {
               bukkungListModel.title!,
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
-            subtitle:
-                Text(DateFormat('yyyy-MM-dd').format(bukkungListModel.date!),
+            subtitle: bukkungListModel.date != null
+                ? Text(
+                    DateFormat('yyyy-MM-dd').format(bukkungListModel.date!),
                     style: TextStyle(
                       fontSize: 13,
-                    )),
+                    ),
+                  )
+                : Text(
+                    '미정',
+                    style: TextStyle(
+                      fontSize: 13,
+                    ),
+                  ),
             trailing: IconButton(
               onPressed: () {
                 openAlertDialog(
@@ -478,8 +486,8 @@ class GgomulPage extends GetView<GgomulPageController> {
           SizedBox(height: 20),
           _completedList(),
           SizedBox(
-            //50이 뭘까
-              height:50+
+              //50이 뭘까
+              height: 50 +
                   MediaQuery.of(context).padding.bottom +
                   kBottomNavigationBarHeight),
         ],

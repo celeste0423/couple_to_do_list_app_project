@@ -117,7 +117,7 @@ class BukkungListModel {
     DateTime? createdAt,
     List<String>? likedUsers,
   }) {
-    print('날짜 받는중 model $date');
+    //print('날짜 받는중 model $date');
     return BukkungListModel(
       listId: listId ?? this.listId,
       category: category ?? this.category,

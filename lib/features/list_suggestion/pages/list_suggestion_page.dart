@@ -365,7 +365,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           () => Column(
             mainAxisSize: MainAxisSize.min,
             children: controller.categories.map((item) {
-              print(controller.selectedCategories);
+              //print(controller.selectedCategories);
               return CheckboxListTile(
                 title: Text(controller.categoryToString[item]!),
                 value: controller.selectedCategories.contains(item),

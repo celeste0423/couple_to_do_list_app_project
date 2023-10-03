@@ -23,7 +23,7 @@ class DiaryRepository {
           DiaryModel.fromJson(diary.data()),
         );
       }
-      print('리스트 다 가져옴(dia repo)${diaryList.length}개');
+      //print('리스트 다 가져옴(dia repo)${diaryList.length}개');
       return diaryList;
     });
   }
