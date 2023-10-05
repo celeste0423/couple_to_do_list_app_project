@@ -167,7 +167,7 @@ class AuthController extends GetxController {
     if (buddyData == null || myData == null) {
       //아직 짝꿍이 가입 안함
       return GroupIdStatus.noData;
-    } else if (buddyData.groupId != null) {
+    } else if (buddyData != null && buddyData.groupId != null) {
       if (buddyData.groupId!.startsWith("solo")) {
         if (AuthController.to.group == null) {
           //내가 뉴비 상대는 solo그룹 => 그룹 만들고 하나만 옮기기
@@ -177,6 +177,7 @@ class AuthController extends GetxController {
           await UserRepository.updateGroupId(myData, groupData!.uid!);
           await UserRepository.updateGroupId(buddyData, groupData!.uid!);
           //user에 그룹아이디 주입
+          //todo: groupid 이거 쓰는게 맞나?
           user(myData.copyWith(groupId: groupId));
         } else {
           //나도 solo 상대도 solo => 그룹 합치기
@@ -186,12 +187,14 @@ class AuthController extends GetxController {
             group(groupData);
             await UserRepository.updateGroupId(myData, groupData!.uid!);
             await UserRepository.updateGroupId(buddyData, groupData!.uid!);
+            //todo: user(myData.copyWith(groupId: groupId)); 이런식으로 해줘야 되는거 아닌가
           } else {
             var groupData =
                 await GroupRepository().mergeSoloGroup(buddyData, myData);
             group(groupData);
             await UserRepository.updateGroupId(myData, groupData!.uid!);
             await UserRepository.updateGroupId(buddyData, groupData!.uid!);
+            //todo: user(myData.copyWith(groupId: groupId)); 이런식으로 해줘야 되는거 아닌가
           }
         }
         return GroupIdStatus.createdGroupId;
@@ -200,6 +203,7 @@ class AuthController extends GetxController {
         return GroupIdStatus.hasGroup;
       }
     } else {
+      //(buddyData != null && buddyData.groupId == null)
       if (myData.groupId != null) {
         //내가 solo 상대가 new
         var groupData =
@@ -208,6 +212,7 @@ class AuthController extends GetxController {
         await UserRepository.updateGroupId(myData, groupData!.uid!);
         await UserRepository.updateGroupId(buddyData, groupData!.uid!);
         //user에 그룹아이디 주입
+        //todo: groupid 이거 쓰는게 맞나?
         user(myData.copyWith(groupId: groupId));
         return GroupIdStatus.createdGroupId;
       } else {
