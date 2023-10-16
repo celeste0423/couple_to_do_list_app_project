@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
@@ -407,16 +406,15 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                     Expanded(
                       flex: 3,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          bottomLeft: Radius.circular(25),
-                        ),
-                        child: CachedNetworkImage(
-                          imageUrl: '${bukkungListModel.imgUrl}',
-                          height: 150,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25),
+                            bottomLeft: Radius.circular(25),
+                          ),
+                          child: Image.network(
+                            '${bukkungListModel.imgUrl}',
+                            height: 150,
+                            fit: BoxFit.cover,
+                          )),
                     ),
                     SizedBox(width: 20),
                     Expanded(

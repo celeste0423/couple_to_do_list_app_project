@@ -172,6 +172,12 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                     ],
                   ),
                 ),
+                Text(
+                  '주의 : 한 사람만 이메일 찾기를 눌러서 진행해주세요 \n 만약 상대방이 찾기를 눌렀음에도 이 페이지에서 넘어가지 않으면\n 앱을 껐다 켜주세요',
+                  style: TextStyle(
+                    fontSize: 9,
+                  ),
+                ),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 30),
                   height: 40,
