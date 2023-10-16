@@ -157,7 +157,6 @@ class AuthController extends GetxController {
   }
 
   Future<GroupIdStatus> groupCreation(String myEmail, String buddyEmail) async {
-    //todo:mydata 이거 authcontroller정보 쓰면 더 좋을듯
     var myData = await UserRepository.loginUserByEmail(myEmail);
     var buddyData = await UserRepository.loginUserByEmail(buddyEmail);
 
