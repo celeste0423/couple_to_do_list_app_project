@@ -67,6 +67,7 @@ class GroupRepository {
         .get();
     GroupModel groupData =
         GroupModel.fromJson(groupSnapshot.data()! as Map<String, dynamic>);
+    //solo를 뺸 uid 를 집어넣어야 하니까
     String newGid = groupData.uid!.substring(4);
     //버꿍리스트 받아옴
     QuerySnapshot bukkungListSnapshot = await FirebaseFirestore.instance

@@ -176,8 +176,8 @@ class AuthController extends GetxController {
           await UserRepository.updateGroupId(myData, groupData!.uid!);
           await UserRepository.updateGroupId(buddyData, groupData!.uid!);
           //user에 그룹아이디 주입
-          //todo: groupid 이거 쓰는게 맞나?
-          user(myData.copyWith(groupId: groupId));
+          //todo: groupid 이거 쓰는게 맞나?-수정했음
+          user(myData.copyWith(groupId: groupData.uid));
         } else {
           //나도 solo 상대도 solo => 그룹 합치기
           if (AuthController.to.user.value.gender == 'male') {
@@ -186,20 +186,24 @@ class AuthController extends GetxController {
             group(groupData);
             await UserRepository.updateGroupId(myData, groupData!.uid!);
             await UserRepository.updateGroupId(buddyData, groupData!.uid!);
-            //todo: user(myData.copyWith(groupId: groupId)); 이런식으로 해줘야 되는거 아닌가
+            user(myData.copyWith(groupId: groupData.uid));
           } else {
             var groupData =
                 await GroupRepository().mergeSoloGroup(buddyData, myData);
             group(groupData);
             await UserRepository.updateGroupId(myData, groupData!.uid!);
             await UserRepository.updateGroupId(buddyData, groupData!.uid!);
-            //todo: user(myData.copyWith(groupId: groupId)); 이런식으로 해줘야 되는거 아닌가
+            user(myData.copyWith(groupId: groupData.uid));
           }
         }
         return GroupIdStatus.createdGroupId;
       } else {
-        //이미 다른 짝이 있음
-        return GroupIdStatus.hasGroup;
+        //이미 solo아닌 그룹이 있음
+        if (buddyData.groupId == myData.groupId) {
+          return GroupIdStatus.createdGroupId;
+        } else {
+          return GroupIdStatus.hasGroup;
+        }
       }
     } else {
       //(buddyData != null && buddyData.groupId == null)
@@ -211,33 +215,28 @@ class AuthController extends GetxController {
         await UserRepository.updateGroupId(myData, groupData!.uid!);
         await UserRepository.updateGroupId(buddyData, groupData!.uid!);
         //user에 그룹아이디 주입
-        //todo: groupid 이거 쓰는게 맞나?
-        user(myData.copyWith(groupId: groupId));
+        user(myData.copyWith(groupId: groupData.uid));
         return GroupIdStatus.createdGroupId;
       } else {
         if (myData.gender == 'male') {
           var groupData =
               await GroupRepository.groupSignup(groupId, myData, buddyData);
-          //  print('그룹 데이터 ${groupData.uid}');
+          await UserRepository.updateGroupId(myData, groupId);
+          await UserRepository.updateGroupId(buddyData, groupId);
+
           group(groupData);
+          user(myData.copyWith(groupId: groupData.uid));
         } else if (myData.gender == 'female') {
           var groupData =
               await GroupRepository.groupSignup(groupId, buddyData, myData);
-          //  print('그룹 데이터 ${groupData.uid}');
+          await UserRepository.updateGroupId(myData, groupId);
+          await UserRepository.updateGroupId(buddyData, groupId);
+
           group(groupData);
+          user(myData.copyWith(groupId: groupData.uid));
         } else {
           //동성 커플고려는 아직은 하지 않는걸로
-          // var groupData =
-          //     await GroupRepository.groupSignup(groupId, myData, buddyData!);
-          // group(groupData);
         }
-
-        // print('uuid로 가입 시작(cont) $groupId');
-        await UserRepository.updateGroupId(myData, groupId);
-        await UserRepository.updateGroupId(buddyData, groupId);
-        //user에 그룹아이디 주입
-        user(myData.copyWith(groupId: groupId));
-
         //기본 버꿍리스트 업로드
         BukkungListModel initialModel = BukkungListModel.init(user.value);
         BukkungListModel initialBukkungList = initialModel.copyWith(
