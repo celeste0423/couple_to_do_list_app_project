@@ -1,11 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-CustomCachedNetworkImage() {
-  List<String> imgurlList = ['a', 'b'];
-  for (String url in imgurlList) {}
+CustomCachedNetworkImage(String imageurl) {
   return CachedNetworkImage(
-    imageUrl: '',
-    errorWidget: (context, url, error) => Image.asset('assets/error_image.png'),
+    imageUrl: imageurl,
+    errorWidget: (context, url, error) => Image.asset('assets/images/baseimage_ggomool.png'),
   );
 }

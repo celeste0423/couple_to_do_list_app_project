@@ -103,7 +103,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
         decoration: BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: NetworkImage(
+            image: CustomCachedNetworkImage(
                 Constants.baseImageUrl
             ),
           ),
@@ -116,7 +116,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
           decoration: BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.cover,
-              image: NetworkImage(
+              image: CustomCachedNetworkImage(
                 selectedDiaryModel.imgUrlList![0],
               ),
             ),
@@ -132,7 +132,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: NetworkImage(
+                  image: CustomCachedNetworkImage(
                     selectedDiaryModel.imgUrlList![index],
                   ),
                 ),
