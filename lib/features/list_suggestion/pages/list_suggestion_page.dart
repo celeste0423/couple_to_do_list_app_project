@@ -3,6 +3,7 @@ import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/custom_cached_networkImage.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/level_icon.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
@@ -235,7 +236,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     ),
                   ],
                   image: DecorationImage(
-                    image: NetworkImage(bukkungListModel.imgUrl!),
+                    image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -451,7 +452,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                         ),
                       ],
                       image: DecorationImage(
-                        image: NetworkImage(
+                        image: CustomCachedNetworkImage(
                           controller.selectedList.value.imgUrl ?? '',
                         ),
                         fit: BoxFit.cover,

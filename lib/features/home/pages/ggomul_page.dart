@@ -339,6 +339,7 @@ class GgomulPage extends GetView<GgomulPageController> {
                           child: CachedNetworkImage(
                             imageUrl: '${bukkungListModel.imgUrl}',
                             fit: BoxFit.cover,
+                            errorWidget: (context, url, error) => Image.asset('assets/images/baseimage_ggomool.png'),
                           ),
                         ),
                       ),

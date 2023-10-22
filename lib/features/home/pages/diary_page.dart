@@ -156,6 +156,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             fit: BoxFit.cover,
+                            //todo: 이건 뭐지
                             image: CachedNetworkImageProvider(
                                 diaryModel.imgUrlList!.isEmpty ? Constants.baseImageUrl:diaryModel.imgUrlList![0]),
                           ),
@@ -485,6 +486,7 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
                                 image: DecorationImage(
+                                  //todo: 이거뭐지
                                   image: CachedNetworkImageProvider(
                                       controller
                                           .selectedDiary.value.imgUrlList!.isEmpty? Constants.baseImageUrl:
