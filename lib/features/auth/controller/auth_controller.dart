@@ -164,91 +164,103 @@ class AuthController extends GetxController {
     var uuid = Uuid();
     String groupId = uuid.v1();
 
-    if (buddyData == null || myData == null) {
-      //아직 짝꿍이 가입 안함
-      return GroupIdStatus.noData;
-    } else if (buddyData.groupId != null) {
-      if (buddyData.groupId!.startsWith("solo")) {
-        if (AuthController.to.group == null) {
-          //내가 뉴비 상대는 solo그룹 => 그룹 만들고 하나만 옮기기
-          var groupData =
-              await GroupRepository().updateSoloGroup(myData, buddyData);
-          group(groupData);
-          await UserRepository.updateGroupId(myData, groupData!.uid!);
-          await UserRepository.updateGroupId(buddyData, groupData!.uid!);
-          //user에 그룹아이디 주입
-          user(myData.copyWith(groupId: groupId));
-        } else {
-          //나도 solo 상대도 solo => 그룹 합치기
-          if (AuthController.to.user.value.gender == 'male') {
-            var groupData =
-                await GroupRepository().mergeSoloGroup(myData, buddyData);
-            group(groupData);
-            await UserRepository.updateGroupId(myData, groupData!.uid!);
-            await UserRepository.updateGroupId(buddyData, groupData!.uid!);
-          } else {
-            var groupData =
-                await GroupRepository().mergeSoloGroup(buddyData, myData);
-            group(groupData);
-            await UserRepository.updateGroupId(myData, groupData!.uid!);
-            await UserRepository.updateGroupId(buddyData, groupData!.uid!);
-          }
-        }
-        return GroupIdStatus.createdGroupId;
-      } else {
-        //이미 다른 짝이 있음
-        return GroupIdStatus.hasGroup;
-      }
-    } else {
-      if (myData.groupId != null) {
-        //내가 solo 상대가 new
+    Future<GroupIdStatus> _createSoloGroup(
+      UserModel noGroupUserData,
+      UserModel hasGroupUserData,
+      String groupId,
+    ) async {
+      var groupData = await GroupRepository()
+          .updateSoloGroup(noGroupUserData, hasGroupUserData);
+      group(groupData);
+      await UserRepository.updateGroupId(noGroupUserData, groupData!.uid!);
+      await UserRepository.updateGroupId(hasGroupUserData, groupData!.uid!);
+      //user에 그룹아이디 주입
+      user(noGroupUserData.copyWith(groupId: groupId));
+      return GroupIdStatus.createdGroupId;
+    }
+
+    Future<GroupIdStatus> _mergeSoloGroups(
+      UserModel myData,
+      UserModel buddyData,
+    ) async {
+      if (AuthController.to.user.value.gender == 'male') {
         var groupData =
-            await GroupRepository().updateSoloGroup(buddyData, myData);
+            await GroupRepository().mergeSoloGroup(myData, buddyData);
         group(groupData);
         await UserRepository.updateGroupId(myData, groupData!.uid!);
         await UserRepository.updateGroupId(buddyData, groupData!.uid!);
-        //user에 그룹아이디 주입
-        user(myData.copyWith(groupId: groupId));
-        return GroupIdStatus.createdGroupId;
       } else {
+        var groupData =
+            await GroupRepository().mergeSoloGroup(buddyData, myData);
+        group(groupData);
+        await UserRepository.updateGroupId(myData, groupData!.uid!);
+        await UserRepository.updateGroupId(buddyData, groupData!.uid!);
+      }
+      return GroupIdStatus.createdGroupId;
+    }
+
+    Future<GroupIdStatus> _groupSignup(
+      UserModel user1,
+      UserModel user2,
+      String groupId,
+    ) async {
+      var groupData = await GroupRepository.groupSignup(groupId, user1, user2);
+      group(groupData);
+      await UserRepository.updateGroupId(user1, groupId);
+      await UserRepository.updateGroupId(user2, groupId);
+      user(user1.copyWith(groupId: groupId));
+
+      // 기본 버꿍리스트 업로드
+      BukkungListModel initialModel = BukkungListModel.init(user.value);
+      BukkungListModel initialBukkungList = initialModel.copyWith(
+        title: '함께 버꿍리스트 앱 설치하기',
+        listId: 'initial$groupId',
+        category: '6etc',
+        location: '버꿍리스트 앱',
+        content: '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자...',
+        imgUrl: Constants.baseImageUrl,
+      );
+      await BukkungListRepository.setGroupBukkungList(
+          initialBukkungList, 'initial$groupId', groupId);
+      return GroupIdStatus.createdGroupId;
+    }
+
+    if (buddyData == null || myData == null) {
+      //아직 짝꿍이 가입 안함 or 내 정보가 없음(오류)
+      return GroupIdStatus.noData;
+    } else if (buddyData.groupId != null) {
+      //상대 그룹 아이디가 존재
+      if (buddyData.groupId!.startsWith("solo")) {
+        if (AuthController.to.group == null) {
+          //내가 뉴비 상대는 solo그룹 => 그룹 만들고 하나만 옮기기
+          return _createSoloGroup(myData, buddyData, groupId);
+        } else {
+          //나도 solo 상대도 solo => 그룹 합치기
+          return _mergeSoloGroups(myData, buddyData);
+        }
+      } else {
+        //이미 다른 짝이 있음
+        //다른 짝이 나인지 확인할 것
+        return GroupIdStatus.hasGroup;
+      }
+    } else {
+      //상대 그룹아이디가 아직 없음
+      if (myData.groupId != null) {
+        //내가 solo 상대가 new
+        return _createSoloGroup(buddyData, myData, groupId);
+      } else {
+        //나는 아직 solo그룹이 없음 => 새로운 그룹 만들어서 둘다 가입
         if (myData.gender == 'male') {
-          var groupData =
-              await GroupRepository.groupSignup(groupId, myData, buddyData);
-          //  print('그룹 데이터 ${groupData.uid}');
-          group(groupData);
+          return _groupSignup(myData, buddyData, groupId);
         } else if (myData.gender == 'female') {
-          var groupData =
-              await GroupRepository.groupSignup(groupId, buddyData, myData);
-          //  print('그룹 데이터 ${groupData.uid}');
-          group(groupData);
+          return _groupSignup(buddyData, myData, groupId);
         } else {
           //동성 커플고려는 아직은 하지 않는걸로
           // var groupData =
           //     await GroupRepository.groupSignup(groupId, myData, buddyData!);
           // group(groupData);
+          return GroupIdStatus.noData;
         }
-
-        // print('uuid로 가입 시작(cont) $groupId');
-        await UserRepository.updateGroupId(myData, groupId);
-        await UserRepository.updateGroupId(buddyData, groupId);
-        //user에 그룹아이디 주입
-        user(myData.copyWith(groupId: groupId));
-
-        //기본 버꿍리스트 업로드
-        BukkungListModel initialModel = BukkungListModel.init(user.value);
-        BukkungListModel initialBukkungList = initialModel.copyWith(
-          title: '함께 버꿍리스트 앱 설치하기',
-          listId: 'initial$groupId',
-          category: '6etc',
-          location: '버꿍리스트 앱',
-          content:
-              '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자,\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
-          imgUrl: Constants.baseImageUrl,
-        );
-        // print('(auth cont) 기본 버꿍리스트 업로드 시작');
-        await BukkungListRepository.setGroupBukkungList(
-            initialBukkungList, 'initial$groupId', groupId);
-        return GroupIdStatus.createdGroupId;
       }
     }
   }
