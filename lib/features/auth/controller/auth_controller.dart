@@ -243,9 +243,8 @@ class AuthController extends GetxController {
         //다른 짝이 나인지 확인할 것
         if (buddyData.groupId == myData.groupId) {
           return GroupIdStatus.createdGroupId;
-        } else {
-          return GroupIdStatus.hasGroup;
         }
+        return GroupIdStatus.hasGroup;
       }
     } else {
       //상대 그룹아이디가 아직 없음
@@ -260,10 +259,10 @@ class AuthController extends GetxController {
           return _groupSignup(buddyData, myData, groupId);
         } else {
           //동성 커플고려는 아직은 하지 않는걸로
-          // var groupData =
-          //     await GroupRepository.groupSignup(groupId, myData, buddyData!);
-          // group(groupData);
-          // return GroupIdStatus.noData;
+          var groupData =
+              await GroupRepository.groupSignup(groupId, myData, buddyData!);
+          group(groupData);
+          return GroupIdStatus.createdGroupId;
         }
       }
     }
