@@ -142,13 +142,16 @@ class ReadCompletedListPage extends GetView<ReadCompletedListPageController> {
                 () => Container(
                   height: 250,
                   decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: CustomCachedNetworkImage(
+                            controller.imgUrl.value),
+                        fit: BoxFit.cover
+                    ),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(50),
                       bottomLeft: Radius.circular(50),
                     ),
-                    image: CustomCachedNetworkImage(
-                        controller.imgUrl.value,BoxFit.cover,
-                      ),
+
                   ),
                 ),
               ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_to_do_list_app/features/admin_management/controller/admin_list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
@@ -119,15 +120,15 @@ class AdminListSuggestionPage
                     suffixIcon: controller.isTextEmpty
                         ? null
                         : IconButton(
-                            icon: Icon(
-                              Icons.close,
-                              size: 25,
-                              color: CustomColors.darkGrey,
-                            ),
-                            onPressed: () {
-                              return controller.searchBarController.clear();
-                            },
-                          ),
+                      icon: Icon(
+                        Icons.close,
+                        size: 25,
+                        color: CustomColors.darkGrey,
+                      ),
+                      onPressed: () {
+                        return controller.searchBarController.clear();
+                      },
+                    ),
                   ),
                   onTap: () {
                     controller.isSearchResult(true);
@@ -150,42 +151,42 @@ class AdminListSuggestionPage
                       constraints: BoxConstraints(maxHeight: 300),
                       child: controller.isTextEmpty
                           ? Center(
-                              child: Text('검색어를 입력하세요'),
-                            )
+                        child: Text('검색어를 입력하세요'),
+                      )
                           : StreamBuilder(
-                              stream: controller.getSearchedBukkungList(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<List<BukkungListModel>>
-                                      bukkungLists) {
-                                if (!bukkungLists.hasData) {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                        color: CustomColors.mainPink),
-                                  );
-                                } else if (bukkungLists.hasError) {
-                                  openAlertDialog(title: '에러 발생');
-                                } else {
-                                  final list = bukkungLists.data!;
-                                  return ListView(
-                                    physics: AlwaysScrollableScrollPhysics(),
-                                    children: [
-                                      Column(
-                                        children:
-                                            List.generate(list.length, (index) {
-                                          final bukkungList = list[index];
-                                          return _searchListCard(
-                                            bukkungList,
-                                            index,
-                                            context,
-                                          );
-                                        }),
-                                      ),
-                                    ],
-                                  );
-                                }
-                                return Center(child: Text('아직 버꿍리스트가 없습니다'));
-                              },
-                            ),
+                        stream: controller.getSearchedBukkungList(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<BukkungListModel>>
+                            bukkungLists) {
+                          if (!bukkungLists.hasData) {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                  color: CustomColors.mainPink),
+                            );
+                          } else if (bukkungLists.hasError) {
+                            openAlertDialog(title: '에러 발생');
+                          } else {
+                            final list = bukkungLists.data!;
+                            return ListView(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              children: [
+                                Column(
+                                  children:
+                                  List.generate(list.length, (index) {
+                                    final bukkungList = list[index];
+                                    return _searchListCard(
+                                      bukkungList,
+                                      index,
+                                      context,
+                                    );
+                                  }),
+                                ),
+                              ],
+                            );
+                          }
+                          return Center(child: Text('아직 버꿍리스트가 없습니다'));
+                        },
+                      ),
                     );
                   },
                 );
@@ -198,8 +199,8 @@ class AdminListSuggestionPage
     );
   }
 
-  Widget _searchListCard(
-      BukkungListModel bukkungListModel, int index, BuildContext context) {
+  Widget _searchListCard(BukkungListModel bukkungListModel, int index,
+      BuildContext context) {
     int? viewCount = bukkungListModel.viewCount;
     NumberFormat formatter = NumberFormat.compact(locale: "ko_KR");
     String formattedViewCount = formatter.format(viewCount);
@@ -240,6 +241,10 @@ class AdminListSuggestionPage
                 width: 84,
                 height: 84,
                 decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
+                    fit: BoxFit.cover,
+                  ),
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
@@ -249,8 +254,6 @@ class AdminListSuggestionPage
                       offset: Offset(5, 5), // Offset(수평, 수직)
                     ),
                   ],
-                  image: CustomCachedNetworkImage(
-                      bukkungListModel.imgUrl!, BoxFit.cover),
                 ),
               ),
               SizedBox(width: 20),
@@ -311,34 +314,36 @@ class AdminListSuggestionPage
           children: [
             controller.selectedList.value.imgUrl == null
                 ? Container(
-                    width: Get.width - 50,
-                    height: 230,
-                    padding: const EdgeInsets.only(top: 400),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: CustomColors.mainPink,
-                      ),
-                    ),
-                  )
+              width: Get.width - 50,
+              height: 230,
+              padding: const EdgeInsets.only(top: 400),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: CustomColors.mainPink,
+                ),
+              ),
+            )
                 : Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    width: Get.width - 50,
-                    height: 230,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          spreadRadius: 3,
-                          blurRadius: 10,
-                          offset: Offset(5, 5), // Offset(수평, 수직)
-                        ),
-                      ],
-                      image: CustomCachedNetworkImage(
-                          controller.selectedList.value.imgUrl ?? '',
-                          BoxFit.cover),
-                    ),
+              margin: const EdgeInsets.only(top: 10),
+              width: Get.width - 50,
+              height: 230,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: CustomCachedNetworkImage(
+                      controller.selectedList.value.imgUrl ?? ''),
+                  fit: BoxFit.cover
+                ),
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 3,
+                    blurRadius: 10,
+                    offset: Offset(5, 5), // Offset(수평, 수직)
                   ),
+                ],
+              ),
+            ),
             Container(
               margin: const EdgeInsets.only(top: 10),
               width: Get.width - 50,
@@ -368,17 +373,17 @@ class AdminListSuggestionPage
                         child: controller.selectedList.value.title == null
                             ? Container()
                             : Align(
-                                alignment: Alignment.centerLeft,
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: PcText(
-                                    controller.selectedList.value.title ?? '',
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontSize: 24, color: Colors.white),
-                                  ),
-                                ),
-                              ),
+                          alignment: Alignment.centerLeft,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: PcText(
+                              controller.selectedList.value.title ?? '',
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: 24, color: Colors.white),
+                            ),
+                          ),
+                        ),
                       ),
                       SizedBox(width: 10),
                       Row(
@@ -391,7 +396,7 @@ class AdminListSuggestionPage
                           SizedBox(width: 10),
                           Text(
                             controller.categoryToString[
-                                    controller.selectedList.value.category] ??
+                            controller.selectedList.value.category] ??
                                 '',
                             style: TextStyle(
                               color: Colors.white,
@@ -487,7 +492,7 @@ class AdminListSuggestionPage
       child: CustomIconButton(
         onTap: () {
           Get.to(
-            () => UploadBukkungListPage(),
+                () => UploadBukkungListPage(),
             arguments: [controller.selectedList.value, true],
           );
         },
@@ -743,8 +748,8 @@ class AdminListSuggestionPage
   //   );
   // }
 
-  Widget _suggestionListCard(
-      BukkungListModel bukkungListModel, int index, bool isDelete) {
+  Widget _suggestionListCard(BukkungListModel bukkungListModel, int index,
+      bool isDelete) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: GestureDetector(
@@ -754,7 +759,7 @@ class AdminListSuggestionPage
         },
         onDoubleTap: () {
           Get.to(
-            () => UploadBukkungListPage(),
+                () => UploadBukkungListPage(),
             arguments: [controller.selectedList.value, true],
           );
         },
@@ -770,13 +775,13 @@ class AdminListSuggestionPage
                 height: 85,
                 decoration: BoxDecoration(
                     color: bukkungListModel.listId ==
-                            controller.selectedList.value.listId
+                        controller.selectedList.value.listId
                         ? CustomColors.lightPink.withOpacity(0.1)
                         : Colors.white,
                     borderRadius: BorderRadius.circular(25),
                     border: Border.all(
                       color: bukkungListModel.listId ==
-                              controller.selectedList.value.listId
+                          controller.selectedList.value.listId
                           ? CustomColors.mainPink
                           : Colors.white,
                       width: 2,
@@ -826,6 +831,11 @@ class AdminListSuggestionPage
               width: 100,
               height: 100,
               decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: CustomCachedNetworkImage(
+                        bukkungListModel.imgUrl!),
+                    fit: BoxFit.cover
+                ),
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: [
                   BoxShadow(
@@ -835,8 +845,7 @@ class AdminListSuggestionPage
                     offset: Offset(5, 5), // Offset(수평, 수직)
                   ),
                 ],
-                image: CustomCachedNetworkImage(
-                    bukkungListModel.imgUrl!, BoxFit.cover),
+
               ),
             ),
             Positioned(
@@ -888,31 +897,31 @@ class AdminListSuggestionPage
       children: [
         image == null
             ? Icon(
-                Icons.favorite_border,
-                size: 18,
-                color: Colors.black.withOpacity(0.5),
-              )
+          Icons.favorite_border,
+          size: 18,
+          color: Colors.black.withOpacity(0.5),
+        )
             : Image.asset(
-                'assets/icons/$image',
-                width: 20,
-                color: CustomColors.grey.withOpacity(0.5),
-                colorBlendMode: BlendMode.modulate,
-              ),
+          'assets/icons/$image',
+          width: 20,
+          color: CustomColors.grey.withOpacity(0.5),
+          colorBlendMode: BlendMode.modulate,
+        ),
         marquee
             ? MarqueeAbleText(
-                text: text,
-                maxLength: 5,
-                style: TextStyle(
-                  fontFamily: 'Bookk_mj',
-                  fontSize: 13,
-                ),
-              )
+          text: text,
+          maxLength: 5,
+          style: TextStyle(
+            fontFamily: 'Bookk_mj',
+            fontSize: 13,
+          ),
+        )
             : BkText(
-                text,
-                style: TextStyle(
-                  fontSize: 13,
-                ),
-              ),
+          text,
+          style: TextStyle(
+            fontSize: 13,
+          ),
+        ),
       ],
     );
   }

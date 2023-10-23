@@ -226,6 +226,11 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 width: 84,
                 height: 84,
                 decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: CustomCachedNetworkImage(
+                          bukkungListModel.imgUrl!),
+                      fit: BoxFit.cover
+                  ),
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
@@ -235,7 +240,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                       offset: Offset(5, 5), // Offset(수평, 수직)
                     ),
                   ],
-                  image: CustomCachedNetworkImage(bukkungListModel.imgUrl!,BoxFit.cover),
+
                 ),
               ),
               SizedBox(width: 20),
@@ -439,6 +444,11 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                     width: Get.width - 50,
                     height: 230,
                     decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: CustomCachedNetworkImage(
+                              controller.selectedList.value.imgUrl ?? ''),
+                          fit: BoxFit.cover
+                      ),
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(
@@ -448,9 +458,6 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                           offset: Offset(5, 5), // Offset(수평, 수직)
                         ),
                       ],
-                      image: CustomCachedNetworkImage(
-                          controller.selectedList.value.imgUrl ?? '',BoxFit.cover
-                      ),
                     ),
                   ),
             Container(
@@ -919,7 +926,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                   ),
                 ],
                 image: DecorationImage(
-                  image: NetworkImage(bukkungListModel.imgUrl!),
+                  image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
                   fit: BoxFit.cover,
                 ),
               ),

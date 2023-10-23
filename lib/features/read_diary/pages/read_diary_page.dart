@@ -101,17 +101,25 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
     double width = Get.width;
     if (selectedDiaryModel.imgUrlList!.isEmpty) {
       return Container(
-        decoration: CustomCachedNetworkImage(
-            Constants.baseImageUrl,BoxFit.cover
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/baseimage_ggomool.png'),
+            // this will be either NetworkImage or AssetImage, depending on whether the network image loaded
+            fit: BoxFit.cover,
           ),
+        ),
         height: width - 60,
       );
     } else if (selectedDiaryModel.imgUrlList!.length == 1) {
       return Expanded(
         child: Container(
           decoration: BoxDecoration(
-            image: CustomCachedNetworkImage(
-                selectedDiaryModel.imgUrlList![0], BoxFit.cover),
+            image: DecorationImage(
+              image: CustomCachedNetworkImage(
+                  selectedDiaryModel.imgUrlList![0]),
+              // this will be either NetworkImage or AssetImage, depending on whether the network image loaded
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       );
@@ -122,8 +130,11 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
           itemBuilder: (ctx, index, realIndex) {
             return Container(
               decoration: BoxDecoration(
+                image: DecorationImage(
                   image: CustomCachedNetworkImage(
-                    selectedDiaryModel.imgUrlList![index],BoxFit.cover
+                      selectedDiaryModel.imgUrlList![index]),
+                  // this will be either NetworkImage or AssetImage, depending on whether the network image loaded
+                  fit: BoxFit.cover,
                 ),
               ),
             );
