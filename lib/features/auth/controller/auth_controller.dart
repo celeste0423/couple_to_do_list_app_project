@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:couple_to_do_list_app/constants/constants.dart';
+import 'package:couple_to_do_list_app/features/background_message/controller/fcm_controller.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
@@ -130,6 +131,11 @@ class AuthController extends GetxController {
         //   print('서버의 유저 데이터 (cont) ${userData.toJson()}');
         user(userData);
         var groupData = await GroupRepository.groupLogin(userData.groupId);
+
+        //fcm 세팅(클라우드 메시지)
+        var deviceToken = await FCMController().getMyDeviceToken();
+        FCMController().uploadDeviceToken(deviceToken, uid);
+
         if (groupData != null) {
           //   print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
           group(groupData);

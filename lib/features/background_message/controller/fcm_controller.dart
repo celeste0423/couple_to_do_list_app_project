@@ -1,11 +1,48 @@
 import 'dart:convert';
 
+import 'package:couple_to_do_list_app/features/background_message/repository/fcm_repository.dart';
+import 'package:couple_to_do_list_app/models/device_token_model.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
 class FCMController {
   final String _serverKey =
       "BFxYuSIahcU4oMs_Ang7Gxcp6d78v1kuSq46RojpJW23rrNsjdhxbvMbTBANmJy7juyngTyp7UMhIhN_vp8YRTw";
+
+  Future<String?> getMyDeviceToken() async {
+    final token = await FirebaseMessaging.instance.getToken();
+    return token;
+  }
+
+  Future<void> uploadDeviceToken(
+    String? deviceToken,
+    String? uid,
+  ) async {
+    DeviceTokenModel? isDeviceToken =
+        await FCMRepository().getDeviceTokenByUid(uid!);
+
+    if (isDeviceToken == null) {
+      var uuid = Uuid();
+      String tid = uuid.v1();
+
+      DeviceTokenModel deviceTokenData = DeviceTokenModel(
+        tid: tid,
+        uid: uid,
+        deviceToken: deviceToken,
+      );
+
+      FCMRepository().setDeviceToken(deviceTokenData);
+    } else {
+      DeviceTokenModel deviceTokenData = DeviceTokenModel(
+        tid: isDeviceToken.tid,
+        uid: uid,
+        deviceToken: deviceToken,
+      );
+
+      FCMRepository().updateDeviceToken(deviceTokenData);
+    }
+  }
 
   Future<void> sendMessageController({
     required String userToken,
