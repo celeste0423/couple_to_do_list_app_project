@@ -160,101 +160,200 @@ class AuthController extends GetxController {
     var myData = await UserRepository.loginUserByEmail(myEmail);
     var buddyData = await UserRepository.loginUserByEmail(buddyEmail);
 
-    var uuid = Uuid();
-    String groupId = uuid.v1();
-
-    if (buddyData == null || myData == null) {
-      //아직 짝꿍이 가입 안함
+    if (myData == null || buddyData == null) {
+      //오류 발생시 or 아직 짝꿍 가입 전
       return GroupIdStatus.noData;
-    } else if (buddyData != null && buddyData.groupId != null) {
+    }
+
+    var groupId = Uuid().v1();
+
+    if (buddyData.groupId != null) {
+      //짝꿍 그룹 존재
       if (buddyData.groupId!.startsWith("solo")) {
+        //상대 solo 그룹
         if (AuthController.to.group == null) {
-          //내가 뉴비 상대는 solo그룹 => 그룹 만들고 하나만 옮기기
-          var groupData =
-              await GroupRepository().updateSoloGroup(myData, buddyData);
-          group(groupData);
-          await UserRepository.updateGroupId(myData, groupData!.uid!);
-          await UserRepository.updateGroupId(buddyData, groupData!.uid!);
-          //user에 그룹아이디 주입
-          //todo: groupid 이거 쓰는게 맞나?-수정했음
-          user(myData.copyWith(groupId: groupData.uid));
+          //나는 뉴비 => 그룹 만들고 옮기기
+          return _createGroupAndMoveOneUser(myData, buddyData, groupId);
         } else {
-          //나도 solo 상대도 solo => 그룹 합치기
-          if (AuthController.to.user.value.gender == 'male') {
-            var groupData =
-                await GroupRepository().mergeSoloGroup(myData, buddyData);
-            group(groupData);
-            await UserRepository.updateGroupId(myData, groupData!.uid!);
-            await UserRepository.updateGroupId(buddyData, groupData!.uid!);
-            user(myData.copyWith(groupId: groupData.uid));
-          } else {
-            var groupData =
-                await GroupRepository().mergeSoloGroup(buddyData, myData);
-            group(groupData);
-            await UserRepository.updateGroupId(myData, groupData!.uid!);
-            await UserRepository.updateGroupId(buddyData, groupData!.uid!);
-            user(myData.copyWith(groupId: groupData.uid));
-          }
+          //나도 solo => 그룹 합치기
+          return _mergeSoloGroups(myData, buddyData, groupId);
         }
+      } else if (buddyData.groupId == myData.groupId) {
+        //상대 그룹이 존재 => 상대 그룹에 내가 있을 경우
         return GroupIdStatus.createdGroupId;
       } else {
-        //이미 solo아닌 그룹이 있음
-        if (buddyData.groupId == myData.groupId) {
-          return GroupIdStatus.createdGroupId;
-        } else {
-          return GroupIdStatus.hasGroup;
-        }
+        //상대 그룹이 이미 있음(다른 사람과)
+        return GroupIdStatus.hasGroup;
       }
+    } else if (myData.groupId != null) {
+      //나만 solo 그룹이 있을 경우
+      return _createGroupAndMoveOneUser(buddyData, myData, groupId);
     } else {
-      //(buddyData != null && buddyData.groupId == null)
-      if (myData.groupId != null) {
-        //내가 solo 상대가 new
-        var groupData =
-            await GroupRepository().updateSoloGroup(buddyData, myData);
-        group(groupData);
-        await UserRepository.updateGroupId(myData, groupData!.uid!);
-        await UserRepository.updateGroupId(buddyData, groupData!.uid!);
-        //user에 그룹아이디 주입
-        user(myData.copyWith(groupId: groupData.uid));
-        return GroupIdStatus.createdGroupId;
+      //둘다 그룹이 없을 경우
+      if (myData.gender == 'male') {
+        return _groupSignupAndSetupList(groupId, myData, buddyData);
+      } else if (myData.gender == 'female') {
+        return _groupSignupAndSetupList(groupId, buddyData, myData);
       } else {
-        if (myData.gender == 'male') {
-          var groupData =
-              await GroupRepository.groupSignup(groupId, myData, buddyData);
-          await UserRepository.updateGroupId(myData, groupId);
-          await UserRepository.updateGroupId(buddyData, groupId);
-
-          group(groupData);
-          user(myData.copyWith(groupId: groupData.uid));
-        } else if (myData.gender == 'female') {
-          var groupData =
-              await GroupRepository.groupSignup(groupId, buddyData, myData);
-          await UserRepository.updateGroupId(myData, groupId);
-          await UserRepository.updateGroupId(buddyData, groupId);
-
-          group(groupData);
-          user(myData.copyWith(groupId: groupData.uid));
-        } else {
-          //동성 커플고려는 아직은 하지 않는걸로
-        }
-        //기본 버꿍리스트 업로드
-        BukkungListModel initialModel = BukkungListModel.init(user.value);
-        BukkungListModel initialBukkungList = initialModel.copyWith(
-          title: '함께 버꿍리스트 앱 설치하기',
-          listId: 'initial$groupId',
-          category: '6etc',
-          location: '버꿍리스트 앱',
-          content:
-              '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자,\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
-          imgUrl: Constants.baseImageUrl,
-        );
-        // print('(auth cont) 기본 버꿍리스트 업로드 시작');
-        await BukkungListRepository.setGroupBukkungList(
-            initialBukkungList, 'initial$groupId', groupId);
-        return GroupIdStatus.createdGroupId;
+        // 동성 커플 고려는 아직은 하지 않음
+        return GroupIdStatus.noData;
       }
     }
   }
+
+  Future<GroupIdStatus> _createGroupAndMoveOneUser(
+    UserModel myData,
+    UserModel buddyData,
+    String groupId,
+  ) async {
+    var groupData = await GroupRepository().updateSoloGroup(myData, buddyData);
+    group(groupData);
+    await UserRepository.updateGroupId(myData, groupData!.uid!);
+    await UserRepository.updateGroupId(buddyData, groupData!.uid!);
+    user(myData.copyWith(groupId: groupData.uid));
+    return GroupIdStatus.createdGroupId;
+  }
+
+  Future<GroupIdStatus> _mergeSoloGroups(
+      UserModel myData, UserModel buddyData, String groupId) async {
+    var groupData = myData.gender == 'male'
+        ? await GroupRepository().mergeSoloGroup(myData, buddyData)
+        : await GroupRepository().mergeSoloGroup(buddyData, myData);
+
+    group(groupData);
+    await UserRepository.updateGroupId(myData, groupData!.uid!);
+    await UserRepository.updateGroupId(buddyData, groupData!.uid!);
+    user(myData.copyWith(groupId: groupData.uid));
+    return GroupIdStatus.createdGroupId;
+  }
+
+  Future<GroupIdStatus> _groupSignupAndSetupList(
+    String groupId,
+    UserModel user1,
+    UserModel user2,
+  ) async {
+    var groupData = await GroupRepository.groupSignup(groupId, user1, user2);
+    await UserRepository.updateGroupId(user1, groupId);
+    await UserRepository.updateGroupId(user2, groupId);
+
+    group(groupData);
+    user(user1.copyWith(groupId: groupId));
+
+    // 기본 버꿍리스트 업로드
+    BukkungListModel initialModel = BukkungListModel.init(user.value);
+    BukkungListModel initialBukkungList = initialModel.copyWith(
+      title: '함께 버꿍리스트 앱 설치하기',
+      listId: 'initial$groupId',
+      category: '6etc',
+      location: '버꿍리스트 앱',
+      content:
+          '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자,\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
+      imgUrl: Constants.baseImageUrl,
+    );
+    await BukkungListRepository.setGroupBukkungList(
+        initialBukkungList, 'initial$groupId', groupId);
+    return GroupIdStatus.createdGroupId;
+  }
+
+  // Future<GroupIdStatus> groupCreation(String myEmail, String buddyEmail) async {
+  //   var myData = await UserRepository.loginUserByEmail(myEmail);
+  //   var buddyData = await UserRepository.loginUserByEmail(buddyEmail);
+  //
+  //   var uuid = Uuid();
+  //   String groupId = uuid.v1();
+  //
+  //   if (buddyData == null || myData == null) {
+  //     //아직 짝꿍이 가입 안함
+  //     return GroupIdStatus.noData;
+  //   } else if (buddyData != null && buddyData.groupId != null) {
+  //     if (buddyData.groupId!.startsWith("solo")) {
+  //       if (AuthController.to.group == null) {
+  //         //내가 뉴비 상대는 solo그룹 => 그룹 만들고 하나만 옮기기
+  //         var groupData =
+  //             await GroupRepository().updateSoloGroup(myData, buddyData);
+  //         group(groupData);
+  //         await UserRepository.updateGroupId(myData, groupData!.uid!);
+  //         await UserRepository.updateGroupId(buddyData, groupData!.uid!);
+  //         //user에 그룹아이디 주입
+  //         //todo: groupid 이거 쓰는게 맞나?-수정했음
+  //         user(myData.copyWith(groupId: groupData.uid));
+  //       } else {
+  //         //나도 solo 상대도 solo => 그룹 합치기
+  //         if (AuthController.to.user.value.gender == 'male') {
+  //           var groupData =
+  //               await GroupRepository().mergeSoloGroup(myData, buddyData);
+  //           group(groupData);
+  //           await UserRepository.updateGroupId(myData, groupData!.uid!);
+  //           await UserRepository.updateGroupId(buddyData, groupData!.uid!);
+  //           user(myData.copyWith(groupId: groupData.uid));
+  //         } else {
+  //           var groupData =
+  //               await GroupRepository().mergeSoloGroup(buddyData, myData);
+  //           group(groupData);
+  //           await UserRepository.updateGroupId(myData, groupData!.uid!);
+  //           await UserRepository.updateGroupId(buddyData, groupData!.uid!);
+  //           user(myData.copyWith(groupId: groupData.uid));
+  //         }
+  //       }
+  //       return GroupIdStatus.createdGroupId;
+  //     } else {
+  //       //이미 solo아닌 그룹이 있음
+  //       if (buddyData.groupId == myData.groupId) {
+  //         return GroupIdStatus.createdGroupId;
+  //       } else {
+  //         return GroupIdStatus.hasGroup;
+  //       }
+  //     }
+  //   } else {
+  //     //(buddyData != null && buddyData.groupId == null)
+  //     if (myData.groupId != null) {
+  //       //내가 solo 상대가 new
+  //       var groupData =
+  //           await GroupRepository().updateSoloGroup(buddyData, myData);
+  //       group(groupData);
+  //       await UserRepository.updateGroupId(myData, groupData!.uid!);
+  //       await UserRepository.updateGroupId(buddyData, groupData!.uid!);
+  //       //user에 그룹아이디 주입
+  //       user(myData.copyWith(groupId: groupData.uid));
+  //       return GroupIdStatus.createdGroupId;
+  //     } else {
+  //       if (myData.gender == 'male') {
+  //         var groupData =
+  //             await GroupRepository.groupSignup(groupId, myData, buddyData);
+  //         await UserRepository.updateGroupId(myData, groupId);
+  //         await UserRepository.updateGroupId(buddyData, groupId);
+  //
+  //         group(groupData);
+  //         user(myData.copyWith(groupId: groupData.uid));
+  //       } else if (myData.gender == 'female') {
+  //         var groupData =
+  //             await GroupRepository.groupSignup(groupId, buddyData, myData);
+  //         await UserRepository.updateGroupId(myData, groupId);
+  //         await UserRepository.updateGroupId(buddyData, groupId);
+  //
+  //         group(groupData);
+  //         user(myData.copyWith(groupId: groupData.uid));
+  //       } else {
+  //         //동성 커플고려는 아직은 하지 않는걸로
+  //       }
+  //       //기본 버꿍리스트 업로드
+  //       BukkungListModel initialModel = BukkungListModel.init(user.value);
+  //       BukkungListModel initialBukkungList = initialModel.copyWith(
+  //         title: '함께 버꿍리스트 앱 설치하기',
+  //         listId: 'initial$groupId',
+  //         category: '6etc',
+  //         location: '버꿍리스트 앱',
+  //         content:
+  //             '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자,\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
+  //         imgUrl: Constants.baseImageUrl,
+  //       );
+  //       // print('(auth cont) 기본 버꿍리스트 업로드 시작');
+  //       await BukkungListRepository.setGroupBukkungList(
+  //           initialBukkungList, 'initial$groupId', groupId);
+  //       return GroupIdStatus.createdGroupId;
+  //     }
+  //   }
+  // }
 
   Future soloGroupCreation(String myEmail) async {
     UserModel? myData = await UserRepository.loginUserByEmail(myEmail);
