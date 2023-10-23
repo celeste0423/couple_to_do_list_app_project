@@ -235,10 +235,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                       offset: Offset(5, 5), // Offset(수평, 수직)
                     ),
                   ],
-                  image: DecorationImage(
-                    image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
-                    fit: BoxFit.cover,
-                  ),
+                  image: CustomCachedNetworkImage(bukkungListModel.imgUrl!,BoxFit.cover),
                 ),
               ),
               SizedBox(width: 20),
@@ -451,11 +448,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                           offset: Offset(5, 5), // Offset(수평, 수직)
                         ),
                       ],
-                      image: DecorationImage(
-                        image: CustomCachedNetworkImage(
-                          controller.selectedList.value.imgUrl ?? '',
-                        ),
-                        fit: BoxFit.cover,
+                      image: CustomCachedNetworkImage(
+                          controller.selectedList.value.imgUrl ?? '',BoxFit.cover
                       ),
                     ),
                   ),

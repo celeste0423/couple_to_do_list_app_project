@@ -101,26 +101,17 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
     double width = Get.width;
     if (selectedDiaryModel.imgUrlList!.isEmpty) {
       return Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: CustomCachedNetworkImage(
-                Constants.baseImageUrl
-            ),
+        decoration: CustomCachedNetworkImage(
+            Constants.baseImageUrl,BoxFit.cover
           ),
-        ),
         height: width - 60,
       );
     } else if (selectedDiaryModel.imgUrlList!.length == 1) {
       return Expanded(
         child: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: CustomCachedNetworkImage(
-                selectedDiaryModel.imgUrlList![0],
-              ),
-            ),
+            image: CustomCachedNetworkImage(
+                selectedDiaryModel.imgUrlList![0], BoxFit.cover),
           ),
         ),
       );
@@ -131,11 +122,8 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
           itemBuilder: (ctx, index, realIndex) {
             return Container(
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
                   image: CustomCachedNetworkImage(
-                    selectedDiaryModel.imgUrlList![index],
-                  ),
+                    selectedDiaryModel.imgUrlList![index],BoxFit.cover
                 ),
               ),
             );

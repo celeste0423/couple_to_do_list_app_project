@@ -249,10 +249,8 @@ class AdminListSuggestionPage
                       offset: Offset(5, 5), // Offset(수평, 수직)
                     ),
                   ],
-                  image: DecorationImage(
-                    image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
-                    fit: BoxFit.cover,
-                  ),
+                  image: CustomCachedNetworkImage(
+                      bukkungListModel.imgUrl!, BoxFit.cover),
                 ),
               ),
               SizedBox(width: 20),
@@ -336,12 +334,9 @@ class AdminListSuggestionPage
                           offset: Offset(5, 5), // Offset(수평, 수직)
                         ),
                       ],
-                      image: DecorationImage(
-                        image: CustomCachedNetworkImage(
+                      image: CustomCachedNetworkImage(
                           controller.selectedList.value.imgUrl ?? '',
-                        ),
-                        fit: BoxFit.cover,
-                      ),
+                          BoxFit.cover),
                     ),
                   ),
             Container(
@@ -840,10 +835,8 @@ class AdminListSuggestionPage
                     offset: Offset(5, 5), // Offset(수평, 수직)
                   ),
                 ],
-                image: DecorationImage(
-                  image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
-                  fit: BoxFit.cover,
-                ),
+                image: CustomCachedNetworkImage(
+                    bukkungListModel.imgUrl!, BoxFit.cover),
               ),
             ),
             Positioned(

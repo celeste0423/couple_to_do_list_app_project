@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/background_message/controller/fcm_controller.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
@@ -163,12 +164,76 @@ class AuthController extends GetxController {
   }
 
   Future<GroupIdStatus> groupCreation(String myEmail, String buddyEmail) async {
-    //todo:mydata 이거 authcontroller정보 쓰면 더 좋을듯
     var myData = await UserRepository.loginUserByEmail(myEmail);
     var buddyData = await UserRepository.loginUserByEmail(buddyEmail);
 
-    var uuid = Uuid();
-    String groupId = uuid.v1();
+    Future checkMyGroup() async {
+      //내 uid가 포함된 그룹이 이미 존재한다면 바로 페이지 넘어갈 수 있도록. 그 그룹id를 내 정보에 넣기
+      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      String myUid = myData!.uid!;
+      if (myData!.gender == 'male') {
+        // Query snapshots where 'femaleUid' equals the provided UID
+        var maleQuerySnapshot = await _firestore
+            .collection('group')
+            .where('maleUid', isEqualTo: myUid)
+            .get();
+        if (maleQuerySnapshot.docs.isNotEmpty) {
+          List notSoloGroupDatas = [];
+          for (var doc in maleQuerySnapshot.docs) {
+            var data = doc.data();
+            if (!data['uid'].contains('solo')) {
+              notSoloGroupDatas.add(data);
+            }
+          }
+          if (notSoloGroupDatas.isNotEmpty) {
+            Map<String, dynamic> data = notSoloGroupDatas[0].data();
+            String groupId = data['uid'];
+            myData.copyWith(groupId: groupId);
+            user(myData);
+            group(GroupModel.fromJson(data));
+            await UserRepository.updateGroupId(myData, groupId);
+            // Delete the other documents
+            if (notSoloGroupDatas.length > 1) {
+              for (var data in notSoloGroupDatas.skip(1)) {
+                await _firestore.collection('group').doc(data['uid']).delete();
+              }
+            }
+            return GroupIdStatus.createdGroupId;
+          }
+        }
+      }
+      if (myData!.gender == 'female') {
+        // Query snapshots where 'femaleUid' equals the provided UID
+        var femaleQuerySnapshot = await _firestore
+            .collection('group')
+            .where('femaleUid', isEqualTo: myUid)
+            .get();
+        if (femaleQuerySnapshot.docs.isNotEmpty) {
+          List notSoloGroupDatas = [];
+          for (var doc in femaleQuerySnapshot.docs) {
+            var data = doc.data();
+            if (!data['uid'].contains('solo')) {
+              notSoloGroupDatas.add(data);
+            }
+          }
+          if (notSoloGroupDatas.isNotEmpty) {
+            Map<String, dynamic> data = notSoloGroupDatas[0].data();
+            String groupId = data['uid'];
+            myData.copyWith(groupId: groupId);
+            user(myData);
+            group(GroupModel.fromJson(data));
+            await UserRepository.updateGroupId(myData, groupId);
+            // Delete the other documents
+            if (notSoloGroupDatas.length > 1) {
+              for (var data in notSoloGroupDatas.skip(1)) {
+                await _firestore.collection('group').doc(data['uid']).delete();
+              }
+            }
+            return GroupIdStatus.createdGroupId;
+          }
+        }
+      }
+    }
 
     Future<GroupIdStatus> _createSoloGroup(
       UserModel noGroupUserData,
@@ -231,13 +296,18 @@ class AuthController extends GetxController {
       return GroupIdStatus.createdGroupId;
     }
 
+    await checkMyGroup();
+
+    var uuid = Uuid();
+    String groupId = uuid.v1();
+
     if (buddyData == null || myData == null) {
       //아직 짝꿍이 가입 안함 or 내 정보가 없음(오류)
       return GroupIdStatus.noData;
     } else if (buddyData.groupId != null) {
       //상대 그룹 아이디가 존재
       if (buddyData.groupId!.startsWith("solo")) {
-        if (AuthController.to.group == null) {
+        if (myData.groupId == null) {
           //내가 뉴비 상대는 solo그룹 => 그룹 만들고 하나만 옮기기
           return _createSoloGroup(myData, buddyData, groupId);
         } else {
@@ -245,7 +315,7 @@ class AuthController extends GetxController {
           return _mergeSoloGroups(myData, buddyData);
         }
       } else {
-        //이미 다른 짝이 있음
+        //이미 짝이 있음
         //다른 짝이 나인지 확인할 것
         if (buddyData.groupId == myData.groupId) {
           return GroupIdStatus.createdGroupId;
