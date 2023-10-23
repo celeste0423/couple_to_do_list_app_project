@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,7 +34,7 @@ class BukkungListPageController extends GetxController {
     addButtonAnimation();
     _loadSelectedListType();
     // myGroup(AuthController.to.group.value);
-    // getMyDeviceToken();
+    getMyDeviceToken();
   }
 
   void addButtonAnimation() {
@@ -47,10 +48,10 @@ class BukkungListPageController extends GetxController {
     currentType(prefs.getString('selectedListType') ?? 'category');
   }
 
-  // void getMyDeviceToken() async {
-  //   final token = await FirebaseMessaging.instance.getToken();
-  //   print("내 디바이스 토큰: $token");
-  // }
+  void getMyDeviceToken() async {
+    final token = await FirebaseMessaging.instance.getToken();
+    print("내 디바이스 토큰: $token");
+  }
 
   void saveSelectedListType(String listType) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
