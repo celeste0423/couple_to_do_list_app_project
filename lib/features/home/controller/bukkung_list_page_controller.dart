@@ -33,6 +33,7 @@ class BukkungListPageController extends GetxController {
     addButtonAnimation();
     _loadSelectedListType();
     // myGroup(AuthController.to.group.value);
+    // getMyDeviceToken();
   }
 
   void addButtonAnimation() {
@@ -45,6 +46,11 @@ class BukkungListPageController extends GetxController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     currentType(prefs.getString('selectedListType') ?? 'category');
   }
+
+  // void getMyDeviceToken() async {
+  //   final token = await FirebaseMessaging.instance.getToken();
+  //   print("내 디바이스 토큰: $token");
+  // }
 
   void saveSelectedListType(String listType) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
