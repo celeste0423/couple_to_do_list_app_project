@@ -259,7 +259,7 @@ class AuthController extends GetxController {
           // var groupData =
           //     await GroupRepository.groupSignup(groupId, myData, buddyData!);
           // group(groupData);
-          return GroupIdStatus.noData;
+          // return GroupIdStatus.noData;
         }
       }
     }
