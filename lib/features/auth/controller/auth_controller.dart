@@ -241,7 +241,11 @@ class AuthController extends GetxController {
       } else {
         //이미 다른 짝이 있음
         //다른 짝이 나인지 확인할 것
-        return GroupIdStatus.hasGroup;
+        if (buddyData.groupId == myData.groupId) {
+          return GroupIdStatus.createdGroupId;
+        } else {
+          return GroupIdStatus.hasGroup;
+        }
       }
     } else {
       //상대 그룹아이디가 아직 없음
