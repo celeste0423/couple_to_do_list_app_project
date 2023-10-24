@@ -38,7 +38,7 @@ class FCMRepository {
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      final data = querySnapshot.docs[0] as Map<String, dynamic>;
+      final data = querySnapshot.docs[0].data() as Map<String, dynamic>;
       final deviceTokenData = DeviceTokenModel.fromJson(data);
       return deviceTokenData;
     } else {

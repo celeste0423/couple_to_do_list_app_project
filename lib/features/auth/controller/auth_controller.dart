@@ -126,17 +126,17 @@ class AuthController extends GetxController {
       //email과 맞는 유저 데이터를 firebase 에서 가져온다.
       //  print('(auth cont) uid $uid');
       var userData = await UserRepository.loginUserByUid(uid);
+
+      //fcm 세팅(클라우드 메시지)
+      var deviceToken = await FCMController().getMyDeviceToken();
+      FCMController().uploadDeviceToken(deviceToken, uid);
+
       //신규 유저일 경우 userData에 false값 반환됨, error났을떄는 null 반환됨
       if (userData != null && userData != false) {
         //신규유저가 아닐경우 컨트롤러에 유저정보를 전달해 놓는다
         //   print('서버의 유저 데이터 (cont) ${userData.toJson()}');
         user(userData);
         var groupData = await GroupRepository.groupLogin(userData.groupId);
-
-        //fcm 세팅(클라우드 메시지)
-        var deviceToken = await FCMController().getMyDeviceToken();
-        FCMController().uploadDeviceToken(deviceToken, uid);
-
         if (groupData != null) {
           //   print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
           group(groupData);

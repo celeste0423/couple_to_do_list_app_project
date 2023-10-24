@@ -15,6 +15,11 @@ class FCMController {
     return token;
   }
 
+  Future<DeviceTokenModel?> getDeviceTokenByUid(String uid) async {
+    final token = await FCMRepository().getDeviceTokenByUid(uid);
+    return token;
+  }
+
   Future<void> uploadDeviceToken(
     String? deviceToken,
     String? uid,
@@ -30,6 +35,7 @@ class FCMController {
         tid: tid,
         uid: uid,
         deviceToken: deviceToken,
+        createdAt: DateTime.now(),
       );
 
       FCMRepository().setDeviceToken(deviceTokenData);
@@ -38,6 +44,7 @@ class FCMController {
         tid: isDeviceToken.tid,
         uid: uid,
         deviceToken: deviceToken,
+        createdAt: DateTime.now(),
       );
 
       FCMRepository().updateDeviceToken(deviceTokenData);
@@ -61,7 +68,7 @@ class FCMController {
       provisional: false,
       sound: false,
     );
-
+    print('메시지 권한 요청');
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print('User granted permission');
     } else if (settings.authorizationStatus ==
@@ -72,6 +79,7 @@ class FCMController {
     }
 
     try {
+      print('메시지 보내기 시작');
       response = await http.post(
           Uri.parse('https://fcm.googleapis.com/fcm/send'),
           headers: <String, String>{

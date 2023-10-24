@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/background_message/controller/fcm_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
@@ -67,8 +68,7 @@ class UploadDiaryController extends GetxController {
       if (selectedDiaryModel!.creatorUserID ==
           AuthController.to.user.value.uid) {
         contentController.text = selectedDiaryModel!.creatorSogam!;
-      }
-      else {
+      } else {
         contentController.text = selectedDiaryModel!.bukkungSogam ?? '';
       }
       if (selectedDiaryModel!.imgUrlList != []) {
@@ -140,7 +140,7 @@ class UploadDiaryController extends GetxController {
   void placeAutocomplete(String query) async {
     String apiKey = 'AIzaSyASuuGiXo0mFRd2jm_vL5mHBo4r4uCTJZw';
     Uri uri =
-    Uri.https("maps.googleapis.com", 'maps/api/place/autocomplete/json', {
+        Uri.https("maps.googleapis.com", 'maps/api/place/autocomplete/json', {
       "input": query,
       "key": apiKey,
       "language": "ko",
@@ -150,7 +150,7 @@ class UploadDiaryController extends GetxController {
 
     if (response != null) {
       PlaceAutoCompleteResponse result =
-      PlaceAutoCompleteResponse.parseAutocompleteResult(response);
+          PlaceAutoCompleteResponse.parseAutocompleteResult(response);
       if (result.predictions != null) {
         placePredictions = result.predictions!;
       }
@@ -201,8 +201,8 @@ class UploadDiaryController extends GetxController {
         return; // 이미지 선택 종료
       }
       for (var pickerImgIndex = 0;
-      pickerImgIndex < pickerImgList.length;
-      pickerImgIndex++) {
+          pickerImgIndex < pickerImgList.length;
+          pickerImgIndex++) {
         selectedImgFiles[0].add(File(pickerImgList[pickerImgIndex].path));
         selectedImgFiles[1].add(null);
       }
@@ -241,8 +241,8 @@ class UploadDiaryController extends GetxController {
     return imgUrlList;
   }
 
-  Future<DiaryModel> makeAndSubmitDiary(String diaryId,
-      List<String> imgUrlList) async {
+  Future<DiaryModel> makeAndSubmitDiary(
+      String diaryId, List<String> imgUrlList) async {
     if (selectedDiaryModel != null) {
       //기존 다이어리 수정할 경우
       for (String imgUrl in selectedDiaryModel!.imgUrlList!) {
@@ -258,11 +258,11 @@ class UploadDiaryController extends GetxController {
         location: locationController.text,
         imgUrlList: imgUrlList,
         creatorSogam: AuthController.to.user.value.uid ==
-            selectedDiaryModel!.creatorUserID
+                selectedDiaryModel!.creatorUserID
             ? contentController.text
             : selectedDiaryModel!.creatorSogam,
         bukkungSogam: AuthController.to.user.value.uid ==
-            selectedDiaryModel!.creatorUserID
+                selectedDiaryModel!.creatorUserID
             ? selectedDiaryModel!.bukkungSogam
             : contentController.text,
         date: diaryDateTime.value,
@@ -299,9 +299,10 @@ class UploadDiaryController extends GetxController {
   Future<DiaryModel> uploadDiary() async {
     var uuid = Uuid();
     //기존 다이어리 수정의 경우 기존 diaryId 사용하면 됨.
-    String diaryId =
-    selectedDiaryModel != null ? selectedDiaryModel!.diaryId != null
-        ? selectedDiaryModel!.diaryId! : uuid.v1()
+    String diaryId = selectedDiaryModel != null
+        ? selectedDiaryModel!.diaryId != null
+            ? selectedDiaryModel!.diaryId!
+            : uuid.v1()
         : uuid.v1();
     List<String> imgUrlList = [];
     //selectedImages 에 사진file이 있으면
@@ -312,4 +313,18 @@ class UploadDiaryController extends GetxController {
     return updatedDiary;
   }
 
+  Future<void> sendMessageToBuddy() async {
+    final buddyUid = AuthController.to.user.value.gender == 'male'
+        ? AuthController.to.group.value.femaleUid
+        : AuthController.to.group.value.maleUid;
+    print('짝꿍 uid ${buddyUid}');
+    final userTokenData = await FCMController().getDeviceTokenByUid(buddyUid!);
+    if (userTokenData != null) {
+      FCMController().sendMessageController(
+        userToken: userTokenData.deviceToken!,
+        title: "${AuthController.to.user.value.nickname}님이 다이어리를 작성했어요!",
+        body: '지금 바로 소감을 작성해보세요',
+      );
+    }
+  }
 }

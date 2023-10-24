@@ -3,7 +3,6 @@ import 'package:couple_to_do_list_app/features/upload_diary/controller/upload_di
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
-import 'package:couple_to_do_list_app/widgets/main_button.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,9 +41,10 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   //   print('업로드 중');
                   controller.isUploading.value = true;
                   DiaryModel updatedDiary = await controller.uploadDiary();
+                  //소감 작성하라는 메시지 전송
+                  controller.sendMessageToBuddy();
                   Get.off(() => ReadDiaryPage(), arguments: updatedDiary);
                 } else {
-                  //Todo: 요소별로 경고 추가
                   if (controller.titleController.text == '') {
                     openAlertDialog(title: '제목을 입력해 주세요');
                   } else if (controller.diaryCategory.value == '') {
@@ -348,7 +348,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
     return Container(
       color: CustomColors.backgroundLightGrey,
       height: Get.height -
-          494-
+          494 -
           context.mediaQueryPadding.top -
           context.mediaQueryPadding.bottom,
       child: Padding(
@@ -512,144 +512,144 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
     );
   }
 
-  Widget _contentContainer(context) {
-    double numberoFlines = 7;
-    double holeDiameter = 16;
+  // Widget _contentContainer(context) {
+  //   double numberoFlines = 7;
+  //   double holeDiameter = 16;
+  //
+  //   Widget contents() {
+  //     return Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: const [
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.start,
+  //           children: [
+  //             SizedBox(
+  //               width: 20,
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     );
+  //   }
+  //
+  //   Widget circleHole() {
+  //     return Container(
+  //       margin: EdgeInsets.all(10),
+  //       width: holeDiameter,
+  //       height: holeDiameter,
+  //       decoration: BoxDecoration(
+  //         color: CustomColors.redbrown.withOpacity(0.45),
+  //         shape: BoxShape.circle,
+  //       ),
+  //     );
+  //   }
+  //
+  //   return Expanded(
+  //     child: Container(
+  //       margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+  //       padding: EdgeInsets.fromLTRB(0, 20, 20, 10),
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(25),
+  //         color: CustomColors.backgroundLightGrey,
+  //       ),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.start,
+  //         children: [
+  //           Column(
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               for (int i = 0; i < 6; i++) circleHole(),
+  //             ],
+  //           ),
+  //           Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               contents(),
+  //               Stack(
+  //                 children: [
+  //                   for (int lines = 0; lines < numberoFlines; lines++)
+  //                     Container(
+  //                       width: Get.width - 110 - holeDiameter,
+  //                       margin: EdgeInsets.only(
+  //                         top: 7 + (lines + 1) * 28,
+  //                       ),
+  //                       height: 1,
+  //                       color: CustomColors.grey,
+  //                     ),
+  //                   SizedBox(
+  //                     height: 28 * (numberoFlines + 2),
+  //                     width: Get.width - 100 - holeDiameter,
+  //                     child: Padding(
+  //                       padding: EdgeInsets.symmetric(horizontal: 15),
+  //                       child: TextField(
+  //                         controller: controller.contentController,
+  //                         decoration: InputDecoration(
+  //                           hintText: ' 소감은 어땠나요?',
+  //                           hintStyle: TextStyle(
+  //                             color: CustomColors.lightGreyText,
+  //                             fontSize: 18,
+  //                             fontFamily: 'Bookk_mj',
+  //                           ),
+  //                           border: InputBorder.none,
+  //                         ),
+  //                         cursorColor: CustomColors.darkGrey,
+  //                         cursorHeight: 20,
+  //                         style: TextStyle(
+  //                           fontSize: 18,
+  //                           fontFamily: 'Bookk_mj',
+  //                         ),
+  //                         keyboardType: TextInputType.multiline,
+  //                         expands: false,
+  //                         maxLines: numberoFlines.toInt(),
+  //                         maxLength: 140,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-    Widget contents() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 20,
-              ),
-            ],
-          ),
-        ],
-      );
-    }
-
-    Widget circleHole() {
-      return Container(
-        margin: EdgeInsets.all(10),
-        width: holeDiameter,
-        height: holeDiameter,
-        decoration: BoxDecoration(
-          color: CustomColors.redbrown.withOpacity(0.45),
-          shape: BoxShape.circle,
-        ),
-      );
-    }
-
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        padding: EdgeInsets.fromLTRB(0, 20, 20, 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: CustomColors.backgroundLightGrey,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                for (int i = 0; i < 6; i++) circleHole(),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                contents(),
-                Stack(
-                  children: [
-                    for (int lines = 0; lines < numberoFlines; lines++)
-                      Container(
-                        width: Get.width - 110 - holeDiameter,
-                        margin: EdgeInsets.only(
-                          top: 7 + (lines + 1) * 28,
-                        ),
-                        height: 1,
-                        color: CustomColors.grey,
-                      ),
-                    SizedBox(
-                      height: 28 * (numberoFlines + 2),
-                      width: Get.width - 100 - holeDiameter,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: TextField(
-                          controller: controller.contentController,
-                          decoration: InputDecoration(
-                            hintText: ' 소감은 어땠나요?',
-                            hintStyle: TextStyle(
-                              color: CustomColors.lightGreyText,
-                              fontSize: 18,
-                              fontFamily: 'Bookk_mj',
-                            ),
-                            border: InputBorder.none,
-                          ),
-                          cursorColor: CustomColors.darkGrey,
-                          cursorHeight: 20,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontFamily: 'Bookk_mj',
-                          ),
-                          keyboardType: TextInputType.multiline,
-                          expands: false,
-                          maxLines: numberoFlines.toInt(),
-                          maxLength: 140,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buttonRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        MainButton(
-          buttonText: '취소',
-          buttonColor: Colors.white,
-          textColor: CustomColors.mainPink,
-          onTap: () {
-            Get.back();
-          },
-        ),
-        MainButton(
-          buttonText: controller.selectedDiaryModel == null ? '작성 완료' : '수정 완료',
-          onTap: () async {
-            if (controller.isUploading.value) {
-              //print('버튼 비활성화');
-              null;
-            } else {
-              if (controller.isValid()) {
-                //print('업로드 중');
-                controller.isUploading.value = true;
-                DiaryModel updatedDiary = await controller.uploadDiary();
-                Get.off(() => ReadDiaryPage(), arguments: updatedDiary);
-              } else {
-                openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');
-              }
-            }
-          },
-          width: Get.width * 5 / 8,
-        )
-      ],
-    );
-  }
+  // Widget _buttonRow() {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //     children: [
+  //       MainButton(
+  //         buttonText: '취소',
+  //         buttonColor: Colors.white,
+  //         textColor: CustomColors.mainPink,
+  //         onTap: () {
+  //           Get.back();
+  //         },
+  //       ),
+  //       MainButton(
+  //         buttonText: controller.selectedDiaryModel == null ? '작성 완료' : '수정 완료',
+  //         onTap: () async {
+  //           if (controller.isUploading.value) {
+  //             //print('버튼 비활성화');
+  //             null;
+  //           } else {
+  //             if (controller.isValid()) {
+  //               //print('업로드 중');
+  //               controller.isUploading.value = true;
+  //               DiaryModel updatedDiary = await controller.uploadDiary();
+  //               Get.off(() => ReadDiaryPage(), arguments: updatedDiary);
+  //             } else {
+  //               openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');
+  //             }
+  //           }
+  //         },
+  //         width: Get.width * 5 / 8,
+  //       )
+  //     ],
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
