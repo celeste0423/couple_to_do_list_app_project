@@ -227,10 +227,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 height: 84,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: CustomCachedNetworkImage(
-                          bukkungListModel.imgUrl!),
-                      fit: BoxFit.cover
-                  ),
+                      image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
+                      fit: BoxFit.cover),
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
@@ -240,7 +238,6 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                       offset: Offset(5, 5), // Offset(수평, 수직)
                     ),
                   ],
-
                 ),
               ),
               SizedBox(width: 20),
@@ -447,8 +444,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                       image: DecorationImage(
                           image: CustomCachedNetworkImage(
                               controller.selectedList.value.imgUrl ?? ''),
-                          fit: BoxFit.cover
-                      ),
+                          fit: BoxFit.cover),
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(
@@ -610,6 +606,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         onTap: () {
           // controller
           //     .selectedList(controller.selectedList.value.copyWith(date: null));
+          controller.setCopyCount();
           Get.to(
             () => UploadBukkungListPage(),
             arguments: [controller.selectedList.value, true],

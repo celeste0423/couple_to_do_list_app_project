@@ -5,7 +5,9 @@ import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/tutorial_coach_mark/pages/coachmark_desc.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
+import 'package:couple_to_do_list_app/models/copy_count_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
+import 'package:couple_to_do_list_app/repository/copy_count_repository.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:uuid/uuid.dart';
 
 class ListSuggestionPageController extends GetxController
     with GetTickerProviderStateMixin {
@@ -713,11 +716,24 @@ class ListSuggestionPageController extends GetxController
     }
   }
 
+  void setCopyCount() {
+    var uuid = Uuid();
+    String id = uuid.v1();
+    CopyCountModel copyCountData = CopyCountModel(
+      id: id,
+      uid: AuthController.to.user.value.uid,
+      listId: selectedList.value.listId,
+      createdAt: DateTime.now(),
+    );
+    CopyCountRepository().uploadCopyCount(copyCountData);
+  }
+
   Future<void> listDelete() async {
     if (Constants.baseImageUrl != selectedList.value.imgUrl) {
       await ListSuggestionRepository()
           .deleteListImage('${selectedList.value.imgId!}.jpg');
     }
+    CopyCountRepository().deleteCopyCountByListId(selectedList.value.listId!);
     ListSuggestionRepository().deleteList(
       selectedList.value.listId!,
     );

@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/background_message/repository/fcm_repository.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
+import 'package:couple_to_do_list_app/models/device_token_model.dart';
+import 'package:couple_to_do_list_app/repository/copy_count_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -59,7 +62,7 @@ class AuthDeletePageController extends GetxController {
             //print('apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
             //로그인 타입 설정
             // AuthController.loginType = 'apple';
-                    }
+          }
           //auth에서 삭제
           await FirebaseAuth.instance.currentUser!.delete();
           //  print('auth 삭제뒤');
@@ -93,7 +96,7 @@ class AuthDeletePageController extends GetxController {
               //subcollection 모두 없애고
               await deleteSubcollection(groupId, 'bukkungLists');
               await deleteSubcollection(groupId, 'completedBukkungLists');
-              await deleteSubcollection(groupId,'diary');
+              await deleteSubcollection(groupId, 'diary');
 
               //groups 없애고
               await FirebaseFirestore.instance
@@ -108,6 +111,15 @@ class AuthDeletePageController extends GetxController {
             }
           } else {
             //       print('null반환');
+          }
+
+          //CopyCount 삭제
+          CopyCountRepository().deleteCopyCountByUid(uid!);
+          //DeviceToken 삭제
+          DeviceTokenModel? deviceToken =
+              await FCMRepository().getDeviceTokenByUid(uid!);
+          if (deviceToken != null) {
+            FCMRepository().deleteDeviceToken(deviceToken!.tid!);
           }
 
           _uploadFeedback();
