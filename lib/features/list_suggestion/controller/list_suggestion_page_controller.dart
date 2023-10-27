@@ -423,7 +423,7 @@ class ListSuggestionPageController extends GetxController
               favoriteListScrollController.position.maxScrollExtent) {
             if (!isListByViewLastPage) {
               List<BukkungListModel> nextList = await ListSuggestionRepository()
-                  .getNewSuggestionListByView(_pageSize, favoriteListKeyPage,
+                  .getNewFavoriteList(_pageSize, favoriteListKeyPage,
                       favoriteListPrevList, selectedCategories);
               favoriteListStreamController.add(nextList);
             }
