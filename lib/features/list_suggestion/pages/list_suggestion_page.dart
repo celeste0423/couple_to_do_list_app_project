@@ -129,6 +129,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             ),
             Obx(() {
               if (controller.isSearchResult.value) {
+                print('출력물 ${controller.isSearchResult.value}');
                 return GetBuilder<ListSuggestionPageController>(
                   id: 'searchResult',
                   builder: (ListSuggestionPageController) {
@@ -206,10 +207,13 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           //   likeCount: bukkungListModel.likeCount,
           //   viewCount: bukkungListModel.viewCount,
           // );
-          controller.indexSelection(bukkungListModel);
-          controller.viewCount();
+          print('눌렀어');
           controller.isSearchResult(false);
+          print('눌렀어 실행 ${controller.isSearchResult.value}');
           FocusScope.of(context).unfocus();
+          controller.viewCount();
+          controller.indexSelection(bukkungListModel);
+          print('눌렀어 실행 ${controller.isSearchResult.value}');
         },
         child: Container(
           height: 85,

@@ -726,6 +726,7 @@ class ListSuggestionPageController extends GetxController
       createdAt: DateTime.now(),
     );
     CopyCountRepository().uploadCopyCount(copyCountData);
+    ListSuggestionRepository().addCopyCount(selectedList.value.listId!);
   }
 
   Future<void> listDelete() async {

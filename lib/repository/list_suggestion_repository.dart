@@ -57,6 +57,7 @@ class ListSuggestionRepository {
   ) async {
     Query<Map<String, dynamic>> query = FirebaseFirestore.instance
         .collection('bukkungLists')
+        .orderBy('copyCount', descending: true)
         .orderBy('likeCount', descending: true)
         .orderBy('viewCount', descending: true);
     if (keyPage != null) {
@@ -67,6 +68,7 @@ class ListSuggestionRepository {
       query = query.where('category', whereIn: selectedCategories);
     }
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+    print('퀴리는 이거야${querySnapshot.docs}');
     List<BukkungListModel> bukkungLists = prevList ?? [];
     for (var bukkungList in querySnapshot.docs) {
       bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
@@ -102,6 +104,7 @@ class ListSuggestionRepository {
       query = query.where('category', whereIn: selectedCategories);
     }
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+    print('퀴리는 이거야${querySnapshot.docs}');
     List<BukkungListModel> bukkungLists = prevList ?? [];
     for (var bukkungList in querySnapshot.docs) {
       bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
@@ -286,6 +289,21 @@ class ListSuggestionRepository {
     FirebaseFirestore.instance.collection('bukkungLists').doc(listId).update({
       'viewCount': viewCount,
     });
+  }
+
+  Future<void> addCopyCount(String listId) async {
+    final DocumentReference documentReference =
+        FirebaseFirestore.instance.collection('bukkungLists').doc(listId);
+    // 현재 copyCount 필드의 값을 가져와서 1 증가시킴
+    final DocumentSnapshot documentSnapshot = await documentReference.get();
+    final data = documentSnapshot.data() as Map<String, dynamic>;
+    int? currentCopyCount = BukkungListModel.fromJson(data).copyCount;
+    if (currentCopyCount == null) {
+      currentCopyCount = 0;
+    }
+    final newCopyCount = currentCopyCount + 1;
+    // copyCount 필드를 새로운 값으로 업데이트
+    await documentReference.update({'copyCount': newCopyCount});
   }
 
   void deleteList(String listId) {

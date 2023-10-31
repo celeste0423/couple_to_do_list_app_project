@@ -11,7 +11,7 @@ CustomCachedNetworkImage(String imageurl) {
   if (falsebaseimageurls.contains(imageurl)) {
     return AssetImage('assets/images/baseimage_ggomool.png');
   } else {
-    print('notbaseimage');
+    // print('notbaseimage');
     return CachedNetworkImageProvider(
       imageurl,
     );

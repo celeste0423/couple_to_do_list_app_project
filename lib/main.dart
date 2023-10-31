@@ -39,6 +39,20 @@ void initializeNotification() async {
     sound: true,
   );
 }
+// 모든 문서에 대해 필드를 추가하고 싶을 경우 사용
+// Future<void> addCopyCountFieldToAllDocuments() async {
+//   final CollectionReference bukkungListsCollection =
+//       FirebaseFirestore.instance.collection('bukkungLists');
+//
+//   // 모든 문서를 가져오기
+//   final QuerySnapshot querySnapshot = await bukkungListsCollection.get();
+//
+//   // 각 문서에 copyCount 필드 추가 및 초기값 0 할당
+//   for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+//     final documentReference = bukkungListsCollection.doc(documentSnapshot.id);
+//     await documentReference.set({'copyCount': 0}, SetOptions(merge: true));
+//   }
+// }
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -66,6 +80,10 @@ void main() async {
       ),
     );
   });
+
+  // addCopyCountFieldToAllDocuments().then((_) {
+  //   print('copyCount 필드를 모든 문서에 추가 및 초기화했습니다.');
+  // });
 }
 
 class MyApp extends StatelessWidget {
