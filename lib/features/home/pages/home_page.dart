@@ -58,10 +58,10 @@ class _HomePageState extends State<HomePage>
       TargetFocus(
         identify: "list_suggestion_key",
         keyTarget: BukkungListPageController.to.listSuggestionKey,
-        shape: ShapeLightFocus.RRect,
+        shape: ShapeLightFocus.Circle,
         contents: [
           TargetContent(
-            align: ContentAlign.bottom,
+            align: ContentAlign.top,
             builder: (context, controller) {
               return CoachmarkDesc(
                 text: "여기서 버꿍리스트를 새로 만들거나 추천 버꿍리스트를 가져올 수 있습니다",
@@ -82,10 +82,10 @@ class _HomePageState extends State<HomePage>
         shape: ShapeLightFocus.RRect,
         contents: [
           TargetContent(
-            align: ContentAlign.top,
+            align: ContentAlign.bottom,
             builder: (context, controller) {
               return CoachmarkDesc(
-                text: "여기서 짝꿍과의 버꿍리스트를 확인하세요",
+                text: "짝꿍과의 버꿍리스트를 확인하세요",
                 onNext: () {
                   controller.next();
                 },

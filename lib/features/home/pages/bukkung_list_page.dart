@@ -155,7 +155,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     return Obx(() {
       if (controller.currentType.value == 'category') {
         return Expanded(
-          key: controller.bukkungListKey,
+          // key: controller.bukkungListKey,
           child: StreamBuilder(
             stream: BukkungListPageController.to.getAllBukkungListByCategory(),
             builder: (
@@ -520,6 +520,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
 
   Widget _listAddButton() {
     return FloatingActionButton(
+      key: controller.listSuggestionKey,
       onPressed: () {
         Get.to(() => ListSuggestionPage());
       },
