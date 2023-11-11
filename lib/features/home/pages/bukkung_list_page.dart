@@ -6,6 +6,7 @@ import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/utils/type_to_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
+import 'package:couple_to_do_list_app/widgets/custom_cached_networkImage.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
@@ -393,7 +394,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             Expanded(
               flex: 12,
               child: Container(
-                height: 120,
+                height: 100,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -405,16 +406,26 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                   children: [
                     Expanded(
                       flex: 3,
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            bottomLeft: Radius.circular(25),
-                          ),
-                          child: Image.network(
-                            '${bukkungListModel.imgUrl}',
-                            height: 150,
-                            fit: BoxFit.cover,
-                          )),
+                      child: Container(
+                        width: 150,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: CustomCachedNetworkImage(
+                                  bukkungListModel.imgUrl!),
+                              fit: BoxFit.cover),
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                      ),
+                      //   child: ClipRRect(
+                      //       borderRadius: BorderRadius.only(
+                      //         topLeft: Radius.circular(25),
+                      //         bottomLeft: Radius.circular(25),
+                      //       ),
+                      //       child: Image.network(
+                      //         '${bukkungListModel.imgUrl}',
+                      //         height: 150,
+                      //         fit: BoxFit.cover,
+                      //       )),
                     ),
                     SizedBox(width: 20),
                     Expanded(
@@ -484,7 +495,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             Expanded(
               flex: 1,
               child: Container(
-                height: 120,
+                height: 100,
                 decoration: BoxDecoration(
                   color: TypeToColor.typeToColor(bukkungListModel.category),
                   borderRadius: BorderRadius.only(
