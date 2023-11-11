@@ -3,6 +3,7 @@ import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_cached_networkImage.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/level_icon.dart';
@@ -501,46 +502,73 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                                 ),
                               ),
                       ),
-                      // SizedBox(width: 10),
-                      // Row(
-                      //   children: [
-                      //     CategoryIcon(
-                      //       category: controller.selectedList.value.category ??
-                      //           '1travel',
-                      //       size: 25,
-                      //     ),
-                      //     SizedBox(width: 10),
-                      //     Text(
-                      //       controller.categoryToString[
-                      //               controller.selectedList.value.category] ??
-                      //           '',
-                      //       style: TextStyle(
-                      //         color: Colors.white,
-                      //         fontSize: 15,
-                      //       ),
-                      //     ),
-                      //   ],
-                      // )
+                      SizedBox(width: 10),
+                      CategoryIcon(
+                        category:
+                            controller.selectedList.value.category ?? '1travel',
+                        size: 25,
+                      ),
                     ],
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.asset(
-                        'assets/icons/locationPinWhite.png',
-                        width: 15,
-                        color: Colors.white.withOpacity(0.9),
-                        colorBlendMode: BlendMode.modulate,
-                      ),
                       Expanded(
-                        child: PcText(
-                          controller.selectedList.value.location ?? '',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/icons/locationPinWhite.png',
+                              width: 13,
+                              color: Colors.white.withOpacity(0.9),
+                              colorBlendMode: BlendMode.modulate,
+                            ),
+                            Expanded(
+                              child: PcText(
+                                controller.selectedList.value.location ?? '',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: 150,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: PcText(
+                                '업로드:  ',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: PcText(
+                                controller.selectedList.value.createdAt
+                                        .toString() ??
+                                    '',
+                                maxLines: 1,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -857,7 +885,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               String formattedViewCount = formatter.format(viewCount);
               return Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
-                padding: EdgeInsets.only(left: 120, right: 30),
+                padding: EdgeInsets.only(left: 110, right: 30),
                 height: 85,
                 decoration: BoxDecoration(
                     color: bukkungListModel.listId ==
@@ -901,8 +929,13 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                             false,
                           ),
                           _iconText(
-                            null,
+                            'likeCount',
                             '${bukkungListModel.likeCount.toString()}개',
+                            false,
+                          ),
+                          _iconText(
+                            'copyCount',
+                            '${bukkungListModel.copyCount.toString()}회',
                             false,
                           ),
                         ],
@@ -980,31 +1013,37 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   Widget _iconText(String? image, String text, bool marquee) {
     return Row(
       children: [
-        image == null
+        image == 'likeCount'
             ? Icon(
                 Icons.favorite_border,
-                size: 18,
+                size: 16,
                 color: Colors.black.withOpacity(0.5),
               )
-            : Image.asset(
-                'assets/icons/$image',
-                width: 20,
-                color: CustomColors.grey.withOpacity(0.5),
-                colorBlendMode: BlendMode.modulate,
-              ),
+            : image == 'copyCount'
+                ? Icon(
+                    Icons.document_scanner_outlined,
+                    size: 16,
+                    color: Colors.black.withOpacity(0.5),
+                  )
+                : Image.asset(
+                    'assets/icons/$image',
+                    width: 18,
+                    color: CustomColors.grey.withOpacity(0.5),
+                    colorBlendMode: BlendMode.modulate,
+                  ),
         marquee
             ? MarqueeAbleText(
                 text: text,
                 maxLength: 5,
                 style: TextStyle(
                   fontFamily: 'Bookk_mj',
-                  fontSize: 13,
+                  fontSize: 11,
                 ),
               )
             : BkText(
                 text,
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 11,
                 ),
               ),
       ],

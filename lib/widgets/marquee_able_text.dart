@@ -27,7 +27,7 @@ class MarqueeAbleText extends StatelessWidget {
     style ??= Theme.of(context).textTheme.bodyMedium;
     if (text.length > maxLength) {
       return SizedBox(
-        height: style!.fontSize,
+        height: style!.fontSize! * 1.2,
         width: getTextWidth(text, style!) / text.length * maxLength,
         child: Marquee(
           text: text,
