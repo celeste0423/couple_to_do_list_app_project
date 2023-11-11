@@ -129,6 +129,7 @@ class AuthController extends GetxController {
 
       //fcm 세팅(클라우드 메시지)
       var deviceToken = await FCMController().getMyDeviceToken();
+      print('디바이스 토큰 (auth cont) ${deviceToken}');
       FCMController().uploadDeviceToken(deviceToken, uid);
 
       //신규 유저일 경우 userData에 false값 반환됨, error났을떄는 null 반환됨

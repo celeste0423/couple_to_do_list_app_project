@@ -8,7 +8,7 @@ import 'package:uuid/uuid.dart';
 
 class FCMController {
   final String _serverKey =
-      "BFxYuSIahcU4oMs_Ang7Gxcp6d78v1kuSq46RojpJW23rrNsjdhxbvMbTBANmJy7juyngTyp7UMhIhN_vp8YRTw";
+      "AAAAXAfR3tg:APA91bGcuXLBYeTnasJULQUnpVTGbFipzfZ1badsIxXgMymNNwRPffH3XDPytHqO8mvpfn-fBuPeLiyiy28YjOWgZ_HBqQE4rQmDZVu7eHlYTJHh7z5dWu06zyC4-P_0qm4h4hQegGwi";
 
   Future<String?> getMyDeviceToken() async {
     final token = await FirebaseMessaging.instance.getToken();
@@ -100,6 +100,8 @@ class FCMController {
             'to': userToken
             // 'registration_ids': tokenList
           }));
+      print('HTTP Response Code: ${response.statusCode}');
+      print('HTTP Response Body: ${response.body}');
     } catch (e) {
       print('error $e');
     }

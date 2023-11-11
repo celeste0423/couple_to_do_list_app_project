@@ -1,9 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
+import 'package:couple_to_do_list_app/models/user_model.dart';
+import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/custom_cached_networkImage.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +23,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
   final DiaryModel selectedDiaryModel = Get.arguments;
   int? tabIndex;
   String? myNickname;
-  String? bukkungNickname;
+  String? buddyNickname;
   String? myComment;
   String? bukkungComment;
 
@@ -37,13 +37,29 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
     }
   }
 
-  getNickname() {
-    myNickname = AuthController.to.user.value.nickname;
+  // Future<void> getNickname() async{
+  //   myNickname = AuthController.to.user.value.nickname;
+  //   if (AuthController.to.user.value.gender == 'male') {
+  //     buddyNickname = DiaryPageController.to.femaleNickname.value;
+  //   } else {
+  //     buddyNickname = DiaryPageController.to.maleNickname.value;
+  //   }
+  //   print('짝꿍 닉네임 = ${buddyNickname}');
+  // }
+
+  Future<void> getNickname() async {
     if (AuthController.to.user.value.gender == 'male') {
-      bukkungNickname = DiaryPageController.to.femaleNickname.value;
+      UserModel? buddyData = await UserRepository.getUserDataByUid(
+          AuthController.to.group.value.femaleUid!);
+      myNickname = AuthController.to.user.value.nickname;
+      buddyNickname = buddyData!.nickname;
     } else {
-      bukkungNickname = DiaryPageController.to.maleNickname.value;
+      UserModel? buddyData = await UserRepository.getUserDataByUid(
+          AuthController.to.group.value.maleUid!);
+      myNickname = AuthController.to.user.value.nickname;
+      buddyNickname = buddyData!.nickname;
     }
+    print('짝꿍 닉네임 ${buddyNickname}');
   }
 
   @override
@@ -115,8 +131,8 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: CustomCachedNetworkImage(
-                  selectedDiaryModel.imgUrlList![0]),
+              image:
+                  CustomCachedNetworkImage(selectedDiaryModel.imgUrlList![0]),
               // this will be either NetworkImage or AssetImage, depending on whether the network image loaded
               fit: BoxFit.cover,
             ),
@@ -221,7 +237,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                     height: 45,
                     child: Align(
                         alignment: Alignment.topRight,
-                        child: Text('$bukkungNickname 소감')),
+                        child: Text('$buddyNickname 소감')),
                   )),
             ),
             Align(
@@ -305,7 +321,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                   height: 45,
                   child: Align(
                       alignment: Alignment.topRight,
-                      child: Text('$bukkungNickname 소감')),
+                      child: Text('$buddyNickname 소감')),
                 )),
             Positioned(
               top: 35,
@@ -379,7 +395,15 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
             SizedBox(
               height: 5,
             ),
-            _diaryTab(tabIndex!),
+            FutureBuilder(
+                future: getNickname(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return _diaryTab(tabIndex!);
+                  } else {
+                    return _diaryTab(tabIndex!);
+                  }
+                }),
           ],
         ),
       ),

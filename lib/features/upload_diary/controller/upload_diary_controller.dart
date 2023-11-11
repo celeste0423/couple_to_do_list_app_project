@@ -313,13 +313,14 @@ class UploadDiaryController extends GetxController {
     return updatedDiary;
   }
 
-  Future<void> sendMessageToBuddy() async {
+  Future<void> sendCompletedMessageToBuddy() async {
     final buddyUid = AuthController.to.user.value.gender == 'male'
         ? AuthController.to.group.value.femaleUid
         : AuthController.to.group.value.maleUid;
     print('짝꿍 uid ${buddyUid}');
     final userTokenData = await FCMController().getDeviceTokenByUid(buddyUid!);
     if (userTokenData != null) {
+      print('유저 토큰 존재');
       FCMController().sendMessageController(
         userToken: userTokenData.deviceToken!,
         title: "${AuthController.to.user.value.nickname}님이 다이어리를 작성했어요!",

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
@@ -7,6 +6,7 @@ import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
+import 'package:couple_to_do_list_app/widgets/custom_cached_networkImage.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/short_h_bar.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
@@ -157,8 +157,12 @@ class DiaryPage extends GetView<DiaryPageController> {
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             //todo: 이건 뭐지
-                            image: CachedNetworkImageProvider(
-                                diaryModel.imgUrlList!.isEmpty ? Constants.baseImageUrl:diaryModel.imgUrlList![0]),
+                            image: CustomCachedNetworkImage(
+                                diaryModel.imgUrlList!.isEmpty
+                                    ? Constants.baseImageUrl
+                                    : diaryModel.imgUrlList![0]),
+                            //   image: CachedNetworkImageProvider(
+                            //       diaryModel.imgUrlList!.isEmpty ? Constants.baseImageUrl:diaryModel.imgUrlList![0]),
                           ),
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(10),
@@ -487,11 +491,14 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                                 borderRadius: BorderRadius.circular(25),
                                 image: DecorationImage(
                                   //todo: 이거뭐지
-                                  image: CachedNetworkImageProvider(
-                                      controller
-                                          .selectedDiary.value.imgUrlList!.isEmpty? Constants.baseImageUrl:
-                                      controller
-                                      .selectedDiary.value.imgUrlList![0]),
+                                  image: CustomCachedNetworkImage(controller
+                                          .selectedDiary
+                                          .value
+                                          .imgUrlList!
+                                          .isEmpty
+                                      ? Constants.baseImageUrl
+                                      : controller
+                                          .selectedDiary.value.imgUrlList![0]),
                                   fit: BoxFit.cover,
                                 ),
                               ),

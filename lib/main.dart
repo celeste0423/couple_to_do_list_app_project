@@ -12,8 +12,10 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
+//백그라운드 메시지
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("백그라운드 메시지 처리 ${message.notification!.body!}");
+  print("백그라운드 메시지 처리 ${message.messageId}");
 }
 
 void initializeNotification() async {
@@ -25,8 +27,9 @@ void initializeNotification() async {
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(const AndroidNotificationChannel(
         'high_importance_channel', // id
-        'high_importance_notification', // name
-        importance: Importance.max,
+        'High Importance Notifications', // title
+        description: 'This channel is used for important notifications.',
+        importance: Importance.high,
       ));
 
   await flutterLocalNotificationsPlugin.initialize(const InitializationSettings(
@@ -56,15 +59,16 @@ void initializeNotification() async {
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  KakaoSdk.init(nativeAppKey: '6343b85d09998d34e9261b1c6e5f4635');
+//파이어베이스 설정
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   //푸쉬 알림
   initializeNotification();
-
+  //스플래시 이미지
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  //카카오 sdk실행
+  KakaoSdk.init(nativeAppKey: '6343b85d09998d34e9261b1c6e5f4635');
   //화면 회전 불가
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
