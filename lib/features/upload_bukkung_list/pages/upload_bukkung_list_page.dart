@@ -505,6 +505,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
             ? () async {
                 print('업로드 시작(upl page)');
                 controller.isUploading.value = true;
+                controller.sendCompletedMessageToBuddy();
                 await controller.uploadBukkungList();
                 Get.back();
                 Get.back();

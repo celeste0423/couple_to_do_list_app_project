@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:couple_to_do_list_app/features/background_message/repository/fcm_repository.dart';
 import 'package:couple_to_do_list_app/models/device_token_model.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
@@ -11,7 +12,16 @@ class FCMController {
       "AAAAXAfR3tg:APA91bGcuXLBYeTnasJULQUnpVTGbFipzfZ1badsIxXgMymNNwRPffH3XDPytHqO8mvpfn-fBuPeLiyiy28YjOWgZ_HBqQE4rQmDZVu7eHlYTJHh7z5dWu06zyC4-P_0qm4h4hQegGwi";
 
   Future<String?> getMyDeviceToken() async {
-    final token = await FirebaseMessaging.instance.getToken();
+    // ios
+    String? token;
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      token = await FirebaseMessaging.instance.getAPNSToken();
+    }
+    // android
+    else {
+      token = await FirebaseMessaging.instance.getToken();
+    }
     return token;
   }
 

@@ -4,6 +4,7 @@ import 'package:couple_to_do_list_app/firebase_options.dart';
 import 'package:couple_to_do_list_app/theme/base_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -18,27 +19,70 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("백그라운드 메시지 처리 ${message.messageId}");
 }
 
+const channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  description:
+      'This channel is used for important notifications.', // description
+  importance: Importance.high,
+);
+
+final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+//로컬 알림 보이기(foreground)
+void showFlutterNotification(RemoteMessage message) {
+  RemoteNotification? notification = message.notification;
+  AndroidNotification? android = message.notification?.android;
+  if (notification != null && android != null && !kIsWeb) {
+    // 웹이 아니면서 안드로이드이고, 알림이 있는경우
+    flutterLocalNotificationsPlugin.show(
+      notification.hashCode,
+      notification.title,
+      notification.body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          channelDescription: channel.description,
+          // TODO add a proper drawable resource to android, for now using
+          //      one that already exists in example app.
+          icon: 'launch_background',
+        ),
+      ),
+    );
+  }
+}
+
 void initializeNotification() async {
+  //foreground 수신 처리
+  FirebaseMessaging.onMessage.listen(showFlutterNotification);
+  //background 수신 처리
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 //안드로이드 푸시 알림
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(const AndroidNotificationChannel(
-        'high_importance_channel', // id
-        'High Importance Notifications', // title
-        description: 'This channel is used for important notifications.',
-        importance: Importance.high,
-      ));
+      ?.createNotificationChannel(channel);
 
   await flutterLocalNotificationsPlugin.initialize(const InitializationSettings(
     android: AndroidInitializationSettings("@mipmap/ic_launcher"),
   ));
 
+  //IOS foreground 권한 체크
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
+    sound: true,
+  );
+
+  // IOS background 권한 체킹 , 요청
+  await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
     sound: true,
   );
 }
