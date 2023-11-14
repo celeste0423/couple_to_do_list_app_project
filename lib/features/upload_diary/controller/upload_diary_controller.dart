@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/features/background_message/controller/fcm
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
+import 'package:couple_to_do_list_app/helper/AdHelper.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/repository/diary_repository.dart';
@@ -56,6 +57,7 @@ class UploadDiaryController extends GetxController {
   void onInit() {
     super.onInit();
     _checkIsDiarySelected();
+    testAdHelper.createInterstitialAd();
     contentScrollController.addListener(scrollToContent);
   }
 

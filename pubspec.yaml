@@ -72,6 +72,8 @@ dependencies:
   sign_in_with_apple: ^5.0.0
   google_sign_in: ^6.1.4
   firebase_analytics: ^10.6.4
+  get_storage: ^2.1.1
+  google_mobile_ads: ^3.1.0
 
 flutter_launcher_icons:
   ios: true

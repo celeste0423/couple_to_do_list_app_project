@@ -6,6 +6,7 @@ import 'package:couple_to_do_list_app/features/background_message/controller/fcm
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
+import 'package:couple_to_do_list_app/helper/AdHelper.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -61,6 +62,8 @@ class UploadBukkungListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    testAdHelper.createInterstitialAd();
+
     _checkIsBukkungListSelected();
     _checkCompleted();
     titleController.addListener(_checkCompleted);
@@ -369,6 +372,7 @@ class UploadBukkungListController extends GetxController {
         _updateBukkungList(updatedBukkungList);
       }
     }
+    testAdHelper.showInterstitialAd();
   }
 
   UploadTask uploadFile(Uint8List image, String location, String filename) {
