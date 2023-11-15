@@ -27,7 +27,7 @@ class DiaryPage extends GetView<DiaryPageController> {
     const double minHeaderHeight = kToolbarHeight + 170;
 
     return CustomScrollView(
-      // controller: controller.sliverScrollController,
+      controller: controller.sliverScrollController,
       slivers: [
         SliverPersistentHeader(
           delegate: SliverPersistentDelegate(
@@ -103,6 +103,7 @@ class DiaryPage extends GetView<DiaryPageController> {
           )
         : ListView.builder(
             itemCount: controller.diaryList[tabIndex].length + 1,
+            controller: controller.listScrollController,
             itemBuilder: (BuildContext context, int index) {
               if (index != controller.diaryList[tabIndex].length) {
                 return diaryTile(controller.diaryList[tabIndex][index]);
@@ -490,7 +491,6 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
                                 image: DecorationImage(
-                                  //todo: 이거뭐지
                                   image: CustomCachedNetworkImage(controller
                                           .selectedDiary
                                           .value

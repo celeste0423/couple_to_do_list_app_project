@@ -13,7 +13,8 @@ class DiaryPageController extends GetxController
     with GetTickerProviderStateMixin {
   static DiaryPageController get to => Get.find();
 
-  // ScrollController sliverScrollController = ScrollController();
+  ScrollController listScrollController = ScrollController();
+  ScrollController sliverScrollController = ScrollController();
   // Rx<bool> isScrollMax = false.obs;
 
   Rx<String?> listCategory = "".obs;
@@ -52,6 +53,20 @@ class DiaryPageController extends GetxController
     setDiaryList();
     initSelectedDiary();
     // getNickname();
+    scrollControl();
+  }
+
+  void scrollControl() {
+    // // sliverScrollController의 스크롤 위치 변화를 감지하는 리스너 추가
+    // sliverScrollController.addListener(() {
+    //   // sliverScrollController가 최대로 스크롤되었는지 확인
+    //   bool isScrollMax = sliverScrollController.position.maxScrollExtent ==
+    //       sliverScrollController.position.pixels;
+    //
+    //   // 최대 스크롤 상태에 따라 listScrollController의 스크롤을 고정 또는 해제
+    //   listScrollController
+    //       .jumpTo(isScrollMax ? 0.0 : listScrollController.position.pixels);
+    // });
   }
 
   Future setDiaryList() async {
