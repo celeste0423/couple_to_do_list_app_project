@@ -29,6 +29,7 @@ class ListSuggestionPageController extends GetxController
   GlobalKey copyKey = GlobalKey();
 
   late TabController suggestionListTabController;
+  final int initialTabIndex = Get.arguments ?? 0;
 
   static ListSuggestionPageController get to => Get.find();
 
@@ -103,7 +104,8 @@ class ListSuggestionPageController extends GetxController
   @override
   void onInit() {
     super.onInit();
-    suggestionListTabController = TabController(length: 5, vsync: this);
+    suggestionListTabController =
+        TabController(initialIndex: initialTabIndex, length: 5, vsync: this);
     suggestionListTabController.addListener(() {
       _onTabChanged();
     });
@@ -128,6 +130,19 @@ class ListSuggestionPageController extends GetxController
     Future.delayed(const Duration(seconds: 1), () {
       _showTutorialCoachMark();
     });
+  }
+
+  @override
+  void onClose() {
+    // 컨트롤러에서 사용한 리소스를 해제 또는 정리하는 로직 추가
+    // suggestionListTabController.dispose();
+    searchBarController.dispose();
+    listByLikeScrollController.dispose();
+    listByDateScrollController.dispose();
+    listByViewScrollController.dispose();
+    favoriteListScrollController.dispose();
+
+    super.onClose(); // 부모 클래스의 onClose 메서드를 호출
   }
 
   void _showTutorialCoachMark() async {
