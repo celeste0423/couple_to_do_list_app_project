@@ -349,7 +349,7 @@ class MyPage extends GetView<MyPageController> {
                 _achievementDetail(
                     '조회수', controller.viewCount.value.toString()),
                 _achievementDetail(
-                    '좋아요', controller.likeCount.value.toString()),
+                    '받은 좋아요', controller.likeCount.value.toString()),
               ],
             ),
           ),
