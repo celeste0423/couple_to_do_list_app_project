@@ -7,6 +7,7 @@ import 'package:couple_to_do_list_app/features/home/widgets/circle_tab_indicator
 import 'package:couple_to_do_list_app/features/tutorial_coach_mark/pages/coachmark_desc.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
@@ -19,6 +20,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  int openAppCount = 0;
+
   TutorialCoachMark? tutorialCoachMark;
   List<TargetFocus> targets = [];
 
@@ -33,10 +36,29 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+    _openAppCounter();
     Future.delayed(const Duration(seconds: 1), () {
       _showTutorialCoachMark();
+      _showReviewPopup();
     });
     // InitBinding.additionalBinding();
+  }
+
+  void _openAppCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    openAppCount = prefs.getInt('openAppCount') ?? 0;
+    await prefs.setInt('openAppCount', openAppCount + 1);
+    print('앱을 ${openAppCount}번 열었습니다. (home page)');
+  }
+
+  void _showReviewPopup() async {
+    final InAppReview inAppReview = InAppReview.instance;
+    if (openAppCount >= 3) {
+      // inAppReview.requestReview();
+      if (await inAppReview.isAvailable()) {
+        inAppReview.requestReview();
+      }
+    }
   }
 
   void _showTutorialCoachMark() async {

@@ -74,6 +74,7 @@ dependencies:
   firebase_analytics: ^10.6.4
   get_storage: ^2.1.1
   google_mobile_ads: ^3.1.0
+  in_app_review: ^2.0.8
 
 flutter_launcher_icons:
   ios: true
