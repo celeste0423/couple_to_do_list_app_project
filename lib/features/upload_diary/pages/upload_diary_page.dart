@@ -44,7 +44,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   DiaryModel updatedDiary = await controller.uploadDiary();
                   //소감 작성하라는 메시지 전송
                   controller.sendCompletedMessageToBuddy();
-                  testAdHelper.showInterstitialAd();
+                  AdHelper.showInterstitialAd();
                   Get.off(() => ReadDiaryPage(), arguments: updatedDiary);
                 } else {
                   if (controller.titleController.text == '') {

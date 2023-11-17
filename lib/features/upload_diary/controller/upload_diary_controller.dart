@@ -57,7 +57,7 @@ class UploadDiaryController extends GetxController {
   void onInit() {
     super.onInit();
     _checkIsDiarySelected();
-    testAdHelper.createInterstitialAd();
+    AdHelper.createInterstitialAd();
     contentScrollController.addListener(scrollToContent);
   }
 

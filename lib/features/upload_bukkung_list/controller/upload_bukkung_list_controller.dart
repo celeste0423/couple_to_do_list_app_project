@@ -62,7 +62,7 @@ class UploadBukkungListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    testAdHelper.createInterstitialAd();
+    AdHelper.createInterstitialAd();
 
     _checkIsBukkungListSelected();
     _checkCompleted();
@@ -372,7 +372,7 @@ class UploadBukkungListController extends GetxController {
         _updateBukkungList(updatedBukkungList);
       }
     }
-    testAdHelper.showInterstitialAd();
+   AdHelper.showInterstitialAd();
   }
 
   UploadTask uploadFile(Uint8List image, String location, String filename) {
