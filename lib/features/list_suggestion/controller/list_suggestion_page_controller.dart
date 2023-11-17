@@ -98,6 +98,13 @@ class ListSuggestionPageController extends GetxController
   QueryDocumentSnapshot<Map<String, dynamic>>? favoriteListKeyPage;
   List<BukkungListModel>? favoriteListPrevList;
   bool isfavoriteListLastPage = false;
+  Rx<bool> noFavoriteList = false.obs;
+
+  Stream<List<BukkungListModel>> getSuggestionMyBukkungList() {
+    return ListSuggestionRepository().getMyBukkungList();
+  }
+
+  Rx<bool> noMyList = false.obs;
 
   final int _pageSize = 5;
 
@@ -234,11 +241,12 @@ class ListSuggestionPageController extends GetxController
   }
 
   void initSelectedBukkungList() {
-    print(suggestionListTabController.index);
+    // print(suggestionListTabController.index);
     switch (suggestionListTabController.index) {
       case 0:
         {
-          print('인기 첫 리스트 선정');
+          noFavoriteList(false);
+          noMyList(false);
           final stream = listByLikeStreamController.stream;
           StreamSubscription<List<BukkungListModel>>? subscription;
           subscription = stream.listen((list) async {
@@ -262,7 +270,8 @@ class ListSuggestionPageController extends GetxController
         }
       case 1:
         {
-          print('최신 첫 리스트 선정');
+          noFavoriteList(false);
+          noMyList(false);
           final stream = listByDateStreamController.stream;
           StreamSubscription<List<BukkungListModel>>? subscription;
           subscription = stream.listen((list) async {
@@ -286,6 +295,8 @@ class ListSuggestionPageController extends GetxController
         }
       case 2:
         {
+          noFavoriteList(false);
+          noMyList(false);
           final stream = listByViewStreamController.stream;
           StreamSubscription<List<BukkungListModel>>? subscription;
           subscription = stream.listen((list) async {
@@ -309,10 +320,12 @@ class ListSuggestionPageController extends GetxController
         }
       case 3:
         {
+          noMyList(false);
           final stream = favoriteListStreamController.stream;
           StreamSubscription<List<BukkungListModel>>? subscription;
           subscription = stream.listen((list) async {
             if (list.isNotEmpty) {
+              noFavoriteList(false);
               final updatedList = list[0];
               selectedList(updatedList);
               // 리스트 레벨 가져오기
@@ -327,17 +340,22 @@ class ListSuggestionPageController extends GetxController
                 isLiked(true);
               }
               subscription?.cancel();
+            } else {
+              //찜 리스트가 없을 경우
+              print('진심 리스트 없어?');
+              noFavoriteList(true);
             }
           });
         }
       case 4:
-      //Todo: 굳이 선택될 필요가 있을까 근데..?
       default:
         {
-          final stream = listByLikeStreamController.stream;
+          noFavoriteList(false);
+          final stream = getSuggestionMyBukkungList();
           StreamSubscription<List<BukkungListModel>>? subscription;
           subscription = stream.listen((list) async {
             if (list.isNotEmpty) {
+              noMyList(true);
               final updatedList = list[0];
               selectedList(updatedList);
               // 리스트 레벨 가져오기
@@ -352,6 +370,9 @@ class ListSuggestionPageController extends GetxController
                 isLiked(true);
               }
               subscription?.cancel();
+            } else {
+              //내 리스트가 없을 경우
+              noMyList(true);
             }
           });
         }
@@ -522,10 +543,6 @@ class ListSuggestionPageController extends GetxController
   //     return ListSuggestionRepository().getCategoryBukkungList(category);
   //   }
   // }
-
-  Stream<List<BukkungListModel>> getSuggestionMyBukkungList() {
-    return ListSuggestionRepository().getMyBukkungList();
-  }
 
   //리스트 선택
   void indexSelection(BukkungListModel updatedList) async {
