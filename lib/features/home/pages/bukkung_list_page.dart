@@ -1,12 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
+import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/utils/type_to_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
+import 'package:couple_to_do_list_app/widgets/custom_cached_networkImage.dart';
 import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
@@ -29,57 +30,57 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     );
   }
 
-  Widget _listAddButton() {
-    return GestureDetector(onTap: () {
-      Get.to(() => ListSuggestionPage());
-    }, child: Obx(() {
-      return AnimatedContainer(
-        key: controller.listSuggestionKey,
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        padding: EdgeInsets.symmetric(
-            horizontal: controller.isAnimated.value ? 8 : 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          border: Border.all(
-            width: controller.isAnimated.value ? 2 : 0,
-            color: controller.isAnimated.value
-                ? CustomColors.lightPink
-                : Colors.transparent,
-          ),
-          color: CustomColors.mainPink,
-        ),
-        height: 50,
-        duration: Duration(milliseconds: 1000),
-        curve: Curves.easeOut,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // PngIcon(
-            //   iconName: 'plus',
-            //   iconColor: Colors.white.withOpacity(0.7),
-            //   iconSize: 30,
-            // ),
-            Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 35,
-            ),
-            SizedBox(width: 10),
-            Material(
-              type: MaterialType.transparency,
-              child: Text(
-                '여기를 눌러 버꿍리스트를 추가하세요',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }));
-  }
+  // Widget _listAddButton() {
+  //   return GestureDetector(onTap: () {
+  //     Get.to(() => ListSuggestionPage());
+  //   }, child: Obx(() {
+  //     return AnimatedContainer(
+  //       key: controller.listSuggestionKey,
+  //       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+  //       padding: EdgeInsets.symmetric(
+  //           horizontal: controller.isAnimated.value ? 8 : 10),
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(25),
+  //         border: Border.all(
+  //           width: controller.isAnimated.value ? 2 : 0,
+  //           color: controller.isAnimated.value
+  //               ? CustomColors.lightPink
+  //               : Colors.transparent,
+  //         ),
+  //         color: CustomColors.mainPink,
+  //       ),
+  //       height: 50,
+  //       duration: Duration(milliseconds: 1000),
+  //       curve: Curves.easeOut,
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.start,
+  //         children: [
+  //           // PngIcon(
+  //           //   iconName: 'plus',
+  //           //   iconColor: Colors.white.withOpacity(0.7),
+  //           //   iconSize: 30,
+  //           // ),
+  //           Icon(
+  //             Icons.add,
+  //             color: Colors.white,
+  //             size: 35,
+  //           ),
+  //           SizedBox(width: 10),
+  //           Material(
+  //             type: MaterialType.transparency,
+  //             child: Text(
+  //               '여기를 눌러 버꿍리스트를 추가하세요',
+  //               style: TextStyle(
+  //                 color: Colors.white,
+  //                 fontSize: 14,
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   }));
+  // }
 
   Widget _listTypeSelector() {
     return Padding(
@@ -156,7 +157,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     return Obx(() {
       if (controller.currentType.value == 'category') {
         return Expanded(
-          key: controller.bukkungListKey,
+          // key: controller.bukkungListKey,
           child: StreamBuilder(
             stream: BukkungListPageController.to.getAllBukkungListByCategory(),
             builder: (
@@ -394,7 +395,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             Expanded(
               flex: 12,
               child: Container(
-                height: 120,
+                height: 100,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -406,17 +407,26 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                   children: [
                     Expanded(
                       flex: 3,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          bottomLeft: Radius.circular(25),
-                        ),
-                        child: CachedNetworkImage(
-                          imageUrl: '${bukkungListModel.imgUrl}',
-                          height: 150,
-                          fit: BoxFit.cover,
+                      child: Container(
+                        width: 150,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: CustomCachedNetworkImage(
+                                  bukkungListModel.imgUrl!),
+                              fit: BoxFit.cover),
+                          borderRadius: BorderRadius.circular(25),
                         ),
                       ),
+                      //   child: ClipRRect(
+                      //       borderRadius: BorderRadius.only(
+                      //         topLeft: Radius.circular(25),
+                      //         bottomLeft: Radius.circular(25),
+                      //       ),
+                      //       child: Image.network(
+                      //         '${bukkungListModel.imgUrl}',
+                      //         height: 150,
+                      //         fit: BoxFit.cover,
+                      //       )),
                     ),
                     SizedBox(width: 20),
                     Expanded(
@@ -486,7 +496,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             Expanded(
               flex: 1,
               child: Container(
-                height: 120,
+                height: 100,
                 decoration: BoxDecoration(
                   color: TypeToColor.typeToColor(bukkungListModel.category),
                   borderRadius: BorderRadius.only(
@@ -520,6 +530,22 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     );
   }
 
+  Widget _listAddButton() {
+    return FloatingActionButton(
+      key: controller.listSuggestionKey,
+      onPressed: () {
+        Analytics().logEvent('추천 버꿍리스트 페이지 오픈', null);
+        Get.to(() => ListSuggestionPage());
+      },
+      backgroundColor: CustomColors.mainPink,
+      child: Icon(
+        Icons.add,
+        color: Colors.white,
+        size: 35,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Get.put(BukkungListPageController());
@@ -528,12 +554,17 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          _listAddButton(),
+          // _listAddButton(),
           _listTypeSelector(),
           customDivider(),
           _bukkungListView(),
         ],
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 90, right: 10),
+        child: _listAddButton(),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

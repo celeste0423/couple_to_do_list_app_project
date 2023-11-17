@@ -13,7 +13,10 @@ class DiaryPageController extends GetxController
     with GetTickerProviderStateMixin {
   static DiaryPageController get to => Get.find();
 
-  // ScrollController sliverScrollController = ScrollController();
+  ScrollController listScrollController =
+      ScrollController(initialScrollOffset: 0);
+  ScrollController sliverScrollController =
+      ScrollController(initialScrollOffset: 0);
   // Rx<bool> isScrollMax = false.obs;
 
   Rx<String?> listCategory = "".obs;
@@ -52,6 +55,27 @@ class DiaryPageController extends GetxController
     setDiaryList();
     initSelectedDiary();
     // getNickname();
+    scrollControl();
+  }
+
+  void scrollControl() {
+    //min 0 / max 156
+    double previousListPosition = 0;
+
+    listScrollController.addListener(() {
+      double currentListPosition = listScrollController.position.pixels;
+      // print(currentListPosition);
+      double sliverScrollControllerPosition =
+          sliverScrollController.position.pixels +
+              (currentListPosition - previousListPosition) * 1.5;
+      if (sliverScrollControllerPosition >= 156) {
+        sliverScrollControllerPosition = 156;
+      } else if (sliverScrollControllerPosition <= 0) {
+        sliverScrollControllerPosition = 0;
+      }
+      previousListPosition = listScrollController.position.pixels;
+      sliverScrollController.jumpTo(sliverScrollControllerPosition);
+    });
   }
 
   Future setDiaryList() async {

@@ -68,7 +68,7 @@ class GgomulPage extends GetView<GgomulPageController> {
               bottom: 0,
               child: Obx(
                 () => AnimatedContainer(
-                  height: (controller.completedListCount.value / 8) * 250,
+                  height: (controller.completedListCount.value % 8) / 8 * 250,
                   width: 25,
                   duration: Duration(milliseconds: 500),
                   decoration: BoxDecoration(
@@ -266,7 +266,7 @@ class GgomulPage extends GetView<GgomulPageController> {
                     ),
                   )
                 : Text(
-                    '미정',
+                    '날짜 미정',
                     style: TextStyle(
                       fontSize: 13,
                     ),
@@ -339,6 +339,8 @@ class GgomulPage extends GetView<GgomulPageController> {
                           child: CachedNetworkImage(
                             imageUrl: '${bukkungListModel.imgUrl}',
                             fit: BoxFit.cover,
+                            errorWidget: (context, url, error) => Image.asset(
+                                'assets/images/baseimage_ggomool.png'),
                           ),
                         ),
                       ),

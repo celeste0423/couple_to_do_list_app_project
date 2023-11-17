@@ -2,9 +2,11 @@ import 'dart:typed_data';
 
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/background_message/controller/fcm_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
+import 'package:couple_to_do_list_app/helper/ad_helper.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -60,6 +62,8 @@ class UploadBukkungListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    AdHelper.createInterstitialAd();
+
     _checkIsBukkungListSelected();
     _checkCompleted();
     titleController.addListener(_checkCompleted);
@@ -368,6 +372,7 @@ class UploadBukkungListController extends GetxController {
         _updateBukkungList(updatedBukkungList);
       }
     }
+   AdHelper.showInterstitialAd();
   }
 
   UploadTask uploadFile(Uint8List image, String location, String filename) {
@@ -429,5 +434,21 @@ class UploadBukkungListController extends GetxController {
 
   void _updateBukkungList(BukkungListModel bukkungListModel) async {
     await BukkungListRepository.updateGroupBukkungList(bukkungListModel);
+  }
+
+  Future<void> sendCompletedMessageToBuddy() async {
+    final buddyUid = AuthController.to.user.value.gender == 'male'
+        ? AuthController.to.group.value.femaleUid
+        : AuthController.to.group.value.maleUid;
+    print('짝꿍 uid ${buddyUid}');
+    final userTokenData = await FCMController().getDeviceTokenByUid(buddyUid!);
+    if (userTokenData != null) {
+      print('유저 토큰 존재');
+      FCMController().sendMessageController(
+        userToken: userTokenData.deviceToken!,
+        title: "${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!",
+        body: '지금 바로 확인해보세요',
+      );
+    }
   }
 }

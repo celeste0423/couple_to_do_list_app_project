@@ -1,9 +1,11 @@
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
+import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/repository/group_repository.dart';
+import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +91,10 @@ class MyPageController extends GetxController {
     expPoint(listExpViewLikeCount[0]);
     viewCount(listExpViewLikeCount[1]);
     likeCount(listExpViewLikeCount[2]);
+
+    List<BukkungListModel> bukkungLists =
+        await ListSuggestionRepository().getFutureMyBukkungList();
+    bukkungListCount(bukkungLists.length);
   }
 
   @override

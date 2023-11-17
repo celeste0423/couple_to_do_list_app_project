@@ -1,9 +1,9 @@
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/controller/upload_diary_controller.dart';
+import 'package:couple_to_do_list_app/helper/ad_helper.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
-import 'package:couple_to_do_list_app/widgets/main_button.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,9 +42,11 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   //   print('업로드 중');
                   controller.isUploading.value = true;
                   DiaryModel updatedDiary = await controller.uploadDiary();
+                  //소감 작성하라는 메시지 전송
+                  controller.sendCompletedMessageToBuddy();
+                  AdHelper.showInterstitialAd();
                   Get.off(() => ReadDiaryPage(), arguments: updatedDiary);
                 } else {
-                  //Todo: 요소별로 경고 추가
                   if (controller.titleController.text == '') {
                     openAlertDialog(title: '제목을 입력해 주세요');
                   } else if (controller.diaryCategory.value == '') {
@@ -348,7 +350,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
     return Container(
       color: CustomColors.backgroundLightGrey,
       height: Get.height -
-          494-
+          494 -
           context.mediaQueryPadding.top -
           context.mediaQueryPadding.bottom,
       child: Padding(
@@ -423,61 +425,89 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25),
       ),
-      child: SizedBox(
-        height: 550,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '카테고리',
-                  style: TextStyle(fontSize: 25),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      child: Get.width < 350 || Get.height < 550
+          ? SizedBox(
+              //화면이 너무 작을 때만 작동하는 예외처리 UI
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20.0,
+                  mainAxisSpacing: 20.0,
+                  childAspectRatio: 2.0,
+                  shrinkWrap: true,
                   children: [
-                    SizedBox(
-                      height: 450,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _categoryCard(
-                              'airplane', '여행', CustomColors.travel, '1travel'),
-                          _categoryCard('running', '액티비티',
-                              CustomColors.activity, '3activity'),
-                          _categoryCard(
-                              'study', '자기계발', CustomColors.study, '5study'),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    SizedBox(
-                      height: 450,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _categoryCard(
-                              'food', '식사', CustomColors.meal, '2meal'),
-                          _categoryCard('singer', '문화활동', CustomColors.culture,
-                              '4culture'),
-                          _categoryCard(
-                              'filter-file', '기타', CustomColors.etc, '6etc'),
-                        ],
-                      ),
-                    )
+                    _categoryCard(
+                        'airplane', '여행', CustomColors.travel, '1travel'),
+                    _categoryCard(
+                        'running', '액티비티', CustomColors.activity, '3activity'),
+                    _categoryCard(
+                        'study', '자기계발', CustomColors.study, '5study'),
+                    _categoryCard('food', '식사', CustomColors.meal, '2meal'),
+                    _categoryCard(
+                        'singer', '문화활동', CustomColors.culture, '4culture'),
+                    _categoryCard(
+                        'filter-file', '기타', CustomColors.etc, '6etc'),
                   ],
                 ),
-              ],
+              ),
+            )
+          : SizedBox(
+              height: 550,
+              width: 350,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '카테고리',
+                        style: TextStyle(fontSize: 25),
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 450,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _categoryCard('airplane', '여행',
+                                    CustomColors.travel, '1travel'),
+                                _categoryCard('running', '액티비티',
+                                    CustomColors.activity, '3activity'),
+                                _categoryCard('study', '자기계발',
+                                    CustomColors.study, '5study'),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          SizedBox(
+                            height: 450,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _categoryCard(
+                                    'food', '식사', CustomColors.meal, '2meal'),
+                                _categoryCard('singer', '문화활동',
+                                    CustomColors.culture, '4culture'),
+                                _categoryCard('filter-file', '기타',
+                                    CustomColors.etc, '6etc'),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -488,168 +518,170 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
         Get.back();
       },
       child: Container(
-        width: Get.width * 0.3,
-        height: Get.width * 0.3,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           color: color,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/icons/$icon.png',
-              width: 60,
-            ),
-            SizedBox(height: 10),
-            Text(
-              text,
-              style: TextStyle(fontSize: 15, color: Colors.white),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _contentContainer(context) {
-    double numberoFlines = 7;
-    double holeDiameter = 16;
-
-    Widget contents() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+        child: Padding(
+          padding:
+              const EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                width: 20,
+              Image.asset(
+                'assets/icons/$icon.png',
+                width: 60,
+              ),
+              SizedBox(height: 10),
+              Text(
+                text,
+                style: TextStyle(fontSize: 15, color: Colors.white),
               ),
             ],
           ),
-        ],
-      );
-    }
-
-    Widget circleHole() {
-      return Container(
-        margin: EdgeInsets.all(10),
-        width: holeDiameter,
-        height: holeDiameter,
-        decoration: BoxDecoration(
-          color: CustomColors.redbrown.withOpacity(0.45),
-          shape: BoxShape.circle,
-        ),
-      );
-    }
-
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        padding: EdgeInsets.fromLTRB(0, 20, 20, 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: CustomColors.backgroundLightGrey,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                for (int i = 0; i < 6; i++) circleHole(),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                contents(),
-                Stack(
-                  children: [
-                    for (int lines = 0; lines < numberoFlines; lines++)
-                      Container(
-                        width: Get.width - 110 - holeDiameter,
-                        margin: EdgeInsets.only(
-                          top: 7 + (lines + 1) * 28,
-                        ),
-                        height: 1,
-                        color: CustomColors.grey,
-                      ),
-                    SizedBox(
-                      height: 28 * (numberoFlines + 2),
-                      width: Get.width - 100 - holeDiameter,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: TextField(
-                          controller: controller.contentController,
-                          decoration: InputDecoration(
-                            hintText: ' 소감은 어땠나요?',
-                            hintStyle: TextStyle(
-                              color: CustomColors.lightGreyText,
-                              fontSize: 18,
-                              fontFamily: 'Bookk_mj',
-                            ),
-                            border: InputBorder.none,
-                          ),
-                          cursorColor: CustomColors.darkGrey,
-                          cursorHeight: 20,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontFamily: 'Bookk_mj',
-                          ),
-                          keyboardType: TextInputType.multiline,
-                          expands: false,
-                          maxLines: numberoFlines.toInt(),
-                          maxLength: 140,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
         ),
       ),
     );
   }
 
-  Widget _buttonRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        MainButton(
-          buttonText: '취소',
-          buttonColor: Colors.white,
-          textColor: CustomColors.mainPink,
-          onTap: () {
-            Get.back();
-          },
-        ),
-        MainButton(
-          buttonText: controller.selectedDiaryModel == null ? '작성 완료' : '수정 완료',
-          onTap: () async {
-            if (controller.isUploading.value) {
-              //print('버튼 비활성화');
-              null;
-            } else {
-              if (controller.isValid()) {
-                //print('업로드 중');
-                controller.isUploading.value = true;
-                DiaryModel updatedDiary = await controller.uploadDiary();
-                Get.off(() => ReadDiaryPage(), arguments: updatedDiary);
-              } else {
-                openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');
-              }
-            }
-          },
-          width: Get.width * 5 / 8,
-        )
-      ],
-    );
-  }
+  // Widget _contentContainer(context) {
+  //   double numberoFlines = 7;
+  //   double holeDiameter = 16;
+  //
+  //   Widget contents() {
+  //     return Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: const [
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.start,
+  //           children: [
+  //             SizedBox(
+  //               width: 20,
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     );
+  //   }
+  //
+  //   Widget circleHole() {
+  //     return Container(
+  //       margin: EdgeInsets.all(10),
+  //       width: holeDiameter,
+  //       height: holeDiameter,
+  //       decoration: BoxDecoration(
+  //         color: CustomColors.redbrown.withOpacity(0.45),
+  //         shape: BoxShape.circle,
+  //       ),
+  //     );
+  //   }
+  //
+  //   return Expanded(
+  //     child: Container(
+  //       margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+  //       padding: EdgeInsets.fromLTRB(0, 20, 20, 10),
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(25),
+  //         color: CustomColors.backgroundLightGrey,
+  //       ),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.start,
+  //         children: [
+  //           Column(
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               for (int i = 0; i < 6; i++) circleHole(),
+  //             ],
+  //           ),
+  //           Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               contents(),
+  //               Stack(
+  //                 children: [
+  //                   for (int lines = 0; lines < numberoFlines; lines++)
+  //                     Container(
+  //                       width: Get.width - 110 - holeDiameter,
+  //                       margin: EdgeInsets.only(
+  //                         top: 7 + (lines + 1) * 28,
+  //                       ),
+  //                       height: 1,
+  //                       color: CustomColors.grey,
+  //                     ),
+  //                   SizedBox(
+  //                     height: 28 * (numberoFlines + 2),
+  //                     width: Get.width - 100 - holeDiameter,
+  //                     child: Padding(
+  //                       padding: EdgeInsets.symmetric(horizontal: 15),
+  //                       child: TextField(
+  //                         controller: controller.contentController,
+  //                         decoration: InputDecoration(
+  //                           hintText: ' 소감은 어땠나요?',
+  //                           hintStyle: TextStyle(
+  //                             color: CustomColors.lightGreyText,
+  //                             fontSize: 18,
+  //                             fontFamily: 'Bookk_mj',
+  //                           ),
+  //                           border: InputBorder.none,
+  //                         ),
+  //                         cursorColor: CustomColors.darkGrey,
+  //                         cursorHeight: 20,
+  //                         style: TextStyle(
+  //                           fontSize: 18,
+  //                           fontFamily: 'Bookk_mj',
+  //                         ),
+  //                         keyboardType: TextInputType.multiline,
+  //                         expands: false,
+  //                         maxLines: numberoFlines.toInt(),
+  //                         maxLength: 140,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  // Widget _buttonRow() {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //     children: [
+  //       MainButton(
+  //         buttonText: '취소',
+  //         buttonColor: Colors.white,
+  //         textColor: CustomColors.mainPink,
+  //         onTap: () {
+  //           Get.back();
+  //         },
+  //       ),
+  //       MainButton(
+  //         buttonText: controller.selectedDiaryModel == null ? '작성 완료' : '수정 완료',
+  //         onTap: () async {
+  //           if (controller.isUploading.value) {
+  //             //print('버튼 비활성화');
+  //             null;
+  //           } else {
+  //             if (controller.isValid()) {
+  //               //print('업로드 중');
+  //               controller.isUploading.value = true;
+  //               DiaryModel updatedDiary = await controller.uploadDiary();
+  //               Get.off(() => ReadDiaryPage(), arguments: updatedDiary);
+  //             } else {
+  //               openAlertDialog(title: '다이어리를 빠짐없이 작성해 주세요');
+  //             }
+  //           }
+  //         },
+  //         width: Get.width * 5 / 8,
+  //       )
+  //     ],
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

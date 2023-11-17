@@ -182,61 +182,89 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25),
       ),
-      child: SizedBox(
-        height: 550,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '카테고리',
-                  style: TextStyle(fontSize: 25),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      child: Get.width < 350 || Get.height < 550
+          ? SizedBox(
+              //화면이 너무 작을 때만 작동하는 예외처리 UI
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20.0,
+                  mainAxisSpacing: 20.0,
+                  childAspectRatio: 2.0,
+                  shrinkWrap: true,
                   children: [
-                    SizedBox(
-                      height: 450,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _categoryCard(
-                              'airplane', '여행', CustomColors.travel, '1travel'),
-                          _categoryCard('running', '액티비티',
-                              CustomColors.activity, '3activity'),
-                          _categoryCard(
-                              'study', '자기계발', CustomColors.study, '5study'),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    SizedBox(
-                      height: 450,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _categoryCard(
-                              'food', '식사', CustomColors.meal, '2meal'),
-                          _categoryCard('singer', '문화활동', CustomColors.culture,
-                              '4culture'),
-                          _categoryCard(
-                              'filter-file', '기타', CustomColors.etc, '6etc'),
-                        ],
-                      ),
-                    )
+                    _categoryCard(
+                        'airplane', '여행', CustomColors.travel, '1travel'),
+                    _categoryCard(
+                        'running', '액티비티', CustomColors.activity, '3activity'),
+                    _categoryCard(
+                        'study', '자기계발', CustomColors.study, '5study'),
+                    _categoryCard('food', '식사', CustomColors.meal, '2meal'),
+                    _categoryCard(
+                        'singer', '문화활동', CustomColors.culture, '4culture'),
+                    _categoryCard(
+                        'filter-file', '기타', CustomColors.etc, '6etc'),
                   ],
                 ),
-              ],
+              ),
+            )
+          : SizedBox(
+              height: 550,
+              width: 350,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '카테고리',
+                        style: TextStyle(fontSize: 25),
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 450,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _categoryCard('airplane', '여행',
+                                    CustomColors.travel, '1travel'),
+                                _categoryCard('running', '액티비티',
+                                    CustomColors.activity, '3activity'),
+                                _categoryCard('study', '자기계발',
+                                    CustomColors.study, '5study'),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          SizedBox(
+                            height: 450,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _categoryCard(
+                                    'food', '식사', CustomColors.meal, '2meal'),
+                                _categoryCard('singer', '문화활동',
+                                    CustomColors.culture, '4culture'),
+                                _categoryCard('filter-file', '기타',
+                                    CustomColors.etc, '6etc'),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -505,6 +533,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
             ? () async {
                 print('업로드 시작(upl page)');
                 controller.isUploading.value = true;
+                controller.sendCompletedMessageToBuddy();
                 await controller.uploadBukkungList();
                 Get.back();
                 Get.back();

@@ -7,6 +7,7 @@ import 'package:couple_to_do_list_app/features/home/widgets/circle_tab_indicator
 import 'package:couple_to_do_list_app/features/tutorial_coach_mark/pages/coachmark_desc.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
@@ -19,6 +20,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  int openAppCount = 0;
+
   TutorialCoachMark? tutorialCoachMark;
   List<TargetFocus> targets = [];
 
@@ -33,10 +36,32 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+    _openAppCounter();
     Future.delayed(const Duration(seconds: 1), () {
       _showTutorialCoachMark();
+      _showReviewPopup();
     });
     // InitBinding.additionalBinding();
+  }
+
+  void _openAppCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    openAppCount = prefs.getInt('openAppCount') ?? 0;
+    await prefs.setInt('openAppCount', openAppCount + 1);
+    // print('앱을 ${openAppCount}번 열었습니다. (home page)');
+  }
+
+  void _showReviewPopup() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasShownReviewPopup = prefs.getBool('hasShownReviewPopup') ?? false;
+    final InAppReview inAppReview = InAppReview.instance;
+    if (openAppCount >= 3 && !hasShownReviewPopup) {
+      // inAppReview.requestReview();
+      if (await inAppReview.isAvailable()) {
+        inAppReview.requestReview();
+        await prefs.setBool('hasShownReviewPopup', true);
+      }
+    }
   }
 
   void _showTutorialCoachMark() async {
@@ -58,10 +83,10 @@ class _HomePageState extends State<HomePage>
       TargetFocus(
         identify: "list_suggestion_key",
         keyTarget: BukkungListPageController.to.listSuggestionKey,
-        shape: ShapeLightFocus.RRect,
+        shape: ShapeLightFocus.Circle,
         contents: [
           TargetContent(
-            align: ContentAlign.bottom,
+            align: ContentAlign.top,
             builder: (context, controller) {
               return CoachmarkDesc(
                 text: "여기서 버꿍리스트를 새로 만들거나 추천 버꿍리스트를 가져올 수 있습니다",
@@ -82,10 +107,10 @@ class _HomePageState extends State<HomePage>
         shape: ShapeLightFocus.RRect,
         contents: [
           TargetContent(
-            align: ContentAlign.top,
+            align: ContentAlign.bottom,
             builder: (context, controller) {
               return CoachmarkDesc(
-                text: "여기서 짝꿍과의 버꿍리스트를 확인하세요",
+                text: "짝꿍과의 버꿍리스트를 확인하세요",
                 onNext: () {
                   controller.next();
                 },

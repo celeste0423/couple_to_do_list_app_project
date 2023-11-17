@@ -11,6 +11,7 @@ class BukkungListModel {
   final String? imgId;
   int? likeCount;
   int? viewCount;
+  final int? copyCount;
   final DateTime? date;
   final String? madeBy;
   final String? userId;
@@ -28,6 +29,7 @@ class BukkungListModel {
     this.imgId,
     this.likeCount = 0,
     this.viewCount = 0,
+    this.copyCount,
     this.date,
     this.madeBy,
     this.userId,
@@ -47,6 +49,7 @@ class BukkungListModel {
       imgId: null,
       likeCount: 0,
       viewCount: 0,
+      copyCount: null,
       date: null,
       madeBy: userInfo.nickname,
       userId: userInfo.uid,
@@ -67,6 +70,7 @@ class BukkungListModel {
       imgId: json['imgId'] == null ? null : json['imgId'] as String,
       likeCount: json['likeCount'] == null ? 0 : json['likeCount'] as int,
       viewCount: json['viewCount'] == null ? 0 : json['viewCount'] as int,
+      copyCount: json['copyCount'] == null ? 0 : json['copyCount'] as int,
       date: json['date'] == null ? null : (json['date'] as Timestamp).toDate(),
       madeBy: json['madeBy'] == null ? null : json['madeBy'] as String,
       userId: json['userId'] == null ? null : json['userId'] as String,
@@ -91,6 +95,7 @@ class BukkungListModel {
       'imgId': imgId,
       'likeCount': likeCount,
       'viewCount': viewCount,
+      'copyCount' : copyCount,
       'date': date,
       'madeBy': madeBy,
       'userId': userId,
@@ -110,6 +115,7 @@ class BukkungListModel {
     String? imgId,
     int? likeCount,
     int? viewCount,
+    int? copyCount,
     DateTime? date,
     String? madeBy,
     String? userId,
@@ -128,6 +134,7 @@ class BukkungListModel {
       imgId: imgId ?? this.imgId,
       likeCount: likeCount ?? this.likeCount,
       viewCount: viewCount ?? this.viewCount,
+      copyCount: copyCount ?? this.copyCount,
       date: date,
       madeBy: madeBy ?? this.madeBy,
       userId: userId ?? this.userId,

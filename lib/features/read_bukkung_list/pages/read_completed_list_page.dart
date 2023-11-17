@@ -2,6 +2,7 @@ import 'package:couple_to_do_list_app/features/read_bukkung_list/controller/read
 import 'package:couple_to_do_list_app/utils/category_to_text.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
+import 'package:couple_to_do_list_app/widgets/custom_cached_networkImage.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
@@ -141,16 +142,16 @@ class ReadCompletedListPage extends GetView<ReadCompletedListPageController> {
                 () => Container(
                   height: 250,
                   decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: CustomCachedNetworkImage(
+                            controller.imgUrl.value),
+                        fit: BoxFit.cover
+                    ),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(50),
                       bottomLeft: Radius.circular(50),
                     ),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        controller.imgUrl.value,
-                      ),
-                      fit: BoxFit.cover,
-                    ),
+
                   ),
                 ),
               ),

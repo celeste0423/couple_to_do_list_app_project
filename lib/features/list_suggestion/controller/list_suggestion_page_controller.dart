@@ -5,7 +5,9 @@ import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/tutorial_coach_mark/pages/coachmark_desc.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
+import 'package:couple_to_do_list_app/models/copy_count_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
+import 'package:couple_to_do_list_app/repository/copy_count_repository.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:uuid/uuid.dart';
 
 class ListSuggestionPageController extends GetxController
     with GetTickerProviderStateMixin {
@@ -26,6 +29,7 @@ class ListSuggestionPageController extends GetxController
   GlobalKey copyKey = GlobalKey();
 
   late TabController suggestionListTabController;
+  final int initialTabIndex = Get.arguments ?? 0;
 
   static ListSuggestionPageController get to => Get.find();
 
@@ -100,7 +104,8 @@ class ListSuggestionPageController extends GetxController
   @override
   void onInit() {
     super.onInit();
-    suggestionListTabController = TabController(length: 5, vsync: this);
+    suggestionListTabController =
+        TabController(initialIndex: initialTabIndex, length: 5, vsync: this);
     suggestionListTabController.addListener(() {
       _onTabChanged();
     });
@@ -125,6 +130,19 @@ class ListSuggestionPageController extends GetxController
     Future.delayed(const Duration(seconds: 1), () {
       _showTutorialCoachMark();
     });
+  }
+
+  @override
+  void onClose() {
+    // 컨트롤러에서 사용한 리소스를 해제 또는 정리하는 로직 추가
+    // suggestionListTabController.dispose();
+    searchBarController.dispose();
+    listByLikeScrollController.dispose();
+    listByDateScrollController.dispose();
+    listByViewScrollController.dispose();
+    favoriteListScrollController.dispose();
+
+    super.onClose(); // 부모 클래스의 onClose 메서드를 호출
   }
 
   void _showTutorialCoachMark() async {
@@ -423,7 +441,7 @@ class ListSuggestionPageController extends GetxController
               favoriteListScrollController.position.maxScrollExtent) {
             if (!isListByViewLastPage) {
               List<BukkungListModel> nextList = await ListSuggestionRepository()
-                  .getNewSuggestionListByView(_pageSize, favoriteListKeyPage,
+                  .getNewFavoriteList(_pageSize, favoriteListKeyPage,
                       favoriteListPrevList, selectedCategories);
               favoriteListStreamController.add(nextList);
             }
@@ -713,11 +731,25 @@ class ListSuggestionPageController extends GetxController
     }
   }
 
+  void setCopyCount() {
+    var uuid = Uuid();
+    String id = uuid.v1();
+    CopyCountModel copyCountData = CopyCountModel(
+      id: id,
+      uid: AuthController.to.user.value.uid,
+      listId: selectedList.value.listId,
+      createdAt: DateTime.now(),
+    );
+    CopyCountRepository().uploadCopyCount(copyCountData);
+    ListSuggestionRepository().addCopyCount(selectedList.value.listId!);
+  }
+
   Future<void> listDelete() async {
     if (Constants.baseImageUrl != selectedList.value.imgUrl) {
       await ListSuggestionRepository()
           .deleteListImage('${selectedList.value.imgId!}.jpg');
     }
+    CopyCountRepository().deleteCopyCountByListId(selectedList.value.listId!);
     ListSuggestionRepository().deleteList(
       selectedList.value.listId!,
     );

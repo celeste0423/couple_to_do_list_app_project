@@ -1,6 +1,7 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/home/controller/my_page_controller.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/setting/pages/setting_page.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
@@ -318,32 +319,39 @@ class MyPage extends GetView<MyPageController> {
   }
 
   Widget _achievement() {
-    return Container(
-      width: 300,
-      height: 105,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            offset: Offset(0, 5),
-            blurRadius: 5,
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15),
-        child: Obx(
-          () => Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _achievementDetail(
-                  '리스트', controller.bukkungListCount.value.toString()),
-              _achievementDetail('조회수', controller.viewCount.value.toString()),
-              _achievementDetail('좋아요', controller.likeCount.value.toString()),
-            ],
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => ListSuggestionPage(), arguments: 4);
+      },
+      child: Container(
+        width: 300,
+        height: 105,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              offset: Offset(0, 5),
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          child: Obx(
+            () => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _achievementDetail(
+                    '리스트', controller.bukkungListCount.value.toString()),
+                _achievementDetail(
+                    '조회수', controller.viewCount.value.toString()),
+                _achievementDetail(
+                    '받은 좋아요', controller.likeCount.value.toString()),
+              ],
+            ),
           ),
         ),
       ),
