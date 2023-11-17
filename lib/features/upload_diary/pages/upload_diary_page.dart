@@ -55,7 +55,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                     openAlertDialog(title: '위치를 작성해주세요');
                   } else if (controller.diaryDateTime.value == null) {
                     openAlertDialog(title: '날짜를 선택해주세요');
-                  } else if (controller.contentController == '') {
+                  } else if (controller.contentController.text == '') {
                     openAlertDialog(title: '소감을 작성해주세요');
                   }
                 }
