@@ -48,15 +48,18 @@ class _HomePageState extends State<HomePage>
     SharedPreferences prefs = await SharedPreferences.getInstance();
     openAppCount = prefs.getInt('openAppCount') ?? 0;
     await prefs.setInt('openAppCount', openAppCount + 1);
-    print('앱을 ${openAppCount}번 열었습니다. (home page)');
+    // print('앱을 ${openAppCount}번 열었습니다. (home page)');
   }
 
   void _showReviewPopup() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasShownReviewPopup = prefs.getBool('hasShownReviewPopup') ?? false;
     final InAppReview inAppReview = InAppReview.instance;
-    if (openAppCount >= 3) {
+    if (openAppCount >= 3 && !hasShownReviewPopup) {
       // inAppReview.requestReview();
       if (await inAppReview.isAvailable()) {
         inAppReview.requestReview();
+        await prefs.setBool('hasShownReviewPopup', true);
       }
     }
   }

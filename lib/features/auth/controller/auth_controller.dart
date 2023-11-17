@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/background_message/controller/fcm_controller.dart';
+import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
@@ -121,11 +122,15 @@ class AuthController extends GetxController {
     }
   }
 
+//로그인
   Future<UserModel?> loginUser(String uid) async {
     try {
       //email과 맞는 유저 데이터를 firebase 에서 가져온다.
       //  print('(auth cont) uid $uid');
       var userData = await UserRepository.loginUserByUid(uid);
+
+      //analytics 로그인 기록
+      Analytics().logAppOpen();
 
       //fcm 세팅(클라우드 메시지)
       var deviceToken = await FCMController().getMyDeviceToken();

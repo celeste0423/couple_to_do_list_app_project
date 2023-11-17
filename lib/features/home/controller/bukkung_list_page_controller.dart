@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,6 +34,13 @@ class BukkungListPageController extends GetxController {
     addButtonAnimation();
     _loadSelectedListType();
     // myGroup(AuthController.to.group.value);
+  }
+
+  Future<void> sendAnalyticsEvent() async {
+    await FirebaseAnalytics.instance
+        .logEvent(name: 'view_product', parameters: {
+      'product_id': 1234,
+    });
   }
 
   void addButtonAnimation() {
