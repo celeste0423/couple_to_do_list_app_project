@@ -157,6 +157,11 @@ class MyApp extends StatelessWidget {
       title: 'BukkungList',
       theme: baseTheme(),
       home: Root(),
+      builder: (context, child) {
+      return MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: child!,
+      );},
     );
   }
 }
