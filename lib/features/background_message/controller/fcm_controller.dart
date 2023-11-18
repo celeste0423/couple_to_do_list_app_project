@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:couple_to_do_list_app/features/background_message/repository/fcm_repository.dart';
 import 'package:couple_to_do_list_app/models/device_token_model.dart';
@@ -114,6 +115,61 @@ class FCMController {
       print('HTTP Response Body: ${response.body}');
     } catch (e) {
       print('error $e');
+    }
+  }
+
+  //HTTP v1 방식의 보안 전송 (권장)
+  Future<String?> sendMessageV1Controller({
+    required String userToken,
+    required String title,
+    required String body,
+  }) async {
+    try {
+      String _accessToken =
+          'ya29.a0AfB_byDlAahVJJBxf90LRTPOmGmBAUj14hg90rxXVceRcj5735tW3SZd07kRnzJu4UzryLsk7uyAfH2SMRFLYIMnhEn3pSqtTRXnx6JVpJzUtkF9Hj1u7fXwspjzEViz6xjL_AVv_-IXKt4sTV66isFKWZRRQwvtdFd3aCgYKAW8SARASFQHGX2MiX6fRHsu00Or54iB5OcLY8w0171';
+      http.Response _response = await http.post(
+          Uri.parse(
+            "https://fcm.googleapis.com/v1/projects/bukkunglist/messages:send",
+          ),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $_accessToken',
+          },
+          body: json.encode({
+            "message": {
+              "token": userToken,
+              // "topic": "user_uid",
+
+              "notification": {
+                "title": title,
+                "body": body,
+              },
+              "data": {
+                "click_action": "FCM Test Click Action",
+              },
+              "android": {
+                "notification": {
+                  "click_action": "Android Click Action",
+                }
+              },
+              "apns": {
+                "payload": {
+                  "aps": {
+                    "category": "Message Category",
+                    "content-available": 1
+                  }
+                }
+              }
+            }
+          }));
+      if (_response.statusCode == 200) {
+        print('알림 보내기 완료 v1 (fcm cont)');
+        return null;
+      } else {
+        return "Faliure";
+      }
+    } on HttpException catch (error) {
+      return error.message;
     }
   }
 }

@@ -372,7 +372,7 @@ class UploadBukkungListController extends GetxController {
         _updateBukkungList(updatedBukkungList);
       }
     }
-   AdHelper.showInterstitialAd();
+    AdHelper.showInterstitialAd();
   }
 
   UploadTask uploadFile(Uint8List image, String location, String filename) {
@@ -444,7 +444,7 @@ class UploadBukkungListController extends GetxController {
     final userTokenData = await FCMController().getDeviceTokenByUid(buddyUid!);
     if (userTokenData != null) {
       print('유저 토큰 존재');
-      FCMController().sendMessageController(
+      FCMController().sendMessageV1Controller(
         userToken: userTokenData.deviceToken!,
         title: "${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!",
         body: '지금 바로 확인해보세요',

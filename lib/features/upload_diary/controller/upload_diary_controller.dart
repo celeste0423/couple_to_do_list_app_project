@@ -323,7 +323,7 @@ class UploadDiaryController extends GetxController {
     final userTokenData = await FCMController().getDeviceTokenByUid(buddyUid!);
     if (userTokenData != null) {
       print('유저 토큰 존재');
-      FCMController().sendMessageController(
+      FCMController().sendMessageV1Controller(
         userToken: userTokenData.deviceToken!,
         title: "${AuthController.to.user.value.nickname}님이 다이어리를 작성했어요!",
         body: '지금 바로 소감을 작성해보세요',
