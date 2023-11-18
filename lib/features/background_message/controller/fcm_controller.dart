@@ -147,20 +147,21 @@ class FCMController {
                 "body": body,
               },
               "data": {
+                "click_action": "Test Click Action",
                 "data_type": dataType,
                 "data_content": dataContent,
               },
-              // "android": {
-              //   "notification": {
-              //     "click_action": "Android Click Action",
-              //   }
-              // },
+              "android": {
+                "notification": {
+                  "click_action": "Android Click Action",
+                }
+              },
               "apns": {
                 "payload": {
                   "aps": {
                     "category": "Message Category",
                     "content-available": 1,
-                    "sound": "default"
+                    "sound": "default",
                   }
                 }
               }
@@ -170,9 +171,11 @@ class FCMController {
         print('알림 보내기 완료 v1 (fcm cont)');
         return null;
       } else {
+        print('알림 보내기 실패');
         return "Faliure";
       }
     } on HttpException catch (error) {
+      print(error);
       return error.message;
     }
   }

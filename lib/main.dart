@@ -25,7 +25,20 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("백그라운드 메시지 처리 ${message.messageId}");
+}
 
+const channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  description:
+      'This channel is used for important notifications.', // description
+  importance: Importance.high,
+);
+
+final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+//로컬 알림 보이기(foreground)
+Future<void> showFlutterNotification(RemoteMessage message) async{
   String dataType = message.data['data_type'];
   switch (dataType) {
     case 'diary':
@@ -46,20 +59,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     default:
       break;
   }
-}
 
-const channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description:
-      'This channel is used for important notifications.', // description
-  importance: Importance.high,
-);
-
-final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-//로컬 알림 보이기(foreground)
-void showFlutterNotification(RemoteMessage message) {
   RemoteNotification? notification = message.notification;
   AndroidNotification? android = message.notification?.android;
   if (notification != null && android != null && !kIsWeb) {

@@ -24,6 +24,8 @@ class UploadDiaryController extends GetxController {
 
   Uint8List? diaryImage;
 
+  String? newUuid = null;
+
   DiaryModel? selectedDiaryModel = Get.arguments;
 
   // Rx<DiaryModel?> selectedDiaryModel =
@@ -306,6 +308,7 @@ class UploadDiaryController extends GetxController {
             ? selectedDiaryModel!.diaryId!
             : uuid.v1()
         : uuid.v1();
+    newUuid = diaryId;
     List<String> imgUrlList = [];
     //selectedImages 에 사진file이 있으면
     if (selectedImgFiles.isNotEmpty) {
@@ -323,13 +326,18 @@ class UploadDiaryController extends GetxController {
     final userTokenData = await FCMController().getDeviceTokenByUid(buddyUid!);
     if (userTokenData != null) {
       print('유저 토큰 존재');
-      FCMController().sendMessageV1Controller(
+      FCMController().sendMessageController(
         userToken: userTokenData.deviceToken!,
         title: "${AuthController.to.user.value.nickname}님이 다이어리를 작성했어요!",
         body: '지금 바로 소감을 작성해보세요',
-        dataType: 'diary',
-        dataContent: selectedDiaryModel!.diaryId,
       );
+      // FCMController().sendMessageV1Controller(
+      //   userToken: userTokenData.deviceToken!,
+      //   title: "${AuthController.to.user.value.nickname}님이 다이어리를 작성했어요!",
+      //   body: '지금 바로 소감을 작성해보세요',
+      //   dataType: 'diary',
+      //   dataContent: newUuid,
+      // );
     }
   }
 }
