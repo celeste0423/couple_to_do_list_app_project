@@ -49,6 +49,21 @@ class DiaryRepository {
     });
   }
 
+  Future<DiaryModel?> getDiary(String diaryId) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(AuthController.to.group.value.uid)
+        .collection('diary')
+        .doc(diaryId)
+        .get();
+    if (snapshot.exists) {
+      return DiaryModel.fromJson(snapshot.data() as Map<String, dynamic>);
+    } else {
+      openAlertDialog(title: '해당 다이어리가 존재하지 않습니다.');
+      return null;
+    }
+  }
+
   static Future<void> setGroupDiary(
       DiaryModel diaryData, String diaryId) async {
     await FirebaseFirestore.instance

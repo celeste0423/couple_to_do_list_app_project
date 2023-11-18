@@ -123,6 +123,8 @@ class FCMController {
     required String userToken,
     required String title,
     required String body,
+    String? dataType,
+    String? dataContent,
   }) async {
     try {
       String _accessToken =
@@ -145,18 +147,20 @@ class FCMController {
                 "body": body,
               },
               "data": {
-                "click_action": "FCM Test Click Action",
+                "data_type": dataType,
+                "data_content": dataContent,
               },
-              "android": {
-                "notification": {
-                  "click_action": "Android Click Action",
-                }
-              },
+              // "android": {
+              //   "notification": {
+              //     "click_action": "Android Click Action",
+              //   }
+              // },
               "apns": {
                 "payload": {
                   "aps": {
                     "category": "Message Category",
-                    "content-available": 1
+                    "content-available": 1,
+                    "sound": "default"
                   }
                 }
               }

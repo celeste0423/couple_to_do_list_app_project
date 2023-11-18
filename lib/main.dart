@@ -1,6 +1,13 @@
 import 'package:couple_to_do_list_app/binding/init_binding.dart';
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/root/root.dart';
+import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
+import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/firebase_options.dart';
+import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
+import 'package:couple_to_do_list_app/models/diary_model.dart';
+import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
+import 'package:couple_to_do_list_app/repository/diary_repository.dart';
 import 'package:couple_to_do_list_app/theme/base_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,6 +25,27 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("백그라운드 메시지 처리 ${message.messageId}");
+
+  String dataType = message.data['data_type'];
+  switch (dataType) {
+    case 'diary':
+      {
+        DiaryModel? sendedDiary =
+            await DiaryRepository().getDiary(message.data['data_content']);
+        Get.to(() => ReadDiaryPage(), arguments: sendedDiary);
+        break;
+      }
+    case 'bukkunglist':
+      {
+        BukkungListModel? sendedBukkungList = await BukkungListRepository(
+                groupModel: AuthController.to.group.value)
+            .getBukkungList(message.data['data_content']);
+        Get.to(() => ReadBukkungListPage(), arguments: sendedBukkungList);
+        break;
+      }
+    default:
+      break;
+  }
 }
 
 const channel = AndroidNotificationChannel(
@@ -158,10 +186,11 @@ class MyApp extends StatelessWidget {
       theme: baseTheme(),
       home: Root(),
       builder: (context, child) {
-      return MediaQuery(
-        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-        child: child!,
-      );},
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: child!,
+        );
+      },
     );
   }
 }

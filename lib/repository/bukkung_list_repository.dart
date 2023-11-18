@@ -71,6 +71,21 @@ class BukkungListRepository {
     });
   }
 
+  Future<BukkungListModel?> getBukkungList(String bukkungListId) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(AuthController.to.group.value.uid)
+        .collection('bukkungLists')
+        .doc(bukkungListId)
+        .get();
+    if (snapshot.exists) {
+      return BukkungListModel.fromJson(snapshot.data() as Map<String, dynamic>);
+    } else {
+      openAlertDialog(title: '해당 버꿍리스트가 존재하지 않습니다.');
+      return null;
+    }
+  }
+
   static Future<void> setSuggestionBukkungList(
       BukkungListModel bukkungLisData, String listId) async {
     await FirebaseFirestore.instance

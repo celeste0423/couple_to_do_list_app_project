@@ -327,6 +327,8 @@ class UploadDiaryController extends GetxController {
         userToken: userTokenData.deviceToken!,
         title: "${AuthController.to.user.value.nickname}님이 다이어리를 작성했어요!",
         body: '지금 바로 소감을 작성해보세요',
+        dataType: 'diary',
+        dataContent: selectedDiaryModel!.diaryId,
       );
     }
   }
