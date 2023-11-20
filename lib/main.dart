@@ -11,7 +11,6 @@ import 'package:couple_to_do_list_app/repository/diary_repository.dart';
 import 'package:couple_to_do_list_app/theme/base_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -25,20 +24,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("백그라운드 메시지 처리 ${message.messageId}");
-}
 
-const channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description:
-      'This channel is used for important notifications.', // description
-  importance: Importance.high,
-);
-
-final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-//로컬 알림 보이기(foreground)
-Future<void> showFlutterNotification(RemoteMessage message) async{
   String dataType = message.data['data_type'];
   switch (dataType) {
     case 'diary':
@@ -59,32 +45,70 @@ Future<void> showFlutterNotification(RemoteMessage message) async{
     default:
       break;
   }
+}
 
-  RemoteNotification? notification = message.notification;
-  AndroidNotification? android = message.notification?.android;
-  if (notification != null && android != null && !kIsWeb) {
-    // 웹이 아니면서 안드로이드이고, 알림이 있는경우
-    flutterLocalNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          channel.id,
-          channel.name,
-          channelDescription: channel.description,
-          // TODO add a proper drawable resource to android, for now using
-          //      one that already exists in example app.
-          icon: 'launch_background',
-        ),
-      ),
-    );
+const channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  description:
+      'This channel is used for important notifications.', // description
+  importance: Importance.high,
+);
+
+final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+//로컬 알림 보이기(foreground)
+Future<void> _showFlutterNotification(RemoteMessage message) async {
+  //foreground메시지 처리
+  String dataType = message.data['data_type'];
+  switch (dataType) {
+    case 'diary':
+      {
+        print('foreground 다이어리로 바로가기');
+        DiaryModel? sendedDiary =
+            await DiaryRepository().getDiary(message.data['data_content']);
+        Get.to(() => ReadDiaryPage(), arguments: sendedDiary);
+        ScaffoldMessenger.of(Get.key.currentContext!).showSnackBar(SnackBar(
+          content: Text('상대방이 다이어리에 소감을 작성했어요!'),
+        ));
+        break;
+      }
+    case 'bukkunglist':
+      {
+        BukkungListModel? sendedBukkungList = await BukkungListRepository(
+                groupModel: AuthController.to.group.value)
+            .getBukkungList(message.data['data_content']);
+        Get.to(() => ReadBukkungListPage(), arguments: sendedBukkungList);
+        break;
+      }
+    default:
+      break;
   }
+  // RemoteNotification? notification = message.notification;
+  // AndroidNotification? android = message.notification?.android;
+  // if (notification != null && android != null && !kIsWeb) {
+  //   // 웹이 아니면서 안드로이드이고, 알림이 있는경우
+  //   flutterLocalNotificationsPlugin.show(
+  //     notification.hashCode,
+  //     notification.title,
+  //     notification.body,
+  //     NotificationDetails(
+  //       android: AndroidNotificationDetails(
+  //         channel.id,
+  //         channel.name,
+  //         channelDescription: channel.description,
+  //         // add a proper drawable resource to android, for now using
+  //         //      one that already exists in example app.
+  //         icon: 'launch_background',
+  //       ),
+  //     ),
+  //   );
+  // }
 }
 
 void initializeNotification() async {
   //foreground 수신 처리
-  FirebaseMessaging.onMessage.listen(showFlutterNotification);
+  FirebaseMessaging.onMessage.listen(_showFlutterNotification);
   //background 수신 처리
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 //안드로이드 푸시 알림

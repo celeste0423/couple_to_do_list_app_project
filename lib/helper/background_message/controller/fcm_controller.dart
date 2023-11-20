@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:couple_to_do_list_app/features/background_message/repository/fcm_repository.dart';
+import 'package:couple_to_do_list_app/helper/background_message/repository/fcm_repository.dart';
 import 'package:couple_to_do_list_app/models/device_token_model.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -66,6 +66,8 @@ class FCMController {
     required String userToken,
     required String title,
     required String body,
+    String? dataType,
+    String? dataContent,
   }) async {
     http.Response response;
 
@@ -92,25 +94,58 @@ class FCMController {
     try {
       print('메시지 보내기 시작');
       response = await http.post(
-          Uri.parse('https://fcm.googleapis.com/fcm/send'),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Authorization': 'key=$_serverKey'
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=$_serverKey'
+        },
+        // body: json.encode({
+        //   "message": {
+        //     "to": userToken,
+        //     // "topic": "user_uid",
+        //     "content_available": true,
+        //     'ttl': '60s',
+        //     "notification": {
+        //       "title": title,
+        //       "body": body,
+        //     },
+        //     "data": {
+        //       "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        //       "data_type": dataType,
+        //       "data_content": dataContent,
+        //     },
+        //     // "android": {
+        //     //   "notification": {
+        //     //     "click_action": "Android Click Action",
+        //     //   }
+        //     // },
+        //     "apns": {
+        //       "payload": {
+        //         "aps": {
+        //           "category": "Message Category",
+        //           "content-available": 1,
+        //           "sound": "default",
+        //         }
+        //       }
+        //     }
+        //   }
+        // }),
+        body: jsonEncode({
+          'notification': {'title': title, 'body': body, 'sound': 'false'},
+          'ttl': '60s',
+          "content_available": true,
+          'data': {
+            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+            'id': '1',
+            'status': 'done',
+            "data_type": dataType,
+            "data_content": dataContent,
           },
-          body: jsonEncode({
-            'notification': {'title': title, 'body': body, 'sound': 'false'},
-            'ttl': '60s',
-            "content_available": true,
-            'data': {
-              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-              'id': '1',
-              'status': 'done',
-              "action": '테스트',
-            },
-            // 상대방 토큰 값, to -> 단일, registration_ids -> 여러명
-            'to': userToken
-            // 'registration_ids': tokenList
-          }));
+          // 상대방 토큰 값, to -> 단일, registration_ids -> 여러명
+          'to': userToken
+          // 'registration_ids': tokenList
+        }),
+      );
       print('HTTP Response Code: ${response.statusCode}');
       print('HTTP Response Body: ${response.body}');
     } catch (e) {
@@ -128,50 +163,53 @@ class FCMController {
   }) async {
     try {
       String _accessToken =
-          'ya29.a0AfB_byDlAahVJJBxf90LRTPOmGmBAUj14hg90rxXVceRcj5735tW3SZd07kRnzJu4UzryLsk7uyAfH2SMRFLYIMnhEn3pSqtTRXnx6JVpJzUtkF9Hj1u7fXwspjzEViz6xjL_AVv_-IXKt4sTV66isFKWZRRQwvtdFd3aCgYKAW8SARASFQHGX2MiX6fRHsu00Or54iB5OcLY8w0171';
-      http.Response _response = await http.post(
-          Uri.parse(
-            "https://fcm.googleapis.com/v1/projects/bukkunglist/messages:send",
-          ),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $_accessToken',
-          },
-          body: json.encode({
-            "message": {
-              "token": userToken,
-              // "topic": "user_uid",
+          'ya29.a0AfB_byAP-E3RXufxkEVvpcF-yGaqvGlhXSOauAhFjRf68W9a3G5ti1Lv5V85gsIx7Au8g9K9vJpXgwmHZWWezjeTYdDwWSQu9kucWQ9U7tLNz0Mlf-fre2ay1D-h6OYUbcZCaPRcipzbIdd7axa-MvWQmOTmpabtYSR5aCgYKAWoSARASFQHGX2MisVLzRBiFfYdrlNiX7keSKg0171';
 
-              "notification": {
-                "title": title,
-                "body": body,
-              },
-              "data": {
-                "click_action": "Test Click Action",
-                "data_type": dataType,
-                "data_content": dataContent,
-              },
-              "android": {
-                "notification": {
-                  "click_action": "Android Click Action",
-                }
-              },
-              "apns": {
-                "payload": {
-                  "aps": {
-                    "category": "Message Category",
-                    "content-available": 1,
-                    "sound": "default",
-                  }
+      http.Response _response = await http.post(
+        Uri.parse(
+          "https://fcm.googleapis.com/v1/projects/bukkunglist/messages:send",
+        ),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_accessToken',
+        },
+        body: json.encode({
+          "message": {
+            "token": userToken,
+            // "topic": "user_uid",
+
+            "notification": {
+              "title": title,
+              "body": body,
+            },
+            "data": {
+              "click_action": "FLUTTER_NOTIFICATION_CLICK",
+              "data_type": dataType,
+              "data_content": dataContent,
+            },
+            // "android": {
+            //   "notification": {
+            //     "click_action": "Android Click Action",
+            //   }
+            // },
+            "apns": {
+              "payload": {
+                "aps": {
+                  "category": "Message Category",
+                  "content-available": 1,
+                  "sound": "default",
                 }
               }
             }
-          }));
+          }
+        }),
+      );
       if (_response.statusCode == 200) {
         print('알림 보내기 완료 v1 (fcm cont)');
         return null;
       } else {
-        print('알림 보내기 실패');
+        print('알림 보내기 실패 ${_response.statusCode}');
+        print('알림 보내기 실패 ${_response.headers}');
         return "Faliure";
       }
     } on HttpException catch (error) {

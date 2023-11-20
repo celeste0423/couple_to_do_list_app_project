@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/background_message/controller/fcm_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
 import 'package:couple_to_do_list_app/helper/ad_helper.dart';
+import 'package:couple_to_do_list_app/helper/background_message/controller/fcm_controller.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/repository/diary_repository.dart';
@@ -330,14 +330,9 @@ class UploadDiaryController extends GetxController {
         userToken: userTokenData.deviceToken!,
         title: "${AuthController.to.user.value.nickname}님이 다이어리를 작성했어요!",
         body: '지금 바로 소감을 작성해보세요',
+        dataType: 'diary',
+        dataContent: newUuid,
       );
-      // FCMController().sendMessageV1Controller(
-      //   userToken: userTokenData.deviceToken!,
-      //   title: "${AuthController.to.user.value.nickname}님이 다이어리를 작성했어요!",
-      //   body: '지금 바로 소감을 작성해보세요',
-      //   dataType: 'diary',
-      //   dataContent: newUuid,
-      // );
     }
   }
 }

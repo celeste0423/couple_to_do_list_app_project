@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/background_message/repository/fcm_repository.dart';
+import 'package:couple_to_do_list_app/helper/background_message/repository/fcm_repository.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/device_token_model.dart';
 import 'package:couple_to_do_list_app/repository/copy_count_repository.dart';

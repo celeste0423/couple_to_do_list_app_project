@@ -189,6 +189,7 @@ class _HomePageState extends State<HomePage>
         controller: _tabController,
         indicatorWeight: 4,
         splashFactory: NoSplash.splashFactory,
+        dividerColor: Colors.transparent,
         tabs: [
           Tab(
             key: bukkungTabKey,
