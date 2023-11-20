@@ -161,5 +161,8 @@ ThemeData baseTheme() {
       selectionColor: CustomColors.mainPink,
     ),
     canvasColor: Color.fromRGBO(10, 10, 10, 1),
+    listTileTheme: ListTileThemeData(
+      textColor: CustomColors.blackText.withOpacity(0.8),
+    ),
   );
 }

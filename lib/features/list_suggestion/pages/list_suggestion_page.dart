@@ -335,6 +335,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           Expanded(
             child: TabBar(
               isScrollable: false,
+              dividerColor: Colors.transparent,
               controller: controller.suggestionListTabController,
               labelColor: Colors.black.withOpacity(0.8),
               labelStyle: TextStyle(
