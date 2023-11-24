@@ -25,18 +25,24 @@ class MainButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: width,
-        height: height ?? 50,
+        height: height ?? 45,
         padding: const EdgeInsets.symmetric(horizontal: 30),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: buttonColor ?? CustomColors.mainPink,
-        ),
+            borderRadius: BorderRadius.circular(25),
+            color: buttonColor ?? CustomColors.mainPink,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                offset: Offset(0, 0),
+                blurRadius: 5,
+              ),
+            ]),
         child: Center(
           child: Text(
             buttonText,
             style: TextStyle(
               color: textColor ?? Colors.white,
-              fontSize: 20,
+              fontSize: 18,
             ),
           ),
         ),
