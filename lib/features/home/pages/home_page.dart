@@ -6,6 +6,7 @@ import 'package:couple_to_do_list_app/features/home/pages/my_page.dart';
 import 'package:couple_to_do_list_app/features/home/widgets/circle_tab_indicator.dart';
 import 'package:couple_to_do_list_app/features/tutorial_coach_mark/pages/coachmark_desc.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:couple_to_do_list_app/widgets/dialog/level_up_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,6 +40,7 @@ class _HomePageState extends State<HomePage>
     _openAppCounter();
     Future.delayed(const Duration(seconds: 1), () {
       _showTutorialCoachMark();
+      _showLevelUpDialog();
       _showReviewPopup();
     });
     // InitBinding.additionalBinding();
@@ -49,19 +51,6 @@ class _HomePageState extends State<HomePage>
     openAppCount = prefs.getInt('openAppCount') ?? 0;
     await prefs.setInt('openAppCount', openAppCount + 1);
     // print('앱을 ${openAppCount}번 열었습니다. (home page)');
-  }
-
-  void _showReviewPopup() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool hasShownReviewPopup = prefs.getBool('hasShownReviewPopup') ?? false;
-    final InAppReview inAppReview = InAppReview.instance;
-    if (openAppCount >= 3 && !hasShownReviewPopup) {
-      // inAppReview.requestReview();
-      if (await inAppReview.isAvailable()) {
-        inAppReview.requestReview();
-        await prefs.setBool('hasShownReviewPopup', true);
-      }
-    }
   }
 
   void _showTutorialCoachMark() async {
@@ -76,6 +65,28 @@ class _HomePageState extends State<HomePage>
         targets: targets, hideSkip: true, onClickTarget: (target) {})
       ..show(context: context);
     await prefs.setBool('hasShownTutorial', true);
+  }
+
+  void _showLevelUpDialog() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return LevelUpDialog(previousLevel: 1, currentLevel: 2);
+      },
+    );
+  }
+
+  void _showReviewPopup() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasShownReviewPopup = prefs.getBool('hasShownReviewPopup') ?? false;
+    final InAppReview inAppReview = InAppReview.instance;
+    if (openAppCount >= 3 && !hasShownReviewPopup) {
+      // inAppReview.requestReview();
+      if (await inAppReview.isAvailable()) {
+        inAppReview.requestReview();
+        await prefs.setBool('hasShownReviewPopup', true);
+      }
+    }
   }
 
   void _initTarget() {
