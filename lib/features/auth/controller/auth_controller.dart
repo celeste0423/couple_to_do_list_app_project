@@ -15,6 +15,7 @@ import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 
@@ -106,6 +107,16 @@ class AuthController extends GetxController {
     //조회수는 1점, 좋아요는 5점
     expLikeViewCount[0] = expLikeViewCount[1] * 1 + expLikeViewCount[2] * 5;
     //  print('exp계산중(auth cont) 총 ${expLikeViewCount[0]}점');
+
+    //이전 exp와 비교하여 레벨이 올랐을 시 level up dialog 표시
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? previousLevel = prefs.getInt('user_level');
+    if (previousLevel != expLikeViewCount[0]) {
+      //Todo: 다이얼로그 뜨도록
+    }
+    await prefs.setInt('user_level',
+        ((expLikeViewCount[0] - (expLikeViewCount[0] % 100)) / 100).toInt());
+
     return expLikeViewCount;
   }
 
