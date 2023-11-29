@@ -30,6 +30,10 @@ class AuthController extends GetxController {
   Rx<UserModel> user = UserModel().obs;
   Rx<GroupModel> group = GroupModel().obs;
 
+  int globalPreviousLevel = 0;
+  int globalCurrentLevel = 0;
+  bool isLevelDialog = false;
+
   // StreamController<UserModel> streamUserController =
   //     StreamController<UserModel>();
   // late Stream<UserModel> streamUser = streamUserController.stream;
@@ -111,11 +115,14 @@ class AuthController extends GetxController {
     //이전 exp와 비교하여 레벨이 올랐을 시 level up dialog 표시
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? previousLevel = prefs.getInt('user_level');
-    if (previousLevel != expLikeViewCount[0]) {
-      //Todo: 다이얼로그 뜨도록
+    print('previous Level ${previousLevel}');
+    print('지금 레벨 ${(expLikeViewCount[0] / 100).toInt()}');
+    if (previousLevel != (expLikeViewCount[0] / 100).toInt()) {
+      globalPreviousLevel = previousLevel!;
+      globalCurrentLevel = (expLikeViewCount[0] / 100).toInt();
+      isLevelDialog = true;
     }
-    await prefs.setInt('user_level',
-        ((expLikeViewCount[0] - (expLikeViewCount[0] % 100)) / 100).toInt());
+    await prefs.setInt('user_level', (expLikeViewCount[0] / 100).toInt());
 
     return expLikeViewCount;
   }

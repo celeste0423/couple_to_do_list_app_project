@@ -42,17 +42,26 @@ class _LevelUpDialogState extends State<LevelUpDialog>
       duration: Duration(milliseconds: 300),
       vsync: this,
     );
-    _levelAnimation =
-        Tween<double>(begin: 0, end: 1).animate(_levelAnimationController);
+    // _levelAnimation =
+    //     Tween<double>(begin: 0, end: 1).animate(_levelAnimationController);
+    _levelAnimation = CurvedAnimation(
+      parent: _levelAnimationController,
+      curve: Curves.easeInOut,
+    );
     _levelAnimation.addListener(() {
       setState(() {});
     });
+
     _textAnimationController = AnimationController(
       duration: Duration(milliseconds: 1000),
       vsync: this,
     );
-    _textAnimation =
-        Tween<double>(begin: 0, end: 1).animate(_textAnimationController);
+    // _textAnimation =
+    //     Tween<double>(begin: 0, end: 1).animate(_textAnimationController);
+    _textAnimation = CurvedAnimation(
+      parent: _textAnimationController,
+      curve: Curves.easeOut,
+    );
     _textAnimation.addListener(() {
       setState(() {});
     });
@@ -217,7 +226,7 @@ class _LevelUpDialogState extends State<LevelUpDialog>
                       child: Padding(
                         padding: EdgeInsets.only(
                           top: isTextVisible
-                              ? 140 + 250 * (_textAnimation.value)
+                              ? 100 + 290 * (_textAnimation.value)
                               : 140,
                           left: isTextVisible ? 0 : 120 * _levelAnimation.value,
                         ),

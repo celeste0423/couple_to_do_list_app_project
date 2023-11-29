@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/home/pages/bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/diary_page.dart';
@@ -68,12 +69,18 @@ class _HomePageState extends State<HomePage>
   }
 
   void _showLevelUpDialog() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return LevelUpDialog(previousLevel: 1, currentLevel: 2);
-      },
-    );
+    if (AuthController.to.isLevelDialog) {
+      print('이전레벨${AuthController.to.globalPreviousLevel} 지금레벨 ${AuthController.to.globalCurrentLevel}');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return LevelUpDialog(
+            previousLevel: AuthController.to.globalPreviousLevel,
+            currentLevel: AuthController.to.globalCurrentLevel,
+          );
+        },
+      );
+    }
   }
 
   void _showReviewPopup() async {
