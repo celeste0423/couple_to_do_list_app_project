@@ -29,14 +29,15 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 // start of Gradle 서명 구성 시작
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
-if(keystorePropertiesFile.exists()){
+if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 // end of Gradle 서명 구성
 
 android {
     namespace "com.example.couple_to_do_list_app"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
+//    compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -72,7 +73,7 @@ android {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
         }
-        debug{
+        debug {
             storeFile file(keystoreProperties['storeFileDebug'])
             storePassword keystoreProperties['storePasswordDebug']
             keyAlias keystoreProperties['keyAliasDebug']
@@ -88,7 +89,7 @@ android {
             //release 속성으로 변경
             signingConfig signingConfigs.release
             //debug 속성
-            debug{
+            debug {
                 signingConfig signingConfigs.debug
             }
 

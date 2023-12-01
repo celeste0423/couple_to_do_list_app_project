@@ -71,6 +71,8 @@ class ListSuggestionPageController extends GetxController
   Rx<BukkungListModel> selectedList = Rx<BukkungListModel>(BukkungListModel());
   // int selectedListIndex = 0;
 
+  Timer _paginationTimer = Timer(Duration(milliseconds: 0), () {});
+
   ScrollController listByLikeScrollController = ScrollController();
   StreamController<List<BukkungListModel>> listByLikeStreamController =
       BehaviorSubject<List<BukkungListModel>>();
@@ -126,7 +128,9 @@ class ListSuggestionPageController extends GetxController
       loadMoreBukkungLists('like');
     });
     listByDateScrollController.addListener(() {
-      loadMoreBukkungLists('date');
+      if (!_paginationTimer.isActive) {
+        loadMoreBukkungLists('date');
+      }
     });
     listByViewScrollController.addListener(() {
       loadMoreBukkungLists('view');
@@ -355,7 +359,7 @@ class ListSuggestionPageController extends GetxController
           StreamSubscription<List<BukkungListModel>>? subscription;
           subscription = stream.listen((list) async {
             if (list.isNotEmpty) {
-              noMyList(true);
+              noMyList(false);
               final updatedList = list[0];
               selectedList(updatedList);
               // 리스트 레벨 가져오기
@@ -434,8 +438,16 @@ class ListSuggestionPageController extends GetxController
         }
       case 'date':
         {
-          if (listByDateScrollController.position.pixels ==
-              listByDateScrollController.position.maxScrollExtent) {
+          print(listByDateScrollController.position.maxScrollExtent * 0.7);
+          print(listByDateScrollController.position.pixels);
+
+          if (listByDateScrollController.position.pixels >=
+              listByDateScrollController.position.maxScrollExtent * 0.7) {
+            print('성공');
+            _paginationTimer.cancel();
+            _paginationTimer = Timer(Duration(milliseconds: 100), () {
+              print('0.1초 지남');
+            });
             if (!isListByDateLastPage) {
               List<BukkungListModel> nextList = await ListSuggestionRepository()
                   .getNewSuggestionListByDate(_pageSize, listByDateKeyPage,

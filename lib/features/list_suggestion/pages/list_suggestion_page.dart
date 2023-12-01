@@ -511,9 +511,10 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                               ? '아직 만든 리스트가 없네요'
                               : '아직 찜한 리스트가 없네요',
                           style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ))
