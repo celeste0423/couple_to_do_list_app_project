@@ -117,7 +117,8 @@ class AuthController extends GetxController {
     int? previousLevel = prefs.getInt('user_level');
     print('previous Level ${previousLevel}');
     print('지금 레벨 ${(expLikeViewCount[0] / 100).toInt()}');
-    if (previousLevel != (expLikeViewCount[0] / 100).toInt()) {
+    if (previousLevel != null &&
+        previousLevel != (expLikeViewCount[0] / 100).toInt()) {
       globalPreviousLevel = previousLevel!;
       globalCurrentLevel = (expLikeViewCount[0] / 100).toInt();
       isLevelDialog = true;
@@ -144,7 +145,7 @@ class AuthController extends GetxController {
   Future<UserModel?> loginUser(String uid) async {
     try {
       //email과 맞는 유저 데이터를 firebase 에서 가져온다.
-      print('(auth cont) uid $uid');
+      // print('(auth cont) uid $uid');
       var userData = await UserRepository.loginUserByUid(uid);
 
       //analytics 로그인 기록

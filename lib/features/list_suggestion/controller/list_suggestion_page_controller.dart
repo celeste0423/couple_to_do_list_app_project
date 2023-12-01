@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
@@ -125,7 +126,9 @@ class ListSuggestionPageController extends GetxController
     loadNewBukkungLists('view');
     loadNewBukkungLists('favorite');
     listByLikeScrollController.addListener(() {
-      loadMoreBukkungLists('like');
+      if (!_paginationTimer.isActive) {
+        loadMoreBukkungLists('like');
+      }
     });
     listByDateScrollController.addListener(() {
       if (!_paginationTimer.isActive) {
@@ -133,7 +136,9 @@ class ListSuggestionPageController extends GetxController
       }
     });
     listByViewScrollController.addListener(() {
-      loadMoreBukkungLists('view');
+      if (!_paginationTimer.isActive) {
+        loadMoreBukkungLists('view');
+      }
     });
     favoriteListScrollController.addListener(() {
       loadMoreBukkungLists('favorite');
@@ -426,8 +431,10 @@ class ListSuggestionPageController extends GetxController
     switch (type) {
       case 'like':
         {
-          if (listByLikeScrollController.position.pixels ==
-              listByLikeScrollController.position.maxScrollExtent) {
+          if (listByLikeScrollController.position.pixels >=
+              listByLikeScrollController.position.maxScrollExtent * 0.7) {
+            _paginationTimer.cancel();
+            _paginationTimer = Timer(Duration(milliseconds: 200), () {});
             if (!isListByLikeLastPage) {
               List<BukkungListModel> nextList = await ListSuggestionRepository()
                   .getNewSuggestionListByLike(_pageSize, listByLikeKeyPage,
@@ -438,16 +445,13 @@ class ListSuggestionPageController extends GetxController
         }
       case 'date':
         {
-          print(listByDateScrollController.position.maxScrollExtent * 0.7);
-          print(listByDateScrollController.position.pixels);
-
+          // print(
+          //     '${listByDateScrollController.position.pixels.toInt()} / ${(maxScroll)}');
+          // print('개수 : ${listByDatePrevList!.length}');
           if (listByDateScrollController.position.pixels >=
               listByDateScrollController.position.maxScrollExtent * 0.7) {
-            print('성공');
             _paginationTimer.cancel();
-            _paginationTimer = Timer(Duration(milliseconds: 100), () {
-              print('0.1초 지남');
-            });
+            _paginationTimer = Timer(Duration(milliseconds: 200), () {});
             if (!isListByDateLastPage) {
               List<BukkungListModel> nextList = await ListSuggestionRepository()
                   .getNewSuggestionListByDate(_pageSize, listByDateKeyPage,
@@ -458,8 +462,10 @@ class ListSuggestionPageController extends GetxController
         }
       case 'view':
         {
-          if (listByViewScrollController.position.pixels ==
-              listByViewScrollController.position.maxScrollExtent) {
+          if (listByViewScrollController.position.pixels >=
+              listByViewScrollController.position.maxScrollExtent * 0.7) {
+            _paginationTimer.cancel();
+            _paginationTimer = Timer(Duration(milliseconds: 200), () {});
             if (!isListByViewLastPage) {
               List<BukkungListModel> nextList = await ListSuggestionRepository()
                   .getNewSuggestionListByView(_pageSize, listByViewKeyPage,
