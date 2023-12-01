@@ -191,7 +191,7 @@ class UploadDiaryController extends GetxController {
   Future pickMultipleImages() async {
     int maxImageCount = 5;
     final pickerImgList = await ImagePicker().pickMultiImage(
-      imageQuality: 50, // To set quality of images
+      imageQuality: 70, // To set quality of images
       maxHeight: 500, // To set maxheight of images that you want in your app
       maxWidth: 500,
     ); // To set maxheight of images that you want in your app

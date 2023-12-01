@@ -212,7 +212,14 @@ class UploadBukkungListController extends GetxController {
     final picker = ImagePicker();
 
     try {
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      final pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 70,
+        // To set quality of images
+        maxHeight: 500,
+        // To set maxheight of images that you want in your app
+        maxWidth: 500,
+      );
 
       if (pickedFile == null) {
         // print('No image selected');
