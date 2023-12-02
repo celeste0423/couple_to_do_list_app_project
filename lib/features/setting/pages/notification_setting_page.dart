@@ -3,10 +3,49 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class NotificationSettingPage
     extends GetView<NotificationSettingPageController> {
   const NotificationSettingPage({Key? key}) : super(key: key);
+
+  Widget _settingListTile() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          height: 45,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: Colors.white,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '버꿍 리스트 공개 여부 설정',
+                style: TextStyle(
+                  color: CustomColors.blackText,
+                  fontSize: 15,
+                ),
+              ),
+              Obx(() {
+                return Switch(
+                  inactiveThumbColor: CustomColors.grey,
+                  value: controller.notificationEnabled.value,
+                  onChanged: (value) {
+                    controller.notificationEnabled.value = value;
+                    controller.toggleNotificationSettings(value);
+                  },
+                );
+              }),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +65,7 @@ class NotificationSettingPage
           text: '알림',
         ),
       ),
+      body: _settingListTile(),
     );
   }
 }

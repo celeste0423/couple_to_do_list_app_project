@@ -19,6 +19,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //백그라운드 메시지
 @pragma('vm:entry-point')
@@ -162,7 +163,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   //푸쉬 알림
-  initializeNotification();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool? notificationEnabled = prefs.getBool('notificationEnabled');
+  if (notificationEnabled == null || notificationEnabled) {
+    initializeNotification();
+  }
   //스플래시 이미지
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   //카카오 sdk실행
