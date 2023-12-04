@@ -458,11 +458,8 @@ class AuthController extends GetxController {
           }
         case 'bukkunglist':
           {
-            BukkungListModel? sendedBukkungList =
-                await BukkungListRepository().getBukkungList(
-              message.data['data_content'],
-              message.data['group_id'],
-            );
+            BukkungListModel? sendedBukkungList = await BukkungListRepository()
+                .getBukkungList(message.data['data_content']);
             Get.to(() => ReadBukkungListPage(), arguments: sendedBukkungList);
             break;
           }

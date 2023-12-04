@@ -141,10 +141,18 @@ class FCMController {
             'status': 'done',
             "data_type": dataType,
             "data_content": dataContent,
-            "group_id": groupId,
           },
           // 상대방 토큰 값, to -> 단일, registration_ids -> 여러명
-          'to': userToken
+          'to': userToken,
+          "apns": {
+            "payload": {
+              "aps": {
+                "category": "Message Category",
+                "content-available": 1,
+                "sound": "default",
+              }
+            }
+          },
           // 'registration_ids': tokenList
         }),
       );

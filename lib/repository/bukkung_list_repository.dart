@@ -69,11 +69,10 @@ class BukkungListRepository {
     });
   }
 
-  Future<BukkungListModel?> getBukkungList(
-      String bukkungListId, String? groupId) async {
+  Future<BukkungListModel?> getBukkungList(String bukkungListId) async {
     final snapshot = await FirebaseFirestore.instance
         .collection('groups')
-        .doc(groupId ?? AuthController.to.group.value.uid)
+        .doc(AuthController.to.group.value.uid)
         .collection('bukkungLists')
         .doc(bukkungListId)
         .get();
