@@ -149,4 +149,18 @@ class BukkungListRepository {
       openAlertDialog(title: '이미지 삭제 오류 $e');
     }
   }
+
+  Stream<List<BukkungListModel>> getBukkungListByCreatedAt() {
+    return FirebaseFirestore.instance
+        .collectionGroup('bukkungLists')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((event) {
+      List<BukkungListModel> bukkungLists = [];
+      for (var bukkungList in event.docs) {
+        bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+      }
+      return bukkungLists;
+    });
+  }
 }
