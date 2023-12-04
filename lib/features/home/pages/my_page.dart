@@ -43,6 +43,7 @@ class MyPage extends GetView<MyPageController> {
               _nickname(context),
               _achievement(),
               _levelCircularBar(),
+              _description(),
               _chatButton(),
             ],
           ),
@@ -466,6 +467,17 @@ class MyPage extends GetView<MyPageController> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _description() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      child: Text(
+        '자신이 올린 리스트의 조회수와 좋아요 수가 \n늘어날 수록 레벨이 올라가요!',
+        style: TextStyle(color: CustomColors.greyText, fontSize: 12),
+        textAlign: TextAlign.center,
       ),
     );
   }

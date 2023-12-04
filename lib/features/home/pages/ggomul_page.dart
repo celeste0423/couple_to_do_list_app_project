@@ -127,7 +127,7 @@ class GgomulPage extends GetView<GgomulPageController> {
               ),
               Obx(
                 () => Text(
-                  '${((controller.completedListCount.value - (controller.completedListCount.value % 8)) / 8 + 1).toInt()}단계',
+                  '${((controller.completedListCount.value - (controller.completedListCount.value % 8)) / 8 + 1).toInt()}레벨',
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -184,7 +184,7 @@ class GgomulPage extends GetView<GgomulPageController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '완료한 버킷리스트',
+                                '완료한 버꿍리스트',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,

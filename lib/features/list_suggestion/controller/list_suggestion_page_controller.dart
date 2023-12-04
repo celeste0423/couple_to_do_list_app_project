@@ -72,7 +72,7 @@ class ListSuggestionPageController extends GetxController
   Rx<BukkungListModel> selectedList = Rx<BukkungListModel>(BukkungListModel());
   // int selectedListIndex = 0;
 
-  bool isNextListLoading = false;
+  Rx<bool> isNextListLoading = false.obs;
 
   ScrollController listByLikeScrollController = ScrollController();
   StreamController<List<BukkungListModel>> listByLikeStreamController =
@@ -126,17 +126,17 @@ class ListSuggestionPageController extends GetxController
     loadNewBukkungLists('view');
     loadNewBukkungLists('favorite');
     listByLikeScrollController.addListener(() {
-      if (!isNextListLoading) {
+      if (!isNextListLoading.value) {
         loadMoreBukkungLists('like');
       }
     });
     listByDateScrollController.addListener(() {
-      if (!isNextListLoading) {
+      if (!isNextListLoading.value) {
         loadMoreBukkungLists('date');
       }
     });
     listByViewScrollController.addListener(() {
-      if (!isNextListLoading) {
+      if (!isNextListLoading.value) {
         loadMoreBukkungLists('view');
       }
     });
@@ -433,12 +433,12 @@ class ListSuggestionPageController extends GetxController
         {
           if (listByLikeScrollController.position.extentAfter < 200) {
             if (!isListByLikeLastPage) {
-              isNextListLoading = true;
+              isNextListLoading(true);
               List<BukkungListModel> nextList = await ListSuggestionRepository()
                   .getNewSuggestionListByLike(_pageSize, listByLikeKeyPage,
                       listByLikePrevList, selectedCategories);
               listByLikeStreamController.add(nextList);
-              isNextListLoading = false;
+              isNextListLoading(false);
             }
           }
         }
@@ -446,12 +446,12 @@ class ListSuggestionPageController extends GetxController
         {
           if (listByDateScrollController.position.extentAfter < 200) {
             if (!isListByDateLastPage) {
-              isNextListLoading = true;
+              isNextListLoading(true);
               List<BukkungListModel> nextList = await ListSuggestionRepository()
                   .getNewSuggestionListByDate(_pageSize, listByDateKeyPage,
                       listByDatePrevList, selectedCategories);
               listByDateStreamController.add(nextList);
-              isNextListLoading = false;
+              isNextListLoading(false);
             }
           }
         }
@@ -459,12 +459,12 @@ class ListSuggestionPageController extends GetxController
         {
           if (listByViewScrollController.position.extentAfter < 200) {
             if (!isListByViewLastPage) {
-              isNextListLoading = true;
+              isNextListLoading(true);
               List<BukkungListModel> nextList = await ListSuggestionRepository()
                   .getNewSuggestionListByView(_pageSize, listByViewKeyPage,
                       listByViewPrevList, selectedCategories);
               listByViewStreamController.add(nextList);
-              isNextListLoading = false;
+              isNextListLoading(false);
             }
           }
         }
