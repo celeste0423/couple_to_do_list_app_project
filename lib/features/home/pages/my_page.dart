@@ -40,11 +40,19 @@ class MyPage extends GetView<MyPageController> {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _nickname(context),
+              Expanded(
+                  child: FittedBox(
+                      fit: BoxFit.scaleDown, child: _nickname(context))),
               _achievement(),
-              _levelCircularBar(),
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: _levelCircularBar(),
+                ),
+              ),
               _description(),
               _chatButton(),
+              SizedBox(height: 150),
             ],
           ),
         ],
@@ -227,89 +235,95 @@ class MyPage extends GetView<MyPageController> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Obx(
-                  () => controller.isSolo.value
-                      ? GestureDetector(
-                          onTap: () {
-                            Get.offAll(
-                              FindBuddyPage(
-                                email: AuthController.to.user.value.email!,
-                              ),
-                            );
-                          },
-                          child: Text(
-                            '여기를 눌러 짝꿍을 연결하세요',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: CustomColors.blackText,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        )
-                      : GestureDetector(
-                          onTap: () {
-                            controller.setDayMet(context);
-                          },
-                          child: SizedBox(
-                            width: 250,
-                            child: controller.isDayMet.value
-                                ? FittedBox(
-                                    alignment: Alignment.centerLeft,
-                                    fit: BoxFit.scaleDown,
-                                    child: RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text:
-                                                controller.buddyNickname.value,
-                                            style: TextStyle(
-                                              fontFamily: 'Pyeongchang',
-                                              fontSize: 20,
-                                              color: CustomColors.blackText,
-                                              decoration:
-                                                  TextDecoration.underline,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: ' 님과 함께한 지 ',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w200,
-                                              fontSize: 18,
-                                              color: CustomColors.blackText
-                                                  .withOpacity(0.8),
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: controller.togetherDate.value
-                                                .toString(),
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                              color: CustomColors.blackText,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: '일째',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                              color: CustomColors.blackText,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : Text(
-                                    '여기를 눌러 만난 날짜를 설정하세요',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomColors.blackText,
-                                      decoration: TextDecoration.underline,
-                                    ),
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Obx(
+                      () => controller.isSolo.value
+                          ? GestureDetector(
+                              onTap: () {
+                                Get.offAll(
+                                  FindBuddyPage(
+                                    email: AuthController.to.user.value.email!,
                                   ),
-                          ),
-                        ),
+                                );
+                              },
+                              child: Text(
+                                '여기를 눌러 짝꿍을 연결하세요',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: CustomColors.blackText,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                controller.setDayMet(context);
+                              },
+                              child: SizedBox(
+                                width: 250,
+                                child: controller.isDayMet.value
+                                    ? FittedBox(
+                                        alignment: Alignment.centerLeft,
+                                        fit: BoxFit.scaleDown,
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: controller
+                                                    .buddyNickname.value,
+                                                style: TextStyle(
+                                                  fontFamily: 'Pyeongchang',
+                                                  fontSize: 20,
+                                                  color: CustomColors.blackText,
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: ' 님과 함께한 지 ',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w200,
+                                                  fontSize: 18,
+                                                  color: CustomColors.blackText
+                                                      .withOpacity(0.8),
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: controller
+                                                    .togetherDate.value
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,
+                                                  color: CustomColors.blackText,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: '일째',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,
+                                                  color: CustomColors.blackText,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    : Text(
+                                        '여기를 눌러 만난 날짜를 설정하세요',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: CustomColors.blackText,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -326,7 +340,7 @@ class MyPage extends GetView<MyPageController> {
       },
       child: Container(
         width: 300,
-        height: 105,
+        height: 101,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(25),
@@ -487,42 +501,45 @@ class MyPage extends GetView<MyPageController> {
       onTap: () {
         controller.openChatUrl();
       },
-      child: Container(
-        height: 50,
-        width: 350,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: CustomColors.backgroundLightGrey,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.white.withOpacity(0.2),
-              offset: Offset(0, -5),
-              blurRadius: 5,
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              offset: Offset(0, 5),
-              blurRadius: 5,
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: const [
-            SizedBox(width: 30),
-            Icon(
-              Icons.chat,
-              size: 30,
-              color: CustomColors.darkGrey,
-            ),
-            SizedBox(width: 20),
-            Text(
-              '1:1 문의사항 (카카오톡 문의하기)',
-              style: TextStyle(
-                fontSize: 16,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Container(
+          height: 40,
+          width: Get.width - 80,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: CustomColors.backgroundLightGrey,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withOpacity(0.2),
+                offset: Offset(0, -5),
+                blurRadius: 5,
               ),
-            ),
-          ],
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                offset: Offset(0, 5),
+                blurRadius: 5,
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: const [
+              SizedBox(width: 30),
+              Icon(
+                Icons.chat,
+                size: 20,
+                color: CustomColors.darkGrey,
+              ),
+              SizedBox(width: 20),
+              Text(
+                '1:1 문의사항 (카카오톡 문의하기)',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
