@@ -68,6 +68,7 @@ class FCMController {
     required String body,
     String? dataType,
     String? dataContent,
+    String? groupId,
   }) async {
     http.Response response;
 
@@ -140,6 +141,7 @@ class FCMController {
             'status': 'done',
             "data_type": dataType,
             "data_content": dataContent,
+            "group_id": groupId,
           },
           // 상대방 토큰 값, to -> 단일, registration_ids -> 여러명
           'to': userToken
