@@ -72,7 +72,7 @@ class ListSuggestionPageController extends GetxController
   Rx<BukkungListModel> selectedList = Rx<BukkungListModel>(BukkungListModel());
   // int selectedListIndex = 0;
 
-  Timer _paginationTimer = Timer(Duration(milliseconds: 0), () {});
+  bool isNextListLoading = false;
 
   ScrollController listByLikeScrollController = ScrollController();
   StreamController<List<BukkungListModel>> listByLikeStreamController =
@@ -126,17 +126,17 @@ class ListSuggestionPageController extends GetxController
     loadNewBukkungLists('view');
     loadNewBukkungLists('favorite');
     listByLikeScrollController.addListener(() {
-      if (!_paginationTimer.isActive) {
+      if (!isNextListLoading) {
         loadMoreBukkungLists('like');
       }
     });
     listByDateScrollController.addListener(() {
-      if (!_paginationTimer.isActive) {
+      if (!isNextListLoading) {
         loadMoreBukkungLists('date');
       }
     });
     listByViewScrollController.addListener(() {
-      if (!_paginationTimer.isActive) {
+      if (!isNextListLoading) {
         loadMoreBukkungLists('view');
       }
     });
@@ -431,46 +431,40 @@ class ListSuggestionPageController extends GetxController
     switch (type) {
       case 'like':
         {
-          if (listByLikeScrollController.position.pixels >=
-              listByLikeScrollController.position.maxScrollExtent * 0.7) {
-            _paginationTimer.cancel();
-            _paginationTimer = Timer(Duration(milliseconds: 200), () {});
+          if (listByLikeScrollController.position.extentAfter < 200) {
             if (!isListByLikeLastPage) {
+              isNextListLoading = true;
               List<BukkungListModel> nextList = await ListSuggestionRepository()
                   .getNewSuggestionListByLike(_pageSize, listByLikeKeyPage,
                       listByLikePrevList, selectedCategories);
               listByLikeStreamController.add(nextList);
+              isNextListLoading = false;
             }
           }
         }
       case 'date':
         {
-          // print(
-          //     '${listByDateScrollController.position.pixels.toInt()} / ${(maxScroll)}');
-          // print('개수 : ${listByDatePrevList!.length}');
-          if (listByDateScrollController.position.pixels >=
-              listByDateScrollController.position.maxScrollExtent * 0.7) {
-            _paginationTimer.cancel();
-            _paginationTimer = Timer(Duration(milliseconds: 200), () {});
+          if (listByDateScrollController.position.extentAfter < 200) {
             if (!isListByDateLastPage) {
+              isNextListLoading = true;
               List<BukkungListModel> nextList = await ListSuggestionRepository()
                   .getNewSuggestionListByDate(_pageSize, listByDateKeyPage,
                       listByDatePrevList, selectedCategories);
               listByDateStreamController.add(nextList);
+              isNextListLoading = false;
             }
           }
         }
       case 'view':
         {
-          if (listByViewScrollController.position.pixels >=
-              listByViewScrollController.position.maxScrollExtent * 0.7) {
-            _paginationTimer.cancel();
-            _paginationTimer = Timer(Duration(milliseconds: 200), () {});
+          if (listByViewScrollController.position.extentAfter < 200) {
             if (!isListByViewLastPage) {
+              isNextListLoading = true;
               List<BukkungListModel> nextList = await ListSuggestionRepository()
                   .getNewSuggestionListByView(_pageSize, listByViewKeyPage,
                       listByViewPrevList, selectedCategories);
               listByViewStreamController.add(nextList);
+              isNextListLoading = false;
             }
           }
         }
@@ -578,9 +572,11 @@ class ListSuggestionPageController extends GetxController
     int expPoint = 0;
     UserModel? userData =
         await UserRepository.getUserDataByUid(updatedList.userId!);
-    print('유저 exp${userData!.expPoint}');
-    if (userData.expPoint != null) {
-      expPoint = userData.expPoint!;
+    // print('유저 exp${userData!.expPoint}');
+    if (userData != null) {
+      if (userData.expPoint != null) {
+        expPoint = userData.expPoint!;
+      }
     }
     userLevel((expPoint - expPoint % 100) ~/ 100);
     print('레벨${userLevel.value}');
