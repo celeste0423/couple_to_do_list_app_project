@@ -161,6 +161,23 @@ class ListSuggestionPageController extends GetxController
     super.onClose(); // 부모 클래스의 onClose 메서드를 호출
   }
 
+  void dispose() {
+    super.dispose();
+    suggestionListTabController.removeListener(() {
+      _onTabChanged;
+    });
+    suggestionListTabController.dispose();
+    searchBarController.dispose();
+    listByLikeScrollController.dispose();
+    listByLikeStreamController.close();
+    listByDateScrollController.dispose();
+    listByDateStreamController.close();
+    listByViewScrollController.dispose();
+    listByViewStreamController.close();
+    favoriteListScrollController.dispose();
+    favoriteListStreamController.close();
+  }
+
   void _showTutorialCoachMark() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool hasShownSuggestionTutorial =
@@ -493,24 +510,6 @@ class ListSuggestionPageController extends GetxController
           }
         }
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    suggestionListTabController.removeListener(() {
-      _onTabChanged;
-    });
-    suggestionListTabController.dispose();
-    searchBarController.dispose();
-    listByLikeScrollController.dispose();
-    listByLikeStreamController.close();
-    listByDateScrollController.dispose();
-    listByDateStreamController.close();
-    listByViewScrollController.dispose();
-    listByViewStreamController.close();
-    favoriteListScrollController.dispose();
-    favoriteListStreamController.close();
   }
 
   void onTextChanged() {
