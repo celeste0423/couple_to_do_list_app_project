@@ -1,6 +1,7 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/setting/controller/setting_page_controller.dart';
 import 'package:couple_to_do_list_app/features/setting/pages/auth_delete_page.dart';
+import 'package:couple_to_do_list_app/features/setting/pages/notification_setting_page.dart';
 import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -123,7 +124,8 @@ class SettingPage extends GetView<SettingPageController> {
               style: TextStyle(fontSize: 20),
             ),
             onTap: () {
-              openAlertDialog(title: '알림 기능 구현 예정입니다.');
+              // openAlertDialog(title: '알림 기능 구현 예정입니다.');
+              Get.to(() => NotificationSettingPage());
             },
           ),
         ],

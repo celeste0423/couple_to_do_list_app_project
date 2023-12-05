@@ -6,16 +6,14 @@ import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class BukkungListRepository {
-  final GroupModel groupModel;
-
-  BukkungListRepository({required this.groupModel});
+  BukkungListRepository();
 
   Stream<Map<String, dynamic>> getGroupBukkungListByCategory() {
     print('(buk repo) 리스트 겟 유저그룹id ${AuthController.to.user.value.groupId}');
     print('(buk repo) 리스트 겟 그룹id ${AuthController.to.group.value.uid}');
     return FirebaseFirestore.instance
         .collection('groups')
-        .doc(groupModel.uid)
+        .doc(AuthController.to.group.value.uid)
         .collection('bukkungLists')
         .orderBy('category', descending: false)
         .snapshots()
@@ -42,7 +40,7 @@ class BukkungListRepository {
   Stream<List<BukkungListModel>> getGroupBukkungListByDate() {
     return FirebaseFirestore.instance
         .collection('groups')
-        .doc(groupModel.uid)
+        .doc(AuthController.to.group.value.uid)
         .collection('bukkungLists')
         .orderBy('date', descending: true)
         .snapshots()
@@ -58,7 +56,7 @@ class BukkungListRepository {
   Stream<List<BukkungListModel>> getGroupBukkungListByReverseDate() {
     return FirebaseFirestore.instance
         .collection('groups')
-        .doc(groupModel.uid)
+        .doc(AuthController.to.group.value.uid)
         .collection('bukkungLists')
         .orderBy('date', descending: false)
         .snapshots()
@@ -150,5 +148,19 @@ class BukkungListRepository {
     } catch (e) {
       openAlertDialog(title: '이미지 삭제 오류 $e');
     }
+  }
+
+  Stream<List<BukkungListModel>> getBukkungListByCreatedAt() {
+    return FirebaseFirestore.instance
+        .collectionGroup('bukkungLists')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((event) {
+      List<BukkungListModel> bukkungLists = [];
+      for (var bukkungList in event.docs) {
+        bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+      }
+      return bukkungLists;
+    });
   }
 }

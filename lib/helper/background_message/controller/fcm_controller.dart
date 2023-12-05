@@ -68,6 +68,7 @@ class FCMController {
     required String body,
     String? dataType,
     String? dataContent,
+    String? groupId,
   }) async {
     http.Response response;
 
@@ -142,7 +143,16 @@ class FCMController {
             "data_content": dataContent,
           },
           // 상대방 토큰 값, to -> 단일, registration_ids -> 여러명
-          'to': userToken
+          'to': userToken,
+          "apns": {
+            "payload": {
+              "aps": {
+                "category": "Message Category",
+                "content-available": 1,
+                "sound": "default",
+              }
+            }
+          },
           // 'registration_ids': tokenList
         }),
       );

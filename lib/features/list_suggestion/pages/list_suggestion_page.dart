@@ -741,25 +741,38 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           openAlertDialog(title: '에러 발생');
         } else {
           final list = bukkungLists.data!;
-          return Scrollbar(
-            controller: controller.listByLikeScrollController,
-            thickness: 5,
-            thumbVisibility: true,
-            radius: Radius.circular(25),
-            child: ListView(
-              physics: AlwaysScrollableScrollPhysics(),
-              controller: controller.listByLikeScrollController,
-              children: [
-                SizedBox(height: 50),
-                Column(
-                  children: List.generate(list.length, (index) {
-                    final bukkungList = list[index];
-                    return _suggestionListCard(bukkungList, index, false);
-                  }),
+          return Column(
+            children: [
+              Expanded(
+                child: Scrollbar(
+                  controller: controller.listByLikeScrollController,
+                  thickness: 5,
+                  thumbVisibility: true,
+                  radius: Radius.circular(25),
+                  child: ListView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    controller: controller.listByLikeScrollController,
+                    children: [
+                      SizedBox(height: 50),
+                      Column(
+                        children: List.generate(list.length, (index) {
+                          final bukkungList = list[index];
+                          return _suggestionListCard(bukkungList, index, false);
+                        }),
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 20),
-              ],
-            ),
+              ),
+              controller.isNextListLoading.value
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: CircularProgressIndicator(
+                          color: CustomColors.mainPink),
+                    )
+                  : Container()
+            ],
           );
         }
         return Center(child: Text('아직 추천리스트가 없습니다'));
@@ -780,25 +793,38 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           openAlertDialog(title: '에러 발생');
         } else {
           final list = bukkungLists.data!;
-          return Scrollbar(
-            controller: controller.listByDateScrollController,
-            thickness: 5,
-            thumbVisibility: true,
-            radius: Radius.circular(25),
-            child: ListView(
-              physics: AlwaysScrollableScrollPhysics(),
-              controller: controller.listByDateScrollController,
-              children: [
-                SizedBox(height: 50),
-                Column(
-                  children: List.generate(list.length, (index) {
-                    final bukkungList = list[index];
-                    return _suggestionListCard(bukkungList, index, false);
-                  }),
+          return Column(
+            children: [
+              Expanded(
+                child: Scrollbar(
+                  controller: controller.listByDateScrollController,
+                  thickness: 5,
+                  thumbVisibility: true,
+                  radius: Radius.circular(25),
+                  child: ListView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    controller: controller.listByDateScrollController,
+                    children: [
+                      SizedBox(height: 50),
+                      Column(
+                        children: List.generate(list.length, (index) {
+                          final bukkungList = list[index];
+                          return _suggestionListCard(bukkungList, index, false);
+                        }),
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 20),
-              ],
-            ),
+              ),
+              controller.isNextListLoading.value
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: CircularProgressIndicator(
+                          color: CustomColors.mainPink),
+                    )
+                  : Container()
+            ],
           );
         }
         return Center(child: Text('아직 추천리스트가 없습니다'));
@@ -819,25 +845,38 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           openAlertDialog(title: '에러 발생');
         } else {
           final list = bukkungLists.data!;
-          return Scrollbar(
-            controller: controller.listByViewScrollController,
-            thickness: 5,
-            thumbVisibility: true,
-            radius: Radius.circular(25),
-            child: ListView(
-              physics: AlwaysScrollableScrollPhysics(),
-              controller: controller.listByViewScrollController,
-              children: [
-                SizedBox(height: 50),
-                Column(
-                  children: List.generate(list.length, (index) {
-                    final bukkungList = list[index];
-                    return _suggestionListCard(bukkungList, index, false);
-                  }),
+          return Column(
+            children: [
+              Expanded(
+                child: Scrollbar(
+                  controller: controller.listByViewScrollController,
+                  thickness: 5,
+                  thumbVisibility: true,
+                  radius: Radius.circular(25),
+                  child: ListView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    controller: controller.listByViewScrollController,
+                    children: [
+                      SizedBox(height: 50),
+                      Column(
+                        children: List.generate(list.length, (index) {
+                          final bukkungList = list[index];
+                          return _suggestionListCard(bukkungList, index, false);
+                        }),
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 20),
-              ],
-            ),
+              ),
+              controller.isNextListLoading.value
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: CircularProgressIndicator(
+                          color: CustomColors.mainPink),
+                    )
+                  : Container()
+            ],
           );
         }
         return Center(child: Text('아직 추천리스트가 없습니다'));

@@ -19,32 +19,12 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //백그라운드 메시지
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("백그라운드 메시지 처리 ${message.messageId}");
-
-  String dataType = message.data['data_type'];
-  switch (dataType) {
-    case 'diary':
-      {
-        DiaryModel? sendedDiary =
-            await DiaryRepository().getDiary(message.data['data_content']);
-        Get.to(() => ReadDiaryPage(), arguments: sendedDiary);
-        break;
-      }
-    case 'bukkunglist':
-      {
-        BukkungListModel? sendedBukkungList = await BukkungListRepository(
-                groupModel: AuthController.to.group.value)
-            .getBukkungList(message.data['data_content']);
-        Get.to(() => ReadBukkungListPage(), arguments: sendedBukkungList);
-        break;
-      }
-    default:
-      break;
-  }
 }
 
 const channel = AndroidNotificationChannel(
@@ -59,51 +39,26 @@ final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 //로컬 알림 보이기(foreground)
 Future<void> _showFlutterNotification(RemoteMessage message) async {
-  //foreground메시지 처리
-  String dataType = message.data['data_type'];
-  switch (dataType) {
-    case 'diary':
-      {
-        print('foreground 다이어리로 바로가기');
-        DiaryModel? sendedDiary =
-            await DiaryRepository().getDiary(message.data['data_content']);
-        Get.to(() => ReadDiaryPage(), arguments: sendedDiary);
-        ScaffoldMessenger.of(Get.key.currentContext!).showSnackBar(SnackBar(
-          content: Text('상대방이 다이어리에 소감을 작성했어요!'),
-        ));
-        break;
-      }
-    case 'bukkunglist':
-      {
-        BukkungListModel? sendedBukkungList = await BukkungListRepository(
-                groupModel: AuthController.to.group.value)
-            .getBukkungList(message.data['data_content']);
-        Get.to(() => ReadBukkungListPage(), arguments: sendedBukkungList);
-        break;
-      }
-    default:
-      break;
+  RemoteNotification? notification = message.notification;
+  AndroidNotification? android = message.notification?.android;
+  if (notification != null && android != null) {
+    // 안드로이드이고, 알림이 있는경우
+    flutterLocalNotificationsPlugin.show(
+      notification.hashCode,
+      notification.title,
+      notification.body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          channelDescription: channel.description,
+          // add a proper drawable resource to android, for now using
+          //      one that already exists in example app.
+          icon: 'launch_background',
+        ),
+      ),
+    );
   }
-  // RemoteNotification? notification = message.notification;
-  // AndroidNotification? android = message.notification?.android;
-  // if (notification != null && android != null && !kIsWeb) {
-  //   // 웹이 아니면서 안드로이드이고, 알림이 있는경우
-  //   flutterLocalNotificationsPlugin.show(
-  //     notification.hashCode,
-  //     notification.title,
-  //     notification.body,
-  //     NotificationDetails(
-  //       android: AndroidNotificationDetails(
-  //         channel.id,
-  //         channel.name,
-  //         channelDescription: channel.description,
-  //         // add a proper drawable resource to android, for now using
-  //         //      one that already exists in example app.
-  //         icon: 'launch_background',
-  //       ),
-  //     ),
-  //   );
-  // }
 }
 
 void initializeNotification() async {
@@ -116,18 +71,15 @@ void initializeNotification() async {
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
-
   await flutterLocalNotificationsPlugin.initialize(const InitializationSettings(
     android: AndroidInitializationSettings("@mipmap/ic_launcher"),
   ));
-
   //IOS foreground 권한 체크
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
     sound: true,
   );
-
   // IOS background 권한 체킹 , 요청
   await FirebaseMessaging.instance.requestPermission(
     alert: true,
@@ -139,34 +91,25 @@ void initializeNotification() async {
     sound: true,
   );
 }
-// 모든 문서에 대해 필드를 추가하고 싶을 경우 사용
-// Future<void> addCopyCountFieldToAllDocuments() async {
-//   final CollectionReference bukkungListsCollection =
-//       FirebaseFirestore.instance.collection('bukkungLists');
-//
-//   // 모든 문서를 가져오기
-//   final QuerySnapshot querySnapshot = await bukkungListsCollection.get();
-//
-//   // 각 문서에 copyCount 필드 추가 및 초기값 0 할당
-//   for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-//     final documentReference = bukkungListsCollection.doc(documentSnapshot.id);
-//     await documentReference.set({'copyCount': 0}, SetOptions(merge: true));
-//   }
-// }
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 //파이어베이스 설정
-  await MobileAds.instance.initialize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   //푸쉬 알림
-  initializeNotification();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool? notificationEnabled = prefs.getBool('notificationEnabled');
+  if (notificationEnabled == null || notificationEnabled) {
+    initializeNotification();
+  }
   //스플래시 이미지
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   //카카오 sdk실행
   KakaoSdk.init(nativeAppKey: '6343b85d09998d34e9261b1c6e5f4635');
+  //광고 실행
+  await MobileAds.instance.initialize();
   //화면 회전 불가
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
@@ -182,10 +125,6 @@ void main() async {
       ),
     );
   });
-
-  // addCopyCountFieldToAllDocuments().then((_) {
-  //   print('copyCount 필드를 모든 문서에 추가 및 초기화했습니다.');
-  // });
 }
 
 class MyApp extends StatelessWidget {

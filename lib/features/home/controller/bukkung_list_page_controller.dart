@@ -64,8 +64,7 @@ class BukkungListPageController extends GetxController {
     // print('리스트 로드 ${AuthController.to.group.value.maleUid}');
     // print('리스트 로드 ${AuthController.to.group.value.femaleUid}');
     final GroupModel groupModel = AuthController.to.group.value;
-    return BukkungListRepository(groupModel: groupModel)
-        .getGroupBukkungListByCategory();
+    return BukkungListRepository().getGroupBukkungListByCategory();
   }
 
   Stream<List<BukkungListModel>> getAllBukkungList(String type) {
@@ -77,15 +76,12 @@ class BukkungListPageController extends GetxController {
 
     switch (type) {
       case 'date':
-        return BukkungListRepository(groupModel: groupModel)
-            .getGroupBukkungListByDate();
+        return BukkungListRepository().getGroupBukkungListByDate();
       case 'redate':
-        return BukkungListRepository(groupModel: groupModel)
-            .getGroupBukkungListByReverseDate();
+        return BukkungListRepository().getGroupBukkungListByReverseDate();
       default:
         print('에러: 분류 타입 지정 안됨(buk cont)');
-        return BukkungListRepository(groupModel: groupModel)
-            .getGroupBukkungListByDate();
+        return BukkungListRepository().getGroupBukkungListByDate();
     }
   }
 
@@ -94,11 +90,10 @@ class BukkungListPageController extends GetxController {
     final GroupModel groupModel = AuthController.to.group.value;
     if (isDeleteImage) {
       if (Constants.baseImageUrl != bukkungListModel.imgUrl) {
-        await BukkungListRepository(groupModel: groupModel)
+        await BukkungListRepository()
             .deleteListImage('${bukkungListModel.imgId}.jpg');
       }
     }
-    await BukkungListRepository(groupModel: groupModel)
-        .deleteList(bukkungListModel);
+    await BukkungListRepository().deleteList(bukkungListModel);
   }
 }

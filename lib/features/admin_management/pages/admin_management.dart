@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
+import 'package:couple_to_do_list_app/features/admin_management/pages/admin_all_bukkung_list_page.dart';
+import 'package:couple_to_do_list_app/features/admin_management/pages/admin_diary_page.dart';
 import 'package:couple_to_do_list_app/features/admin_management/pages/admin_list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
@@ -54,7 +56,7 @@ class AdminPage extends StatelessWidget {
 
   Future<void> deleteBukkungListsInRange(int start, int end) async {
     final fireStorecollection =
-    FirebaseFirestore.instance.collection('bukkungLists');
+        FirebaseFirestore.instance.collection('bukkungLists');
 
     for (int i = start; i <= end; i++) {
       String paddedIndex = i.toString().padLeft(3, '0');
@@ -68,6 +70,7 @@ class AdminPage extends StatelessWidget {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,10 +83,9 @@ class AdminPage extends StatelessWidget {
           child: Column(
             children: [
               MainButton(
-                buttonText: '기본버꿍리스트 업로드',
-                buttonColor: Colors.grey,
-                onTap: uploadBukkungListWeb
-              ),
+                  buttonText: '기본버꿍리스트 업로드',
+                  buttonColor: Colors.grey,
+                  onTap: uploadBukkungListWeb),
               MainButton(
                 buttonText: '사진 URL: Storage->FireStore',
                 buttonColor: Colors.grey,
@@ -97,7 +99,7 @@ class AdminPage extends StatelessWidget {
                 buttonColor: Colors.grey,
                 onTap: () async {
                   int start = 1; // Initialize the start value
-                  int end = 91;   // Initialize the end value
+                  int end = 91; // Initialize the end value
                   // Show a dialog to get the start and end integers from the user
                   Get.dialog(
                     AlertDialog(
@@ -135,6 +137,20 @@ class AdminPage extends StatelessWidget {
                 buttonColor: Colors.grey,
                 onTap: () {
                   Get.to(() => AdminListSuggestionPage());
+                },
+              ),
+              MainButton(
+                buttonText: '모든 버꿍리스트',
+                buttonColor: Colors.grey,
+                onTap: () {
+                  Get.to(() => AdminBukkungListPage());
+                },
+              ),
+              MainButton(
+                buttonText: '모든 다이어리',
+                buttonColor: Colors.grey,
+                onTap: () {
+                  Get.to(() => AdminDiaryPage());
                 },
               ),
               MainButton(
