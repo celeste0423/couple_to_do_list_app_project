@@ -280,6 +280,21 @@ class DiaryPage extends GetView<DiaryPageController> {
                   top: 10,
                   right: 10,
                   child: PopupMenuButton(
+                    onSelected: (result) {
+                      if (result == 0) {
+                        openAlertDialog(
+                          title: '다이어리 삭제',
+                          content: '이 다이어리를 지우시겠습니까?',
+                          btnText: '삭제',
+                          secondButtonText: '취소',
+                          mainfunction: () {
+                            controller
+                                .deleteDiary(controller.selectedDiary.value);
+                            Get.back();
+                          },
+                        );
+                      }
+                    },
                     offset: Offset(-10, 25),
                     shape: ShapeBorder.lerp(
                       RoundedRectangleBorder(
@@ -291,20 +306,7 @@ class DiaryPage extends GetView<DiaryPageController> {
                     itemBuilder: (BuildContext context) {
                       return [
                         PopupMenuItem(
-                          onTap: () {
-                            Get.back();
-                            openAlertDialog(
-                              title: '다이어리 삭제',
-                              content: '이 다이어리를 지우시겠습니까?',
-                              btnText: '삭제',
-                              secondButtonText: '취소',
-                              mainfunction: () {
-                                controller.deleteDiary(
-                                    controller.selectedDiary.value);
-                                Get.back();
-                              },
-                            );
-                          },
+                          value: 0,
                           height: 40,
                           child: Text(
                             "삭제하기",

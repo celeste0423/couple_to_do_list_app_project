@@ -38,6 +38,14 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
       ),
       actions: [
         PopupMenuButton(
+          onSelected: (result) {
+            if (result == 0) {
+              Get.to(
+                () => UploadBukkungListPage(),
+                arguments: [controller.bukkungListModel, false],
+              );
+            }
+          },
           offset: Offset(0, 50),
           shape: ShapeBorder.lerp(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -47,12 +55,7 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
           itemBuilder: (BuildContext context) {
             return [
               PopupMenuItem(
-                onTap: () {
-                  Get.to(
-                    () => UploadBukkungListPage(),
-                    arguments: [controller.bukkungListModel, false],
-                  );
-                },
+                value: 0,
                 child: Text(
                   "수정하기",
                   style: TextStyle(
@@ -147,15 +150,13 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
                   height: 250,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: CustomCachedNetworkImage(
-                            controller.imgUrl.value),
-                        fit: BoxFit.cover
-                    ),
+                        image:
+                            CustomCachedNetworkImage(controller.imgUrl.value),
+                        fit: BoxFit.cover),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(50),
                       bottomLeft: Radius.circular(50),
                     ),
-
                   ),
                 ),
               ),
