@@ -10,6 +10,7 @@ import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
@@ -130,7 +131,7 @@ class SettingPage extends GetView<SettingPageController> {
     );
   }
 
-  Widget _appSetting(double imagewidth) {
+  Widget _appSetting(double imagewidth, context) {
     return basicContainer(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,11 +146,12 @@ class SettingPage extends GetView<SettingPageController> {
               style: TextStyle(fontSize: 20),
             ),
             onTap: () async {
-              //Todo: FlutterShare package ios installation 필요 https://pub.dev/packages/share_plus
-              //Todo : appstore link 바꿔놓기
+              final box = context.findRenderObject() as RenderBox?;
               await Share.share(
-                  '버꿍리스트 \n https://play.google.com/store/apps/details?id=com.teambukkung.bukkunglist',
-                  subject: '버꿍리스트');
+                '\n플레이 스토어:\nhttps://play.google.com/store/apps/details?id=com.teambukkung.bukkunglist\n앱스토어:\nhttps://apps.apple.com/kr/app/%EB%B2%84%EA%BF%8D%EB%A6%AC%EC%8A%A4%ED%8A%B8-%EC%BB%A4%ED%94%8C-%EB%B2%84%ED%82%B7%EB%A6%AC%EC%8A%A4%ED%8A%B8/id6451405746',
+                subject: '버꿍리스트',
+                sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+              );
             },
           ),
           Divider(
@@ -165,9 +167,14 @@ class SettingPage extends GetView<SettingPageController> {
               '후기 남기기',
               style: TextStyle(fontSize: 20),
             ),
-            onTap: () {
+            onTap: ()async {
+              final InAppReview inAppReview = InAppReview.instance;
+
+              if (await inAppReview.isAvailable()) {
+              inAppReview.requestReview();
+              }
               //Todo: LauchReview package ios install 할때 할것 https://pub.dev/packages/launch_review
-              LaunchReview.launch();
+             // LaunchReview.launch();
             },
           ),
           Divider(
@@ -323,7 +330,7 @@ class SettingPage extends GetView<SettingPageController> {
             customDivider(),
             Hero(tag: 'addButton', child: accountListTile()),
             _notificationSetting(imageWidth),
-            _appSetting(imageWidth),
+            _appSetting(imageWidth, context),
             _logoutListTile(imageWidth),
           ],
         ),
