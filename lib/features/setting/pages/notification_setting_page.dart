@@ -24,7 +24,7 @@ class NotificationSettingPage
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '버꿍 리스트 공개 여부 설정',
+                '버꿍리스트 공개 여부 설정',
                 style: TextStyle(
                   color: CustomColors.blackText,
                   fontSize: 15,

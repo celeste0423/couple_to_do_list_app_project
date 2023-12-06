@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -506,11 +507,16 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              '버꿍 리스트 공개 여부 설정',
-              style: TextStyle(
-                color: CustomColors.greyText,
-                fontSize: 15,
+            SizedBox(
+              // color: Colors.black,
+              width: Get.width-30-30-50-10-20-20-70,
+              child: AutoSizeText(
+                '버꿍리스트 공개 여부',
+                maxLines: 2,
+                style: TextStyle(
+                  color: CustomColors.greyText,
+                  fontSize: 15,
+                ),
               ),
             ),
             Obx(() {
