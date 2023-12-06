@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/home/controller/my_page_controller.dart';
@@ -248,8 +249,9 @@ class MyPage extends GetView<MyPageController> {
                                   ),
                                 );
                               },
-                              child: Text(
+                              child: AutoSizeText(
                                 '여기를 눌러 짝꿍을 연결하세요',
+                                maxLines: 1,
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: CustomColors.blackText,
@@ -524,18 +526,22 @@ class MyPage extends GetView<MyPageController> {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
-              SizedBox(width: 30),
+            children: [
+              SizedBox(width: 20),
               Icon(
                 Icons.chat,
                 size: 20,
                 color: CustomColors.darkGrey,
               ),
               SizedBox(width: 20),
-              Text(
-                '1:1 문의사항 (카카오톡 문의하기)',
-                style: TextStyle(
-                  fontSize: 16,
+              SizedBox(
+                width: Get.width - 80-20-20-20,
+                child: AutoSizeText(
+                  '1:1 문의사항 (카카오톡 문의하기)',
+                  maxLines: 2,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ],
@@ -554,7 +560,7 @@ class MyPage extends GetView<MyPageController> {
         controller.isChangeNickname(false);
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         appBar: _appBar(),
         body: _myPage(context),
       ),
