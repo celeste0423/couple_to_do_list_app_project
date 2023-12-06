@@ -184,13 +184,15 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
       ),
       child: Get.width < 350 || Get.height < 550
           ? SizedBox(
+              width: Get.width - 40,
+              height: 500,
               //화면이 너무 작을 때만 작동하는 예외처리 UI
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(15),
                 child: GridView.count(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 20.0,
-                  mainAxisSpacing: 20.0,
+                  crossAxisSpacing: 15.0,
+                  mainAxisSpacing: 15.0,
                   childAspectRatio: 2.0,
                   shrinkWrap: true,
                   children: [
