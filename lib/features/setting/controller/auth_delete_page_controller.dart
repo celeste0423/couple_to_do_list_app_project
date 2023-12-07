@@ -97,6 +97,7 @@ class AuthDeletePageController extends GetxController {
               await deleteSubcollection(groupId, 'bukkungLists');
               await deleteSubcollection(groupId, 'completedBukkungLists');
               await deleteSubcollection(groupId, 'diary');
+              await deleteSubcollection(groupId, 'notification');
 
               //groups 없애고
               await FirebaseFirestore.instance
@@ -135,10 +136,10 @@ class AuthDeletePageController extends GetxController {
 
   void _uploadFeedback() {
     //Todo: 피드백 업로드
-    FirebaseFirestore.instance
-        .collection('deletionFeedbacks')
-        .doc()
-        .set({'surveyResult': surveyResult.value});
+    FirebaseFirestore.instance.collection('deletionFeedbacks').doc().set({
+      'surveyResult': surveyResult.value,
+      'created_at': DateTime.now(),
+    });
   }
 }
 

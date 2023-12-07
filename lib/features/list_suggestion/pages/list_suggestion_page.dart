@@ -682,7 +682,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               left: Get.width / 2 - 30,
               child: CustomIconButton(
                 onTap: () {
-                  Analytics().logEvent('버꿍리스트 복사', null);
+                  Analytics().logEvent('copy_bukkunglist', null);
                   controller.setCopyCount();
                   Get.to(
                     () => UploadBukkungListPage(),
@@ -1181,7 +1181,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   Widget _listAddButton() {
     return FloatingActionButton(
       onPressed: () {
-        Analytics().logEvent('새 버꿍리스트 제작', null);
+        Analytics().logEvent('made_new_bukkunglist', null);
         Get.to(() => UploadBukkungListPage(), arguments: [null, true]);
       },
       backgroundColor: CustomColors.mainPink,

@@ -545,7 +545,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     return FloatingActionButton(
       key: controller.listSuggestionKey,
       onPressed: () {
-        Analytics().logEvent('추천 버꿍리스트 페이지 오픈', null);
+        Analytics().logEvent('list_suggestion_page_open', null);
         Get.to(
           () => ListSuggestionPage(),
           transition: Transition.fadeIn,
