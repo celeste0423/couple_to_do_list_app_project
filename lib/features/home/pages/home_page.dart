@@ -70,7 +70,8 @@ class _HomePageState extends State<HomePage>
 
   void _showLevelUpDialog() async {
     if (AuthController.to.isLevelDialog) {
-      print('이전레벨${AuthController.to.globalPreviousLevel} 지금레벨 ${AuthController.to.globalCurrentLevel}');
+      print(
+          '이전레벨${AuthController.to.globalPreviousLevel} 지금레벨 ${AuthController.to.globalCurrentLevel}');
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -268,6 +269,7 @@ class _HomePageState extends State<HomePage>
       body: TabBarView(
         controller: _tabController,
         physics: NeverScrollableScrollPhysics(),
+        viewportFraction: 1,
         children: const [
           BukkungListPage(),
           DiaryPage(),
