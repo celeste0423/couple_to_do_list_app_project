@@ -1,5 +1,6 @@
 import 'package:couple_to_do_list_app/features/notification/controllers/notification_page_controller.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,23 +11,19 @@ class NotificationPage extends GetView<NotificationPageController> {
     return AppBar(
       backgroundColor: CustomColors.backgroundLightGrey,
       leading: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: Image(image: AssetImage('assets/images/title_horizontal.png')),
-      ),
-      leadingWidth: 190,
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(top: 20, right: 20),
-          child: GestureDetector(
-            onTap: () {},
-            child: Icon(
-              Icons.notifications,
-              color: CustomColors.lightGrey,
-              size: 30,
-            ),
+        padding: const EdgeInsets.only(left: 10),
+        child: CupertinoButton(
+          onPressed: () {
+            Get.back();
+          },
+          padding: const EdgeInsets.all(0),
+          child: Icon(
+            Icons.arrow_back_ios,
+            size: 30,
+            color: CustomColors.grey,
           ),
-        )
-      ],
+        ),
+      ),
     );
   }
 

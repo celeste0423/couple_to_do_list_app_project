@@ -42,8 +42,11 @@ class MyPage extends GetView<MyPageController> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                  child: FittedBox(
-                      fit: BoxFit.scaleDown, child: _nickname(context))),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: _nickname(context),
+                ),
+              ),
               _achievement(),
               Expanded(
                 child: FittedBox(
@@ -51,9 +54,17 @@ class MyPage extends GetView<MyPageController> {
                   child: _levelCircularBar(),
                 ),
               ),
-              _description(),
+              Obx(() {
+                return !controller.isKeyboard.value
+                    ? _description()
+                    : Container();
+              }),
               _chatButton(),
-              SizedBox(height: 150),
+              Obx(() {
+                return !controller.isKeyboard.value
+                    ? SizedBox(height: 150)
+                    : Container();
+              })
             ],
           ),
         ],
@@ -74,30 +85,39 @@ class MyPage extends GetView<MyPageController> {
             ),
           ),
         ),
-        Container(
-          //pink 부분이 200,
-          height: MediaQuery.of(context).size.height -
-              MediaQuery.of(context).padding.top -
-              MediaQuery.of(context).padding.bottom -
-              200 -
-              kBottomNavigationBarHeight -
-              120,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(30),
-              bottomLeft: Radius.circular(30),
+        Obx(() {
+          return AnimatedContainer(
+            //pink 부분이 200,
+            height: !controller.isKeyboard.value
+                ? MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top -
+                    MediaQuery.of(context).padding.bottom -
+                    200 -
+                    kBottomNavigationBarHeight -
+                    120
+                : 40,
+            duration: Duration(milliseconds: 200),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 5,
+                  offset: Offset(0, 8),
+                )
+              ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 5,
-                offset: Offset(0, 8),
-              )
-            ],
-          ),
-        ),
-        SizedBox(height: 90),
+          );
+        }),
+        Obx(() {
+          return !controller.isKeyboard.value
+              ? SizedBox(height: 90)
+              : Container();
+        }),
       ],
     );
   }
@@ -145,6 +165,7 @@ class MyPage extends GetView<MyPageController> {
                           child: TextField(
                             maxLength: 10,
                             autofocus: true,
+                            focusNode: controller.nicknameFocusNode,
                             maxLengthEnforcement: MaxLengthEnforcement.enforced,
                             keyboardType: TextInputType.text,
                             controller: controller.nicknameController,
@@ -336,43 +357,45 @@ class MyPage extends GetView<MyPageController> {
   }
 
   Widget _achievement() {
-    return GestureDetector(
-      onTap: () {
-        Get.to(() => ListSuggestionPage(), arguments: 4);
-      },
-      child: Container(
-        width: 300,
-        height: 101,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              offset: Offset(0, 5),
-              blurRadius: 5,
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: Obx(
-            () => Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _achievementDetail(
-                    '리스트', controller.bukkungListCount.value.toString()),
-                _achievementDetail(
-                    '조회수', controller.viewCount.value.toString()),
-                _achievementDetail(
-                    '받은 좋아요', controller.likeCount.value.toString()),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return Obx(() {
+      return !controller.isKeyboard.value
+          ? GestureDetector(
+              onTap: () {
+                Get.to(() => ListSuggestionPage(), arguments: 4);
+              },
+              child: Container(
+                width: 300,
+                height: 101,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      offset: Offset(0, 5),
+                      blurRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _achievementDetail(
+                          '리스트', controller.bukkungListCount.value.toString()),
+                      _achievementDetail(
+                          '조회수', controller.viewCount.value.toString()),
+                      _achievementDetail(
+                          '받은 좋아요', controller.likeCount.value.toString()),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : Container();
+    });
   }
 
   Widget _achievementDetail(String title, String content) {
@@ -398,93 +421,95 @@ class MyPage extends GetView<MyPageController> {
   }
 
   Widget _levelCircularBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 30),
-      child: Container(
-        height: 200,
-        width: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(240),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              offset: Offset(0, 15),
-              blurRadius: 10,
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              offset: Offset(0, -15),
-              blurRadius: 10,
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              offset: Offset(15, 0),
-              blurRadius: 10,
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              offset: Offset(-15, 0),
-              blurRadius: 10,
-            ),
-          ],
-        ),
-        child: Obx(
-          () => Stack(
-            children: [
-              Center(
-                child: SizedBox(
-                  height: 180,
-                  width: 180,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 8,
-                    value: (controller.expPoint.value % 100) / 100,
-                    color: CustomColors.mainPink,
-                  ),
+    return Obx(() {
+      return !controller.isKeyboard.value
+          ? Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30),
+              child: Container(
+                height: 200,
+                width: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(240),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      offset: Offset(0, 15),
+                      blurRadius: 10,
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      offset: Offset(0, -15),
+                      blurRadius: 10,
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      offset: Offset(15, 0),
+                      blurRadius: 10,
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      offset: Offset(-15, 0),
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: SizedBox(
+                        height: 180,
+                        width: 180,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 8,
+                          value: (controller.expPoint.value % 100) / 100,
+                          color: CustomColors.mainPink,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: SizedBox(
+                        height: 180,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              'LV.${(controller.expPoint.value - (controller.expPoint.value % 100)) ~/ 100}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 30,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              '${(controller.expPoint.value % 100).toString()}%',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            GestureDetector(
+                              onTap: () {
+                                controller.refreshAchievement();
+                              },
+                              child: Icon(
+                                Icons.refresh,
+                                size: 30,
+                                color: CustomColors.darkGrey,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Center(
-                child: SizedBox(
-                  height: 180,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'LV.${(controller.expPoint.value - (controller.expPoint.value % 100)) ~/ 100}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 30,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        '${(controller.expPoint.value % 100).toString()}%',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      GestureDetector(
-                        onTap: () {
-                          controller.refreshAchievement();
-                        },
-                        child: Icon(
-                          Icons.refresh,
-                          size: 30,
-                          color: CustomColors.darkGrey,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            )
+          : Container();
+    });
   }
 
   Widget _description() {
@@ -499,56 +524,60 @@ class MyPage extends GetView<MyPageController> {
   }
 
   Widget _chatButton() {
-    return GestureDetector(
-      onTap: () {
-        controller.openChatUrl();
-      },
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Container(
-          height: 40,
-          width: Get.width - 80,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: CustomColors.backgroundLightGrey,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(0.2),
-                offset: Offset(0, -5),
-                blurRadius: 5,
-              ),
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                offset: Offset(0, 5),
-                blurRadius: 5,
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(width: 20),
-              Icon(
-                Icons.chat,
-                size: 20,
-                color: CustomColors.darkGrey,
-              ),
-              SizedBox(width: 20),
-              SizedBox(
-                width: Get.width - 80-20-20-20,
-                child: AutoSizeText(
-                  '1:1 문의사항 (카카오톡 문의하기)',
-                  maxLines: 2,
-                  style: TextStyle(
-                    fontSize: 16,
+    return Obx(() {
+      return !controller.isKeyboard.value
+          ? GestureDetector(
+              onTap: () {
+                controller.openChatUrl();
+              },
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Container(
+                  height: 40,
+                  width: Get.width - 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: CustomColors.backgroundLightGrey,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white.withOpacity(0.2),
+                        offset: Offset(0, -5),
+                        blurRadius: 5,
+                      ),
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        offset: Offset(0, 5),
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 20),
+                      Icon(
+                        Icons.chat,
+                        size: 20,
+                        color: CustomColors.darkGrey,
+                      ),
+                      SizedBox(width: 20),
+                      SizedBox(
+                        width: Get.width - 80 - 20 - 20 - 20,
+                        child: AutoSizeText(
+                          '1:1 문의사항 (카카오톡 문의하기)',
+                          maxLines: 2,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            )
+          : Container();
+    });
   }
 
   @override

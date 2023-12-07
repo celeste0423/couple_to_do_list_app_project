@@ -329,67 +329,67 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     switch (categoryNumber) {
       case 1:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '1travel'),
               SizedBox(width: 10),
-              Text('여행', style: TextStyle(fontSize: 20)),
+              Text('여행', style: TextStyle(fontSize: 15)),
             ],
           ),
         );
       case 2:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '2meal'),
               SizedBox(width: 10),
-              Text('식사', style: TextStyle(fontSize: 20)),
+              Text('식사', style: TextStyle(fontSize: 15)),
             ],
           ),
         );
       case 3:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '3activity'),
               SizedBox(width: 10),
-              Text('액티비티', style: TextStyle(fontSize: 20)),
+              Text('액티비티', style: TextStyle(fontSize: 15)),
             ],
           ),
         );
       case 4:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '4culture'),
               SizedBox(width: 10),
-              Text('문화 활동', style: TextStyle(fontSize: 20)),
+              Text('문화 활동', style: TextStyle(fontSize: 15)),
             ],
           ),
         );
       case 5:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '5study'),
               SizedBox(width: 10),
-              Text('자기 계발', style: TextStyle(fontSize: 20)),
+              Text('자기 계발', style: TextStyle(fontSize: 15)),
             ],
           ),
         );
       case 6:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '6etc'),
               SizedBox(width: 10),
-              Text('기타', style: TextStyle(fontSize: 20)),
+              Text('기타', style: TextStyle(fontSize: 15)),
             ],
           ),
         );

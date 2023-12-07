@@ -18,6 +18,8 @@ class MyPageController extends GetxController {
 
   Rx<bool> isChangeNickname = false.obs;
   TextEditingController nicknameController = TextEditingController();
+  FocusNode nicknameFocusNode = FocusNode();
+  Rx<bool> isKeyboard = false.obs;
 
   Rx<bool> isSolo = false.obs;
   Rx<bool> isDayMet = false.obs;
@@ -35,6 +37,7 @@ class MyPageController extends GetxController {
     _checkIfSolo();
     _getDayMet();
     _getAchievement();
+    nicknameFocusNode.addListener(_onFocusChange);
   }
 
   void _checkIfSolo() async {
@@ -95,6 +98,14 @@ class MyPageController extends GetxController {
     List<BukkungListModel> bukkungLists =
         await ListSuggestionRepository().getFutureMyBukkungList();
     bukkungListCount(bukkungLists.length);
+  }
+
+  void _onFocusChange() {
+    if (nicknameFocusNode.hasFocus) {
+      isKeyboard(true);
+    } else {
+      isKeyboard(false);
+    }
   }
 
   @override

@@ -11,6 +11,7 @@ import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,13 +24,15 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
     return AppBar(
       leading: Padding(
         padding: const EdgeInsets.only(left: 10),
-        child: IconButton(
+        child: CupertinoButton(
           onPressed: () {
             Get.back();
           },
-          icon: Icon(
+          padding: const EdgeInsets.all(0),
+          child: Icon(
             Icons.arrow_back_ios,
             size: 30,
+            color: CustomColors.grey,
           ),
         ),
       ),
