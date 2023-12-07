@@ -38,35 +38,7 @@ class MyPage extends GetView<MyPageController> {
       child: Stack(
         children: [
           _cardBackground(context),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: _nickname(context),
-                ),
-              ),
-              _achievement(),
-              Expanded(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: _levelCircularBar(),
-                ),
-              ),
-              Obx(() {
-                return !controller.isKeyboard.value
-                    ? _description()
-                    : Container();
-              }),
-              _chatButton(),
-              Obx(() {
-                return !controller.isKeyboard.value
-                    ? SizedBox(height: 150)
-                    : Container();
-              })
-            ],
-          ),
+          _achievement(),
         ],
       ),
     );
@@ -75,282 +47,295 @@ class MyPage extends GetView<MyPageController> {
   Widget _cardBackground(context) {
     return Column(
       children: [
-        Container(
-          height: 200,
-          decoration: BoxDecoration(
-            color: CustomColors.mainPink,
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30),
-              topLeft: Radius.circular(30),
+        Expanded(
+          flex: 3,
+          child: Container(
+            decoration: BoxDecoration(
+              color: CustomColors.mainPink,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30),
+                topLeft: Radius.circular(30),
+              ),
             ),
+            child: _nickname(context),
           ),
         ),
-        Obx(() {
-          return AnimatedContainer(
-            //pink 부분이 200,
-            height: !controller.isKeyboard.value
-                ? MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).padding.top -
-                    MediaQuery.of(context).padding.bottom -
-                    200 -
-                    kBottomNavigationBarHeight -
-                    120
-                : 40,
-            duration: Duration(milliseconds: 200),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(30),
-                bottomLeft: Radius.circular(30),
+
+        Expanded(
+          flex: 6,
+          child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(30),
+                  bottomLeft: Radius.circular(30),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 5,
+                    offset: Offset(0, 8),
+                  )
+                ],
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  offset: Offset(0, 8),
-                )
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(height: 50),
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: _levelCircularBar(),
+                  ),
+                ),
+                Obx(() {
+                  return !controller.isKeyboard.value
+                      ? _description()
+                      : Container();
+                }),
+                _chatButton(),
               ],
             ),
-          );
-        }),
-        Obx(() {
-          return !controller.isKeyboard.value
-              ? SizedBox(height: 90)
-              : Container();
-        }),
+            ),
+        ),
+        Expanded(flex: 2, child: Container(),),
       ],
     );
   }
 
   Widget _nickname(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 10,
-        top: 10,
-        bottom: 20,
-        right: 10,
-      ),
-      child: Row(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
         children: [
-          Container(
-            width: 70,
-            height: 70,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Align(
-              alignment: Alignment.center,
-              child: FractionallySizedBox(
-                widthFactor: 0.8,
-                heightFactor: 0.8,
-                child: Image.asset(
-                  'assets/images/ggomool.png',
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 20),
-          SizedBox(
-            height: 120,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
+          Expanded(
+            flex: 6,
+            child: Row(
               children: [
-                Obx(
-                  () => controller.isChangeNickname.value
-                      ? SizedBox(
-                          width: 250,
-                          height: 60,
-                          child: TextField(
-                            maxLength: 10,
-                            autofocus: true,
-                            focusNode: controller.nicknameFocusNode,
-                            maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                            keyboardType: TextInputType.text,
-                            controller: controller.nicknameController,
-                            cursorColor: Colors.black.withOpacity(0.5),
-                            style: TextStyle(
-                              fontSize: 27,
-                              fontFamily: 'Pyeongchang',
-                              color: Colors.white,
-                            ),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              hintText: '수정할 닉네임을 입력하세요',
-                              hintStyle: TextStyle(
-                                fontSize: 27,
-                                fontFamily: 'Pyeongchang',
-                              ),
-                              counterText: '',
-                              suffixIcon: IconButton(
-                                icon: Icon(Icons.save, size: 25),
-                                onPressed: () {
-                                  controller.changeNickname();
-                                },
-                              ),
-                            ),
-                          ),
-                        )
-                      : SizedBox(
-                          width: 250,
-                          height: 60,
-                          child: FittedBox(
-                            alignment: Alignment.centerLeft,
-                            fit: BoxFit.scaleDown,
-                            child: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: controller.myNickname.value,
-                                    style: TextStyle(
-                                      fontFamily: 'Pyeongchang',
-                                      fontSize: 30,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: ' 님 반갑습니다',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    controller.changeNicknameStart();
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: const [
-                          Icon(
-                            Icons.edit_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            '닉네임 수정하기',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: FractionallySizedBox(
+                      widthFactor: 0.8,
+                      heightFactor: 0.8,
+                      child: Image.asset(
+                        'assets/images/ggomool.png',
                       ),
-                      Container(
-                        color: Colors.white,
-                        width: 105,
-                        height: 1,
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-                SizedBox(height: 10),
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Obx(
-                      () => controller.isSolo.value
-                          ? GestureDetector(
-                              onTap: () {
-                                Get.offAll(
-                                  FindBuddyPage(
-                                    email: AuthController.to.user.value.email!,
-                                  ),
-                                );
-                              },
-                              child: AutoSizeText(
-                                '여기를 눌러 짝꿍을 연결하세요',
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: CustomColors.blackText,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            )
-                          : GestureDetector(
-                              onTap: () {
-                                controller.setDayMet(context);
-                              },
-                              child: SizedBox(
+                SizedBox(width: 20),
+                SizedBox(
+                  height: 120,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Obx(
+                        () => controller.isChangeNickname.value
+                            ? SizedBox(
                                 width: 250,
-                                child: controller.isDayMet.value
-                                    ? FittedBox(
-                                        alignment: Alignment.centerLeft,
-                                        fit: BoxFit.scaleDown,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: controller
-                                                    .buddyNickname.value,
-                                                style: TextStyle(
-                                                  fontFamily: 'Pyeongchang',
-                                                  fontSize: 20,
-                                                  color: CustomColors.blackText,
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: ' 님과 함께한 지 ',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w200,
-                                                  fontSize: 18,
-                                                  color: CustomColors.blackText
-                                                      .withOpacity(0.8),
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: controller
-                                                    .togetherDate.value
-                                                    .toString(),
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20,
-                                                  color: CustomColors.blackText,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: '일째',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20,
-                                                  color: CustomColors.blackText,
-                                                ),
-                                              ),
-                                            ],
+                                height: 60,
+                                child: TextField(
+                                  maxLength: 10,
+                                  autofocus: true,
+                                  focusNode: controller.nicknameFocusNode,
+                                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                                  keyboardType: TextInputType.text,
+                                  controller: controller.nicknameController,
+                                  cursorColor: Colors.black.withOpacity(0.5),
+                                  style: TextStyle(
+                                    fontSize: 27,
+                                    fontFamily: 'Pyeongchang',
+                                    color: Colors.white,
+                                  ),
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    errorBorder: InputBorder.none,
+                                    disabledBorder: InputBorder.none,
+                                    hintText: '수정할 닉네임을 입력하세요',
+                                    hintStyle: TextStyle(
+                                      fontSize: 27,
+                                      fontFamily: 'Pyeongchang',
+                                    ),
+                                    counterText: '',
+                                    suffixIcon: IconButton(
+                                      icon: Icon(Icons.save, size: 25),
+                                      onPressed: () {
+                                        controller.changeNickname();
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : SizedBox(
+                                width: 250,
+                                height: 60,
+                                child: FittedBox(
+                                  alignment: Alignment.centerLeft,
+                                  fit: BoxFit.scaleDown,
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: controller.myNickname.value,
+                                          style: TextStyle(
+                                            fontFamily: 'Pyeongchang',
+                                            fontSize: 30,
                                           ),
                                         ),
-                                      )
-                                    : Text(
-                                        '여기를 눌러 만난 날짜를 설정하세요',
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: CustomColors.blackText,
-                                          decoration: TextDecoration.underline,
+                                        TextSpan(
+                                          text: ' 님 반갑습니다',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17,
+                                          ),
                                         ),
-                                      ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          controller.changeNicknameStart();
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: const [
+                                Icon(
+                                  Icons.edit_outlined,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                                Text(
+                                  '닉네임 수정하기',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
-                    ),
+                            Container(
+                              color: Colors.white,
+                              width: 105,
+                              height: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Obx(
+                            () => controller.isSolo.value
+                                ? GestureDetector(
+                                    onTap: () {
+                                      Get.offAll(
+                                        FindBuddyPage(
+                                          email: AuthController.to.user.value.email!,
+                                        ),
+                                      );
+                                    },
+                                    child: AutoSizeText(
+                                      '여기를 눌러 짝꿍을 연결하세요',
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: CustomColors.blackText,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  )
+                                : GestureDetector(
+                                    onTap: () {
+                                      controller.setDayMet(context);
+                                    },
+                                    child: SizedBox(
+                                      width: 250,
+                                      child: controller.isDayMet.value
+                                          ? FittedBox(
+                                              alignment: Alignment.centerLeft,
+                                              fit: BoxFit.scaleDown,
+                                              child: RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: controller
+                                                          .buddyNickname.value,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Pyeongchang',
+                                                        fontSize: 20,
+                                                        color: CustomColors.blackText,
+                                                        decoration:
+                                                            TextDecoration.underline,
+                                                      ),
+                                                    ),
+                                                    TextSpan(
+                                                      text: ' 님과 함께한 지 ',
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.w200,
+                                                        fontSize: 18,
+                                                        color: CustomColors.blackText
+                                                            .withOpacity(0.8),
+                                                      ),
+                                                    ),
+                                                    TextSpan(
+                                                      text: controller
+                                                          .togetherDate.value
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 20,
+                                                        color: CustomColors.blackText,
+                                                      ),
+                                                    ),
+                                                    TextSpan(
+                                                      text: '일째',
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 20,
+                                                        color: CustomColors.blackText,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          : Text(
+                                              '여기를 눌러 만난 날짜를 설정하세요',
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color: CustomColors.blackText,
+                                                decoration: TextDecoration.underline,
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
+          Expanded(flex: 4, child: Container()),
         ],
       ),
     );
@@ -359,41 +344,51 @@ class MyPage extends GetView<MyPageController> {
   Widget _achievement() {
     return Obx(() {
       return !controller.isKeyboard.value
-          ? GestureDetector(
-              onTap: () {
-                Get.to(() => ListSuggestionPage(), arguments: 4);
-              },
-              child: Container(
-                width: 300,
-                height: 101,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      offset: Offset(0, 5),
-                      blurRadius: 5,
+          ? Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(flex: 3,child: Container()),
+              Expanded(
+                flex: 2,
+                child: GestureDetector(
+                    onTap: () {
+                      Get.to(() => ListSuggestionPage(), arguments: 4);
+                    },
+                    child: Container(
+                      width: 300,
+                      height: 101,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            offset: Offset(0, 5),
+                            blurRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            _achievementDetail(
+                                '리스트', controller.bukkungListCount.value.toString()),
+                            _achievementDetail(
+                                '조회수', controller.viewCount.value.toString()),
+                            _achievementDetail(
+                                '받은 좋아요', controller.likeCount.value.toString()),
+                          ],
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      _achievementDetail(
-                          '리스트', controller.bukkungListCount.value.toString()),
-                      _achievementDetail(
-                          '조회수', controller.viewCount.value.toString()),
-                      _achievementDetail(
-                          '받은 좋아요', controller.likeCount.value.toString()),
-                    ],
                   ),
-                ),
               ),
-            )
+              Expanded(flex: 10, child: Container()),
+            ],
+          )
           : Container();
     });
   }
@@ -534,6 +529,7 @@ class MyPage extends GetView<MyPageController> {
                 fit: BoxFit.scaleDown,
                 child: Container(
                   height: 40,
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   width: Get.width - 80,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
