@@ -206,8 +206,8 @@ class DiaryPage extends GetView<DiaryPageController> {
                                   });
                             },
                             child: Container(
-                              width: 10,
-                              height: 10,
+                              width: 15,
+                              height: 15,
                               decoration: BoxDecoration(
                                 color: Colors.red,
                                 shape: BoxShape.circle,

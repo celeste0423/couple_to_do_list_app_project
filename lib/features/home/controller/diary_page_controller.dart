@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
+import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/repository/diary_repository.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +158,15 @@ class DiaryPageController extends GetxController
     //버꿍소감아직 작성안된경우 버꿍인이라면 바로 uploaddiarypage로 가도록
     if (selectedDiary.value.bukkungSogam == null &&
         AuthController.to.user.value.uid != selectedDiary.value.creatorUserID) {
-      Get.to(() => UploadDiaryPage(), arguments: selectedDiary.value);
+      openAlertDialog(
+        title: '아직 소감을 작성하지 않았습니다.',
+        content: '상대방의 소감을 확인하려면 소감을 작성해주세요',
+        btnText: '작성하기',
+        secondButtonText: '취소',
+        mainfunction: () {
+          Get.to(() => UploadDiaryPage(), arguments: selectedDiary.value);
+        },
+      );
     } else {
       Get.to(
         () => ReadDiaryPage(),

@@ -30,16 +30,50 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       ),
       leadingWidth: 190,
       actions: [
-        CupertinoButton(
-          onPressed: () {
-            Get.to(NotificationPage());
-          },
-          padding: const EdgeInsets.only(top: 25, right: 25),
-          child: Icon(
-            Icons.notifications,
-            color: CustomColors.lightGrey,
-            size: 28,
-          ),
+        Stack(
+          children: [
+            CupertinoButton(
+              onPressed: () {
+                Get.to(NotificationPage());
+              },
+              padding: const EdgeInsets.only(top: 10, right: 10),
+              // child: Gif(
+              //   image: AssetImage('assets/gifs/notification_bell.gif'),
+              //   autostart: Autostart.loop,
+              // ),
+              child: Image(
+                image: AssetImage('assets/gifs/notification_bell.gif'),
+                width: 55,
+                height: 55,
+                color: CustomColors.grey.withOpacity(0.5),
+                colorBlendMode: BlendMode.modulate,
+              ),
+              // child: Icon(
+              //   Icons.notifications,
+              //   color: CustomColors.lightGrey,
+              //   size: 28,
+              // ),
+            ),
+            Obx(() {
+              return controller.isNotification.value
+                  ? Positioned(
+                      top: controller.isAnimated.value ? 17 : 18,
+                      right: controller.isAnimated.value ? 24 : 25,
+                      child: AnimatedContainer(
+                        duration: Duration(milliseconds: 50),
+                        width: controller.isAnimated.value ? 9 : 7,
+                        height: controller.isAnimated.value ? 9 : 7,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(25),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container();
+            }),
+          ],
         )
       ],
     );

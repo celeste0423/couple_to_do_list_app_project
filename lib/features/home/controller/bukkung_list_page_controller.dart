@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
+import 'package:couple_to_do_list_app/repository/notification_repository.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,7 +20,9 @@ class BukkungListPageController extends GetxController {
   // Rx<GroupModel> myGroup = GroupModel().obs;
   Rx<BukkungListModel> bukkungList = BukkungListModel().obs;
 
+  Rx<bool> isNotification = false.obs;
   Rx<bool> isAnimated = false.obs;
+  // GifController gifController = GifController(vsync: this);
 
   Rx<String?> currentType = "category".obs;
   Map<String, String> typetoString = {
@@ -31,7 +34,8 @@ class BukkungListPageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    addButtonAnimation();
+    _checkNotification();
+    _notificationAnimation();
     _loadSelectedListType();
     // myGroup(AuthController.to.group.value);
   }
@@ -43,8 +47,15 @@ class BukkungListPageController extends GetxController {
     });
   }
 
-  void addButtonAnimation() {
-    Timer.periodic(Duration(seconds: 2), (timer) {
+  void _checkNotification() async {
+    isNotification(
+      await NotificationRepository()
+          .isUncheckedNotification(AuthController.to.user.value.uid!),
+    );
+  }
+
+  void _notificationAnimation() {
+    Timer.periodic(Duration(milliseconds: 300), (timer) {
       isAnimated(!isAnimated.value);
     });
   }

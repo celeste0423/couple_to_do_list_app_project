@@ -32,25 +32,24 @@ class NotificationRepository {
     }
   }
 
-  Future<List<CopyCountModel>?> getCopyCountByListId(String listId) async {
+  Future<bool> isUncheckedNotification(String uid) async {
     try {
-      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('copyCount')
-          .where('list_id', isEqualTo: listId)
-          .get();
+      // 해당 사용자의 notification 서브컬렉션에 대한 쿼리
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .collection('notification')
+              .where('isChecked', isEqualTo: false)
+              .limit(1) // 하나 이상이 필요하지 않으므로 최대 1개만 가져옴
+              .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        List<CopyCountModel> result = querySnapshot.docs
-            .map((doc) =>
-                CopyCountModel.fromJson(doc.data() as Map<String, dynamic>))
-            .toList();
-        return result;
-      } else {
-        return null; // 데이터가 없는 경우 null 반환 또는 빈 리스트로 처리할 수 있습니다.
-      }
+      // 결과에서 문서가 하나라도 있으면 true를 반환
+      return querySnapshot.docs.isNotEmpty;
     } catch (e) {
-      print("copyCount 데이터 가져오기 오류: $e");
-      return null;
+      // 오류 처리
+      print('isUncheckedNotification 오류: $e');
+      return false; // 오류가 발생하면 false를 반환
     }
   }
 }
