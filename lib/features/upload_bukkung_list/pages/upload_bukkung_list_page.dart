@@ -25,8 +25,10 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
   PreferredSizeWidget _appBar() {
     return AppBar(
       leading: TextButton(
-        onPressed: () {
-          Get.back();
+        onPressed: () async {
+          // Get.back();
+          String url = await controller.getOnlineImage('nature');
+          print('사진 data ${url}');
         },
         child: Text(
           '취소',
@@ -509,7 +511,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
           children: [
             SizedBox(
               // color: Colors.black,
-              width: Get.width-30-30-50-10-20-20-70,
+              width: Get.width - 30 - 30 - 50 - 10 - 20 - 20 - 70,
               child: AutoSizeText(
                 '버꿍리스트 공개 여부',
                 maxLines: 2,

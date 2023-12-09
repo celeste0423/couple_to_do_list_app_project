@@ -16,6 +16,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class UploadBukkungListController extends GetxController {
   static UploadBukkungListController get to => Get.find();
@@ -436,6 +438,27 @@ class UploadBukkungListController extends GetxController {
     if (isPublic.value == true && isSelected == false) {
       await BukkungListRepository.setSuggestionBukkungList(
           bukkungListData, listId);
+    }
+  }
+
+  Future<String> getOnlineImage(String searchWords) async {
+    final response = await http.get(
+      Uri.parse(
+          "https://api.pexels.com/v1/search?query=${searchWords}&locale='ko-KR'&per_page=1"),
+      headers: {
+        'Authorization':
+            'vj40CWvim48eP6I6ymW21oHCbU50DVS4Dyj8y4b4GZVIKaWaT9EisapB'
+      },
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      print('데이터 ${data}');
+      Map<String, dynamic> firstPhoto = data['photos'][0];
+      String originalImageUrl = firstPhoto['src']['original'];
+      // return data.cast<Map<String, dynamic>>();
+      return originalImageUrl;
+    } else {
+      throw Exception('Failed to load images');
     }
   }
 

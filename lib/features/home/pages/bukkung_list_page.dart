@@ -42,7 +42,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               //   autostart: Autostart.loop,
               // ),
               child: Image(
-                image: AssetImage('assets/gifs/notification_bell.gif'),
+                image: AssetImage('assets/gifs/notification_bell_short.gif'),
                 width: 55,
                 height: 55,
                 color: CustomColors.grey.withOpacity(0.5),
