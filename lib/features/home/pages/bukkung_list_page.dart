@@ -1,6 +1,5 @@
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
-import 'package:couple_to_do_list_app/features/notification/pages/notification_page.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
@@ -29,53 +28,54 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         child: Image(image: AssetImage('assets/images/title_horizontal.png')),
       ),
       leadingWidth: 190,
-      actions: [
-        Stack(
-          children: [
-            CupertinoButton(
-              onPressed: () {
-                Get.to(NotificationPage());
-              },
-              padding: const EdgeInsets.only(top: 10, right: 10),
-              // child: Gif(
-              //   image: AssetImage('assets/gifs/notification_bell.gif'),
-              //   autostart: Autostart.loop,
-              // ),
-              child: Image(
-                image: AssetImage('assets/gifs/notification_bell_short.gif'),
-                width: 55,
-                height: 55,
-                color: CustomColors.grey.withOpacity(0.5),
-                colorBlendMode: BlendMode.modulate,
-              ),
-              // child: Icon(
-              //   Icons.notifications,
-              //   color: CustomColors.lightGrey,
-              //   size: 28,
-              // ),
-            ),
-            Obx(() {
-              return controller.isNotification.value
-                  ? Positioned(
-                      top: controller.isAnimated.value ? 17 : 18,
-                      right: controller.isAnimated.value ? 24 : 25,
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 50),
-                        width: controller.isAnimated.value ? 9 : 7,
-                        height: controller.isAnimated.value ? 9 : 7,
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(25),
-                          ),
-                        ),
-                      ),
-                    )
-                  : Container();
-            }),
-          ],
-        )
-      ],
+      //알림 페이지 버튼
+      // actions: [
+      //   Stack(
+      //     children: [
+      //       CupertinoButton(
+      //         onPressed: () {
+      //           Get.to(NotificationPage());
+      //         },
+      //         padding: const EdgeInsets.only(top: 10, right: 10),
+      //         // child: Gif(
+      //         //   image: AssetImage('assets/gifs/notification_bell.gif'),
+      //         //   autostart: Autostart.loop,
+      //         // ),
+      //         child: Image(
+      //           image: AssetImage('assets/gifs/notification_bell_short.gif'),
+      //           width: 55,
+      //           height: 55,
+      //           color: CustomColors.grey.withOpacity(0.5),
+      //           colorBlendMode: BlendMode.modulate,
+      //         ),
+      //         // child: Icon(
+      //         //   Icons.notifications,
+      //         //   color: CustomColors.lightGrey,
+      //         //   size: 28,
+      //         // ),
+      //       ),
+      //       Obx(() {
+      //         return controller.isNotification.value
+      //             ? Positioned(
+      //                 top: controller.isAnimated.value ? 17 : 18,
+      //                 right: controller.isAnimated.value ? 24 : 25,
+      //                 child: AnimatedContainer(
+      //                   duration: Duration(milliseconds: 50),
+      //                   width: controller.isAnimated.value ? 9 : 7,
+      //                   height: controller.isAnimated.value ? 9 : 7,
+      //                   decoration: BoxDecoration(
+      //                     color: Colors.red,
+      //                     borderRadius: BorderRadius.all(
+      //                       Radius.circular(25),
+      //                     ),
+      //                   ),
+      //                 ),
+      //               )
+      //             : Container();
+      //       }),
+      //     ],
+      //   )
+      // ],
     );
   }
 

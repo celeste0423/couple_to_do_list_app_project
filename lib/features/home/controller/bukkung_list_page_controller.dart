@@ -98,9 +98,9 @@ class BukkungListPageController extends GetxController {
 
   void deleteBukkungList(
       BukkungListModel bukkungListModel, bool isDeleteImage) async {
-    final GroupModel groupModel = AuthController.to.group.value;
     if (isDeleteImage) {
-      if (Constants.baseImageUrl != bukkungListModel.imgUrl) {
+      if (Constants.baseImageUrl != bukkungListModel.imgUrl &&
+          bukkungListModel.imgUrl!.startsWith('https://firebasestorage')) {
         await BukkungListRepository()
             .deleteListImage('${bukkungListModel.imgId}.jpg');
       }

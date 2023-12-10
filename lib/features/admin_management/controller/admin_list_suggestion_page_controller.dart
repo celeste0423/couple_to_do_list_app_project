@@ -21,9 +21,9 @@ class AdminListSuggestionPageController extends GetxController
   TutorialCoachMark? tutorialCoachMark;
   List<TargetFocus> targets = [];
 
-  GlobalKey addKey = GlobalKey();
-  GlobalKey likeKey = GlobalKey();
-  GlobalKey copyKey = GlobalKey();
+  GlobalKey adminAddKey = GlobalKey();
+  GlobalKey adminLikeKey = GlobalKey();
+  GlobalKey adminCopyKey = GlobalKey();
 
   late TabController suggestionListTabController;
 
@@ -131,7 +131,7 @@ class AdminListSuggestionPageController extends GetxController
     targets = [
       TargetFocus(
         identify: "add_key",
-        keyTarget: addKey,
+        keyTarget: adminAddKey,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
@@ -151,7 +151,7 @@ class AdminListSuggestionPageController extends GetxController
       ),
       TargetFocus(
         identify: "copy_key",
-        keyTarget: copyKey,
+        keyTarget: adminCopyKey,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
@@ -171,7 +171,7 @@ class AdminListSuggestionPageController extends GetxController
       ),
       TargetFocus(
         identify: "like_key",
-        keyTarget: likeKey,
+        keyTarget: adminLikeKey,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,

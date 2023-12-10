@@ -197,7 +197,7 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
                       fit: BoxFit.scaleDown,
                       child: BkText(
                         controller.bukkungListModel.date == null
-                            ? '미정'
+                            ? '날짜 미정'
                             : controller.bukkungListModel.date!
                                 .toString()
                                 .substring(0, 10),
