@@ -46,7 +46,6 @@ class UploadBukkungListController extends GetxController {
 
   Rx<DateTime?> listDateTime = Rx<DateTime?>(null);
 
-  late Ticker _ticker;
   TextEditingController contentController = TextEditingController();
   FocusNode contentFocusNode = FocusNode();
   ScrollController contentScrollController = ScrollController();
@@ -462,7 +461,7 @@ class UploadBukkungListController extends GetxController {
   Future<String?> getOnlineImage(String searchWords) async {
     final response = await http.get(
       Uri.parse(
-          "https://api.pexels.com/v1/search?query=${searchWords}&locale=ko-KR&per_page=1"),
+          "https://api.pexels.com/v1/search?query=$searchWords&locale=ko-KR&per_page=1"),
       headers: {
         'Authorization':
             'vj40CWvim48eP6I6ymW21oHCbU50DVS4Dyj8y4b4GZVIKaWaT9EisapB'
@@ -496,7 +495,7 @@ class UploadBukkungListController extends GetxController {
     final buddyUid = AuthController.to.user.value.gender == 'male'
         ? AuthController.to.group.value.femaleUid
         : AuthController.to.group.value.maleUid;
-    print('짝꿍 uid ${buddyUid}');
+    print('짝꿍 uid $buddyUid');
     final userTokenData = await FCMController().getDeviceTokenByUid(buddyUid!);
     if (userTokenData != null) {
       print('유저 토큰 존재');

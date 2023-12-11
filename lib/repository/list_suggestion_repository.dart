@@ -298,9 +298,7 @@ class ListSuggestionRepository {
     final DocumentSnapshot documentSnapshot = await documentReference.get();
     final data = documentSnapshot.data() as Map<String, dynamic>;
     int? currentCopyCount = BukkungListModel.fromJson(data).copyCount;
-    if (currentCopyCount == null) {
-      currentCopyCount = 0;
-    }
+    currentCopyCount ??= 0;
     final newCopyCount = currentCopyCount + 1;
     // copyCount 필드를 새로운 값으로 업데이트
     await documentReference.update({'copyCount': newCopyCount});

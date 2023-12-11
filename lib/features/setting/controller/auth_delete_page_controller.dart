@@ -57,8 +57,7 @@ class AuthDeletePageController extends GetxController {
               await FirebaseAuth.instance.signInWithCustomToken(customToken);
             }
           } else if (loginType == 'apple') {
-            UserCredential? userCredential =
-                await AuthController.to.signInWithApple();
+            await AuthController.to.signInWithApple();
             //print('apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
             //로그인 타입 설정
             // AuthController.loginType = 'apple';
@@ -118,9 +117,9 @@ class AuthDeletePageController extends GetxController {
           CopyCountRepository().deleteCopyCountByUid(uid!);
           //DeviceToken 삭제
           DeviceTokenModel? deviceToken =
-              await FCMRepository().getDeviceTokenByUid(uid!);
+              await FCMRepository().getDeviceTokenByUid(uid);
           if (deviceToken != null) {
-            FCMRepository().deleteDeviceToken(deviceToken!.tid!);
+            FCMRepository().deleteDeviceToken(deviceToken.tid!);
           }
 
           _uploadFeedback();

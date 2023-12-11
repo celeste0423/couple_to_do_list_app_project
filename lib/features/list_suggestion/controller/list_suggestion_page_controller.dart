@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
@@ -161,6 +160,7 @@ class ListSuggestionPageController extends GetxController
     super.onClose(); // 부모 클래스의 onClose 메서드를 호출
   }
 
+  @override
   void dispose() {
     super.dispose();
     suggestionListTabController.removeListener(() {

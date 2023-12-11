@@ -12,7 +12,6 @@ import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:launch_review/launch_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -195,8 +194,8 @@ class SettingPage extends GetView<SettingPageController> {
             onTap: () async {
               PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-              String appName = packageInfo.appName;
-              String packageName = packageInfo.packageName;
+              // String appName = packageInfo.appName;
+              // String packageName = packageInfo.packageName;
               String version = packageInfo.version;
               String buildNumber = packageInfo.buildNumber;
               openAlertDialog(

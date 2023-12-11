@@ -3,9 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
-import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
-import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -81,7 +79,6 @@ class AdminBukkungListPageController extends GetxController {
 
   void deleteBukkungList(
       BukkungListModel bukkungListModel, bool isDeleteImage) async {
-    final GroupModel groupModel = AuthController.to.group.value;
     if (isDeleteImage) {
       if (Constants.baseImageUrl != bukkungListModel.imgUrl) {
         await BukkungListRepository()
@@ -122,7 +119,7 @@ class AdminBukkungListPageController extends GetxController {
   Future<String?> getOnlineImage(String searchWords) async {
     final response = await http.get(
       Uri.parse(
-          "https://api.pexels.com/v1/search?query=${searchWords}&locale=ko-KR&per_page=1"),
+          "https://api.pexels.com/v1/search?query=$searchWords&locale=ko-KR&per_page=1"),
       headers: {
         'Authorization':
             'vj40CWvim48eP6I6ymW21oHCbU50DVS4Dyj8y4b4GZVIKaWaT9EisapB'

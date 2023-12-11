@@ -53,7 +53,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
           )
         ],
       ),
-      actions: [
+      actions: const [
         SizedBox(width: 40),
       ],
     );
@@ -581,7 +581,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                                 ],
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: 150,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -601,8 +601,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                                   Expanded(
                                     child: PcText(
                                       controller.selectedList.value.createdAt
-                                              .toString() ??
-                                          '',
+                                          .toString(),
                                       maxLines: 1,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(

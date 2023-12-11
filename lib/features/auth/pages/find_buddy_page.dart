@@ -218,7 +218,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
     return GestureDetector(
       onTap: () {
         Clipboard.setData(
-          ClipboardData(text: useremail ?? ''),
+          ClipboardData(text: useremail),
         ).then(
           (_) {
             Get.snackbar(

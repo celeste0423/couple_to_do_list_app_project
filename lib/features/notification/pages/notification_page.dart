@@ -34,7 +34,7 @@ class NotificationPage extends GetView<NotificationPageController> {
       appBar: _appBar(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: [],
+        children: const [],
       ),
     );
   }

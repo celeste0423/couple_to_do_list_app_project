@@ -1,23 +1,17 @@
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/admin_management/controller/admin_diary_page_controller.dart';
-import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
-import 'package:couple_to_do_list_app/widgets/category_select_tab_bar.dart';
 import 'package:couple_to_do_list_app/widgets/custom_cached_networkImage.dart';
-import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
-import 'package:couple_to_do_list_app/widgets/short_h_bar.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:shimmer/shimmer.dart';
 
 class AdminDiaryPage extends GetView<AdminDiaryPageController> {
   const AdminDiaryPage({super.key});
@@ -65,7 +59,6 @@ class AdminDiaryPage extends GetView<AdminDiaryPageController> {
   }
 
   Widget diaryTile(DiaryModel diaryModel) {
-    String dateString = DateFormat('yyyy-MM-dd').format(diaryModel.date!);
     String createdString =
         DateFormat('yyyy-MM-dd').format(diaryModel.createdAt!);
     return Stack(
@@ -175,7 +168,7 @@ class AdminDiaryPage extends GetView<AdminDiaryPageController> {
                       //   style: TextStyle(fontSize: 13),
                       // ),
                       BkText(
-                        '만든날짜 : ${createdString}',
+                        '만든날짜 : $createdString',
                         style: TextStyle(fontSize: 13),
                       ),
                       BkText(

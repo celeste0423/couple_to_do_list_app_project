@@ -4,7 +4,7 @@ import 'package:marquee/marquee.dart';
 class MarqueeAbleText extends StatelessWidget {
   final String text;
   final int maxLength;
-  late final TextStyle? style;
+  late TextStyle? style;
 
   MarqueeAbleText({
     Key? key,

@@ -155,6 +155,7 @@ class GroupRepository {
 
       return updatedGroupData;
     }
+    return null;
   }
 
   Future<GroupModel?> mergeSoloGroup(

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/notification/controllers/notification_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/location_auto_complete_response.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
@@ -26,7 +25,7 @@ class UploadDiaryController extends GetxController {
 
   Uint8List? diaryImage;
 
-  String? newUuid = null;
+  String? newUuid;
 
   DiaryModel? selectedDiaryModel = Get.arguments;
 
@@ -321,7 +320,7 @@ class UploadDiaryController extends GetxController {
     final buddyUid = AuthController.to.user.value.gender == 'male'
         ? AuthController.to.group.value.femaleUid
         : AuthController.to.group.value.maleUid;
-    print('짝꿍 uid ${buddyUid}');
+    print('짝꿍 uid $buddyUid');
     final userTokenData = await FCMController().getDeviceTokenByUid(buddyUid!);
     if (userTokenData != null) {
       print('유저 토큰 존재');

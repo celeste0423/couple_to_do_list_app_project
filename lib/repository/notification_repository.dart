@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:couple_to_do_list_app/models/copy_count_model.dart';
 import 'package:couple_to_do_list_app/models/notification_model.dart';
-import 'package:couple_to_do_list_app/models/user_model.dart';
 
 class NotificationRepository {
   NotificationRepository();
@@ -28,7 +26,7 @@ class NotificationRepository {
           .delete();
     } catch (e) {
       print("notification 문서 삭제 오류: $e");
-      throw e;
+      rethrow;
     }
   }
 

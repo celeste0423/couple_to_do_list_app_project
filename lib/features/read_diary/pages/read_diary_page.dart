@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/helper/background_message/controller/fcm_controller.dart';
-import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
@@ -61,14 +60,14 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
       myNickname = AuthController.to.user.value.nickname;
       buddyNickname = buddyData!.nickname;
     }
-    print('짝꿍 닉네임 ${buddyNickname}');
+    print('짝꿍 닉네임 $buddyNickname');
   }
 
   Future<void> sendCompletedMessageToBuddy() async {
     final buddyUid = AuthController.to.user.value.gender == 'male'
         ? AuthController.to.group.value.femaleUid
         : AuthController.to.group.value.maleUid;
-    print('짝꿍 uid ${buddyUid}');
+    print('짝꿍 uid $buddyUid');
     final userTokenData = await FCMController().getDeviceTokenByUid(buddyUid!);
     if (userTokenData != null) {
       print('유저 토큰 존재');
