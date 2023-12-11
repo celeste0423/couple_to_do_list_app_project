@@ -1,5 +1,6 @@
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/pages/old_list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
@@ -581,10 +582,15 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       onPressed: () {
         Analytics().logEvent('list_suggestion_page_open', null);
         Get.to(
-          () => ListSuggestionPage(),
+          () => OldListSuggestionPage(),
           transition: Transition.fadeIn,
           duration: Duration(milliseconds: 500),
         );
+        // Get.to(
+        //   () => ListSuggestionPage(),
+        //   transition: Transition.fadeIn,
+        //   duration: Duration(milliseconds: 500),
+        // );
       },
       backgroundColor: CustomColors.mainPink,
       child: Icon(

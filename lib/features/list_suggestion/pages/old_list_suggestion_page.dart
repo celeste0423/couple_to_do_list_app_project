@@ -1,4 +1,5 @@
 import 'package:couple_to_do_list_app/features/list_suggestion/controller/list_suggestion_page_controller.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/controller/old_list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
@@ -12,13 +13,12 @@ import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class ListSuggestionPage extends GetView<ListSuggestionPageController> {
-  const ListSuggestionPage({Key? key}) : super(key: key);
+class OldListSuggestionPage extends GetView<OldListSuggestionPageController> {
+  const OldListSuggestionPage({Key? key}) : super(key: key);
 
   PreferredSizeWidget _appBar() {
     return AppBar(
@@ -133,7 +133,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             Obx(() {
               if (controller.isSearchResult.value) {
                 print('출력물 ${controller.isSearchResult.value}');
-                return GetBuilder<ListSuggestionPageController>(
+                return GetBuilder<OldListSuggestionPageController>(
                   id: 'searchResult',
                   builder: (ListSuggestionPageController) {
                     return ConstrainedBox(
@@ -197,7 +197,26 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
       child: GestureDetector(
         onTap: () {
-          //상세 페이지 이동
+          // final updatedList = controller.selectedList.value.copyWith(
+          //   listId: bukkungListModel.listId,
+          //   title: bukkungListModel.title,
+          //   content: bukkungListModel.content,
+          //   location: bukkungListModel.location,
+          //   category: bukkungListModel.category,
+          //   imgUrl: bukkungListModel.imgUrl,
+          //   imgId: bukkungListModel.imgId,
+          //   madeBy: bukkungListModel.madeBy,
+          //   likedUsers: bukkungListModel.likedUsers,
+          //   likeCount: bukkungListModel.likeCount,
+          //   viewCount: bukkungListModel.viewCount,
+          // );
+          print('눌렀어');
+          controller.isSearchResult(false);
+          print('눌렀어 실행 ${controller.isSearchResult.value}');
+          FocusScope.of(context).unfocus();
+          controller.viewCount();
+          controller.indexSelection(bukkungListModel);
+          print('눌렀어 실행 ${controller.isSearchResult.value}');
         },
         child: Container(
           height: 85,
@@ -332,16 +351,16 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               labelPadding: EdgeInsets.zero,
               unselectedLabelColor: Colors.black.withOpacity(0.5),
               indicator: UnderlineTabIndicator(
-                insets: EdgeInsets.only(left: 30, right: 30, bottom: 5),
-                borderSide: BorderSide(
-                  width: 3,
-                  color: Colors.black.withOpacity(0.5),
-                ),
-              ),
+                  insets: EdgeInsets.only(left: 30, right: 30, bottom: 5),
+                  borderSide: BorderSide(
+                    width: 3,
+                    color: Colors.black.withOpacity(0.5),
+                  )),
               tabs: const [
                 Tab(text: '인기'),
                 Tab(text: '최신'),
                 Tab(text: '조회수'),
+                Tab(text: '찜'),
                 Tab(text: '내 리스트'),
               ],
             ),
@@ -394,10 +413,12 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             controller.listByLikePrevList!.clear();
             controller.listByDatePrevList!.clear();
             controller.listByViewPrevList!.clear();
+            controller.favoriteListPrevList!.clear();
             controller.loadNewBukkungLists('like');
             controller.loadNewBukkungLists('date');
             controller.loadNewBukkungLists('view');
             controller.loadNewBukkungLists('favorite');
+            controller.initSelectedBukkungList();
             Get.back();
           },
           child: Text(
@@ -411,22 +432,295 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
+  Widget _selectedImage() {
+    return Obx(() {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Stack(
+          children: [
+            //예외 처리
+            controller.selectedList.value.imgUrl == null
+                ? Container(
+                    width: Get.width - 50,
+                    height: 230,
+                    padding: const EdgeInsets.only(top: 400),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: CustomColors.mainPink,
+                      ),
+                    ),
+                  )
+                : AnimatedContainer(
+                    duration: Duration(milliseconds: 250),
+                    margin: const EdgeInsets.only(top: 10),
+                    width: Get.width - 50,
+                    height: 230,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: CustomCachedNetworkImage(
+                              controller.selectedList.value.imgUrl ?? ''),
+                          fit: BoxFit.cover,
+                          opacity: controller.noFavoriteList.value ||
+                                  controller.noMyList.value
+                              ? 0
+                              : 1),
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(
+                              controller.noFavoriteList.value ||
+                                      controller.noMyList.value
+                                  ? 0
+                                  : 0.2),
+                          spreadRadius: 3,
+                          blurRadius: 10,
+                          offset: Offset(5, 5), // Offset(수평, 수직)
+                        ),
+                      ],
+                    ),
+                  ),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              margin: const EdgeInsets.only(top: 10),
+              width: Get.width - 50,
+              height: 230,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color:
+                    controller.noFavoriteList.value || controller.noMyList.value
+                        ? Colors.transparent
+                        : Colors.black.withOpacity(0.5),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(
+                top: 30,
+                left: 20,
+                right: 20,
+                bottom: 10,
+              ),
+              width: Get.width - 60,
+              height: 230,
+              child: controller.noFavoriteList.value ||
+                      controller.noMyList.value
+                  ? Center(
+                      child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          controller.noMyList.value
+                              ? '아직 만든 리스트가 없네요'
+                              : '아직 찜한 리스트가 없네요',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ))
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: controller.selectedList.value.title == null
+                                  ? Container()
+                                  : Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: PcText(
+                                          controller.selectedList.value.title ??
+                                              '',
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              fontSize: 24,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                            ),
+                            SizedBox(width: 10),
+                            CategoryIcon(
+                              category:
+                                  controller.selectedList.value.category ??
+                                      '1travel',
+                              size: 25,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/icons/locationPinWhite.png',
+                                    width: 13,
+                                    color: Colors.white.withOpacity(0.9),
+                                    colorBlendMode: BlendMode.modulate,
+                                  ),
+                                  Expanded(
+                                    child: PcText(
+                                      controller.selectedList.value.location ??
+                                          '',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 150,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: PcText(
+                                      '업로드:  ',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: PcText(
+                                      controller.selectedList.value.createdAt
+                                          .toString(),
+                                      maxLines: 1,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 15),
+                        BkText(
+                          controller.selectedList.value.content ?? '',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            height: 1.3,
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'by: ${controller.selectedList.value.madeBy ?? ''}',
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.9),
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  LevelIcon(level: controller.userLevel.value)
+                                ],
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                controller.toggleLike();
+                              },
+                              child: Icon(
+                                key: controller.likeKey,
+                                controller.isLiked.value
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Colors.white.withOpacity(0.9),
+                                size: 25,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _listPlayButton() {
+    return Obx(() {
+      return controller.noFavoriteList.value || controller.noMyList.value
+          ? Container()
+          : Positioned(
+              key: controller.copyKey,
+              top: 340,
+              left: Get.width / 2 - 30,
+              child: CustomIconButton(
+                onTap: () {
+                  Analytics().logEvent('copy_bukkunglist', null);
+                  controller.setCopyCount();
+                  Get.to(
+                    () => UploadBukkungListPage(),
+                    arguments: [controller.selectedList.value, true],
+                  );
+                },
+                size: 60,
+                icon: Icon(
+                  Icons.document_scanner,
+                  size: 40,
+                  color: Colors.white,
+                ),
+                shadowOffset: Offset(5, 5),
+                shadowBlurRadius: 5,
+              ),
+            );
+    });
+  }
+
   Widget _suggestionListTabView() {
     return Expanded(
       child: Obx(() {
-        return controller.noMyList.value
+        return controller.noFavoriteList.value || controller.noMyList.value
             ? Center(
                 child: Text(
-                  '나만의 버꿍리스트를 만들어보세요',
+                  controller.noMyList.value
+                      ? '나만의 버꿍리스트를 만들어보세요'
+                      : '추천리스트 중 마음에 드는 \n버꿍리스트를 찜해보세요',
                   style: TextStyle(color: CustomColors.blackText),
                 ),
               )
             : TabBarView(
                 controller: controller.suggestionListTabController,
                 children: [
-                  _listByCopy(),
+                  _listByLike(),
                   _listByDate(),
                   _listByView(),
+                  _favoriteList(),
                   _suggestionMyList(),
                 ],
               );
@@ -434,7 +728,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
-  Widget _listByCopy() {
+  Widget _listByLike() {
     return StreamBuilder(
       stream: controller.listByLikeStreamController.stream,
       builder: (BuildContext context,
@@ -456,6 +750,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               physics: AlwaysScrollableScrollPhysics(),
               controller: controller.listByLikeScrollController,
               children: [
+                SizedBox(height: 50),
                 Column(
                   children: List.generate(list.length, (index) {
                     final bukkungList = list[index];
@@ -500,6 +795,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               physics: AlwaysScrollableScrollPhysics(),
               controller: controller.listByDateScrollController,
               children: [
+                SizedBox(height: 50),
                 Column(
                   children: List.generate(list.length, (index) {
                     final bukkungList = list[index];
@@ -544,6 +840,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               physics: AlwaysScrollableScrollPhysics(),
               controller: controller.listByViewScrollController,
               children: [
+                SizedBox(height: 50),
                 Column(
                   children: List.generate(list.length, (index) {
                     final bukkungList = list[index];
@@ -566,70 +863,164 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
+  Widget _favoriteList() {
+    return StreamBuilder(
+      stream: controller.favoriteListStreamController.stream,
+      builder: (BuildContext context,
+          AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+        if (!bukkungLists.hasData) {
+          return Center(
+            child: CircularProgressIndicator(color: CustomColors.mainPink),
+          );
+        } else if (bukkungLists.hasError) {
+          openAlertDialog(title: '에러 발생');
+        } else {
+          final list = bukkungLists.data!;
+          return Scrollbar(
+            controller: controller.favoriteListScrollController,
+            thickness: 5,
+            thumbVisibility: true,
+            radius: Radius.circular(25),
+            child: ListView(
+              physics: AlwaysScrollableScrollPhysics(),
+              controller: controller.favoriteListScrollController,
+              children: [
+                SizedBox(height: 50),
+                Column(
+                  children: List.generate(list.length, (index) {
+                    final bukkungList = list[index];
+                    return _suggestionListCard(bukkungList, index, false);
+                  }),
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
+          );
+        }
+        return Center(child: Text('아직 좋아요를 누른 리스트가 없습니다'));
+      },
+    );
+  }
+
+  // Widget _suggestionCategoryList(int index) {
+  //   return StreamBuilder(
+  //     stream: controller.getSuggestionBukkungList(
+  //       controller.tabIndexToName(index),
+  //     ),
+  //     builder: (BuildContext context,
+  //         AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+  //       if (!bukkungLists.hasData) {
+  //         return Center(
+  //           child: CircularProgressIndicator(color: CustomColors.mainPink),
+  //         );
+  //       } else if (bukkungLists.hasError) {
+  //         openAlertDialog(title: '에러 발생');
+  //       } else {
+  //         final list = bukkungLists.data!;
+  //         return ListView(
+  //           physics: AlwaysScrollableScrollPhysics(),
+  //           children: [
+  //             SizedBox(height: 50),
+  //             Column(
+  //               children: List.generate(list.length, (index) {
+  //                 final bukkungList = list[index];
+  //                 return _suggestionListCard(bukkungList, index, false);
+  //               }),
+  //             ),
+  //             SizedBox(height: 20),
+  //           ],
+  //         );
+  //       }
+  //       return Center(child: Text('아직 버꿍리스트가 없습니다'));
+  //     },
+  //   );
+  // }
+
   Widget _suggestionListCard(
       BukkungListModel bukkungListModel, int index, bool isDelete) {
-    int? viewCount = bukkungListModel.viewCount;
-    NumberFormat formatter = NumberFormat.compact(locale: "ko_KR");
-    String formattedViewCount = formatter.format(viewCount);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: CupertinoButton(
-        onPressed: () {
-          //세부 페이지 이동
+      child: GestureDetector(
+        onTap: () {
+          controller.indexSelection(bukkungListModel);
+          controller.viewCount();
         },
-        padding: EdgeInsets.zero,
+        onDoubleTap: () {
+          controller.indexSelection(bukkungListModel);
+          Get.to(
+            () => UploadBukkungListPage(),
+            arguments: [controller.selectedList.value, true],
+          );
+        },
         child: Stack(
           children: [
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              padding: EdgeInsets.only(left: 110, right: 30),
-              height: 85,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SizedBox(height: 10),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: PcText(
-                      bukkungListModel.title!,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: CustomColors.blackText,
+            Obx(() {
+              int? viewCount = bukkungListModel.viewCount;
+              NumberFormat formatter = NumberFormat.compact(locale: "ko_KR");
+              String formattedViewCount = formatter.format(viewCount);
+              return Container(
+                margin: EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.only(left: 110, right: 30),
+                height: 85,
+                decoration: BoxDecoration(
+                    color: bukkungListModel.listId ==
+                            controller.selectedList.value.listId
+                        ? CustomColors.lightPink.withOpacity(0.1)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                      color: bukkungListModel.listId ==
+                              controller.selectedList.value.listId
+                          ? CustomColors.mainPink
+                          : Colors.white,
+                      width: 2,
+                    )),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SizedBox(height: 10),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: PcText(
+                        bukkungListModel.title!,
+                        style: TextStyle(
+                            fontSize: 18, color: CustomColors.blackText),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _iconText(
-                          'location-pin.png',
-                          bukkungListModel.location ?? '',
-                          true,
-                        ),
-                        _iconText(
-                          'preview.png',
-                          '$formattedViewCount회',
-                          false,
-                        ),
-                        _iconText(
-                          'copyCount',
-                          '${bukkungListModel.copyCount.toString()}회',
-                          false,
-                        ),
-                      ],
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _iconText(
+                            'location-pin.png',
+                            bukkungListModel.location ?? '',
+                            true,
+                          ),
+                          _iconText(
+                            'preview.png',
+                            '$formattedViewCount회',
+                            false,
+                          ),
+                          _iconText(
+                            'likeCount',
+                            '${bukkungListModel.likeCount.toString()}개',
+                            false,
+                          ),
+                          _iconText(
+                            'copyCount',
+                            '${bukkungListModel.copyCount.toString()}회',
+                            false,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                ],
-              ),
-            ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              );
+            }),
             Container(
               width: 100,
               height: 100,
@@ -654,11 +1045,25 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 right: 0,
                 child: CustomIconButton(
                   onTap: () {
+                    // final updatedList = controller.selectedList.value.copyWith(
+                    //   listId: bukkungListModel.listId,
+                    //   title: bukkungListModel.title,
+                    //   content: bukkungListModel.content,
+                    //   location: bukkungListModel.location,
+                    //   category: bukkungListModel.category,
+                    //   imgUrl: bukkungListModel.imgUrl,
+                    //   imgId: bukkungListModel.imgId,
+                    //   madeBy: bukkungListModel.madeBy,
+                    //   likedUsers: bukkungListModel.likedUsers,
+                    //   likeCount: bukkungListModel.likeCount,
+                    //   viewCount: bukkungListModel.viewCount,
+                    // );
+                    controller.indexSelection(bukkungListModel);
                     openAlertDialog(
                       title: '정말로 지우시겠습니까?',
                       secondButtonText: '취소',
                       mainfunction: () {
-                        controller.listDelete(bukkungListModel);
+                        controller.listDelete();
                         Get.back();
                       },
                     );
@@ -708,14 +1113,12 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 style: TextStyle(
                   fontFamily: 'Bookk_mj',
                   fontSize: 11,
-                  color: CustomColors.blackText,
                 ),
               )
             : BkText(
                 text,
                 style: TextStyle(
                   fontSize: 11,
-                  color: CustomColors.blackText,
                 ),
               ),
       ],
@@ -772,7 +1175,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ListSuggestionPageController(context));
+    Get.put(OldListSuggestionPageController(context));
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -783,12 +1186,21 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
         appBar: _appBar(),
         body: Stack(
           children: [
-            _background(),
-            Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              SizedBox(height: 75),
-              _suggestionListTabBar(context),
-              _suggestionListTabView(),
-            ]),
+            Column(
+              children: [
+                _background(),
+                _suggestionListTabView(),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 75),
+                _suggestionListTabBar(context),
+                _selectedImage(),
+              ],
+            ),
+            _listPlayButton(),
             _searchBar(),
           ],
         ),

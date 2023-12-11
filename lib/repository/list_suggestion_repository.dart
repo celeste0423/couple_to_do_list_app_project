@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/controller/list_suggestion_page_controller.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/controller/old_list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
@@ -76,12 +77,12 @@ class ListSuggestionRepository {
     //키페이지 설정
     QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
         querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
-    ListSuggestionPageController.to.listByLikeKeyPage = lastDocument;
+    OldListSuggestionPageController.to.listByLikeKeyPage = lastDocument;
     //이전 리스트 저장
-    ListSuggestionPageController.to.listByLikePrevList = bukkungLists;
+    OldListSuggestionPageController.to.listByLikePrevList = bukkungLists;
     //마지막 페이지인지 여부 확인
     if (querySnapshot.docs.length < pageSize) {
-      ListSuggestionPageController.to.isListByLikeLastPage = true;
+      OldListSuggestionPageController.to.isListByLikeLastPage = true;
     }
     return bukkungLists;
   }
@@ -112,12 +113,12 @@ class ListSuggestionRepository {
     //키페이지 설정
     QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
         querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
-    ListSuggestionPageController.to.listByDateKeyPage = lastDocument;
+    OldListSuggestionPageController.to.listByDateKeyPage = lastDocument;
     //이전 리스트 저장
-    ListSuggestionPageController.to.listByDatePrevList = bukkungLists;
+    OldListSuggestionPageController.to.listByDatePrevList = bukkungLists;
     //마지막 페이지인지 여부 확인
     if (querySnapshot.docs.length < pageSize) {
-      ListSuggestionPageController.to.isListByDateLastPage = true;
+      OldListSuggestionPageController.to.isListByDateLastPage = true;
     }
     return bukkungLists;
   }
@@ -148,12 +149,12 @@ class ListSuggestionRepository {
     //키페이지 설정
     QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
         querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
-    ListSuggestionPageController.to.listByViewKeyPage = lastDocument;
+    OldListSuggestionPageController.to.listByViewKeyPage = lastDocument;
     //이전 리스트 저장
-    ListSuggestionPageController.to.listByViewPrevList = bukkungLists;
+    OldListSuggestionPageController.to.listByViewPrevList = bukkungLists;
     //마지막 페이지인지 여부 확인
     if (querySnapshot.docs.length < pageSize) {
-      ListSuggestionPageController.to.isListByViewLastPage = true;
+      OldListSuggestionPageController.to.isListByViewLastPage = true;
     }
     return bukkungLists;
   }
@@ -185,12 +186,12 @@ class ListSuggestionRepository {
     //키페이지 설정
     QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
         querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
-    ListSuggestionPageController.to.favoriteListKeyPage = lastDocument;
+    OldListSuggestionPageController.to.favoriteListKeyPage = lastDocument;
     //이전 리스트 저장
-    ListSuggestionPageController.to.favoriteListPrevList = bukkungLists;
+    OldListSuggestionPageController.to.favoriteListPrevList = bukkungLists;
     //마지막 페이지인지 여부 확인
     if (querySnapshot.docs.length < pageSize) {
-      ListSuggestionPageController.to.isfavoriteListLastPage = true;
+      OldListSuggestionPageController.to.isfavoriteListLastPage = true;
     }
     return bukkungLists;
   }
@@ -319,5 +320,114 @@ class ListSuggestionRepository {
     } catch (e) {
       openAlertDialog(title: '이미지 삭제 오류 $e');
     }
+  }
+
+  Future<List<BukkungListModel>> getNewListByLike(
+    int pageSize,
+    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
+    List<BukkungListModel>? prevList,
+    List<String> selectedCategories,
+  ) async {
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .orderBy('copyCount', descending: true)
+        .orderBy('likeCount', descending: true)
+        .orderBy('viewCount', descending: true);
+    if (keyPage != null) {
+      query = query.startAfterDocument(keyPage);
+    }
+    query = query.limit(pageSize);
+    if (selectedCategories.isNotEmpty) {
+      query = query.where('category', whereIn: selectedCategories);
+    }
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+    print('퀴리는 이거야${querySnapshot.docs}');
+    List<BukkungListModel> bukkungLists = prevList ?? [];
+    for (var bukkungList in querySnapshot.docs) {
+      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+    }
+    //키페이지 설정
+    QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
+        querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
+    ListSuggestionPageController.to.listByLikeKeyPage = lastDocument;
+    //이전 리스트 저장
+    ListSuggestionPageController.to.listByLikePrevList = bukkungLists;
+    //마지막 페이지인지 여부 확인
+    if (querySnapshot.docs.length < pageSize) {
+      ListSuggestionPageController.to.isListByLikeLastPage = true;
+    }
+    return bukkungLists;
+  }
+
+  Future<List<BukkungListModel>> getNewListByDate(
+    int pageSize,
+    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
+    List<BukkungListModel>? prevList,
+    List<String> selectedCategories,
+  ) async {
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .orderBy('createdAt', descending: true)
+        .orderBy('likeCount', descending: true);
+    if (keyPage != null) {
+      query = query.startAfterDocument(keyPage);
+    }
+    query = query.limit(pageSize);
+    if (selectedCategories.isNotEmpty) {
+      query = query.where('category', whereIn: selectedCategories);
+    }
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+    print('퀴리는 이거야${querySnapshot.docs}');
+    List<BukkungListModel> bukkungLists = prevList ?? [];
+    for (var bukkungList in querySnapshot.docs) {
+      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+    }
+    //키페이지 설정
+    QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
+        querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
+    ListSuggestionPageController.to.listByDateKeyPage = lastDocument;
+    //이전 리스트 저장
+    ListSuggestionPageController.to.listByDatePrevList = bukkungLists;
+    //마지막 페이지인지 여부 확인
+    if (querySnapshot.docs.length < pageSize) {
+      ListSuggestionPageController.to.isListByDateLastPage = true;
+    }
+    return bukkungLists;
+  }
+
+  Future<List<BukkungListModel>> getNewListByView(
+    int pageSize,
+    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
+    List<BukkungListModel>? prevList,
+    List<String> selectedCategories,
+  ) async {
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .orderBy('viewCount', descending: true)
+        .orderBy('likeCount', descending: true)
+        .orderBy('createdAt', descending: true);
+    if (keyPage != null) {
+      query = query.startAfterDocument(keyPage);
+    }
+    query = query.limit(pageSize);
+    if (selectedCategories.isNotEmpty) {
+      query = query.where('category', whereIn: selectedCategories);
+    }
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+    List<BukkungListModel> bukkungLists = prevList ?? [];
+    for (var bukkungList in querySnapshot.docs) {
+      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+    }
+    //키페이지 설정
+    QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
+        querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
+    ListSuggestionPageController.to.listByViewKeyPage = lastDocument;
+    //이전 리스트 저장
+    ListSuggestionPageController.to.listByViewPrevList = bukkungLists;
+    //마지막 페이지인지 여부 확인
+    if (querySnapshot.docs.length < pageSize) {
+      ListSuggestionPageController.to.isListByViewLastPage = true;
+    }
+    return bukkungLists;
   }
 }
