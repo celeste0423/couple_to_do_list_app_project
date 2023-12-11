@@ -72,7 +72,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       //                 ),
       //               )
       //             : Container();
-      //       }),
+      //       },),
       //     ],
       //   )
       // ],

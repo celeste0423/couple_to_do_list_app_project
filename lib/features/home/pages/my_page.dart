@@ -416,24 +416,27 @@ class MyPage extends GetView<MyPageController> {
   }
 
   Widget _achievementDetail(String title, String content) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 15,
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 15,
+            ),
           ),
-        ),
-        Text(
-          content,
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.w800,
-            decoration: TextDecoration.underline,
-            height: 2,
+          Text(
+            content,
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.w800,
+              decoration: TextDecoration.underline,
+              height: 2,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
