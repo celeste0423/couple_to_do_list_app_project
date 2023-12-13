@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
+import 'package:couple_to_do_list_app/helper/background_message/controller/fcm_controller.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
@@ -59,7 +60,25 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
       myNickname = AuthController.to.user.value.nickname;
       buddyNickname = buddyData!.nickname;
     }
-    print('짝꿍 닉네임 ${buddyNickname}');
+    print('짝꿍 닉네임 $buddyNickname');
+  }
+
+  Future<void> sendCompletedMessageToBuddy() async {
+    final buddyUid = AuthController.to.user.value.gender == 'male'
+        ? AuthController.to.group.value.femaleUid
+        : AuthController.to.group.value.maleUid;
+    print('짝꿍 uid $buddyUid');
+    final userTokenData = await FCMController().getDeviceTokenByUid(buddyUid!);
+    if (userTokenData != null) {
+      print('유저 토큰 존재');
+      FCMController().sendMessageController(
+        userToken: userTokenData.deviceToken!,
+        title: "${AuthController.to.user.value.nickname}님이 다이어리 소감 작성을 요청했어요!",
+        body: '지금 바로 작성해보세요',
+        dataType: 'diary',
+        dataContent: selectedDiaryModel.diaryId,
+      );
+    }
   }
 
   @override
@@ -267,10 +286,24 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 15.0),
-                        child: Text(
-                          myComment ?? '없음',
-                          style: TextStyle(color: CustomColors.greyText),
-                        ),
+                        child: myComment != null
+                            ? Text(
+                                myComment!,
+                                style: TextStyle(color: CustomColors.greyText),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  Get.off(() => UploadDiaryPage(),
+                                      arguments: selectedDiaryModel);
+                                },
+                                child: Text(
+                                  '여기를 눌러 소감을 작성하세요',
+                                  style: TextStyle(
+                                    color: CustomColors.greyText,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
                       ),
                     )
                   ],
@@ -278,7 +311,11 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
               ),
             ),
             //top+height 하면 됨
-            Positioned(right: 0, top: 205, child: _bottomButtons())
+            Positioned(
+              right: 0,
+              top: 205,
+              child: _bottomButtons(),
+            )
           ],
         ),
       );
@@ -338,10 +375,24 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 15.0),
-                        child: Text(
-                          bukkungComment ?? '없음',
-                          style: TextStyle(color: CustomColors.greyText),
-                        ),
+                        child: bukkungComment != null
+                            ? Text(
+                                bukkungComment!,
+                                style: TextStyle(color: CustomColors.greyText),
+                              )
+                            : GestureDetector(
+                                onTap: () async {
+                                  await sendCompletedMessageToBuddy();
+                                  Get.snackbar('전송완료', '요청을 보냈습니다.');
+                                },
+                                child: Text(
+                                  '아직 상대가 소감을 작성하지 않았어요. \n여기를 눌러 소감 작성을 요청해보세요.',
+                                  style: TextStyle(
+                                    color: CustomColors.greyText,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
                       ),
                     ),
                   ],
@@ -396,14 +447,15 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
               height: 5,
             ),
             FutureBuilder(
-                future: getNickname(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return _diaryTab(tabIndex!);
-                  } else {
-                    return _diaryTab(tabIndex!);
-                  }
-                }),
+              future: getNickname(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return _diaryTab(tabIndex!);
+                } else {
+                  return _diaryTab(tabIndex!);
+                }
+              },
+            ),
           ],
         ),
       ),

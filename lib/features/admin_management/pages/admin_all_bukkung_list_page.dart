@@ -1,20 +1,16 @@
-import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
-import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
+import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
-import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/utils/type_to_color.dart';
-import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/custom_cached_networkImage.dart';
-import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 import '../controller/admin_bukkung_list_page_controller.dart';
 
@@ -128,79 +124,6 @@ class AdminBukkungListPage extends GetView<AdminBukkungListPageController> {
     );
   }
 
-  Widget _categoryDivider(int categoryNumber) {
-    switch (categoryNumber) {
-      case 1:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-          child: Row(
-            children: const [
-              CategoryIcon(category: '1travel'),
-              SizedBox(width: 10),
-              Text('여행', style: TextStyle(fontSize: 20)),
-            ],
-          ),
-        );
-      case 2:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-          child: Row(
-            children: const [
-              CategoryIcon(category: '2meal'),
-              SizedBox(width: 10),
-              Text('식사', style: TextStyle(fontSize: 20)),
-            ],
-          ),
-        );
-      case 3:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-          child: Row(
-            children: const [
-              CategoryIcon(category: '3activity'),
-              SizedBox(width: 10),
-              Text('액티비티', style: TextStyle(fontSize: 20)),
-            ],
-          ),
-        );
-      case 4:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-          child: Row(
-            children: const [
-              CategoryIcon(category: '4culture'),
-              SizedBox(width: 10),
-              Text('문화 활동', style: TextStyle(fontSize: 20)),
-            ],
-          ),
-        );
-      case 5:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-          child: Row(
-            children: const [
-              CategoryIcon(category: '5study'),
-              SizedBox(width: 10),
-              Text('자기 계발', style: TextStyle(fontSize: 20)),
-            ],
-          ),
-        );
-      case 6:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-          child: Row(
-            children: const [
-              CategoryIcon(category: '6etc'),
-              SizedBox(width: 10),
-              Text('기타', style: TextStyle(fontSize: 20)),
-            ],
-          ),
-        );
-      default:
-        return Container();
-    }
-  }
-
   Widget _bukkungListCard(BukkungListModel bukkungListModel) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -235,16 +158,6 @@ class AdminBukkungListPage extends GetView<AdminBukkungListPageController> {
                           borderRadius: BorderRadius.circular(25),
                         ),
                       ),
-                      //   child: ClipRRect(
-                      //       borderRadius: BorderRadius.only(
-                      //         topLeft: Radius.circular(25),
-                      //         bottomLeft: Radius.circular(25),
-                      //       ),
-                      //       child: Image.network(
-                      //         '${bukkungListModel.imgUrl}',
-                      //         height: 150,
-                      //         fit: BoxFit.cover,
-                      //       )),
                     ),
                     SizedBox(width: 20),
                     Expanded(
@@ -266,18 +179,6 @@ class AdminBukkungListPage extends GetView<AdminBukkungListPageController> {
                               ),
                             ),
                           ),
-                          // MarqueeAbleText(
-                          //   text: bukkungListModel.title!,
-                          //   maxLength: 10,
-                          //   style: TextStyle(
-                          //     fontSize: 25,
-                          //     color: CustomColors.blackText,
-                          //   ),
-                          // ),
-                          bukkungListModel.date == null
-                              ? BkText('(날짜 미정)')
-                              : BkText(DateFormat('yyyy-MM-dd')
-                                  .format(bukkungListModel.date!)),
                           Row(
                             children: [
                               PngIcon(
@@ -304,6 +205,22 @@ class AdminBukkungListPage extends GetView<AdminBukkungListPageController> {
                               ),
                             ],
                           ),
+                          bukkungListModel.imgUrl == Constants.baseImageUrl
+                              ? CupertinoButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () async {
+                                    await controller
+                                        .updateAutoImage(bukkungListModel);
+                                  },
+                                  child: Text(
+                                    '사진 자동 추가',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
                     )

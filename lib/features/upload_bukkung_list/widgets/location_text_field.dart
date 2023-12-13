@@ -99,7 +99,7 @@ class _LocationTextFieldState extends State<LocationTextField> {
           onTap: onTap,
           horizontalTitleGap: 0,
           title: Text(
-            shortLocation ?? '',
+            shortLocation,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),

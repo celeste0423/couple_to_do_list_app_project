@@ -25,7 +25,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
   PreferredSizeWidget _appBar() {
     return AppBar(
       leading: TextButton(
-        onPressed: () {
+        onPressed: () async {
           Get.back();
         },
         child: Text(
@@ -433,7 +433,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      height: Get.height - 520,
+      height: Get.height - 520 - 65,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
         color: Colors.white,
@@ -495,6 +495,45 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
     });
   }
 
+  Widget _autoImageSwitch() {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        height: 45,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: Colors.white,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              // color: Colors.black,
+              width: Get.width - 30 - 30 - 50 - 10 - 20 - 20 - 70,
+              child: AutoSizeText(
+                '추천 이미지 자동 추가',
+                maxLines: 2,
+                style: TextStyle(
+                  color: CustomColors.greyText,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            Obx(() {
+              return Switch(
+                inactiveThumbColor: CustomColors.grey,
+                value: controller.isAutoImage.value,
+                onChanged: (value) {
+                  controller.isAutoImage.value = value;
+                },
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _publicSwitch() {
     return Expanded(
       child: Container(
@@ -509,7 +548,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
           children: [
             SizedBox(
               // color: Colors.black,
-              width: Get.width-30-30-50-10-20-20-70,
+              width: Get.width - 30 - 30 - 50 - 10 - 20 - 20 - 70,
               child: AutoSizeText(
                 '버꿍리스트 공개 여부',
                 maxLines: 2,
@@ -646,11 +685,21 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                                 ),
                                 child:
                                     controller.selectedBukkungListModel == null
-                                        ? Row(
+                                        ? Column(
                                             children: [
-                                              _imagePicker(context),
-                                              SizedBox(width: 10),
-                                              _publicSwitch(),
+                                              Row(
+                                                children: [
+                                                  _publicSwitch(),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10),
+                                              Row(
+                                                children: [
+                                                  _imagePicker(context),
+                                                  SizedBox(width: 10),
+                                                  _autoImageSwitch(),
+                                                ],
+                                              ),
                                             ],
                                           )
                                         : _imagePicker(context),

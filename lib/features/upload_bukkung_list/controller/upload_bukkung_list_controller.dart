@@ -16,6 +16,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class UploadBukkungListController extends GetxController {
   static UploadBukkungListController get to => Get.find();
@@ -44,7 +46,6 @@ class UploadBukkungListController extends GetxController {
 
   Rx<DateTime?> listDateTime = Rx<DateTime?>(null);
 
-  late Ticker _ticker;
   TextEditingController contentController = TextEditingController();
   FocusNode contentFocusNode = FocusNode();
   ScrollController contentScrollController = ScrollController();
@@ -53,9 +54,11 @@ class UploadBukkungListController extends GetxController {
 
   Rx<bool> isImage = false.obs;
   Rx<bool> isSelectedImage = false.obs;
+  Rx<bool> isAutoImage = true.obs;
 
   Rx<bool> isPublic = true.obs;
   BukkungListModel? bukkungList;
+  String? newListId;
 
   Rx<bool> isUploading = false.obs;
 
@@ -243,6 +246,7 @@ class UploadBukkungListController extends GetxController {
     FocusManager.instance.primaryFocus?.unfocus();
     var uuid = Uuid();
     String listId = uuid.v1();
+    newListId = listId;
     String imageId = uuid.v4();
     var filename = '$imageId.jpg';
 
@@ -270,26 +274,41 @@ class UploadBukkungListController extends GetxController {
       });
     } else if (selectedBukkungListModel == null) {
       // 선택 안함, 사진 없음
-      var updatedBukkungList = bukkungList!.copyWith(
-        listId: listId,
-        category: listCategory.value,
-        title: titleController.text,
-        content: contentController.text,
-        location: locationController.text,
-        imgUrl: Constants.baseImageUrl,
-        likeCount: 0,
-        date: listDateTime.value,
-      );
-      _submitNoImgBukkungList(updatedBukkungList, listId, false);
+      String? autoImageUrl = await getOnlineImage(titleController.text);
+      if (isAutoImage.value == true && autoImageUrl != null) {
+        //추천 이미지 있을 경우
+        var updatedBukkungList = bukkungList!.copyWith(
+          listId: listId,
+          category: listCategory.value,
+          title: titleController.text,
+          content: contentController.text,
+          location: locationController.text,
+          imgUrl: autoImageUrl,
+          likeCount: 0,
+          date: listDateTime.value,
+        );
+        _submitNoImgBukkungList(updatedBukkungList, listId, false);
+      } else {
+        //추천 이미지 없을 경우
+        var updatedBukkungList = bukkungList!.copyWith(
+          listId: listId,
+          category: listCategory.value,
+          title: titleController.text,
+          content: contentController.text,
+          location: locationController.text,
+          imgUrl: Constants.baseImageUrl,
+          likeCount: 0,
+          date: listDateTime.value,
+        );
+        _submitNoImgBukkungList(updatedBukkungList, listId, false);
+      }
     } else if (selectedBukkungListModel != null &&
         isSelectedImage.value == true &&
         listImage == null) {
       // 선택함, 사진 있음(웹사진)
-      //print('선택함, 사진있음(웹사진)');
       String? downloadUrl;
       if (isSuggestion) {
         //수정중 => 이미지 주소 그대로 들고옴
-        // print('수정중 이미지 주소 그대로 들고옴');
         String sourcePath = '${selectedBukkungListModel!.imgId}.jpg';
         String destinationPath =
             '${AuthController.to.user.value.groupId}/$filename';
@@ -439,6 +458,35 @@ class UploadBukkungListController extends GetxController {
     }
   }
 
+  Future<String?> getOnlineImage(String searchWords) async {
+    final response = await http.get(
+      Uri.parse(
+          "https://api.pexels.com/v1/search?query=$searchWords&locale=ko-KR&per_page=1"),
+      headers: {
+        'Authorization':
+            'vj40CWvim48eP6I6ymW21oHCbU50DVS4Dyj8y4b4GZVIKaWaT9EisapB'
+      },
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      // 안전하게 null 체크를 수행하고 photos가 없으면 null을 반환
+      List<dynamic>? photos = data['photos'];
+      if (photos == null || photos.isEmpty) {
+        return null;
+      }
+      Map<String, dynamic>? firstPhoto = photos[0];
+      if (firstPhoto == null) {
+        return null;
+      }
+      String? originalImageUrl = firstPhoto['src']['original'];
+      return originalImageUrl;
+    } else {
+      // 오류가 발생한 경우에도 null 반환
+      print('추천 사진 없음 오류 (upl buk cont)');
+      return null;
+    }
+  }
+
   void _updateBukkungList(BukkungListModel bukkungListModel) async {
     await BukkungListRepository.updateGroupBukkungList(bukkungListModel);
   }
@@ -447,18 +495,31 @@ class UploadBukkungListController extends GetxController {
     final buddyUid = AuthController.to.user.value.gender == 'male'
         ? AuthController.to.group.value.femaleUid
         : AuthController.to.group.value.maleUid;
-    print('짝꿍 uid ${buddyUid}');
+    print('짝꿍 uid $buddyUid');
     final userTokenData = await FCMController().getDeviceTokenByUid(buddyUid!);
     if (userTokenData != null) {
       print('유저 토큰 존재');
-      FCMController().sendMessageController(
-        userToken: userTokenData.deviceToken!,
-        title: "${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!",
-        body: selectedBukkungListModel!.title!,
-        dataType: 'bukkunglist',
-        dataContent: selectedBukkungListModel!.listId,
-        groupId: AuthController.to.group.value.uid,
-      );
+      if (selectedBukkungListModel != null) {
+        //추천 리스트에서 가져온 경우
+        FCMController().sendMessageController(
+          userToken: userTokenData.deviceToken!,
+          title: "${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!",
+          body: selectedBukkungListModel!.title!,
+          dataType: 'bukkunglist',
+          dataContent: selectedBukkungListModel!.listId,
+          groupId: AuthController.to.group.value.uid,
+        );
+      } else {
+        //리스트를 완전히 새로 만든 경우
+        FCMController().sendMessageController(
+          userToken: userTokenData.deviceToken!,
+          title: "${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!",
+          body: titleController.text,
+          dataType: 'bukkunglist',
+          dataContent: newListId,
+          groupId: AuthController.to.group.value.uid,
+        );
+      }
     }
   }
 }

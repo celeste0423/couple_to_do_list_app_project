@@ -1,5 +1,7 @@
-import 'package:couple_to_do_list_app/features/admin_management/controller/admin_list_suggestion_page_controller.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/controller/list_suggestion_page_controller.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/controller/old_list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
+import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -8,15 +10,15 @@ import 'package:couple_to_do_list_app/widgets/custom_cached_networkImage.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/level_icon.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
+import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class AdminListSuggestionPage
-    extends GetView<AdminListSuggestionPageController> {
-  const AdminListSuggestionPage({Key? key}) : super(key: key);
+class OldListSuggestionPage extends GetView<OldListSuggestionPageController> {
+  const OldListSuggestionPage({Key? key}) : super(key: key);
 
   PreferredSizeWidget _appBar() {
     return AppBar(
@@ -52,21 +54,8 @@ class AdminListSuggestionPage
           )
         ],
       ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: GestureDetector(
-            onTap: () {
-              Get.to(() => UploadBukkungListPage(), arguments: [null, true]);
-            },
-            child: Icon(
-              key: controller.adminAddKey,
-              Icons.add,
-              color: Colors.white,
-              size: 35,
-            ),
-          ),
-        ),
+      actions: const [
+        SizedBox(width: 40),
       ],
     );
   }
@@ -143,9 +132,10 @@ class AdminListSuggestionPage
             ),
             Obx(() {
               if (controller.isSearchResult.value) {
-                return GetBuilder<AdminListSuggestionPageController>(
+                print('출력물 ${controller.isSearchResult.value}');
+                return GetBuilder<OldListSuggestionPageController>(
                   id: 'searchResult',
-                  builder: (AdminListSuggestionPageController) {
+                  builder: (ListSuggestionPageController) {
                     return ConstrainedBox(
                       constraints: BoxConstraints(maxHeight: 300),
                       child: controller.isTextEmpty
@@ -220,10 +210,13 @@ class AdminListSuggestionPage
           //   likeCount: bukkungListModel.likeCount,
           //   viewCount: bukkungListModel.viewCount,
           // );
-          controller.indexSelection(bukkungListModel);
-          controller.viewCount();
+          print('눌렀어');
           controller.isSearchResult(false);
+          print('눌렀어 실행 ${controller.isSearchResult.value}');
           FocusScope.of(context).unfocus();
+          controller.viewCount();
+          controller.indexSelection(bukkungListModel);
+          print('눌렀어 실행 ${controller.isSearchResult.value}');
         },
         child: Container(
           height: 85,
@@ -241,9 +234,8 @@ class AdminListSuggestionPage
                 height: 84,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
-                    fit: BoxFit.cover,
-                  ),
+                      image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
+                      fit: BoxFit.cover),
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
@@ -287,8 +279,13 @@ class AdminListSuggestionPage
                             false,
                           ),
                           _iconText(
-                            null,
+                            'likeCount',
                             '${bukkungListModel.likeCount.toString()}개',
+                            false,
+                          ),
+                          _iconText(
+                            'copyCount',
+                            '${bukkungListModel.copyCount.toString()}회',
                             false,
                           ),
                         ],
@@ -305,12 +302,143 @@ class AdminListSuggestionPage
     );
   }
 
+  Widget _suggestionListTabBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return _categorySelectDialog();
+                },
+              );
+            },
+            child: Container(
+              width: 35,
+              height: 35,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 3, bottom: 5),
+                child: PngIcon(
+                  iconName: 'category',
+                  iconColor: Colors.black.withOpacity(0.6),
+                  iconSize: 25,
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: TabBar(
+              isScrollable: false,
+              dividerColor: Colors.transparent,
+              controller: controller.suggestionListTabController,
+              labelColor: Colors.black.withOpacity(0.8),
+              labelStyle: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+              ),
+              unselectedLabelStyle: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w200,
+                color: Colors.black.withOpacity(0.5),
+              ),
+              labelPadding: EdgeInsets.zero,
+              unselectedLabelColor: Colors.black.withOpacity(0.5),
+              indicator: UnderlineTabIndicator(
+                  insets: EdgeInsets.only(left: 30, right: 30, bottom: 5),
+                  borderSide: BorderSide(
+                    width: 3,
+                    color: Colors.black.withOpacity(0.5),
+                  )),
+              tabs: const [
+                Tab(text: '인기'),
+                Tab(text: '최신'),
+                Tab(text: '조회수'),
+                Tab(text: '찜'),
+                Tab(text: '내 리스트'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _categorySelectDialog() {
+    return AlertDialog(
+      title: Text('카테고리를 선택해주세요'),
+      content: SingleChildScrollView(
+        child: Obx(
+          () => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: controller.categories.map((item) {
+              //print(controller.selectedCategories);
+              return CheckboxListTile(
+                title: Text(controller.categoryToString[item]!),
+                value: controller.selectedCategories.contains(item),
+                activeColor: CustomColors.mainPink,
+                onChanged: (bool? value) {
+                  if (value!) {
+                    controller.selectedCategories.add(item);
+                  } else {
+                    controller.selectedCategories.remove(item);
+                  }
+                },
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            controller.selectedCategories.clear();
+            Get.back();
+          },
+          child: Text(
+            '취소',
+            style: TextStyle(
+              color: CustomColors.blackText,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            controller.listByLikePrevList!.clear();
+            controller.listByDatePrevList!.clear();
+            controller.listByViewPrevList!.clear();
+            controller.favoriteListPrevList!.clear();
+            controller.loadNewBukkungLists('like');
+            controller.loadNewBukkungLists('date');
+            controller.loadNewBukkungLists('view');
+            controller.loadNewBukkungLists('favorite');
+            controller.initSelectedBukkungList();
+            Get.back();
+          },
+          child: Text(
+            '확인',
+            style: TextStyle(
+              color: CustomColors.mainPink,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _selectedImage() {
     return Obx(() {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Stack(
           children: [
+            //예외 처리
             controller.selectedList.value.imgUrl == null
                 ? Container(
                     width: Get.width - 50,
@@ -322,7 +450,8 @@ class AdminListSuggestionPage
                       ),
                     ),
                   )
-                : Container(
+                : AnimatedContainer(
+                    duration: Duration(milliseconds: 250),
                     margin: const EdgeInsets.only(top: 10),
                     width: Get.width - 50,
                     height: 230,
@@ -330,11 +459,19 @@ class AdminListSuggestionPage
                       image: DecorationImage(
                           image: CustomCachedNetworkImage(
                               controller.selectedList.value.imgUrl ?? ''),
-                          fit: BoxFit.cover),
+                          fit: BoxFit.cover,
+                          opacity: controller.noFavoriteList.value ||
+                                  controller.noMyList.value
+                              ? 0
+                              : 1),
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withOpacity(
+                              controller.noFavoriteList.value ||
+                                      controller.noMyList.value
+                                  ? 0
+                                  : 0.2),
                           spreadRadius: 3,
                           blurRadius: 10,
                           offset: Offset(5, 5), // Offset(수평, 수직)
@@ -342,13 +479,17 @@ class AdminListSuggestionPage
                       ],
                     ),
                   ),
-            Container(
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
               margin: const EdgeInsets.only(top: 10),
               width: Get.width - 50,
               height: 230,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
-                color: Colors.black.withOpacity(0.5),
+                color:
+                    controller.noFavoriteList.value || controller.noMyList.value
+                        ? Colors.transparent
+                        : Colors.black.withOpacity(0.5),
               ),
             ),
             Container(
@@ -360,121 +501,170 @@ class AdminListSuggestionPage
               ),
               width: Get.width - 60,
               height: 230,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: controller.selectedList.value.title == null
-                            ? Container()
-                            : Align(
-                                alignment: Alignment.centerLeft,
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: PcText(
-                                    controller.selectedList.value.title ?? '',
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontSize: 24, color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                      ),
-                      SizedBox(width: 10),
-                      Row(
-                        children: [
-                          CategoryIcon(
-                            category: controller.selectedList.value.category ??
-                                '1travel',
-                            size: 25,
+              child: controller.noFavoriteList.value ||
+                      controller.noMyList.value
+                  ? Center(
+                      child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          controller.noMyList.value
+                              ? '아직 만든 리스트가 없네요'
+                              : '아직 찜한 리스트가 없네요',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
-                          SizedBox(width: 10),
-                          Text(
-                            controller.categoryToString[
-                                    controller.selectedList.value.category] ??
-                                '',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
+                        ),
+                      ],
+                    ))
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: controller.selectedList.value.title == null
+                                  ? Container()
+                                  : Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: PcText(
+                                          controller.selectedList.value.title ??
+                                              '',
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              fontSize: 24,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
                             ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/icons/locationPinWhite.png',
-                        width: 20,
-                        color: Colors.white.withOpacity(0.9),
-                        colorBlendMode: BlendMode.modulate,
-                      ),
-                      Expanded(
-                        child: PcText(
-                          controller.selectedList.value.location ?? '',
+                            SizedBox(width: 10),
+                            CategoryIcon(
+                              category:
+                                  controller.selectedList.value.category ??
+                                      '1travel',
+                              size: 25,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/icons/locationPinWhite.png',
+                                    width: 13,
+                                    color: Colors.white.withOpacity(0.9),
+                                    colorBlendMode: BlendMode.modulate,
+                                  ),
+                                  Expanded(
+                                    child: PcText(
+                                      controller.selectedList.value.location ??
+                                          '',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 150,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: PcText(
+                                      '업로드:  ',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: PcText(
+                                      controller.selectedList.value.createdAt
+                                          .toString(),
+                                      maxLines: 1,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 15),
+                        BkText(
+                          controller.selectedList.value.content ?? '',
                           overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
+                          maxLines: 3,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 15,
+                            fontSize: 17,
+                            height: 1.3,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  BkText(
-                    controller.selectedList.value.content ?? '',
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Row(
+                        SizedBox(height: 15),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'by: ${controller.selectedList.value.madeBy}',
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
-                                fontSize: 15,
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'by: ${controller.selectedList.value.madeBy ?? ''}',
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.9),
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  LevelIcon(level: controller.userLevel.value)
+                                ],
                               ),
                             ),
-                            SizedBox(width: 5),
-                            LevelIcon(level: controller.userLevel.value)
+                            GestureDetector(
+                              onTap: () {
+                                controller.toggleLike();
+                              },
+                              child: Icon(
+                                key: controller.likeKey,
+                                controller.isLiked.value
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Colors.white.withOpacity(0.9),
+                                size: 25,
+                              ),
+                            ),
                           ],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          controller.toggleLike();
-                        },
-                        child: Icon(
-                          key: controller.adminLikeKey,
-                          controller.isLiked.value
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: Colors.white.withOpacity(0.9),
-                          size: 30,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+                        )
+                      ],
+                    ),
             ),
           ],
         ),
@@ -483,76 +673,58 @@ class AdminListSuggestionPage
   }
 
   Widget _listPlayButton() {
-    return Positioned(
-      key: controller.adminCopyKey,
-      top: 340,
-      left: Get.width / 2 - 30,
-      child: CustomIconButton(
-        onTap: () {
-          Get.to(
-            () => UploadBukkungListPage(),
-            arguments: [controller.selectedList.value, true],
-          );
-        },
-        size: 60,
-        icon: Icon(
-          Icons.document_scanner,
-          size: 40,
-          color: Colors.white,
-        ),
-        shadowOffset: Offset(5, 5),
-        shadowBlurRadius: 5,
-      ),
-    );
-  }
-
-  Widget _suggestionListTabBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TabBar(
-        isScrollable: false,
-        controller: controller.suggestionListTabController,
-        labelColor: Colors.black.withOpacity(0.8),
-        labelStyle: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-        ),
-        unselectedLabelStyle: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w200,
-          color: Colors.black.withOpacity(0.5),
-        ),
-        labelPadding: EdgeInsets.zero,
-        unselectedLabelColor: Colors.black.withOpacity(0.5),
-        indicator: UnderlineTabIndicator(
-            insets: EdgeInsets.only(left: 30, right: 30, bottom: 5),
-            borderSide: BorderSide(
-              width: 3,
-              color: Colors.black.withOpacity(0.5),
-            )),
-        tabs: const [
-          Tab(text: '인기'),
-          Tab(text: '최신'),
-          Tab(text: '조회수'),
-          Tab(text: '찜'),
-          Tab(text: '내 리스트'),
-        ],
-      ),
-    );
+    return Obx(() {
+      return controller.noFavoriteList.value || controller.noMyList.value
+          ? Container()
+          : Positioned(
+              key: controller.copyKey,
+              top: 340,
+              left: Get.width / 2 - 30,
+              child: CustomIconButton(
+                onTap: () {
+                  Analytics().logEvent('copy_bukkunglist', null);
+                  controller.setCopyCount();
+                  Get.to(
+                    () => UploadBukkungListPage(),
+                    arguments: [controller.selectedList.value, true],
+                  );
+                },
+                size: 60,
+                icon: Icon(
+                  Icons.document_scanner,
+                  size: 40,
+                  color: Colors.white,
+                ),
+                shadowOffset: Offset(5, 5),
+                shadowBlurRadius: 5,
+              ),
+            );
+    });
   }
 
   Widget _suggestionListTabView() {
     return Expanded(
-      child: TabBarView(
-        controller: controller.suggestionListTabController,
-        children: [
-          _listByLike(),
-          _listByDate(),
-          _listByView(),
-          _favoriteList(),
-          _suggestionMyList(),
-        ],
-      ),
+      child: Obx(() {
+        return controller.noFavoriteList.value || controller.noMyList.value
+            ? Center(
+                child: Text(
+                  controller.noMyList.value
+                      ? '나만의 버꿍리스트를 만들어보세요'
+                      : '추천리스트 중 마음에 드는 \n버꿍리스트를 찜해보세요',
+                  style: TextStyle(color: CustomColors.blackText),
+                ),
+              )
+            : TabBarView(
+                controller: controller.suggestionListTabController,
+                children: [
+                  _listByLike(),
+                  _listByDate(),
+                  _listByView(),
+                  _favoriteList(),
+                  _suggestionMyList(),
+                ],
+              );
+      }),
     );
   }
 
@@ -585,7 +757,13 @@ class AdminListSuggestionPage
                     return _suggestionListCard(bukkungList, index, false);
                   }),
                 ),
-                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Center(
+                    child:
+                        CircularProgressIndicator(color: CustomColors.mainPink),
+                  ),
+                ),
               ],
             ),
           );
@@ -624,7 +802,13 @@ class AdminListSuggestionPage
                     return _suggestionListCard(bukkungList, index, false);
                   }),
                 ),
-                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Center(
+                    child:
+                        CircularProgressIndicator(color: CustomColors.mainPink),
+                  ),
+                ),
               ],
             ),
           );
@@ -663,7 +847,13 @@ class AdminListSuggestionPage
                     return _suggestionListCard(bukkungList, index, false);
                   }),
                 ),
-                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Center(
+                    child:
+                        CircularProgressIndicator(color: CustomColors.mainPink),
+                  ),
+                ),
               ],
             ),
           );
@@ -756,6 +946,7 @@ class AdminListSuggestionPage
           controller.viewCount();
         },
         onDoubleTap: () {
+          controller.indexSelection(bukkungListModel);
           Get.to(
             () => UploadBukkungListPage(),
             arguments: [controller.selectedList.value, true],
@@ -769,7 +960,7 @@ class AdminListSuggestionPage
               String formattedViewCount = formatter.format(viewCount);
               return Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
-                padding: EdgeInsets.only(left: 120, right: 30),
+                padding: EdgeInsets.only(left: 110, right: 30),
                 height: 85,
                 decoration: BoxDecoration(
                     color: bukkungListModel.listId ==
@@ -813,8 +1004,13 @@ class AdminListSuggestionPage
                             false,
                           ),
                           _iconText(
-                            null,
+                            'likeCount',
                             '${bukkungListModel.likeCount.toString()}개',
+                            false,
+                          ),
+                          _iconText(
+                            'copyCount',
+                            '${bukkungListModel.copyCount.toString()}회',
                             false,
                           ),
                         ],
@@ -829,9 +1025,6 @@ class AdminListSuggestionPage
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
-                    fit: BoxFit.cover),
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: [
                   BoxShadow(
@@ -841,46 +1034,51 @@ class AdminListSuggestionPage
                     offset: Offset(5, 5), // Offset(수평, 수직)
                   ),
                 ],
-              ),
-            ),
-            Positioned(
-              right: 0,
-              child: CustomIconButton(
-                onTap: () {
-                  // final updatedList = controller.selectedList.value.copyWith(
-                  //   listId: bukkungListModel.listId,
-                  //   title: bukkungListModel.title,
-                  //   content: bukkungListModel.content,
-                  //   location: bukkungListModel.location,
-                  //   category: bukkungListModel.category,
-                  //   imgUrl: bukkungListModel.imgUrl,
-                  //   imgId: bukkungListModel.imgId,
-                  //   madeBy: bukkungListModel.madeBy,
-                  //   likedUsers: bukkungListModel.likedUsers,
-                  //   likeCount: bukkungListModel.likeCount,
-                  //   viewCount: bukkungListModel.viewCount,
-                  // );
-                  controller.indexSelection(bukkungListModel);
-                  openAlertDialog(
-                    title: '정말로 지우시겠습니까?',
-                    secondButtonText: '취소',
-                    mainfunction: () {
-                      controller.listDelete();
-                      Get.back();
-                    },
-                  );
-                },
-                size: 30,
-                icon: Icon(
-                  Icons.delete_outline,
-                  size: 20,
-                  color: Colors.white,
+                image: DecorationImage(
+                  image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
+                  fit: BoxFit.cover,
                 ),
-                backgroundColor: CustomColors.redbrown,
-                shadowBlurRadius: 2,
-                shadowOffset: Offset(1, 1),
               ),
             ),
+            if (isDelete)
+              Positioned(
+                right: 0,
+                child: CustomIconButton(
+                  onTap: () {
+                    // final updatedList = controller.selectedList.value.copyWith(
+                    //   listId: bukkungListModel.listId,
+                    //   title: bukkungListModel.title,
+                    //   content: bukkungListModel.content,
+                    //   location: bukkungListModel.location,
+                    //   category: bukkungListModel.category,
+                    //   imgUrl: bukkungListModel.imgUrl,
+                    //   imgId: bukkungListModel.imgId,
+                    //   madeBy: bukkungListModel.madeBy,
+                    //   likedUsers: bukkungListModel.likedUsers,
+                    //   likeCount: bukkungListModel.likeCount,
+                    //   viewCount: bukkungListModel.viewCount,
+                    // );
+                    controller.indexSelection(bukkungListModel);
+                    openAlertDialog(
+                      title: '정말로 지우시겠습니까?',
+                      secondButtonText: '취소',
+                      mainfunction: () {
+                        controller.listDelete();
+                        Get.back();
+                      },
+                    );
+                  },
+                  size: 30,
+                  icon: Icon(
+                    Icons.delete_outline,
+                    size: 20,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: CustomColors.redbrown,
+                  shadowBlurRadius: 2,
+                  shadowOffset: Offset(1, 1),
+                ),
+              ),
           ],
         ),
       ),
@@ -890,31 +1088,37 @@ class AdminListSuggestionPage
   Widget _iconText(String? image, String text, bool marquee) {
     return Row(
       children: [
-        image == null
+        image == 'likeCount'
             ? Icon(
                 Icons.favorite_border,
-                size: 18,
+                size: 16,
                 color: Colors.black.withOpacity(0.5),
               )
-            : Image.asset(
-                'assets/icons/$image',
-                width: 20,
-                color: CustomColors.grey.withOpacity(0.5),
-                colorBlendMode: BlendMode.modulate,
-              ),
+            : image == 'copyCount'
+                ? Icon(
+                    Icons.document_scanner_outlined,
+                    size: 16,
+                    color: Colors.black.withOpacity(0.5),
+                  )
+                : Image.asset(
+                    'assets/icons/$image',
+                    width: 18,
+                    color: CustomColors.grey.withOpacity(0.5),
+                    colorBlendMode: BlendMode.modulate,
+                  ),
         marquee
             ? MarqueeAbleText(
                 text: text,
                 maxLength: 5,
                 style: TextStyle(
                   fontFamily: 'Bookk_mj',
-                  fontSize: 13,
+                  fontSize: 11,
                 ),
               )
             : BkText(
                 text,
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 11,
                 ),
               ),
       ],
@@ -953,9 +1157,25 @@ class AdminListSuggestionPage
     );
   }
 
+  Widget _listAddButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        Analytics().logEvent('made_new_bukkunglist', null);
+        Get.to(() => UploadBukkungListPage(), arguments: [null, true]);
+      },
+      backgroundColor: CustomColors.mainPink,
+      child: Icon(
+        key: controller.addKey,
+        Icons.add,
+        color: Colors.white,
+        size: 35,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    Get.put(AdminListSuggestionPageController(context));
+    Get.put(OldListSuggestionPageController(context));
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -976,13 +1196,7 @@ class AdminListSuggestionPage
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 75),
-                // CategorySelectTabBar(
-                //   tabController: controller.suggestionListTabController,
-                //   selectedColor: Colors.black.withOpacity(0.8),
-                //   unselectedColor: Colors.black.withOpacity(0.5),
-                //   isMyTab: true,
-                // ),
-                _suggestionListTabBar(),
+                _suggestionListTabBar(context),
                 _selectedImage(),
               ],
             ),
@@ -990,6 +1204,8 @@ class AdminListSuggestionPage
             _searchBar(),
           ],
         ),
+        floatingActionButton: _listAddButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }

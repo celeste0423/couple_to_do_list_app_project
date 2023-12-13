@@ -172,16 +172,16 @@ class FCMController {
     String? dataContent,
   }) async {
     try {
-      String _accessToken =
+      String accessToken =
           'ya29.a0AfB_byAP-E3RXufxkEVvpcF-yGaqvGlhXSOauAhFjRf68W9a3G5ti1Lv5V85gsIx7Au8g9K9vJpXgwmHZWWezjeTYdDwWSQu9kucWQ9U7tLNz0Mlf-fre2ay1D-h6OYUbcZCaPRcipzbIdd7axa-MvWQmOTmpabtYSR5aCgYKAWoSARASFQHGX2MisVLzRBiFfYdrlNiX7keSKg0171';
 
-      http.Response _response = await http.post(
+      http.Response response = await http.post(
         Uri.parse(
           "https://fcm.googleapis.com/v1/projects/bukkunglist/messages:send",
         ),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $_accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
         body: json.encode({
           "message": {
@@ -214,12 +214,12 @@ class FCMController {
           }
         }),
       );
-      if (_response.statusCode == 200) {
+      if (response.statusCode == 200) {
         print('알림 보내기 완료 v1 (fcm cont)');
         return null;
       } else {
-        print('알림 보내기 실패 ${_response.statusCode}');
-        print('알림 보내기 실패 ${_response.headers}');
+        print('알림 보내기 실패 ${response.statusCode}');
+        print('알림 보내기 실패 ${response.headers}');
         return "Faliure";
       }
     } on HttpException catch (error) {

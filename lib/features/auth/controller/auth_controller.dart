@@ -17,7 +17,6 @@ import 'package:couple_to_do_list_app/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:get/get.dart';
@@ -121,15 +120,15 @@ class AuthController extends GetxController {
     //이전 exp와 비교하여 레벨이 올랐을 시 level up dialog 표시
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? previousLevel = prefs.getInt('user_level');
-    print('previous Level ${previousLevel}');
-    print('지금 레벨 ${(expLikeViewCount[0] / 100).toInt()}');
+    print('previous Level $previousLevel');
+    print('지금 레벨 ${expLikeViewCount[0] ~/ 100}');
     if (previousLevel != null &&
-        previousLevel != (expLikeViewCount[0] / 100).toInt()) {
-      globalPreviousLevel = previousLevel!;
-      globalCurrentLevel = (expLikeViewCount[0] / 100).toInt();
+        previousLevel != expLikeViewCount[0] ~/ 100) {
+      globalPreviousLevel = previousLevel;
+      globalCurrentLevel = expLikeViewCount[0] ~/ 100;
       isLevelDialog = true;
     }
-    await prefs.setInt('user_level', (expLikeViewCount[0] / 100).toInt());
+    await prefs.setInt('user_level', expLikeViewCount[0] ~/ 100);
 
     return expLikeViewCount;
   }
@@ -159,7 +158,7 @@ class AuthController extends GetxController {
 
       //fcm 세팅(클라우드 메시지)
       var deviceToken = await FCMController().getMyDeviceToken();
-      print('디바이스 토큰 (auth cont) ${deviceToken}');
+      print('디바이스 토큰 (auth cont) $deviceToken');
       FCMController().uploadDeviceToken(deviceToken, uid);
 
       //fcm 수신
@@ -203,11 +202,11 @@ class AuthController extends GetxController {
 
     Future checkMyGroup() async {
       //내 uid가 포함된 그룹이 이미 존재한다면 바로 페이지 넘어갈 수 있도록. 그 그룹id를 내 정보에 넣기
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
       String myUid = myData!.uid!;
-      if (myData!.gender == 'male') {
+      if (myData.gender == 'male') {
         // Query snapshots where 'femaleUid' equals the provided UID
-        var maleQuerySnapshot = await _firestore
+        var maleQuerySnapshot = await firestore
             .collection('group')
             .where('maleUid', isEqualTo: myUid)
             .get();
@@ -229,16 +228,16 @@ class AuthController extends GetxController {
             // Delete the other documents
             if (notSoloGroupDatas.length > 1) {
               for (var data in notSoloGroupDatas.skip(1)) {
-                await _firestore.collection('group').doc(data['uid']).delete();
+                await firestore.collection('group').doc(data['uid']).delete();
               }
             }
             return GroupIdStatus.createdGroupId;
           }
         }
       }
-      if (myData!.gender == 'female') {
+      if (myData.gender == 'female') {
         // Query snapshots where 'femaleUid' equals the provided UID
-        var femaleQuerySnapshot = await _firestore
+        var femaleQuerySnapshot = await firestore
             .collection('group')
             .where('femaleUid', isEqualTo: myUid)
             .get();
@@ -260,7 +259,7 @@ class AuthController extends GetxController {
             // Delete the other documents
             if (notSoloGroupDatas.length > 1) {
               for (var data in notSoloGroupDatas.skip(1)) {
-                await _firestore.collection('group').doc(data['uid']).delete();
+                await firestore.collection('group').doc(data['uid']).delete();
               }
             }
             return GroupIdStatus.createdGroupId;
@@ -269,7 +268,7 @@ class AuthController extends GetxController {
       }
     }
 
-    Future<GroupIdStatus> _createSoloGroup(
+    Future<GroupIdStatus> createSoloGroup(
       UserModel noGroupUserData,
       UserModel hasGroupUserData,
       String groupId,
@@ -278,13 +277,13 @@ class AuthController extends GetxController {
           .updateSoloGroup(noGroupUserData, hasGroupUserData);
       group(groupData);
       await UserRepository.updateGroupId(noGroupUserData, groupData!.uid!);
-      await UserRepository.updateGroupId(hasGroupUserData, groupData!.uid!);
+      await UserRepository.updateGroupId(hasGroupUserData, groupData.uid!);
       //user에 그룹아이디 주입
       user(noGroupUserData.copyWith(groupId: groupId));
       return GroupIdStatus.createdGroupId;
     }
 
-    Future<GroupIdStatus> _mergeSoloGroups(
+    Future<GroupIdStatus> mergeSoloGroups(
       UserModel myData,
       UserModel buddyData,
     ) async {
@@ -293,18 +292,18 @@ class AuthController extends GetxController {
             await GroupRepository().mergeSoloGroup(myData, buddyData);
         group(groupData);
         await UserRepository.updateGroupId(myData, groupData!.uid!);
-        await UserRepository.updateGroupId(buddyData, groupData!.uid!);
+        await UserRepository.updateGroupId(buddyData, groupData.uid!);
       } else {
         var groupData =
             await GroupRepository().mergeSoloGroup(buddyData, myData);
         group(groupData);
         await UserRepository.updateGroupId(myData, groupData!.uid!);
-        await UserRepository.updateGroupId(buddyData, groupData!.uid!);
+        await UserRepository.updateGroupId(buddyData, groupData.uid!);
       }
       return GroupIdStatus.createdGroupId;
     }
 
-    Future<GroupIdStatus> _groupSignup(
+    Future<GroupIdStatus> groupSignup(
       UserModel user1,
       UserModel user2,
       String groupId,
@@ -343,10 +342,10 @@ class AuthController extends GetxController {
       if (buddyData.groupId!.startsWith("solo")) {
         if (myData.groupId == null) {
           //내가 뉴비 상대는 solo그룹 => 그룹 만들고 하나만 옮기기
-          return _createSoloGroup(myData, buddyData, groupId);
+          return createSoloGroup(myData, buddyData, groupId);
         } else {
           //나도 solo 상대도 solo => 그룹 합치기
-          return _mergeSoloGroups(myData, buddyData);
+          return mergeSoloGroups(myData, buddyData);
         }
       } else {
         //이미 짝이 있음
@@ -360,17 +359,17 @@ class AuthController extends GetxController {
       //상대 그룹아이디가 아직 없음
       if (myData.groupId != null) {
         //내가 solo 상대가 new
-        return _createSoloGroup(buddyData, myData, groupId);
+        return createSoloGroup(buddyData, myData, groupId);
       } else {
         //나는 아직 solo그룹이 없음 => 새로운 그룹 만들어서 둘다 가입
         if (myData.gender == 'male') {
-          return _groupSignup(myData, buddyData, groupId);
+          return groupSignup(myData, buddyData, groupId);
         } else if (myData.gender == 'female') {
-          return _groupSignup(buddyData, myData, groupId);
+          return groupSignup(buddyData, myData, groupId);
         } else {
           //동성 커플고려는 아직은 하지 않는걸로
           var groupData =
-              await GroupRepository.groupSignup(groupId, myData, buddyData!);
+              await GroupRepository.groupSignup(groupId, myData, buddyData);
           group(groupData);
           return GroupIdStatus.createdGroupId;
         }
@@ -384,7 +383,7 @@ class AuthController extends GetxController {
     var uuid = Uuid();
     String groupId = 'solo${uuid.v1()}';
 
-    if (myData!.gender == 'male') {
+    if (myData.gender == 'male') {
       var groupData =
           await GroupRepository.groupSignup(groupId, myData, nullBuddyData);
       // print('그룹 데이터 ${groupData.uid}');

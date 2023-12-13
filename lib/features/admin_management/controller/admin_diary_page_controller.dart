@@ -1,11 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
-import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
-import 'package:couple_to_do_list_app/repository/diary_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rxdart/rxdart.dart';

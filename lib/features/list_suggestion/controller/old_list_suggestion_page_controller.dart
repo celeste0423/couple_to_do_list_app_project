@@ -5,7 +5,9 @@ import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/tutorial_coach_mark/pages/coachmark_desc.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
+import 'package:couple_to_do_list_app/models/copy_count_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
+import 'package:couple_to_do_list_app/repository/copy_count_repository.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:flutter/material.dart';
@@ -13,26 +15,47 @@ import 'package:get/get.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:uuid/uuid.dart';
 
-class AdminListSuggestionPageController extends GetxController
+class OldListSuggestionPageController extends GetxController
     with GetTickerProviderStateMixin {
   final BuildContext context;
-  AdminListSuggestionPageController(this.context);
+  OldListSuggestionPageController(this.context);
   TutorialCoachMark? tutorialCoachMark;
   List<TargetFocus> targets = [];
 
-  GlobalKey adminAddKey = GlobalKey();
-  GlobalKey adminLikeKey = GlobalKey();
-  GlobalKey adminCopyKey = GlobalKey();
+  GlobalKey addKey = GlobalKey();
+  GlobalKey likeKey = GlobalKey();
+  GlobalKey copyKey = GlobalKey();
 
   late TabController suggestionListTabController;
+  final int initialTabIndex = Get.arguments ?? 0;
 
-  static AdminListSuggestionPageController get to => Get.find();
+  static OldListSuggestionPageController get to => Get.find();
 
   TextEditingController searchBarController = TextEditingController();
   List<String> _searchWord = [];
   bool isTextEmpty = true;
   Rx<bool> isSearchResult = false.obs;
+
+  RxList<String> categories = [
+    "1travel",
+    "2meal",
+    "3activity",
+    "4culture",
+    "5study",
+    "6etc",
+  ].obs;
+  Rx<bool> isCategory = false.obs;
+  RxList<String> selectedCategories = RxList();
+  Map<String, String> stringToCategory = {
+    "여행": "1travel",
+    "식사": "2meal",
+    "액티비티": "3activity",
+    "문화 활동": "4culture",
+    "자기 계발": "5study",
+    "기타": "6etc",
+  };
 
   Map<String, String> categoryToString = {
     "1travel": "여행",
@@ -47,6 +70,8 @@ class AdminListSuggestionPageController extends GetxController
 
   Rx<BukkungListModel> selectedList = Rx<BukkungListModel>(BukkungListModel());
   // int selectedListIndex = 0;
+
+  Rx<bool> isNextListLoading = false.obs;
 
   ScrollController listByLikeScrollController = ScrollController();
   StreamController<List<BukkungListModel>> listByLikeStreamController =
@@ -75,30 +100,44 @@ class AdminListSuggestionPageController extends GetxController
   QueryDocumentSnapshot<Map<String, dynamic>>? favoriteListKeyPage;
   List<BukkungListModel>? favoriteListPrevList;
   bool isfavoriteListLastPage = false;
+  Rx<bool> noFavoriteList = false.obs;
+
+  Stream<List<BukkungListModel>> getSuggestionMyBukkungList() {
+    return ListSuggestionRepository().getMyBukkungList();
+  }
+
+  Rx<bool> noMyList = false.obs;
 
   final int _pageSize = 5;
 
   @override
   void onInit() {
     super.onInit();
-    suggestionListTabController = TabController(length: 5, vsync: this);
+    suggestionListTabController =
+        TabController(initialIndex: initialTabIndex, length: 5, vsync: this);
     suggestionListTabController.addListener(() {
       _onTabChanged();
     });
     searchBarController.addListener(onTextChanged);
-    _initSelectedBukkungList();
+    initSelectedBukkungList();
     loadNewBukkungLists('like');
     loadNewBukkungLists('date');
     loadNewBukkungLists('view');
     loadNewBukkungLists('favorite');
     listByLikeScrollController.addListener(() {
-      loadMoreBukkungLists('like');
+      if (!isNextListLoading.value) {
+        loadMoreBukkungLists('like');
+      }
     });
     listByDateScrollController.addListener(() {
-      loadMoreBukkungLists('date');
+      if (!isNextListLoading.value) {
+        loadMoreBukkungLists('date');
+      }
     });
     listByViewScrollController.addListener(() {
-      loadMoreBukkungLists('view');
+      if (!isNextListLoading.value) {
+        loadMoreBukkungLists('view');
+      }
     });
     favoriteListScrollController.addListener(() {
       loadMoreBukkungLists('favorite');
@@ -106,6 +145,37 @@ class AdminListSuggestionPageController extends GetxController
     Future.delayed(const Duration(seconds: 1), () {
       _showTutorialCoachMark();
     });
+  }
+
+  @override
+  void onClose() {
+    // 컨트롤러에서 사용한 리소스를 해제 또는 정리하는 로직 추가
+    // suggestionListTabController.dispose();
+    searchBarController.dispose();
+    listByLikeScrollController.dispose();
+    listByDateScrollController.dispose();
+    listByViewScrollController.dispose();
+    favoriteListScrollController.dispose();
+
+    super.onClose(); // 부모 클래스의 onClose 메서드를 호출
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    suggestionListTabController.removeListener(() {
+      _onTabChanged;
+    });
+    suggestionListTabController.dispose();
+    searchBarController.dispose();
+    listByLikeScrollController.dispose();
+    listByLikeStreamController.close();
+    listByDateScrollController.dispose();
+    listByDateStreamController.close();
+    listByViewScrollController.dispose();
+    listByViewStreamController.close();
+    favoriteListScrollController.dispose();
+    favoriteListStreamController.close();
   }
 
   void _showTutorialCoachMark() async {
@@ -131,10 +201,10 @@ class AdminListSuggestionPageController extends GetxController
     targets = [
       TargetFocus(
         identify: "add_key",
-        keyTarget: adminAddKey,
+        keyTarget: addKey,
         contents: [
           TargetContent(
-            align: ContentAlign.bottom,
+            align: ContentAlign.top,
             builder: (context, controller) {
               return CoachmarkDesc(
                 text: "버튼을 눌러 나만의 버꿍리스트를 만들 수 있습니다.",
@@ -151,7 +221,7 @@ class AdminListSuggestionPageController extends GetxController
       ),
       TargetFocus(
         identify: "copy_key",
-        keyTarget: adminCopyKey,
+        keyTarget: copyKey,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
@@ -171,7 +241,7 @@ class AdminListSuggestionPageController extends GetxController
       ),
       TargetFocus(
         identify: "like_key",
-        keyTarget: adminLikeKey,
+        keyTarget: likeKey,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
@@ -193,15 +263,16 @@ class AdminListSuggestionPageController extends GetxController
   }
 
   void _onTabChanged() {
-    _initSelectedBukkungList();
+    initSelectedBukkungList();
   }
 
-  void _initSelectedBukkungList() {
-    print(suggestionListTabController.index);
+  void initSelectedBukkungList() {
+    // print(suggestionListTabController.index);
     switch (suggestionListTabController.index) {
       case 0:
         {
-          print('인기 첫 리스트 선정');
+          noFavoriteList(false);
+          noMyList(false);
           final stream = listByLikeStreamController.stream;
           StreamSubscription<List<BukkungListModel>>? subscription;
           subscription = stream.listen((list) async {
@@ -225,7 +296,8 @@ class AdminListSuggestionPageController extends GetxController
         }
       case 1:
         {
-          print('최신 첫 리스트 선정');
+          noFavoriteList(false);
+          noMyList(false);
           final stream = listByDateStreamController.stream;
           StreamSubscription<List<BukkungListModel>>? subscription;
           subscription = stream.listen((list) async {
@@ -249,6 +321,8 @@ class AdminListSuggestionPageController extends GetxController
         }
       case 2:
         {
+          noFavoriteList(false);
+          noMyList(false);
           final stream = listByViewStreamController.stream;
           StreamSubscription<List<BukkungListModel>>? subscription;
           subscription = stream.listen((list) async {
@@ -272,10 +346,12 @@ class AdminListSuggestionPageController extends GetxController
         }
       case 3:
         {
+          noMyList(false);
           final stream = favoriteListStreamController.stream;
           StreamSubscription<List<BukkungListModel>>? subscription;
           subscription = stream.listen((list) async {
             if (list.isNotEmpty) {
+              noFavoriteList(false);
               final updatedList = list[0];
               selectedList(updatedList);
               // 리스트 레벨 가져오기
@@ -290,17 +366,22 @@ class AdminListSuggestionPageController extends GetxController
                 isLiked(true);
               }
               subscription?.cancel();
+            } else {
+              //찜 리스트가 없을 경우
+              print('진심 리스트 없어?');
+              noFavoriteList(true);
             }
           });
         }
       case 4:
-      //Todo: 굳이 선택될 필요가 있을까 근데..?
       default:
         {
-          final stream = listByLikeStreamController.stream;
+          noFavoriteList(false);
+          final stream = getSuggestionMyBukkungList();
           StreamSubscription<List<BukkungListModel>>? subscription;
           subscription = stream.listen((list) async {
             if (list.isNotEmpty) {
+              noMyList(false);
               final updatedList = list[0];
               selectedList(updatedList);
               // 리스트 레벨 가져오기
@@ -315,6 +396,9 @@ class AdminListSuggestionPageController extends GetxController
                 isLiked(true);
               }
               subscription?.cancel();
+            } else {
+              //내 리스트가 없을 경우
+              noMyList(true);
             }
           });
         }
@@ -325,32 +409,36 @@ class AdminListSuggestionPageController extends GetxController
     switch (type) {
       case 'like':
         {
-          List<BukkungListModel> firstList =
-              await getNewSuggestionListByLike(_pageSize, null, null);
+          List<BukkungListModel> firstList = await ListSuggestionRepository()
+              .getNewSuggestionListByLike(
+                  _pageSize, null, null, selectedCategories);
           listByLikeStreamController.add(firstList);
         }
       case 'date':
         {
-          List<BukkungListModel> firstList =
-              await getNewSuggestionListByDate(_pageSize, null, null);
+          List<BukkungListModel> firstList = await ListSuggestionRepository()
+              .getNewSuggestionListByDate(
+                  _pageSize, null, null, selectedCategories);
           listByDateStreamController.add(firstList);
         }
       case 'view':
         {
-          List<BukkungListModel> firstList =
-              await getNewSuggestionListByView(_pageSize, null, null);
+          List<BukkungListModel> firstList = await ListSuggestionRepository()
+              .getNewSuggestionListByView(
+                  _pageSize, null, null, selectedCategories);
           listByViewStreamController.add(firstList);
         }
       case 'favorite':
         {
-          List<BukkungListModel> firstList =
-              await getNewFavoriteList(_pageSize, null, null);
+          List<BukkungListModel> firstList = await ListSuggestionRepository()
+              .getNewFavoriteList(_pageSize, null, null, selectedCategories);
           favoriteListStreamController.add(firstList);
         }
       default:
         {
-          List<BukkungListModel> firstList =
-              await getNewSuggestionListByLike(_pageSize, null, null);
+          List<BukkungListModel> firstList = await ListSuggestionRepository()
+              .getNewSuggestionListByLike(
+                  _pageSize, null, null, selectedCategories);
           listByLikeStreamController.add(firstList);
         }
     }
@@ -360,37 +448,40 @@ class AdminListSuggestionPageController extends GetxController
     switch (type) {
       case 'like':
         {
-          if (listByLikeScrollController.position.pixels ==
-              listByLikeScrollController.position.maxScrollExtent) {
+          if (listByLikeScrollController.position.extentAfter < 200) {
             if (!isListByLikeLastPage) {
-              List<BukkungListModel> nextList =
-                  await getNewSuggestionListByLike(
-                      _pageSize, listByLikeKeyPage, listByLikePrevList);
+              isNextListLoading(true);
+              List<BukkungListModel> nextList = await ListSuggestionRepository()
+                  .getNewSuggestionListByLike(_pageSize, listByLikeKeyPage,
+                      listByLikePrevList, selectedCategories);
               listByLikeStreamController.add(nextList);
+              isNextListLoading(false);
             }
           }
         }
       case 'date':
         {
-          if (listByDateScrollController.position.pixels ==
-              listByDateScrollController.position.maxScrollExtent) {
+          if (listByDateScrollController.position.extentAfter < 200) {
             if (!isListByDateLastPage) {
-              List<BukkungListModel> nextList =
-                  await getNewSuggestionListByDate(
-                      _pageSize, listByDateKeyPage, listByDatePrevList);
+              isNextListLoading(true);
+              List<BukkungListModel> nextList = await ListSuggestionRepository()
+                  .getNewSuggestionListByDate(_pageSize, listByDateKeyPage,
+                      listByDatePrevList, selectedCategories);
               listByDateStreamController.add(nextList);
+              isNextListLoading(false);
             }
           }
         }
       case 'view':
         {
-          if (listByViewScrollController.position.pixels ==
-              listByViewScrollController.position.maxScrollExtent) {
+          if (listByViewScrollController.position.extentAfter < 200) {
             if (!isListByViewLastPage) {
-              List<BukkungListModel> nextList =
-                  await getNewSuggestionListByView(
-                      _pageSize, listByViewKeyPage, listByViewPrevList);
+              isNextListLoading(true);
+              List<BukkungListModel> nextList = await ListSuggestionRepository()
+                  .getNewSuggestionListByView(_pageSize, listByViewKeyPage,
+                      listByViewPrevList, selectedCategories);
               listByViewStreamController.add(nextList);
+              isNextListLoading(false);
             }
           }
         }
@@ -399,9 +490,9 @@ class AdminListSuggestionPageController extends GetxController
           if (favoriteListScrollController.position.pixels ==
               favoriteListScrollController.position.maxScrollExtent) {
             if (!isListByViewLastPage) {
-              List<BukkungListModel> nextList =
-                  await getNewSuggestionListByView(
-                      _pageSize, favoriteListKeyPage, favoriteListPrevList);
+              List<BukkungListModel> nextList = await ListSuggestionRepository()
+                  .getNewFavoriteList(_pageSize, favoriteListKeyPage,
+                      favoriteListPrevList, selectedCategories);
               favoriteListStreamController.add(nextList);
             }
           }
@@ -411,159 +502,14 @@ class AdminListSuggestionPageController extends GetxController
           if (listByLikeScrollController.position.pixels ==
               listByLikeScrollController.position.maxScrollExtent) {
             if (!isListByLikeLastPage) {
-              List<BukkungListModel> nextList =
-                  await getNewSuggestionListByLike(
-                      _pageSize, listByLikeKeyPage, listByLikePrevList);
+              List<BukkungListModel> nextList = await ListSuggestionRepository()
+                  .getNewSuggestionListByLike(_pageSize, listByLikeKeyPage,
+                      listByLikePrevList, selectedCategories);
               listByLikeStreamController.add(nextList);
             }
           }
         }
     }
-  }
-
-  Future<List<BukkungListModel>> getNewSuggestionListByLike(
-    int pageSize,
-    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
-    List<BukkungListModel>? prevList,
-  ) async {
-    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
-        .collection('bukkungLists')
-        .orderBy('likeCount', descending: true)
-        .orderBy('createdAt', descending: true);
-    if (keyPage != null) {
-      query = query.startAfterDocument(keyPage);
-    }
-    query = query.limit(pageSize);
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
-    List<BukkungListModel> bukkungLists = prevList ?? [];
-    for (var bukkungList in querySnapshot.docs) {
-      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-    }
-    //키페이지 설정
-    QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
-        querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
-    listByLikeKeyPage = lastDocument;
-    //이전 리스트 저장
-    listByLikePrevList = bukkungLists;
-    //마지막 페이지인지 여부 확인
-    if (querySnapshot.docs.length < pageSize) {
-      isListByLikeLastPage = true;
-    }
-    return bukkungLists;
-  }
-
-  Future<List<BukkungListModel>> getNewSuggestionListByDate(
-    int pageSize,
-    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
-    List<BukkungListModel>? prevList,
-  ) async {
-    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
-        .collection('bukkungLists')
-        .orderBy('createdAt', descending: true)
-        .orderBy('likeCount', descending: true);
-    if (keyPage != null) {
-      query = query.startAfterDocument(keyPage);
-    }
-    query = query.limit(pageSize);
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
-    List<BukkungListModel> bukkungLists = prevList ?? [];
-    for (var bukkungList in querySnapshot.docs) {
-      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-    }
-    //키페이지 설정
-    QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
-        querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
-    listByDateKeyPage = lastDocument;
-    //이전 리스트 저장
-    listByDatePrevList = bukkungLists;
-    //마지막 페이지인지 여부 확인
-    if (querySnapshot.docs.length < pageSize) {
-      isListByDateLastPage = true;
-    }
-    return bukkungLists;
-  }
-
-  Future<List<BukkungListModel>> getNewSuggestionListByView(
-    int pageSize,
-    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
-    List<BukkungListModel>? prevList,
-  ) async {
-    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
-        .collection('bukkungLists')
-        .orderBy('viewCount', descending: true)
-        .orderBy('likeCount', descending: true)
-        .orderBy('createdAt', descending: true);
-    if (keyPage != null) {
-      query = query.startAfterDocument(keyPage);
-    }
-    query = query.limit(pageSize);
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
-    List<BukkungListModel> bukkungLists = prevList ?? [];
-    for (var bukkungList in querySnapshot.docs) {
-      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-    }
-    //키페이지 설정
-    QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
-        querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
-    listByViewKeyPage = lastDocument;
-    //이전 리스트 저장
-    listByViewPrevList = bukkungLists;
-    //마지막 페이지인지 여부 확인
-    if (querySnapshot.docs.length < pageSize) {
-      isListByViewLastPage = true;
-    }
-    return bukkungLists;
-  }
-
-  Future<List<BukkungListModel>> getNewFavoriteList(
-    int pageSize,
-    QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,
-    List<BukkungListModel>? prevList,
-  ) async {
-    String currentUserUid = AuthController.to.user.value.uid!;
-    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
-        .collection('bukkungLists')
-        .where('likedUsers', arrayContains: currentUserUid)
-        .orderBy('likeCount', descending: true)
-        .orderBy('createdAt', descending: true);
-    if (keyPage != null) {
-      query = query.startAfterDocument(keyPage);
-    }
-    query = query.limit(pageSize);
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
-    List<BukkungListModel> bukkungLists = prevList ?? [];
-    for (var bukkungList in querySnapshot.docs) {
-      bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-    }
-    //키페이지 설정
-    QueryDocumentSnapshot<Map<String, dynamic>>? lastDocument =
-        querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
-    favoriteListKeyPage = lastDocument;
-    //이전 리스트 저장
-    favoriteListPrevList = bukkungLists;
-    //마지막 페이지인지 여부 확인
-    if (querySnapshot.docs.length < pageSize) {
-      isfavoriteListLastPage = true;
-    }
-    return bukkungLists;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    suggestionListTabController.removeListener(() {
-      _onTabChanged;
-    });
-    suggestionListTabController.dispose();
-    searchBarController.dispose();
-    listByLikeScrollController.dispose();
-    listByLikeStreamController.close();
-    listByDateScrollController.dispose();
-    listByDateStreamController.close();
-    listByViewScrollController.dispose();
-    listByViewStreamController.close();
-    favoriteListScrollController.dispose();
-    favoriteListStreamController.close();
   }
 
   void onTextChanged() {
@@ -609,10 +555,6 @@ class AdminListSuggestionPageController extends GetxController
   //   }
   // }
 
-  Stream<List<BukkungListModel>> getSuggestionMyBukkungList() {
-    return ListSuggestionRepository().getMyBukkungList();
-  }
-
   //리스트 선택
   void indexSelection(BukkungListModel updatedList) async {
     selectedList(updatedList);
@@ -629,9 +571,11 @@ class AdminListSuggestionPageController extends GetxController
     int expPoint = 0;
     UserModel? userData =
         await UserRepository.getUserDataByUid(updatedList.userId!);
-    print('유저 exp${userData!.expPoint}');
-    if (userData.expPoint != null) {
-      expPoint = userData.expPoint!;
+    // print('유저 exp${userData!.expPoint}');
+    if (userData != null) {
+      if (userData.expPoint != null) {
+        expPoint = userData.expPoint!;
+      }
     }
     userLevel((expPoint - expPoint % 100) ~/ 100);
     print('레벨${userLevel.value}');
@@ -817,11 +761,25 @@ class AdminListSuggestionPageController extends GetxController
     }
   }
 
+  void setCopyCount() {
+    var uuid = Uuid();
+    String id = uuid.v1();
+    CopyCountModel copyCountData = CopyCountModel(
+      id: id,
+      uid: AuthController.to.user.value.uid,
+      listId: selectedList.value.listId,
+      createdAt: DateTime.now(),
+    );
+    CopyCountRepository().uploadCopyCount(copyCountData);
+    ListSuggestionRepository().addCopyCount(selectedList.value.listId!);
+  }
+
   Future<void> listDelete() async {
     if (Constants.baseImageUrl != selectedList.value.imgUrl) {
       await ListSuggestionRepository()
           .deleteListImage('${selectedList.value.imgId!}.jpg');
     }
+    CopyCountRepository().deleteCopyCountByListId(selectedList.value.listId!);
     ListSuggestionRepository().deleteList(
       selectedList.value.listId!,
     );

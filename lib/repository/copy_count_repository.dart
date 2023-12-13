@@ -54,7 +54,7 @@ class CopyCountRepository {
       }
     } catch (e) {
       print("copyCount 문서 삭제 오류: $e");
-      throw e; // 오류를 처리하거나 다시 던질 수 있습니다.
+      rethrow; // 오류를 처리하거나 다시 던질 수 있습니다.
     }
   }
 
@@ -71,7 +71,7 @@ class CopyCountRepository {
       }
     } catch (e) {
       print("copyCount 문서 삭제 오류: $e");
-      throw e; // 오류를 처리하거나 다시 던질 수 있습니다.
+      rethrow; // 오류를 처리하거나 다시 던질 수 있습니다.
     }
   }
 

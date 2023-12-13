@@ -10,8 +10,8 @@ class CategoryIcon extends StatelessWidget {
   Widget _categoryIcon(Color color, String icon) {
     return Container(
       padding: const EdgeInsets.all(5),
-      width: size ?? 40,
-      height: size ?? 40,
+      width: size ?? 35,
+      height: size ?? 35,
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(13),

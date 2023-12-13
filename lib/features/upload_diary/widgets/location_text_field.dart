@@ -11,8 +11,7 @@ class LocationTextField extends StatefulWidget {
 }
 
 class _LocationTextFieldState extends State<LocationTextField> {
-  final UploadDiaryController _controller =
-      Get.find<UploadDiaryController>();
+  final UploadDiaryController _controller = Get.find<UploadDiaryController>();
   final FocusNode _focusNode = FocusNode();
   OverlayEntry? _overlayEntry;
 
@@ -98,7 +97,7 @@ class _LocationTextFieldState extends State<LocationTextField> {
           onTap: onTap,
           horizontalTitleGap: 0,
           title: Text(
-            shortLocation ?? '',
+            shortLocation,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),

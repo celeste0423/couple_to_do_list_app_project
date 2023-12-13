@@ -57,8 +57,7 @@ class AuthDeletePageController extends GetxController {
               await FirebaseAuth.instance.signInWithCustomToken(customToken);
             }
           } else if (loginType == 'apple') {
-            UserCredential? userCredential =
-                await AuthController.to.signInWithApple();
+            await AuthController.to.signInWithApple();
             //print('apple login 성공: nickname = ${AuthController.to.user.value.nickname}');
             //로그인 타입 설정
             // AuthController.loginType = 'apple';
@@ -97,6 +96,7 @@ class AuthDeletePageController extends GetxController {
               await deleteSubcollection(groupId, 'bukkungLists');
               await deleteSubcollection(groupId, 'completedBukkungLists');
               await deleteSubcollection(groupId, 'diary');
+              await deleteSubcollection(groupId, 'notification');
 
               //groups 없애고
               await FirebaseFirestore.instance
@@ -117,9 +117,9 @@ class AuthDeletePageController extends GetxController {
           CopyCountRepository().deleteCopyCountByUid(uid!);
           //DeviceToken 삭제
           DeviceTokenModel? deviceToken =
-              await FCMRepository().getDeviceTokenByUid(uid!);
+              await FCMRepository().getDeviceTokenByUid(uid);
           if (deviceToken != null) {
-            FCMRepository().deleteDeviceToken(deviceToken!.tid!);
+            FCMRepository().deleteDeviceToken(deviceToken.tid!);
           }
 
           _uploadFeedback();
@@ -135,10 +135,10 @@ class AuthDeletePageController extends GetxController {
 
   void _uploadFeedback() {
     //Todo: 피드백 업로드
-    FirebaseFirestore.instance
-        .collection('deletionFeedbacks')
-        .doc()
-        .set({'surveyResult': surveyResult.value});
+    FirebaseFirestore.instance.collection('deletionFeedbacks').doc().set({
+      'surveyResult': surveyResult.value,
+      'created_at': DateTime.now(),
+    });
   }
 }
 

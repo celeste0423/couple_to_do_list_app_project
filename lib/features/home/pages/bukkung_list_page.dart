@@ -1,5 +1,6 @@
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/pages/old_list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
@@ -12,6 +13,7 @@ import 'package:couple_to_do_list_app/widgets/custom_divider.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +29,54 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         child: Image(image: AssetImage('assets/images/title_horizontal.png')),
       ),
       leadingWidth: 190,
+      //알림 페이지 버튼
+      // actions: [
+      //   Stack(
+      //     children: [
+      //       CupertinoButton(
+      //         onPressed: () {
+      //           Get.to(NotificationPage());
+      //         },
+      //         padding: const EdgeInsets.only(top: 10, right: 10),
+      //         // child: Gif(
+      //         //   image: AssetImage('assets/gifs/notification_bell.gif'),
+      //         //   autostart: Autostart.loop,
+      //         // ),
+      //         child: Image(
+      //           image: AssetImage('assets/gifs/notification_bell_short.gif'),
+      //           width: 55,
+      //           height: 55,
+      //           color: CustomColors.grey.withOpacity(0.5),
+      //           colorBlendMode: BlendMode.modulate,
+      //         ),
+      //         // child: Icon(
+      //         //   Icons.notifications,
+      //         //   color: CustomColors.lightGrey,
+      //         //   size: 28,
+      //         // ),
+      //       ),
+      //       Obx(() {
+      //         return controller.isNotification.value
+      //             ? Positioned(
+      //                 top: controller.isAnimated.value ? 17 : 18,
+      //                 right: controller.isAnimated.value ? 24 : 25,
+      //                 child: AnimatedContainer(
+      //                   duration: Duration(milliseconds: 50),
+      //                   width: controller.isAnimated.value ? 9 : 7,
+      //                   height: controller.isAnimated.value ? 9 : 7,
+      //                   decoration: BoxDecoration(
+      //                     color: Colors.red,
+      //                     borderRadius: BorderRadius.all(
+      //                       Radius.circular(25),
+      //                     ),
+      //                   ),
+      //                 ),
+      //               )
+      //             : Container();
+      //       },),
+      //     ],
+      //   )
+      // ],
     );
   }
 
@@ -314,67 +364,67 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     switch (categoryNumber) {
       case 1:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '1travel'),
               SizedBox(width: 10),
-              Text('여행', style: TextStyle(fontSize: 20)),
+              Text('여행', style: TextStyle(fontSize: 15)),
             ],
           ),
         );
       case 2:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '2meal'),
               SizedBox(width: 10),
-              Text('식사', style: TextStyle(fontSize: 20)),
+              Text('식사', style: TextStyle(fontSize: 15)),
             ],
           ),
         );
       case 3:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '3activity'),
               SizedBox(width: 10),
-              Text('액티비티', style: TextStyle(fontSize: 20)),
+              Text('액티비티', style: TextStyle(fontSize: 15)),
             ],
           ),
         );
       case 4:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '4culture'),
               SizedBox(width: 10),
-              Text('문화 활동', style: TextStyle(fontSize: 20)),
+              Text('문화 활동', style: TextStyle(fontSize: 15)),
             ],
           ),
         );
       case 5:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '5study'),
               SizedBox(width: 10),
-              Text('자기 계발', style: TextStyle(fontSize: 20)),
+              Text('자기 계발', style: TextStyle(fontSize: 15)),
             ],
           ),
         );
       case 6:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
             children: const [
               CategoryIcon(category: '6etc'),
               SizedBox(width: 10),
-              Text('기타', style: TextStyle(fontSize: 20)),
+              Text('기타', style: TextStyle(fontSize: 15)),
             ],
           ),
         );
@@ -384,148 +434,144 @@ class BukkungListPage extends GetView<BukkungListPageController> {
   }
 
   Widget _bukkungListCard(BukkungListModel bukkungListModel) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      child: GestureDetector(
-        onTap: () {
-          Get.to(() => ReadBukkungListPage(), arguments: bukkungListModel);
-        },
-        child: Row(
-          children: [
-            Expanded(
-              flex: 12,
-              child: Container(
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    bottomLeft: Radius.circular(25),
-                  ),
+    return CupertinoButton(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      onPressed: () {
+        Get.to(() => ReadBukkungListPage(), arguments: bukkungListModel);
+      },
+      child: Row(
+        children: [
+          Expanded(
+            flex: 12,
+            child: Container(
+              height: 75,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  bottomLeft: Radius.circular(20),
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        width: 150,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: CustomCachedNetworkImage(
-                                  bukkungListModel.imgUrl!),
-                              fit: BoxFit.cover),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      width: 150,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: CustomCachedNetworkImage(
+                                bukkungListModel.imgUrl!),
+                            fit: BoxFit.cover),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      //   child: ClipRRect(
-                      //       borderRadius: BorderRadius.only(
-                      //         topLeft: Radius.circular(25),
-                      //         bottomLeft: Radius.circular(25),
-                      //       ),
-                      //       child: Image.network(
-                      //         '${bukkungListModel.imgUrl}',
-                      //         height: 150,
-                      //         fit: BoxFit.cover,
-                      //       )),
                     ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      flex: 7,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: PcText(
-                                bukkungListModel.title!,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: CustomColors.blackText,
-                                ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    flex: 9,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: PcText(
+                              bukkungListModel.title!,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: CustomColors.blackText,
                               ),
                             ),
                           ),
-                          // MarqueeAbleText(
-                          //   text: bukkungListModel.title!,
-                          //   maxLength: 10,
-                          //   style: TextStyle(
-                          //     fontSize: 25,
-                          //     color: CustomColors.blackText,
-                          //   ),
-                          // ),
-                          bukkungListModel.date == null
-                              ? BkText('(날짜 미정)')
-                              : BkText(DateFormat('yyyy-MM-dd')
-                                  .format(bukkungListModel.date!)),
-                          Row(
-                            children: [
-                              PngIcon(
-                                iconName: 'location-pin',
-                                iconSize: 25,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: BkText(
-                                        bukkungListModel.location!,
-                                        style: TextStyle(
-                                          fontSize: 15,
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  PngIcon(
+                                    iconName: 'location-pin',
+                                    iconSize: 20,
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: BkText(
+                                            bukkungListModel.location!,
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: CustomColors.greyText,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                            ),
+                            bukkungListModel.date == null
+                                ? Container()
+                                : Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: BkText(
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(bukkungListModel.date!),
+                                      style: TextStyle(
+                                          color: CustomColors.greyText,
+                                          fontSize: 12),
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              height: 75,
+              decoration: BoxDecoration(
+                color: TypeToColor.typeToColor(bukkungListModel.category),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+              ),
+              width: 20,
+              child: GestureDetector(
+                onTap: () {
+                  openAlertDialog(
+                    title: '정말로 지우시겠습니까?',
+                    secondButtonText: '취소',
+                    mainfunction: () {
+                      controller.deleteBukkungList(bukkungListModel, true);
+                      Get.back();
+                    },
+                  );
+                },
+                child: Icon(
+                  Icons.delete_outline,
+                  size: 20,
+                  color: Colors.white.withOpacity(0.5),
                 ),
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                height: 100,
-                decoration: BoxDecoration(
-                  color: TypeToColor.typeToColor(bukkungListModel.category),
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
-                  ),
-                ),
-                width: 30,
-                child: GestureDetector(
-                  onTap: () {
-                    openAlertDialog(
-                      title: '정말로 지우시겠습니까?',
-                      secondButtonText: '취소',
-                      mainfunction: () {
-                        controller.deleteBukkungList(bukkungListModel, true);
-                        Get.back();
-                      },
-                    );
-                  },
-                  child: Icon(
-                    Icons.delete_outline,
-                    size: 25,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
@@ -534,8 +580,17 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     return FloatingActionButton(
       key: controller.listSuggestionKey,
       onPressed: () {
-        Analytics().logEvent('추천 버꿍리스트 페이지 오픈', null);
-        Get.to(() => ListSuggestionPage());
+        Analytics().logEvent('list_suggestion_page_open', null);
+        Get.to(
+          () => OldListSuggestionPage(),
+          transition: Transition.fadeIn,
+          duration: Duration(milliseconds: 500),
+        );
+        // Get.to(
+        //   () => ListSuggestionPage(),
+        //   transition: Transition.fadeIn,
+        //   duration: Duration(milliseconds: 500),
+        // );
       },
       backgroundColor: CustomColors.mainPink,
       child: Icon(
@@ -554,7 +609,6 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // _listAddButton(),
           _listTypeSelector(),
           customDivider(),
           _bukkungListView(),

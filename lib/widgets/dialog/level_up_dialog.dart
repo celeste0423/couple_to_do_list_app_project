@@ -69,7 +69,7 @@ class _LevelUpDialogState extends State<LevelUpDialog>
   }
 
   void startTimer() {
-    const period = const Duration(milliseconds: 8);
+    const period = Duration(milliseconds: 8);
     Timer.periodic(
       period,
       (Timer timer) {

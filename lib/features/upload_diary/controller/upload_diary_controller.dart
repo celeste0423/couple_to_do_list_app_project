@@ -8,7 +8,9 @@ import 'package:couple_to_do_list_app/helper/ad_helper.dart';
 import 'package:couple_to_do_list_app/helper/background_message/controller/fcm_controller.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
+import 'package:couple_to_do_list_app/models/notification_model.dart';
 import 'package:couple_to_do_list_app/repository/diary_repository.dart';
+import 'package:couple_to_do_list_app/repository/notification_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -18,18 +20,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
-//Todo: onDelete 함수 어떻게 불러오는거징
 class UploadDiaryController extends GetxController {
   static UploadDiaryController get to => Get.find();
 
   Uint8List? diaryImage;
 
-  String? newUuid = null;
+  String? newUuid;
 
   DiaryModel? selectedDiaryModel = Get.arguments;
-
-  // Rx<DiaryModel?> selectedDiaryModel =
-  //     (DiaryModel().copyDiaryModel(Get.arguments)).obs;
 
   TextEditingController locationController = TextEditingController();
   List<AutoCompletePrediction> placePredictions = [];
@@ -322,17 +320,40 @@ class UploadDiaryController extends GetxController {
     final buddyUid = AuthController.to.user.value.gender == 'male'
         ? AuthController.to.group.value.femaleUid
         : AuthController.to.group.value.maleUid;
-    print('짝꿍 uid ${buddyUid}');
+    print('짝꿍 uid $buddyUid');
     final userTokenData = await FCMController().getDeviceTokenByUid(buddyUid!);
     if (userTokenData != null) {
       print('유저 토큰 존재');
-      FCMController().sendMessageController(
-        userToken: userTokenData.deviceToken!,
-        title: "${AuthController.to.user.value.nickname}님이 다이어리를 작성했어요!",
-        body: '지금 바로 소감을 작성해보세요',
-        dataType: 'diary',
-        dataContent: newUuid,
-      );
+      if (selectedDiaryModel == null) {
+        FCMController().sendMessageController(
+          userToken: userTokenData.deviceToken!,
+          title: "${AuthController.to.user.value.nickname}님이 다이어리를 작성했어요!",
+          body: '지금 바로 소감을 작성해보세요',
+          dataType: 'diary',
+          dataContent: newUuid,
+        );
+      } else {
+        FCMController().sendMessageController(
+          userToken: userTokenData.deviceToken!,
+          title: "${AuthController.to.user.value.nickname}님이 다이어리에 소감을 작성했어요!",
+          body: '지금 바로 확인해보세요',
+          dataType: 'diary',
+          dataContent: newUuid,
+        );
+      }
     }
+    //notification page에 업로드
+    Uuid uuid = Uuid();
+    String notificationId = uuid.v1();
+    NotificationModel notificationModel = NotificationModel(
+      notificationId: notificationId,
+      type: 'diary',
+      title: '${AuthController.to.user.value.nickname}님이 다이어리에 소감을 작성했어요!',
+      content: '소감을 작성해보세요',
+      contentId: newUuid,
+      isChecked: false,
+      createdAt: DateTime.now(),
+    );
+    NotificationRepository().setNotification(buddyUid, notificationModel);
   }
 }
