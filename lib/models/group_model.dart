@@ -6,6 +6,7 @@ class GroupModel {
   final String? uid;
   final DateTime? createdAt;
   final DateTime? dayMet;
+  final bool? isPremium; // Added property
 
   GroupModel({
     this.maleUid,
@@ -13,6 +14,7 @@ class GroupModel {
     this.uid,
     this.createdAt,
     this.dayMet,
+    this.isPremium,
   });
 
   factory GroupModel.fromDocumentSnapshot(DocumentSnapshot doc) {
@@ -28,6 +30,7 @@ class GroupModel {
       dayMet: data['dayMet'] == null
           ? null
           : (data['dayMet'] as Timestamp).toDate(),
+      isPremium: data['isPremium'] as bool?, // Added property
     );
   }
 
@@ -42,6 +45,7 @@ class GroupModel {
       dayMet: json['dayMet'] == null
           ? null
           : (json['dayMet'] as Timestamp).toDate(),
+      isPremium: json['isPremium'] ==null ? false: json['isPremium'] as bool, // Added property
     );
   }
 
@@ -52,6 +56,7 @@ class GroupModel {
       'uid': uid,
       'createdAt': createdAt,
       'dayMet': dayMet,
+      'isPremium': isPremium ?? false, // Added property
     };
   }
 
@@ -61,6 +66,7 @@ class GroupModel {
     String? uid,
     DateTime? createdAt,
     DateTime? dayMet,
+    bool? isPremium, // Added property
   }) {
     return GroupModel(
       maleUid: maleUid ?? this.maleUid,
@@ -68,6 +74,7 @@ class GroupModel {
       uid: uid ?? this.uid,
       createdAt: createdAt ?? this.createdAt,
       dayMet: dayMet ?? this.dayMet,
+      isPremium: isPremium ?? this.isPremium ?? false, // Added property
     );
   }
 }

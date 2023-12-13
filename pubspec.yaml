@@ -76,6 +76,7 @@ dependencies:
   google_mobile_ads: ^3.1.0
   in_app_review: ^2.0.8
   auto_size_text: ^3.0.0
+  in_app_purchase: ^3.1.11
 
 
 flutter_launcher_icons:

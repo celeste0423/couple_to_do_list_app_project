@@ -1,13 +1,6 @@
 import 'package:couple_to_do_list_app/binding/init_binding.dart';
-import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/auth/root/root.dart';
-import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
-import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/firebase_options.dart';
-import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
-import 'package:couple_to_do_list_app/models/diary_model.dart';
-import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
-import 'package:couple_to_do_list_app/repository/diary_repository.dart';
 import 'package:couple_to_do_list_app/theme/base_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
