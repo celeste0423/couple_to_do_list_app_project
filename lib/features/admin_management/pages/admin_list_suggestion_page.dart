@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/admin_management/controller/admin_list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
@@ -10,6 +11,7 @@ import 'package:couple_to_do_list_app/widgets/level_icon.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -798,29 +800,46 @@ class AdminListSuggestionPage
                       ),
                     ),
                     SizedBox(height: 10),
+                    // Expanded(
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       _iconText(
+                    //         'location-pin.png',
+                    //         bukkungListModel.location ?? '',
+                    //         true,
+                    //       ),
+                    //       _iconText(
+                    //         'preview.png',
+                    //         '$formattedViewCount회',
+                    //         false,
+                    //       ),
+                    //       _iconText(
+                    //         null,
+                    //         '${bukkungListModel.likeCount.toString()}개',
+                    //         false,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _iconText(
-                            'location-pin.png',
-                            bukkungListModel.location ?? '',
-                            true,
-                          ),
-                          _iconText(
-                            'preview.png',
-                            '$formattedViewCount회',
-                            false,
-                          ),
-                          _iconText(
-                            null,
-                            '${bukkungListModel.likeCount.toString()}개',
-                            false,
-                          ),
-                        ],
-                      ),
+                      child: bukkungListModel.imgUrl == Constants.baseImageUrl
+                          ? CupertinoButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () async {
+                                await controller
+                                    .updateAutoImage(bukkungListModel);
+                              },
+                              child: Text(
+                                '사진 자동 추가',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            )
+                          : Container(),
                     ),
-                    SizedBox(height: 10),
                   ],
                 ),
               );
