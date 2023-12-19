@@ -1,5 +1,4 @@
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
-import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/old_list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';

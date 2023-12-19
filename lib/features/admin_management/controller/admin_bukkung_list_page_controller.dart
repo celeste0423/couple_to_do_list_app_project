@@ -7,8 +7,8 @@ import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
+import 'package:rxdart/rxdart.dart';
 
 class AdminBukkungListPageController extends GetxController {
   static AdminBukkungListPageController get to => Get.find();

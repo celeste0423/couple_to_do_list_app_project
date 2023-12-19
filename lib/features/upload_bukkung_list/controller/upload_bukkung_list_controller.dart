@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:couple_to_do_list_app/constants/constants.dart';
@@ -12,12 +13,10 @@ import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class UploadBukkungListController extends GetxController {
   static UploadBukkungListController get to => Get.find();

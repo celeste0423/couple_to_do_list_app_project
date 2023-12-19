@@ -35,41 +35,6 @@ class ReadCompletedListPage extends GetView<ReadCompletedListPageController> {
       title: TitleText(
         text: '상세보기',
       ),
-      // actions: [
-      //   PopupMenuButton(
-      //     offset: Offset(0, 50),
-      //     shape: ShapeBorder.lerp(
-      //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      //       1,
-      //     ),
-      //     itemBuilder: (BuildContext context) {
-      //       return [
-      //         PopupMenuItem(
-      //           onTap: () {
-      //             Get.to(
-      //               () => UploadBukkungListPage(),
-      //               arguments: [controller.bukkungListModel, false],
-      //             );
-      //           },
-      //           child: Text(
-      //             "수정하기",
-      //             style: TextStyle(
-      //               fontSize: 20,
-      //               fontFamily: 'Yoonwoo',
-      //               letterSpacing: 1.5,
-      //               color: CustomColors.darkGrey,
-      //             ),
-      //           ),
-      //         ),
-      //       ];
-      //     },
-      //     child: Icon(
-      //       Icons.more_vert,
-      //       size: 30,
-      //     ),
-      //   ),
-      // ],
     );
   }
 

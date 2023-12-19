@@ -1,4 +1,3 @@
-import 'package:couple_to_do_list_app/features/list_suggestion/controller/list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/controller/old_list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';

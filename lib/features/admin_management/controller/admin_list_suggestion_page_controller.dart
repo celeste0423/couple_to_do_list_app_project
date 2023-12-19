@@ -11,10 +11,10 @@ import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:http/http.dart' as http;
 
 class AdminListSuggestionPageController extends GetxController
     with GetTickerProviderStateMixin {
