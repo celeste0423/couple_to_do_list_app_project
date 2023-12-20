@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 
@@ -71,7 +71,8 @@ Future fetchOffers(context) async {
           subtitle: Text(packages[packagenumber].storeProduct.description),
           onTap: () async{
             await PurchaseApi.purchasePackage(packages[packagenumber]);
-            Provider.of<RevenueCatProvider>(context, listen: false).refreshhasAccess();
+            //todo: 오류방지위한 주석
+          //  Provider.of<RevenueCatProvider>(context, listen: false).refreshhasAccess();
 
             Navigator.pop(context);
           },
