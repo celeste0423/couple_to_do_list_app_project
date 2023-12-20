@@ -122,8 +122,7 @@ class AuthController extends GetxController {
     int? previousLevel = prefs.getInt('user_level');
     print('previous Level $previousLevel');
     print('지금 레벨 ${expLikeViewCount[0] ~/ 100}');
-    if (previousLevel != null &&
-        previousLevel != expLikeViewCount[0] ~/ 100) {
+    if (previousLevel != null && previousLevel != expLikeViewCount[0] ~/ 100) {
       globalPreviousLevel = previousLevel;
       globalCurrentLevel = expLikeViewCount[0] ~/ 100;
       isLevelDialog = true;
@@ -325,7 +324,7 @@ class AuthController extends GetxController {
         imgUrl: Constants.baseImageUrl,
       );
       await BukkungListRepository.setGroupBukkungList(
-          initialBukkungList, 'initial$groupId', groupId);
+          initialBukkungList, 'initial$groupId');
       return GroupIdStatus.createdGroupId;
     }
 
@@ -418,7 +417,7 @@ class AuthController extends GetxController {
     );
     // print('(auth cont) 기본 버꿍리스트 업로드 시작');
     await BukkungListRepository.setGroupBukkungList(
-        initialBukkungList, 'initial$groupId', groupId);
+        initialBukkungList, 'initial$groupId');
     return GroupIdStatus.createdGroupId;
   }
 

@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:couple_to_do_list_app/constants/enum.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -475,7 +476,8 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
         width: 55,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
-          color: controller.isImage.value || controller.isSelectedImage.value
+          color: controller.imageType.value == ImageType.storageOnlineImage ||
+                  controller.imageType.value == ImageType.storageOfflineImage
               ? CustomColors.mainPink.withOpacity(0.8)
               : Colors.white,
         ),
