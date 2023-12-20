@@ -196,143 +196,13 @@ class AuthController extends GetxController {
   }
 
   Future<GroupIdStatus> groupCreation(String myEmail, String buddyEmail) async {
-    var myData = await UserRepository.loginUserByEmail(myEmail);
-    var buddyData = await UserRepository.loginUserByEmail(buddyEmail);
-
-    Future checkMyGroup() async {
-      //내 uid가 포함된 그룹이 이미 존재한다면 바로 페이지 넘어갈 수 있도록. 그 그룹id를 내 정보에 넣기
-      final FirebaseFirestore firestore = FirebaseFirestore.instance;
-      String myUid = myData!.uid!;
-      if (myData.gender == 'male') {
-        // Query snapshots where 'femaleUid' equals the provided UID
-        var maleQuerySnapshot = await firestore
-            .collection('group')
-            .where('maleUid', isEqualTo: myUid)
-            .get();
-        if (maleQuerySnapshot.docs.isNotEmpty) {
-          List notSoloGroupDatas = [];
-          for (var doc in maleQuerySnapshot.docs) {
-            var data = doc.data();
-            if (!data['uid'].contains('solo')) {
-              notSoloGroupDatas.add(data);
-            }
-          }
-          if (notSoloGroupDatas.isNotEmpty) {
-            Map<String, dynamic> data = notSoloGroupDatas[0].data();
-            String groupId = data['uid'];
-            myData.copyWith(groupId: groupId);
-            user(myData);
-            group(GroupModel.fromJson(data));
-            await UserRepository.updateGroupId(myData, groupId);
-            // Delete the other documents
-            if (notSoloGroupDatas.length > 1) {
-              for (var data in notSoloGroupDatas.skip(1)) {
-                await firestore.collection('group').doc(data['uid']).delete();
-              }
-            }
-            return GroupIdStatus.createdGroupId;
-          }
-        }
-      }
-      if (myData.gender == 'female') {
-        // Query snapshots where 'femaleUid' equals the provided UID
-        var femaleQuerySnapshot = await firestore
-            .collection('group')
-            .where('femaleUid', isEqualTo: myUid)
-            .get();
-        if (femaleQuerySnapshot.docs.isNotEmpty) {
-          List notSoloGroupDatas = [];
-          for (var doc in femaleQuerySnapshot.docs) {
-            var data = doc.data();
-            if (!data['uid'].contains('solo')) {
-              notSoloGroupDatas.add(data);
-            }
-          }
-          if (notSoloGroupDatas.isNotEmpty) {
-            Map<String, dynamic> data = notSoloGroupDatas[0].data();
-            String groupId = data['uid'];
-            myData.copyWith(groupId: groupId);
-            user(myData);
-            group(GroupModel.fromJson(data));
-            await UserRepository.updateGroupId(myData, groupId);
-            // Delete the other documents
-            if (notSoloGroupDatas.length > 1) {
-              for (var data in notSoloGroupDatas.skip(1)) {
-                await firestore.collection('group').doc(data['uid']).delete();
-              }
-            }
-            return GroupIdStatus.createdGroupId;
-          }
-        }
-      }
+    UserModel? myData = await UserRepository.loginUserByEmail(myEmail);
+    UserModel? buddyData = await UserRepository.loginUserByEmail(buddyEmail);
+    if (myData != null) {
+      await checkMyGroup(myData);
     }
-
-    Future<GroupIdStatus> createSoloGroup(
-      UserModel noGroupUserData,
-      UserModel hasGroupUserData,
-      String groupId,
-    ) async {
-      var groupData = await GroupRepository()
-          .updateSoloGroup(noGroupUserData, hasGroupUserData);
-      group(groupData);
-      await UserRepository.updateGroupId(noGroupUserData, groupData!.uid!);
-      await UserRepository.updateGroupId(hasGroupUserData, groupData.uid!);
-      //user에 그룹아이디 주입
-      user(noGroupUserData.copyWith(groupId: groupId));
-      return GroupIdStatus.createdGroupId;
-    }
-
-    Future<GroupIdStatus> mergeSoloGroups(
-      UserModel myData,
-      UserModel buddyData,
-    ) async {
-      if (AuthController.to.user.value.gender == 'male') {
-        var groupData =
-            await GroupRepository().mergeSoloGroup(myData, buddyData);
-        group(groupData);
-        await UserRepository.updateGroupId(myData, groupData!.uid!);
-        await UserRepository.updateGroupId(buddyData, groupData.uid!);
-      } else {
-        var groupData =
-            await GroupRepository().mergeSoloGroup(buddyData, myData);
-        group(groupData);
-        await UserRepository.updateGroupId(myData, groupData!.uid!);
-        await UserRepository.updateGroupId(buddyData, groupData.uid!);
-      }
-      return GroupIdStatus.createdGroupId;
-    }
-
-    Future<GroupIdStatus> groupSignup(
-      UserModel user1,
-      UserModel user2,
-      String groupId,
-    ) async {
-      var groupData = await GroupRepository.groupSignup(groupId, user1, user2);
-      group(groupData);
-      await UserRepository.updateGroupId(user1, groupId);
-      await UserRepository.updateGroupId(user2, groupId);
-      user(user1.copyWith(groupId: groupId));
-
-      // 기본 버꿍리스트 업로드
-      BukkungListModel initialModel = BukkungListModel.init(user.value);
-      BukkungListModel initialBukkungList = initialModel.copyWith(
-        title: '함께 버꿍리스트 앱 설치하기',
-        listId: 'initial$groupId',
-        category: '6etc',
-        location: '버꿍리스트 앱',
-        content: '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자...',
-        imgUrl: Constants.baseImageUrl,
-      );
-      await BukkungListRepository.setGroupBukkungList(
-          initialBukkungList, 'initial$groupId');
-      return GroupIdStatus.createdGroupId;
-    }
-
-    await checkMyGroup();
-
     var uuid = Uuid();
     String groupId = uuid.v1();
-
     if (buddyData == null || myData == null) {
       //아직 짝꿍이 가입 안함 or 내 정보가 없음(오류)
       return GroupIdStatus.noData;
@@ -374,6 +244,132 @@ class AuthController extends GetxController {
         }
       }
     }
+  }
+
+  Future checkMyGroup(UserModel myData) async {
+    //내 uid가 포함된 그룹이 이미 존재한다면 바로 페이지 넘어갈 수 있도록. 그 그룹id를 내 정보에 넣기
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    String myUid = myData!.uid!;
+    if (myData.gender == 'male') {
+      // Query snapshots where 'femaleUid' equals the provided UID
+      var maleQuerySnapshot = await firestore
+          .collection('group')
+          .where('maleUid', isEqualTo: myUid)
+          .get();
+      if (maleQuerySnapshot.docs.isNotEmpty) {
+        List notSoloGroupDatas = [];
+        for (var doc in maleQuerySnapshot.docs) {
+          var data = doc.data();
+          if (!data['uid'].contains('solo')) {
+            notSoloGroupDatas.add(data);
+          }
+        }
+        if (notSoloGroupDatas.isNotEmpty) {
+          Map<String, dynamic> data = notSoloGroupDatas[0].data();
+          String groupId = data['uid'];
+          myData.copyWith(groupId: groupId);
+          user(myData);
+          group(GroupModel.fromJson(data));
+          await UserRepository.updateGroupId(myData, groupId);
+          // Delete the other documents
+          if (notSoloGroupDatas.length > 1) {
+            for (var data in notSoloGroupDatas.skip(1)) {
+              await firestore.collection('group').doc(data['uid']).delete();
+            }
+          }
+          return GroupIdStatus.createdGroupId;
+        }
+      }
+    } else if (myData.gender == 'female') {
+      // Query snapshots where 'femaleUid' equals the provided UID
+      var femaleQuerySnapshot = await firestore
+          .collection('group')
+          .where('femaleUid', isEqualTo: myUid)
+          .get();
+      if (femaleQuerySnapshot.docs.isNotEmpty) {
+        List notSoloGroupDatas = [];
+        for (var doc in femaleQuerySnapshot.docs) {
+          var data = doc.data();
+          if (!data['uid'].contains('solo')) {
+            notSoloGroupDatas.add(data);
+          }
+        }
+        if (notSoloGroupDatas.isNotEmpty) {
+          Map<String, dynamic> data = notSoloGroupDatas[0].data();
+          String groupId = data['uid'];
+          myData.copyWith(groupId: groupId);
+          user(myData);
+          group(GroupModel.fromJson(data));
+          await UserRepository.updateGroupId(myData, groupId);
+          // Delete the other documents
+          if (notSoloGroupDatas.length > 1) {
+            for (var data in notSoloGroupDatas.skip(1)) {
+              await firestore.collection('group').doc(data['uid']).delete();
+            }
+          }
+          return GroupIdStatus.createdGroupId;
+        }
+      }
+    }
+  }
+
+  Future<GroupIdStatus> createSoloGroup(
+    UserModel noGroupUserData,
+    UserModel hasGroupUserData,
+    String groupId,
+  ) async {
+    var groupData = await GroupRepository()
+        .updateSoloGroup(noGroupUserData, hasGroupUserData);
+    group(groupData);
+    await UserRepository.updateGroupId(noGroupUserData, groupData!.uid!);
+    await UserRepository.updateGroupId(hasGroupUserData, groupData.uid!);
+    //user에 그룹아이디 주입
+    user(noGroupUserData.copyWith(groupId: groupId));
+    return GroupIdStatus.createdGroupId;
+  }
+
+  Future<GroupIdStatus> mergeSoloGroups(
+    UserModel myData,
+    UserModel buddyData,
+  ) async {
+    if (AuthController.to.user.value.gender == 'male') {
+      var groupData = await GroupRepository().mergeSoloGroup(myData, buddyData);
+      group(groupData);
+      await UserRepository.updateGroupId(myData, groupData!.uid!);
+      await UserRepository.updateGroupId(buddyData, groupData.uid!);
+    } else {
+      var groupData = await GroupRepository().mergeSoloGroup(buddyData, myData);
+      group(groupData);
+      await UserRepository.updateGroupId(myData, groupData!.uid!);
+      await UserRepository.updateGroupId(buddyData, groupData.uid!);
+    }
+    return GroupIdStatus.createdGroupId;
+  }
+
+  Future<GroupIdStatus> groupSignup(
+    UserModel user1,
+    UserModel user2,
+    String groupId,
+  ) async {
+    var groupData = await GroupRepository.groupSignup(groupId, user1, user2);
+    group(groupData);
+    await UserRepository.updateGroupId(user1, groupId);
+    await UserRepository.updateGroupId(user2, groupId);
+    user(user1.copyWith(groupId: groupId));
+
+    // 기본 버꿍리스트 업로드
+    BukkungListModel initialModel = BukkungListModel.init(user.value);
+    BukkungListModel initialBukkungList = initialModel.copyWith(
+      title: '함께 버꿍리스트 앱 설치하기',
+      listId: 'initial$groupId',
+      category: '6etc',
+      location: '버꿍리스트 앱',
+      content: '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자...',
+      imgUrl: Constants.baseImageUrl,
+    );
+    await BukkungListRepository.setGroupBukkungList(
+        initialBukkungList, 'initial$groupId');
+    return GroupIdStatus.createdGroupId;
   }
 
   Future soloGroupCreation(String myEmail) async {
