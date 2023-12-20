@@ -99,13 +99,16 @@ class UploadBukkungListController extends GetxController {
       isPublic(false);
       if (selectedBukkungListModel!.imgUrl == Constants.baseImageUrl) {
         //사진이 기본 이미지
+        print('기본 이미지');
         imageType(ImageType.baseImage);
       } else if (selectedBukkungListModel!.imgUrl!
           .startsWith("https://firebasestorage")) {
         //사진이 스토리지 이미지
+        print('스토리지 이미지');
         imageType(ImageType.storageOnlineImage);
       } else {
         //사진이 자동 추천 이미지
+        print('자동 추천 이미지');
         imageType(ImageType.autoImage);
       }
     }
@@ -345,7 +348,6 @@ class UploadBukkungListController extends GetxController {
   //       imgUrl: downloadUrl,
   //       imgId: imageId,
   //       date: listDateTime.value,
-  //       // Todo:기존 제작자의 저작권을 남길 지 말지 선택
   //     );
   //     //print('날짜 이거라구${updatedBukkungList.date}');
   //     if (isSuggestion) {
@@ -410,20 +412,23 @@ class UploadBukkungListController extends GetxController {
   // }
 
   Future<void> uploadBukkungList() async {
-    if (isAutoImage.value == true) {
-      autoImageUrl = await getOnlineImage(titleController.text);
-      if (autoImageUrl != null) {
-        imageType(ImageType.autoImage);
-      }
-    }
     if (selectedBukkungListModel == null) {
       //새로 만드는 경우
+      print('새로 만들어');
+      if (isAutoImage.value == true) {
+        autoImageUrl = await getOnlineImage(titleController.text);
+        if (autoImageUrl != null) {
+          imageType(ImageType.autoImage);
+        }
+      }
       await _uploadNewBukkungList();
     } else if (isSuggestion) {
       //기존 리스트 불러오는 경우
+      print('기존 리스트 복사');
       await _copyBukkungList();
     } else {
       //리스트 수정 시
+      print('리스트 수정');
       await _changeBukkungList();
     }
   }
@@ -518,6 +523,7 @@ class UploadBukkungListController extends GetxController {
     switch (imageType.value) {
       case ImageType.storageOnlineImage:
         //직접 올린 이미지를 받아왔을 경우
+        print('이미지 옮기기 시작');
         String sourcePath = '${selectedBukkungListModel!.imgId}.jpg';
         String destinationPath =
             '${AuthController.to.user.value.groupId}/$filename';
@@ -532,6 +538,7 @@ class UploadBukkungListController extends GetxController {
         Uint8List? sourceData = await sourceRef.getData();
         await destinationRef.putData(sourceData!);
         String downloadUrl = await destinationRef.getDownloadURL();
+        print('이게 옮기는 url ${downloadUrl}');
         var storageUpdatedBukkungList = copyBukkungList.copyWith(
           imgUrl: downloadUrl,
           imgId: imageId,
@@ -540,6 +547,7 @@ class UploadBukkungListController extends GetxController {
         break;
       case ImageType.storageOfflineImage:
         //이미지를 새로 업로드 했을 경우
+        print('새 이미지 업로드');
         var task = uploadFile(listImage!, 'group_bukkunglist',
             '${AuthController.to.user.value.groupId}/$filename');
         task.snapshotEvents.listen((event) async {
@@ -557,6 +565,7 @@ class UploadBukkungListController extends GetxController {
       case ImageType.baseImage:
       case ImageType.autoImage:
         //이미지 주소 그대로 업로드
+        print('그냥 이미지 그대로');
         var copyOnlineImageBukkungList = copyBukkungList.copyWith(
           imgUrl: selectedBukkungListModel!.imgUrl,
         );
