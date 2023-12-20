@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:couple_to_do_list_app/constants/enum.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/auto_complete_prediction.dart';
@@ -8,6 +9,7 @@ import 'package:couple_to_do_list_app/features/upload_bukkung_list/models/locati
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/utils/location_network_util.dart';
 import 'package:couple_to_do_list_app/helper/ad_helper.dart';
 import 'package:couple_to_do_list_app/helper/background_message/controller/fcm_controller.dart';
+import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -51,12 +53,13 @@ class UploadBukkungListController extends GetxController {
 
   Uint8List? listImage;
 
-  Rx<bool> isImage = false.obs;
-  Rx<bool> isSelectedImage = false.obs;
+  // Rx<bool> isImage = false.obs;
+  // Rx<bool> isSelectedImage = false.obs;
+  Rx<ImageType> imageType = ImageType.baseImage.obs;
+  String? autoImageUrl = null;
   Rx<bool> isAutoImage = true.obs;
 
   Rx<bool> isPublic = true.obs;
-  BukkungListModel? bukkungList;
   String? newListId;
 
   Rx<bool> isUploading = false.obs;
@@ -82,7 +85,6 @@ class UploadBukkungListController extends GetxController {
     //   scrollToContent();
     // });
     // contentScrollController.addListener(scrollToContent);
-    bukkungList = BukkungListModel.init(AuthController.to.user.value);
   }
 
   void _checkIsBukkungListSelected() {
@@ -96,11 +98,15 @@ class UploadBukkungListController extends GetxController {
       contentController.text = selectedBukkungListModel!.content!;
       isPublic(false);
       if (selectedBukkungListModel!.imgUrl == Constants.baseImageUrl) {
-        // print('사진 없음(upl cont) ${selectedBukkungListModel!.imgUrl}');
-        isSelectedImage(false);
+        //사진이 기본 이미지
+        imageType(ImageType.baseImage);
+      } else if (selectedBukkungListModel!.imgUrl!
+          .startsWith("https://firebasestorage")) {
+        //사진이 스토리지 이미지
+        imageType(ImageType.storageOnlineImage);
       } else {
-        // print('사진 있음(upl cont');
-        isSelectedImage(true);
+        //사진이 자동 추천 이미지
+        imageType(ImageType.autoImage);
       }
     }
   }
@@ -222,92 +228,296 @@ class UploadBukkungListController extends GetxController {
         // To set maxheight of images that you want in your app
         maxWidth: 500,
       );
-
       if (pickedFile == null) {
         // print('No image selected');
-        isImage(false);
+        // isImage(false);
+        imageType(ImageType.baseImage);
         return;
       }
-
-      isImage(true);
-
+      // isImage(true);
+      imageType(ImageType.storageOfflineImage);
       // Convert PickedFile to Uint8List
       final imageBytes = await pickedFile.readAsBytes();
       listImage = Uint8List.fromList(imageBytes);
     } catch (e) {
-      //print('Error picking image: $e');
-      isImage(false);
+      print('Error picking image: $e');
+      openAlertDialog(title: '사진을 선택하지 못했습니다.');
+      // isImage(false);
     }
   }
 
+  // Future<void> uploadBukkungList() async {
+  //   // print('날짜는 현재 이거야 ${selectedBukkungListModel!.date}');
+  //   FocusManager.instance.primaryFocus?.unfocus();
+  //   var uuid = Uuid();
+  //   String listId = uuid.v1();
+  //   newListId = listId;
+  //   String imageId = uuid.v4();
+  //   var filename = '$imageId.jpg';
+  //
+  //   if (selectedBukkungListModel == null &&
+  //       imageType.value == ImageType.storageOfflineImage) {
+  //     //선택 안함, 사진 있음
+  //     var task = uploadFile(listImage!, 'group_bukkunglist',
+  //         '${AuthController.to.user.value.groupId}/$filename');
+  //
+  //     task.snapshotEvents.listen((event) async {
+  //       if (event.bytesTransferred == event.totalBytes &&
+  //           event.state == TaskState.success) {
+  //         var downloadUrl = await event.ref.getDownloadURL();
+  //         var updatedBukkungList = BukkungListModel(
+  //           listId: listId,
+  //           category: listCategory.value,
+  //           title: titleController.text,
+  //           content: contentController.text,
+  //           location: locationController.text,
+  //           imgUrl: downloadUrl,
+  //           imgId: imageId,
+  //           date: listDateTime.value,
+  //         );
+  //         _submitBukkungList(updatedBukkungList, listId, false);
+  //       }
+  //     });
+  //   } else if (selectedBukkungListModel == null &&
+  //       imageType.value == ImageType.baseImage) {
+  //     // 선택 안함, 사진 없음
+  //     String? autoImageUrl = await getOnlineImage(titleController.text);
+  //     if (isAutoImage.value == true && autoImageUrl != null) {
+  //       //추천 이미지 있을 경우
+  //       var updatedBukkungList = bukkungList!.copyWith(
+  //         listId: listId,
+  //         category: listCategory.value,
+  //         title: titleController.text,
+  //         content: contentController.text,
+  //         location: locationController.text,
+  //         imgUrl: autoImageUrl,
+  //         likeCount: 0,
+  //         date: listDateTime.value,
+  //       );
+  //       _submitNoImgBukkungList(updatedBukkungList, listId, false);
+  //     } else {
+  //       //추천 이미지 없을 경우
+  //       var updatedBukkungList = bukkungList!.copyWith(
+  //         listId: listId,
+  //         category: listCategory.value,
+  //         title: titleController.text,
+  //         content: contentController.text,
+  //         location: locationController.text,
+  //         imgUrl: Constants.baseImageUrl,
+  //         likeCount: 0,
+  //         date: listDateTime.value,
+  //       );
+  //       _submitNoImgBukkungList(updatedBukkungList, listId, false);
+  //     }
+  //   } else if (selectedBukkungListModel == null &&
+  //       imageType == ImageType.autoImage) {
+  //   } else if (selectedBukkungListModel != null &&
+  //       imageType.value == ImageType.storageOnlineImage) {
+  //     // 선택함, 사진 있음(웹사진)
+  //     String? downloadUrl;
+  //     if (isSuggestion) {
+  //       //수정중 => 이미지 주소 그대로 들고옴
+  //       //storage 이미지 일 경우
+  //       String sourcePath = '${selectedBukkungListModel!.imgId}.jpg';
+  //       String destinationPath =
+  //           '${AuthController.to.user.value.groupId}/$filename';
+  //       Reference sourceRef = FirebaseStorage.instance
+  //           .ref()
+  //           .child('suggestion_bukkunglist')
+  //           .child(sourcePath);
+  //       Reference destinationRef = FirebaseStorage.instance
+  //           .ref()
+  //           .child('group_bukkunglist')
+  //           .child(destinationPath);
+  //       Uint8List? sourceData = await sourceRef.getData();
+  //       await destinationRef.putData(sourceData!);
+  //       downloadUrl = await destinationRef.getDownloadURL();
+  //     } else {
+  //       downloadUrl = selectedBukkungListModel!.imgUrl;
+  //     }
+  //
+  //     var updatedBukkungList = selectedBukkungListModel!.copyWith(
+  //       listId: isSuggestion ? listId : selectedBukkungListModel!.listId,
+  //       category: listCategory.value,
+  //       title: titleController.text,
+  //       content: contentController.text,
+  //       location: locationController.text,
+  //       imgUrl: downloadUrl,
+  //       imgId: imageId,
+  //       date: listDateTime.value,
+  //       // Todo:기존 제작자의 저작권을 남길 지 말지 선택
+  //     );
+  //     //print('날짜 이거라구${updatedBukkungList.date}');
+  //     if (isSuggestion) {
+  //       _submitBukkungList(updatedBukkungList, listId, true);
+  //     } else {
+  //       //수정할 때는 리스트 업데이트 해줄 것
+  //       _updateBukkungList(updatedBukkungList);
+  //     }
+  //   } else if (selectedBukkungListModel != null && listImage != null) {
+  //     //선택함, 사진 있음(로컬사진)
+  //     //print('선택함, 사진있음(로컬사진)');
+  //     if (!isSuggestion) {
+  //       //수정중 => 기존 사진 삭제, 새 사진 업로드
+  //       //  print('기존 사진 삭제');
+  //       BukkungListRepository.deleteImage(selectedBukkungListModel!.imgUrl!);
+  //     }
+  //     var task = uploadFile(listImage!, 'group_bukkunglist',
+  //         '${AuthController.to.user.value.groupId}/$filename');
+  //     task.snapshotEvents.listen((event) async {
+  //       if (event.bytesTransferred == event.totalBytes &&
+  //           event.state == TaskState.success) {
+  //         var downloadUrl = await event.ref.getDownloadURL();
+  //         var updatedBukkungList = selectedBukkungListModel!.copyWith(
+  //           listId: isSuggestion ? listId : selectedBukkungListModel!.listId,
+  //           category: listCategory.value,
+  //           title: titleController.text,
+  //           content: contentController.text,
+  //           location: locationController.text,
+  //           imgUrl: downloadUrl,
+  //           date: listDateTime.value,
+  //         );
+  //         if (isSuggestion) {
+  //           _submitBukkungList(updatedBukkungList, listId, true);
+  //         } else {
+  //           //수정할 때는 리스트 업데이트 해줄 것
+  //           _updateBukkungList(updatedBukkungList);
+  //         }
+  //       }
+  //     });
+  //   } else if (selectedBukkungListModel != null &&
+  //       listImage == null &&
+  //       isSelectedImage.value == false) {
+  //     //선택함, 사진 없음(로컬, 웹 둘다)
+  //     // print('선택함, 사진없음');
+  //     var updatedBukkungList = selectedBukkungListModel!.copyWith(
+  //       listId: isSuggestion ? listId : selectedBukkungListModel!.listId,
+  //       category: listCategory.value,
+  //       title: titleController.text,
+  //       content: contentController.text,
+  //       location: locationController.text,
+  //       imgUrl: Constants.baseImageUrl,
+  //       date: listDateTime.value,
+  //     );
+  //     if (isSuggestion) {
+  //       _submitBukkungList(updatedBukkungList, listId, true);
+  //     } else {
+  //       //수정할 때는 리스트 업데이트 해줄 것
+  //       _updateBukkungList(updatedBukkungList);
+  //     }
+  //   }
+  //   AdHelper.showInterstitialAd();
+  // }
+
   Future<void> uploadBukkungList() async {
-    // print('날짜는 현재 이거야 ${selectedBukkungListModel!.date}');
-    FocusManager.instance.primaryFocus?.unfocus();
+    if (isAutoImage.value == true) {
+      autoImageUrl = await getOnlineImage(titleController.text);
+      if (autoImageUrl != null) {
+        imageType(ImageType.autoImage);
+      }
+    }
+    if (selectedBukkungListModel == null) {
+      //새로 만드는 경우
+      await _uploadNewBukkungList();
+    } else if (isSuggestion) {
+      //기존 리스트 불러오는 경우
+      await _copyBukkungList();
+    } else {
+      //리스트 수정 시
+      await _changeBukkungList();
+    }
+  }
+
+  Future<void> _uploadNewBukkungList() async {
     var uuid = Uuid();
     String listId = uuid.v1();
     newListId = listId;
     String imageId = uuid.v4();
     var filename = '$imageId.jpg';
-
-    if (selectedBukkungListModel == null && listImage != null) {
-      //선택 안함, 사진 있음
-      var task = uploadFile(listImage!, 'group_bukkunglist',
-          '${AuthController.to.user.value.groupId}/$filename');
-
-      task.snapshotEvents.listen((event) async {
-        if (event.bytesTransferred == event.totalBytes &&
-            event.state == TaskState.success) {
-          var downloadUrl = await event.ref.getDownloadURL();
-          var updatedBukkungList = bukkungList!.copyWith(
-            listId: listId,
-            category: listCategory.value,
-            title: titleController.text,
-            content: contentController.text,
-            location: locationController.text,
-            imgUrl: downloadUrl,
-            imgId: imageId,
-            date: listDateTime.value,
-          );
-          _submitBukkungList(updatedBukkungList, listId, false);
-        }
-      });
-    } else if (selectedBukkungListModel == null) {
-      // 선택 안함, 사진 없음
-      String? autoImageUrl = await getOnlineImage(titleController.text);
-      if (isAutoImage.value == true && autoImageUrl != null) {
-        //추천 이미지 있을 경우
-        var updatedBukkungList = bukkungList!.copyWith(
-          listId: listId,
-          category: listCategory.value,
-          title: titleController.text,
-          content: contentController.text,
-          location: locationController.text,
+    var newBukkungList = BukkungListModel(
+      listId: listId,
+      category: listCategory.value,
+      title: titleController.text,
+      content: contentController.text,
+      location: locationController.text,
+      imgUrl: null,
+      imgId: null,
+      // likeCount: 0,
+      viewCount: 0,
+      copyCount: 0,
+      date: listDateTime.value,
+      madeBy: AuthController.to.user.value.nickname,
+      userId: AuthController.to.user.value.uid,
+      groupId: AuthController.to.user.value.groupId,
+      createdAt: DateTime.now(),
+      updatedAt: null,
+      // likedUsers: null,
+    );
+    //사진 유무에 따른 케이스 분리
+    switch (imageType.value) {
+      case ImageType.storageOfflineImage:
+        //새 이미지 업로드 후 리스트 업로드
+        var task = uploadFile(listImage!, 'group_bukkunglist',
+            '${AuthController.to.user.value.groupId}/$filename');
+        task.snapshotEvents.listen((event) async {
+          if (event.bytesTransferred == event.totalBytes &&
+              event.state == TaskState.success) {
+            var downloadUrl = await event.ref.getDownloadURL();
+            var newOfflineImageBukkungList = newBukkungList.copyWith(
+              imgUrl: downloadUrl,
+              imgId: imageId,
+            );
+            _submitBukkungList(newOfflineImageBukkungList, false, true);
+          }
+        });
+        break;
+      case ImageType.autoImage:
+        //자동 추천 이미지 있을 경우
+        var newAutoImageBukkungList = newBukkungList.copyWith(
           imgUrl: autoImageUrl,
-          likeCount: 0,
-          date: listDateTime.value,
         );
-        _submitNoImgBukkungList(updatedBukkungList, listId, false);
-      } else {
-        //추천 이미지 없을 경우
-        var updatedBukkungList = bukkungList!.copyWith(
-          listId: listId,
-          category: listCategory.value,
-          title: titleController.text,
-          content: contentController.text,
-          location: locationController.text,
+        _submitBukkungList(newAutoImageBukkungList, false, false);
+        break;
+      case ImageType.baseImage:
+        //추천이미지 X, 사진 업로드 X
+        var newBaseImageBukkungList = newBukkungList.copyWith(
           imgUrl: Constants.baseImageUrl,
-          likeCount: 0,
-          date: listDateTime.value,
         );
-        _submitNoImgBukkungList(updatedBukkungList, listId, false);
-      }
-    } else if (selectedBukkungListModel != null &&
-        isSelectedImage.value == true &&
-        listImage == null) {
-      // 선택함, 사진 있음(웹사진)
-      String? downloadUrl;
-      if (isSuggestion) {
-        //수정중 => 이미지 주소 그대로 들고옴
+        _submitBukkungList(newBaseImageBukkungList, false, false);
+        break;
+      default:
+        openAlertDialog(title: '오류가 발생했습니다.');
+    }
+  }
+
+  Future<void> _copyBukkungList() async {
+    var uuid = Uuid();
+    String listId = uuid.v1();
+    String imageId = uuid.v4();
+    var filename = '$imageId.jpg';
+    var copyBukkungList = BukkungListModel(
+      listId: listId,
+      category: listCategory.value,
+      title: titleController.text,
+      content: contentController.text,
+      location: locationController.text,
+      imgUrl: null,
+      imgId: null,
+      // likeCount: 0,
+      viewCount: selectedBukkungListModel!.viewCount,
+      copyCount: selectedBukkungListModel!.copyCount,
+      date: listDateTime.value,
+      madeBy: AuthController.to.user.value.nickname,
+      userId: AuthController.to.user.value.uid,
+      groupId: AuthController.to.user.value.groupId,
+      createdAt: selectedBukkungListModel!.createdAt,
+      updatedAt: DateTime.now(),
+      // likedUsers: null,
+    );
+    //케이스 분리
+    switch (imageType.value) {
+      case ImageType.storageOnlineImage:
+        //직접 올린 이미지를 받아왔을 경우
         String sourcePath = '${selectedBukkungListModel!.imgId}.jpg';
         String destinationPath =
             '${AuthController.to.user.value.groupId}/$filename';
@@ -321,83 +531,94 @@ class UploadBukkungListController extends GetxController {
             .child(destinationPath);
         Uint8List? sourceData = await sourceRef.getData();
         await destinationRef.putData(sourceData!);
+        String downloadUrl = await destinationRef.getDownloadURL();
+        var storageUpdatedBukkungList = copyBukkungList.copyWith(
+          imgUrl: downloadUrl,
+          imgId: imageId,
+        );
+        _submitBukkungList(storageUpdatedBukkungList, true, true);
+        break;
+      case ImageType.storageOfflineImage:
+        //이미지를 새로 업로드 했을 경우
+        var task = uploadFile(listImage!, 'group_bukkunglist',
+            '${AuthController.to.user.value.groupId}/$filename');
+        task.snapshotEvents.listen((event) async {
+          if (event.bytesTransferred == event.totalBytes &&
+              event.state == TaskState.success) {
+            var downloadUrl = await event.ref.getDownloadURL();
+            var copyOfflineImageBukkungList = copyBukkungList.copyWith(
+              imgUrl: downloadUrl,
+              imgId: imageId,
+            );
+            _submitBukkungList(copyOfflineImageBukkungList, true, false);
+          }
+        });
+        break;
+      case ImageType.baseImage:
+      case ImageType.autoImage:
+        //이미지 주소 그대로 업로드
+        var copyOnlineImageBukkungList = copyBukkungList.copyWith(
+          imgUrl: selectedBukkungListModel!.imgUrl,
+        );
+        _submitBukkungList(copyOnlineImageBukkungList, true, false);
+        break;
+      default:
+        openAlertDialog(title: '오류가 발생했습니다.');
+    }
+  }
 
-        downloadUrl = await destinationRef.getDownloadURL();
-      } else {
-        downloadUrl = selectedBukkungListModel!.imgUrl;
-      }
-
-      var updatedBukkungList = selectedBukkungListModel!.copyWith(
-        listId: isSuggestion ? listId : selectedBukkungListModel!.listId,
-        category: listCategory.value,
-        title: titleController.text,
-        content: contentController.text,
-        location: locationController.text,
-        imgUrl: downloadUrl,
-        imgId: imageId,
-        date: listDateTime.value,
-        // Todo:기존 제작자의 저작권을 남길 지 말지 선택
-      );
-      //print('날짜 이거라구${updatedBukkungList.date}');
-      if (isSuggestion) {
-        _submitBukkungList(updatedBukkungList, listId, true);
-      } else {
-        //수정할 때는 리스트 업데이트 해줄 것
-        _updateBukkungList(updatedBukkungList);
-      }
-    } else if (selectedBukkungListModel != null && listImage != null) {
-      //선택함, 사진 있음(로컬사진)
-      //print('선택함, 사진있음(로컬사진)');
-      if (!isSuggestion) {
-        //수정중 => 기존 사진 삭제, 새 사진 업로드
-        //  print('기존 사진 삭제');
+  Future<void> _changeBukkungList() async {
+    var uuid = Uuid();
+    String imageId = uuid.v4();
+    var filename = '$imageId.jpg';
+    var updatedBukkungList = BukkungListModel(
+      listId: selectedBukkungListModel!.listId,
+      category: listCategory.value,
+      title: titleController.text,
+      content: contentController.text,
+      location: locationController.text,
+      imgUrl: null,
+      imgId: null,
+      // likeCount: 0,
+      viewCount: selectedBukkungListModel!.viewCount,
+      copyCount: selectedBukkungListModel!.copyCount,
+      date: listDateTime.value,
+      madeBy: AuthController.to.user.value.nickname,
+      userId: AuthController.to.user.value.uid,
+      groupId: AuthController.to.user.value.groupId,
+      createdAt: selectedBukkungListModel!.createdAt,
+      updatedAt: DateTime.now(),
+      // likedUsers: null,
+    );
+    //케이스 분리
+    switch (imageType.value) {
+      case ImageType.storageOfflineImage:
+        //기존 이미지 삭제, 새 이미지 업로드
         BukkungListRepository.deleteImage(selectedBukkungListModel!.imgUrl!);
-      }
-      var task = uploadFile(listImage!, 'group_bukkunglist',
-          '${AuthController.to.user.value.groupId}/$filename');
-      task.snapshotEvents.listen((event) async {
-        if (event.bytesTransferred == event.totalBytes &&
-            event.state == TaskState.success) {
-          var downloadUrl = await event.ref.getDownloadURL();
-          var updatedBukkungList = selectedBukkungListModel!.copyWith(
-            listId: isSuggestion ? listId : selectedBukkungListModel!.listId,
-            category: listCategory.value,
-            title: titleController.text,
-            content: contentController.text,
-            location: locationController.text,
-            imgUrl: downloadUrl,
-            date: listDateTime.value,
-          );
-          if (isSuggestion) {
-            _submitBukkungList(updatedBukkungList, listId, true);
+        var task = uploadFile(listImage!, 'group_bukkunglist',
+            '${AuthController.to.user.value.groupId}/$filename');
+        task.snapshotEvents.listen((event) async {
+          if (event.bytesTransferred == event.totalBytes &&
+              event.state == TaskState.success) {
+            var downloadUrl = await event.ref.getDownloadURL();
+            var updateOfflineImageBukkungList = updatedBukkungList.copyWith(
+              imgUrl: downloadUrl,
+              imgId: imageId,
+            );
+            _updateBukkungList(updateOfflineImageBukkungList);
           } else {
-            //수정할 때는 리스트 업데이트 해줄 것
             _updateBukkungList(updatedBukkungList);
           }
-        }
-      });
-    } else if (selectedBukkungListModel != null &&
-        listImage == null &&
-        isSelectedImage == false) {
-      //선택함, 사진 없음(로컬, 웹 둘다)
-      // print('선택함, 사진없음');
-      var updatedBukkungList = selectedBukkungListModel!.copyWith(
-        listId: isSuggestion ? listId : selectedBukkungListModel!.listId,
-        category: listCategory.value,
-        title: titleController.text,
-        content: contentController.text,
-        location: locationController.text,
-        imgUrl: Constants.baseImageUrl,
-        date: listDateTime.value,
-      );
-      if (isSuggestion) {
-        _submitBukkungList(updatedBukkungList, listId, true);
-      } else {
-        //수정할 때는 리스트 업데이트 해줄 것
+        });
+        break;
+      case ImageType.baseImage:
+      case ImageType.autoImage:
+      case ImageType.storageOnlineImage:
         _updateBukkungList(updatedBukkungList);
-      }
+        break;
+      default:
+        openAlertDialog(title: '오류가 발생했습니다.');
     }
-    AdHelper.showInterstitialAd();
   }
 
   UploadTask uploadFile(Uint8List image, String location, String filename) {
@@ -409,52 +630,60 @@ class UploadBukkungListController extends GetxController {
   }
 
   void _submitBukkungList(
-      BukkungListModel bukkungListData, String listId, bool isSelected) async {
+    BukkungListModel bukkungListData,
+    bool isSelected,
+    bool isStorageImage,
+  ) async {
     await BukkungListRepository.setGroupBukkungList(
-        bukkungListData, listId, null);
-
+      bukkungListData,
+      null,
+    );
     //공개되었을 경우
     if (isPublic.value == true && isSelected == false) {
-      // print('추천 리스트 공개 업로드(upl cont)');
       var uuid = Uuid();
-      String imageId = uuid.v4();
-      var filename = '$imageId.jpg';
-      var task = uploadFile(listImage!, 'suggestion_bukkunglist', filename);
+      String suggestionListId = uuid.v1();
+      if (isStorageImage) {
+        String imageId = uuid.v4();
+        var filename = '$imageId.jpg';
+        var task = uploadFile(listImage!, 'suggestion_bukkunglist', filename);
 
-      task.snapshotEvents.listen((event) async {
-        if (event.bytesTransferred == event.totalBytes &&
-            event.state == TaskState.success) {
-          var downloadUrl = await event.ref.getDownloadURL();
-          var updatedBukkungList = bukkungList!.copyWith(
-            listId: listId,
-            category: listCategory.value,
-            title: titleController.text,
-            content: contentController.text,
-            location: locationController.text,
-            imgUrl: downloadUrl,
-            imgId: imageId,
-            date: listDateTime.value,
-          );
-          await BukkungListRepository.setSuggestionBukkungList(
-              updatedBukkungList, listId);
-        }
-      });
+        task.snapshotEvents.listen((event) async {
+          if (event.bytesTransferred == event.totalBytes &&
+              event.state == TaskState.success) {
+            var downloadUrl = await event.ref.getDownloadURL();
+            var updatedBukkungList = bukkungListData.copyWith(
+              listId: suggestionListId,
+              imgUrl: downloadUrl,
+              imgId: imageId,
+            );
+            await BukkungListRepository.setSuggestionBukkungList(
+                updatedBukkungList);
+          }
+        });
+      } else {
+        var updatedNoImgBukkungList = bukkungListData.copyWith(
+          listId: suggestionListId,
+        );
+        await BukkungListRepository.setSuggestionBukkungList(
+            updatedNoImgBukkungList);
+      }
     }
   }
 
-  void _submitNoImgBukkungList(
-    BukkungListModel bukkungListData,
-    String listId,
-    bool isSelected,
-  ) async {
-    await BukkungListRepository.setGroupBukkungList(
-        bukkungListData, listId, null);
+  // void _submitNoImgBukkungList(
+  //   BukkungListModel bukkungListData,
+  //   bool isSelected,
+  // ) async {
+  //   await BukkungListRepository.setGroupBukkungList(bukkungListData, null);
+  //
+  //   //공개되었을 경우
+  //   if (isPublic.value == true && isSelected == false) {
+  //     await BukkungListRepository.setSuggestionBukkungList(bukkungListData);
+  //   }
+  // }
 
-    //공개되었을 경우
-    if (isPublic.value == true && isSelected == false) {
-      await BukkungListRepository.setSuggestionBukkungList(
-          bukkungListData, listId);
-    }
+  void _updateBukkungList(BukkungListModel bukkungListModel) async {
+    await BukkungListRepository.updateGroupBukkungList(bukkungListModel);
   }
 
   Future<String?> getOnlineImage(String searchWords) async {
@@ -484,10 +713,6 @@ class UploadBukkungListController extends GetxController {
       print('추천 사진 없음 오류 (upl buk cont)');
       return null;
     }
-  }
-
-  void _updateBukkungList(BukkungListModel bukkungListModel) async {
-    await BukkungListRepository.updateGroupBukkungList(bukkungListModel);
   }
 
   Future<void> sendCompletedMessageToBuddy() async {

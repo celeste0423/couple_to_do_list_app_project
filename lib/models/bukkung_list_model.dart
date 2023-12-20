@@ -17,6 +17,7 @@ class BukkungListModel {
   final String? userId;
   final String? groupId;
   final DateTime? createdAt;
+  final DateTime? updatedAt;
   final List<String>? likedUsers;
 
   BukkungListModel({
@@ -35,6 +36,7 @@ class BukkungListModel {
     this.userId,
     this.groupId,
     this.createdAt,
+    this.updatedAt,
     this.likedUsers,
   });
 
@@ -55,6 +57,7 @@ class BukkungListModel {
       userId: userInfo.uid,
       groupId: userInfo.groupId,
       createdAt: DateTime.now(),
+      updatedAt: null,
       likedUsers: [],
     );
   }
@@ -78,6 +81,7 @@ class BukkungListModel {
       createdAt: json['createdAt'] == null
           ? DateTime.now()
           : json['createdAt'].toDate(),
+      updatedAt: json['updatedAt'] == null ? null : json['createdAt'].toDate(),
       likedUsers: json['likedUsers'] != null
           ? List<String>.from(json['likedUsers'] as List<dynamic>)
           : null,
@@ -95,12 +99,13 @@ class BukkungListModel {
       'imgId': imgId,
       'likeCount': likeCount,
       'viewCount': viewCount,
-      'copyCount' : copyCount,
+      'copyCount': copyCount,
       'date': date,
       'madeBy': madeBy,
       'userId': userId,
       'groupId': groupId,
       'createdAt': createdAt,
+      'updatedAt': updatedAt,
       'likedUsers': likedUsers,
     };
   }
@@ -121,6 +126,7 @@ class BukkungListModel {
     String? userId,
     String? groupId,
     DateTime? createdAt,
+    DateTime? updatedAt,
     List<String>? likedUsers,
   }) {
     //print('날짜 받는중 model $date');
@@ -140,6 +146,7 @@ class BukkungListModel {
       userId: userId ?? this.userId,
       groupId: groupId ?? this.groupId,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.createdAt,
       likedUsers: likedUsers,
     );
   }
