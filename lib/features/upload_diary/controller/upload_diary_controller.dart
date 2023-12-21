@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
@@ -15,6 +16,7 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -53,12 +55,22 @@ class UploadDiaryController extends GetxController {
 
   Rx<bool> isUploading = false.obs;
 
+  late StreamSubscription<bool> keyboardSubscription;
+  Rx<bool> isKeyboard = false.obs;
+
   @override
   void onInit() {
     super.onInit();
     _checkIsDiarySelected();
     AdHelper.createInterstitialAd();
     contentScrollController.addListener(scrollToContent);
+    var keyboardVisibilityController = KeyboardVisibilityController();
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
+      Future.delayed(Duration(milliseconds: 100), () {
+        isKeyboard(visible);
+      });
+    });
   }
 
   void _checkIsDiarySelected() {
@@ -107,6 +119,7 @@ class UploadDiaryController extends GetxController {
     locationController.dispose();
     contentController.dispose();
     contentScrollController.dispose();
+    keyboardSubscription.cancel();
   }
 
   void datePicker(BuildContext context) async {

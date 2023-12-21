@@ -77,6 +77,7 @@ dependencies:
   in_app_review: ^2.0.8
   auto_size_text: ^3.0.0
   purchases_flutter: ^6.5.1
+  flutter_keyboard_visibility: ^5.4.1
 
 
 flutter_launcher_icons:
