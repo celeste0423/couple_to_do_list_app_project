@@ -50,6 +50,51 @@ class ListSuggestionRepository {
     });
   }
 
+  Future<List<BukkungListModel>> getSearchedBukkungListAsFuture(
+      List<String> searchWords) async {
+    List<BukkungListModel> bukkungLists = [];
+
+    await FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .orderBy('likeCount', descending: true)
+        .orderBy('createdAt', descending: true)
+        .get()
+        .then((QuerySnapshot event) {
+      for (var bukkungList in event.docs) {
+        Map<String, dynamic> bukkungData =
+            bukkungList.data() as Map<String, dynamic>;
+        BukkungListModel bukkungListModel =
+            BukkungListModel.fromJson(bukkungData);
+
+        int wordMatchCount = 0;
+        for (String word in searchWords) {
+          if (bukkungListModel.title!.contains(word) ||
+              bukkungListModel.location!.contains(word)) {
+            wordMatchCount++;
+          }
+        }
+        if (wordMatchCount > 0) {
+          bukkungLists.add(bukkungListModel);
+        }
+      }
+      bukkungLists.sort((a, b) {
+        int matchCountA = 0;
+        int matchCountB = 0;
+        for (String word in searchWords) {
+          if (a.toString().contains(word)) {
+            matchCountA++;
+          }
+          if (b.toString().contains(word)) {
+            matchCountB++;
+          }
+        }
+        return matchCountB.compareTo(matchCountA);
+      });
+    });
+
+    return bukkungLists;
+  }
+
   Future<List<BukkungListModel>> getNewSuggestionListByLike(
     int pageSize,
     QueryDocumentSnapshot<Map<String, dynamic>>? keyPage,

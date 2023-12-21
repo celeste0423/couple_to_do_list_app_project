@@ -134,7 +134,7 @@ class OldListSuggestionPage extends GetView<OldListSuggestionPageController> {
                 print('출력물 ${controller.isSearchResult.value}');
                 return GetBuilder<OldListSuggestionPageController>(
                   id: 'searchResult',
-                  builder: (ListSuggestionPageController) {
+                  builder: (OldListSuggestionPageController) {
                     return ConstrainedBox(
                       constraints: BoxConstraints(maxHeight: 300),
                       child: controller.isTextEmpty
@@ -143,9 +143,11 @@ class OldListSuggestionPage extends GetView<OldListSuggestionPageController> {
                             )
                           : StreamBuilder(
                               stream: controller.getSearchedBukkungList(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<List<BukkungListModel>>
-                                      bukkungLists) {
+                              builder: (
+                                BuildContext context,
+                                AsyncSnapshot<List<BukkungListModel>>
+                                    bukkungLists,
+                              ) {
                                 if (!bukkungLists.hasData) {
                                   return Center(
                                     child: CircularProgressIndicator(

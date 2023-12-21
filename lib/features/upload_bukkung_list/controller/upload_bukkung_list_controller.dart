@@ -12,6 +12,7 @@ import 'package:couple_to_do_list_app/helper/background_message/controller/fcm_c
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
+import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,12 @@ class UploadBukkungListController extends GetxController {
   Rx<bool> isCompleted = false.obs;
 
   TextEditingController titleController = TextEditingController();
+  late FocusNode titleFocusNode;
+  bool isTitleFocused = false;
+  bool isTitleTextEmpty = true;
+  List<String> _searchWord = [];
+  Rx<bool> isSearchResultLoading = false.obs;
+  List<BukkungListModel>? searchBukkungLists = null;
 
   Rx<String?> listCategory = "".obs;
   Map<String, String> categoryToString = {
@@ -71,7 +78,12 @@ class UploadBukkungListController extends GetxController {
 
     _checkIsBukkungListSelected();
     _checkCompleted();
-    titleController.addListener(_checkCompleted);
+    titleController.addListener(() {
+      _checkCompleted;
+      _onTitleChanged();
+    });
+    titleFocusNode = FocusNode();
+    titleFocusNode.addListener(_onTitleFocused);
     listCategory.listen((_) {
       _checkCompleted();
     });
@@ -124,6 +136,29 @@ class UploadBukkungListController extends GetxController {
     } else {
       isCompleted.value = false;
     }
+  }
+
+  void _onTitleFocused() {
+    isTitleFocused = titleFocusNode.hasFocus;
+    update(['uploadPageSearchResult'], true);
+  }
+
+  void _onTitleChanged() async {
+    _searchWord = titleController.text.split(' ');
+    isTitleTextEmpty = titleController.text.isEmpty;
+
+    isSearchResultLoading(true);
+    if (!titleController.text.isEmpty) {
+      searchBukkungLists = await getSearchedBukkungList();
+    }
+    isSearchResultLoading(false);
+    // print(searchBukkungLists!.length);
+    update(['uploadPageSearchResult'], true);
+  }
+
+  Future<List<BukkungListModel>> getSearchedBukkungList() {
+    return ListSuggestionRepository()
+        .getSearchedBukkungListAsFuture(_searchWord);
   }
 
   @override
@@ -190,21 +225,21 @@ class UploadBukkungListController extends GetxController {
     }
   }
 
-  void scrollToContent() async {
-    await Future.delayed(Duration(milliseconds: 400));
-    //  print('스크롤 시작${contentFocusNode.hasFocus}');
-    if (contentFocusNode.hasFocus) {
-      // print('스크롤 가능 ${contentScrollController.hasClients}');
-      if (contentScrollController.hasClients) {
-        //  print('스크롤 중');
-        contentScrollController.animateTo(
-          contentScrollController.position.maxScrollExtent - 100,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    }
-  }
+  // void scrollToContent() async {
+  //   await Future.delayed(Duration(milliseconds: 400));
+  //   //  print('스크롤 시작${contentFocusNode.hasFocus}');
+  //   if (contentFocusNode.hasFocus) {
+  //     // print('스크롤 가능 ${contentScrollController.hasClients}');
+  //     if (contentScrollController.hasClients) {
+  //       //  print('스크롤 중');
+  //       contentScrollController.animateTo(
+  //         contentScrollController.position.maxScrollExtent - 100,
+  //         duration: Duration(milliseconds: 300),
+  //         curve: Curves.easeOut,
+  //       );
+  //     }
+  //   }
+  // }
 
   // void pickImageFromGallery(BuildContext context) async {
   //   // To set maxheight of images that you want in your app
