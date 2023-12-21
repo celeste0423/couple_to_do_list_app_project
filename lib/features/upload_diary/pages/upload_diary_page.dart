@@ -244,7 +244,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
 
   Widget _contentRow() {
     return Positioned(
-      top: 410,
+      top: 25 + (Get.height - 150) / 11 * 6,
       left: Get.width / 2 - 165,
       child: Container(
         width: 330,
