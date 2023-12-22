@@ -98,7 +98,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
   Widget _titleTextField() {
     return Container(
       height: 70,
-      margin: const EdgeInsets.symmetric(horizontal: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextField(
         controller: controller.titleController,
         focusNode: controller.titleFocusNode,
@@ -139,70 +139,135 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
           if (controller.searchBukkungLists != null) {
             height = controller.searchBukkungLists!.length * 95;
           }
-          return Positioned(
-            top: 165,
-            left: 20,
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              width: Get.width - 40,
-              height: controller.isTitleFocused && !controller.isTitleTextEmpty
-                  ? controller.searchBukkungLists != null
-                      ? height == 0
-                          ? 0
-                          : height < 85
-                              ? 85
-                              : height > 260
-                                  ? 260
-                                  : height
-                      : 0
-                  : 0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(25),
-                  bottomRight: Radius.circular(25),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 5), // Offset(수평, 수직)
+          return Stack(
+            children: [
+              Positioned(
+                bottom:
+                    Get.height - MediaQuery.of(context).viewInsets.bottom - 167,
+                left: 20,
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 200),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25),
+                    ),
+                    border: Border(
+                      bottom:
+                          BorderSide(width: 2, color: CustomColors.mainPink),
+                      // left: BorderSide(width: 2, color: CustomColors.mainPink),
+                      // right: BorderSide(width: 2, color: CustomColors.mainPink),
+                      // top: BorderSide(width: 2, color: CustomColors.mainPink),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: controller.isTitleFocused &&
+                                !controller.isTitleTextEmpty
+                            ? controller.searchBukkungLists != null
+                                ? height == 0
+                                    ? Colors.transparent
+                                    : Colors.black.withOpacity(0.1)
+                                : Colors.transparent
+                            : Colors.transparent,
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 5), // Offset(수평, 수직)
+                      ),
+                    ],
                   ),
-                ],
+                  width: Get.width - 40,
+                  height:
+                      controller.isTitleFocused && !controller.isTitleTextEmpty
+                          ? controller.searchBukkungLists != null
+                              ? height == 0
+                                  ? 0
+                                  : 75
+                              : 0
+                          : 0,
+                ),
               ),
-              child: Obx(() {
-                return controller.isSearchResultLoading.value
-                    ? Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
-                      )
-                    : controller.searchBukkungLists == null
-                        ? Container()
-                        : controller.searchBukkungLists!.isEmpty
+              Positioned(
+                top: 79,
+                left: 20,
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 200),
+                  width: Get.width - 40,
+                  height:
+                      controller.isTitleFocused && !controller.isTitleTextEmpty
+                          ? controller.searchBukkungLists != null
+                              ? height == 0
+                                  ? 0
+                                  : height < 85
+                                      ? 85
+                                      : height > 260
+                                          ? 260
+                                          : height
+                              : 0
+                          : 0,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(25),
+                      bottomRight: Radius.circular(25),
+                    ),
+                    // border: Border(
+                    //   left: BorderSide(width: 2, color: CustomColors.mainPink),
+                    //   right: BorderSide(width: 2, color: CustomColors.mainPink),
+                    //   bottom:
+                    //       BorderSide(width: 2, color: CustomColors.mainPink),
+                    // ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: controller.isTitleFocused &&
+                                !controller.isTitleTextEmpty
+                            ? controller.searchBukkungLists != null
+                                ? height == 0
+                                    ? Colors.transparent
+                                    : Colors.black.withOpacity(0.1)
+                                : Colors.transparent
+                            : Colors.transparent,
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 5), // Offset(수평, 수직)
+                      ),
+                    ],
+                  ),
+                  child: Obx(() {
+                    return controller.isSearchResultLoading.value
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )
+                        : controller.searchBukkungLists == null
                             ? Container()
-                            : ListView(
-                                padding: EdgeInsets.only(top: 5),
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: List.generate(
-                                        controller.searchBukkungLists!.length,
-                                        (index) {
-                                      final bukkungList =
-                                          controller.searchBukkungLists![index];
-                                      return _searchListCard(
-                                        bukkungList,
-                                        index,
-                                        context,
-                                      );
-                                    }),
-                                  ),
-                                ],
-                              );
-              }),
-            ),
+                            : controller.searchBukkungLists!.isEmpty
+                                ? Container()
+                                : ListView(
+                                    padding: EdgeInsets.only(top: 5),
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: List.generate(
+                                            controller.searchBukkungLists!
+                                                .length, (index) {
+                                          final bukkungList = controller
+                                              .searchBukkungLists![index];
+                                          return _searchListCard(
+                                            bukkungList,
+                                            index,
+                                            context,
+                                          );
+                                        }),
+                                      ),
+                                    ],
+                                  );
+                  }),
+                ),
+              ),
+            ],
           );
         });
   }
@@ -693,6 +758,35 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
     );
   }
 
+  Widget _imageSelectors(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        bottom: 15,
+        left: 30,
+        right: 30,
+      ),
+      child: controller.selectedBukkungListModel == null
+          ? Column(
+              children: [
+                Row(
+                  children: [
+                    _publicSwitch(),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    _imagePicker(context),
+                    SizedBox(width: 10),
+                    _autoImageSwitch(),
+                  ],
+                ),
+              ],
+            )
+          : _imagePicker(context),
+    );
+  }
+
   Widget _imagePicker(BuildContext context) {
     return Obx(() {
       return Container(
@@ -872,55 +966,36 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
           backgroundColor: CustomColors.backgroundLightGrey,
           appBar: _appBar(),
           body: KeyboardDismissOnTap(
-            child: Column(
+            child: Stack(
               children: [
-                _titleTextField(),
-                customDivider(),
-                Expanded(
-                  child: SingleChildScrollView(
-                    controller: controller.contentScrollController,
-                    child: Column(
-                      children: [
-                        _categorySelector(context),
-                        _locationTextfield(context),
-                        _datePicker(context),
-                        _contentTextField(context),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 15,
-                            left: 30,
-                            right: 30,
-                          ),
-                          child: controller.selectedBukkungListModel == null
-                              ? Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        _publicSwitch(),
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        _imagePicker(context),
-                                        SizedBox(width: 10),
-                                        _autoImageSwitch(),
-                                      ],
-                                    ),
-                                  ],
-                                )
-                              : _imagePicker(context),
+                Column(
+                  children: [
+                    // _titleTextField(),
+                    SizedBox(height: 70),
+                    customDivider(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        controller: controller.contentScrollController,
+                        child: Column(
+                          children: [
+                            _categorySelector(context),
+                            _locationTextfield(context),
+                            _datePicker(context),
+                            _contentTextField(context),
+                            _imageSelectors(context),
+                            _bottomBar(),
+                          ],
                         ),
-                        _bottomBar(),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
+                // _searchResult(),
+                _titleTextField(),
               ],
             ),
           ),
         ),
-        // _searchResult(),
         Obx(
           () => controller.isUploading.value
               ? Container(

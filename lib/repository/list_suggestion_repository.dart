@@ -53,7 +53,6 @@ class ListSuggestionRepository {
   Future<List<BukkungListModel>> getSearchedBukkungListAsFuture(
       List<String> searchWords) async {
     List<BukkungListModel> bukkungLists = [];
-
     await FirebaseFirestore.instance
         .collection('bukkungLists')
         .orderBy('likeCount', descending: true)
@@ -74,7 +73,12 @@ class ListSuggestionRepository {
           }
         }
         if (wordMatchCount > 0) {
-          bukkungLists.add(bukkungListModel);
+          if (bukkungLists.length < 10) {
+            bukkungLists.add(bukkungListModel);
+          } else {
+            // 최대 10개를 넘으면 루프 종료
+            break;
+          }
         }
       }
       bukkungLists.sort((a, b) {
@@ -91,7 +95,6 @@ class ListSuggestionRepository {
         return matchCountB.compareTo(matchCountA);
       });
     });
-
     return bukkungLists;
   }
 

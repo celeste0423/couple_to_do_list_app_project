@@ -149,16 +149,12 @@ class UploadBukkungListController extends GetxController {
 
     isSearchResultLoading(true);
     if (!titleController.text.isEmpty) {
-      searchBukkungLists = await getSearchedBukkungList();
+      searchBukkungLists = await ListSuggestionRepository()
+          .getSearchedBukkungListAsFuture(_searchWord);
     }
     isSearchResultLoading(false);
     // print(searchBukkungLists!.length);
     update(['uploadPageSearchResult'], true);
-  }
-
-  Future<List<BukkungListModel>> getSearchedBukkungList() {
-    return ListSuggestionRepository()
-        .getSearchedBukkungListAsFuture(_searchWord);
   }
 
   @override
