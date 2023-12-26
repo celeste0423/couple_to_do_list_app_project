@@ -78,6 +78,9 @@ dependencies:
   auto_size_text: ^3.0.0
   purchases_flutter: ^6.5.1
   flutter_keyboard_visibility: ^5.4.1
+  grouped_list: ^5.1.2
+  intl: ^0.18.1
+  timeago: ^3.6.0
 
 
 flutter_launcher_icons:
