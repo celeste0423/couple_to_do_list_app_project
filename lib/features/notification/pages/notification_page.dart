@@ -56,7 +56,7 @@ class NotificationPage extends GetView<NotificationPageController> {
             : controller.notifications.length == 0
                 ? Center(
                     child: Text(
-                      '아직 알립이 없습니다.',
+                      '아직 알림이 없습니다.',
                       style: TextStyle(
                         fontSize: 14,
                       ),
@@ -104,70 +104,89 @@ class NotificationPage extends GetView<NotificationPageController> {
           controller.updateIsChecked(notification.notificationId);
           controller.openPage(notification);
         },
-        child: Opacity(
-          opacity: notification.isChecked ? 0.5 : 1,
-          child: Container(
-            width: double.infinity,
-            height: 90,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 6,
-                  offset: Offset(0, 3),
+        child: Stack(
+          children: [
+            Opacity(
+              opacity: notification.isChecked ? 0.4 : 1,
+              child: Container(
+                width: double.infinity,
+                height: 90,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 6,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: CircleAvatar(
-                    backgroundColor: CustomColors.mainPink,
-                    radius: 21,
-                    foregroundImage:
-                        AssetImage('assets/images/baseimage_ggomool.png'),
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          notification.title!,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: CustomColors.blackText,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CircleAvatar(
+                        backgroundColor: CustomColors.mainPink,
+                        radius: 21,
+                        foregroundImage:
+                            AssetImage('assets/images/baseimage_ggomool.png'),
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              notification.title!,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: CustomColors.blackText,
+                              ),
+                            ),
                           ),
-                        ),
+                          Text(
+                            notification.content!,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: CustomColors.greyText,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            difference,
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: CustomColors.greyText,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        notification.content!,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: CustomColors.greyText,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        difference,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: CustomColors.greyText,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(width: 10),
+                  ],
                 ),
-                SizedBox(width: 10),
-              ],
+              ),
             ),
-          ),
+            Positioned(
+              right: 0,
+              top: 0,
+              child: CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  controller.deleteNotification(notification.notificationId);
+                },
+                child: Icon(
+                  Icons.close,
+                  size: 20,
+                  color: CustomColors.grey,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

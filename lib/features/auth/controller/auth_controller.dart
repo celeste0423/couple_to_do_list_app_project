@@ -445,16 +445,17 @@ class AuthController extends GetxController {
       switch (dataType) {
         case 'diary':
           {
-            DiaryModel? sendedDiary =
+            DiaryModel? receivedDiary =
                 await DiaryRepository().getDiary(message.data['data_content']);
-            Get.to(() => ReadDiaryPage(), arguments: sendedDiary);
+            Get.to(() => ReadDiaryPage(), arguments: receivedDiary);
             break;
           }
         case 'bukkunglist':
           {
-            BukkungListModel? sendedBukkungList = await BukkungListRepository()
-                .getBukkungList(message.data['data_content']);
-            Get.to(() => ReadBukkungListPage(), arguments: sendedBukkungList);
+            BukkungListModel? receivedBukkunglist =
+                await BukkungListRepository()
+                    .getBukkungList(message.data['data_content']);
+            Get.to(() => ReadBukkungListPage(), arguments: receivedBukkunglist);
             break;
           }
         default:

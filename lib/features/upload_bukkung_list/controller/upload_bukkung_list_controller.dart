@@ -11,8 +11,10 @@ import 'package:couple_to_do_list_app/helper/ad_helper.dart';
 import 'package:couple_to_do_list_app/helper/background_message/controller/fcm_controller.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
+import 'package:couple_to_do_list_app/models/notification_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
+import 'package:couple_to_do_list_app/repository/notification_repository.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -582,11 +584,10 @@ class UploadBukkungListController extends GetxController {
   }
 
   Future<void> sendCompletedMessageToBuddy() async {
+    final buddyUid = AuthController.to.user.value.gender == 'male'
+        ? AuthController.to.group.value.femaleUid
+        : AuthController.to.group.value.maleUid;
     if (isSuggestion) {
-      final buddyUid = AuthController.to.user.value.gender == 'male'
-          ? AuthController.to.group.value.femaleUid
-          : AuthController.to.group.value.maleUid;
-      print('짝꿍 uid $buddyUid');
       final userTokenData =
           await FCMController().getDeviceTokenByUid(buddyUid!);
       if (userTokenData != null) {
@@ -599,7 +600,6 @@ class UploadBukkungListController extends GetxController {
             body: selectedBukkungListModel!.title!,
             dataType: 'bukkunglist',
             dataContent: selectedBukkungListModel!.listId,
-            groupId: AuthController.to.group.value.uid,
           );
         } else {
           //리스트를 완전히 새로 만든 경우
@@ -609,10 +609,24 @@ class UploadBukkungListController extends GetxController {
             body: titleController.text,
             dataType: 'bukkunglist',
             dataContent: newListId,
-            groupId: AuthController.to.group.value.uid,
           );
         }
       }
     }
+    //notification page에 업로드
+    Uuid uuid = Uuid();
+    String notificationId = uuid.v1();
+    NotificationModel notificationModel = NotificationModel(
+      notificationId: notificationId,
+      type: 'bukkunglist',
+      title: '${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!',
+      content: '지금 바로 확인해보세요',
+      contentId: selectedBukkungListModel == null
+          ? newListId
+          : selectedBukkungListModel!.listId,
+      isChecked: false,
+      createdAt: DateTime.now(),
+    );
+    NotificationRepository().setNotification(buddyUid!, notificationModel);
   }
 }

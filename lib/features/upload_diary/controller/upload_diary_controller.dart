@@ -341,7 +341,7 @@ class UploadDiaryController extends GetxController {
         FCMController().sendMessageController(
           userToken: userTokenData.deviceToken!,
           title: "${AuthController.to.user.value.nickname}님이 다이어리를 작성했어요!",
-          body: '지금 바로 소감을 작성해보세요',
+          body: '지금 바로 소감을 작성해보세요📝',
           dataType: 'diary',
           dataContent: newUuid,
         );
@@ -362,7 +362,7 @@ class UploadDiaryController extends GetxController {
       notificationId: notificationId,
       type: 'diary',
       title: '${AuthController.to.user.value.nickname}님이 다이어리에 소감을 작성했어요!',
-      content: '소감을 작성해보세요',
+      content: '소감을 작성해보세요📝',
       contentId: newUuid,
       isChecked: false,
       createdAt: DateTime.now(),
