@@ -463,7 +463,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                             image: CustomCachedNetworkImage(
-                                bukkungListModel.imgUrl!),
+                                bukkungListModel.imgUrl),
                             fit: BoxFit.cover),
                         borderRadius: BorderRadius.circular(20),
                       ),

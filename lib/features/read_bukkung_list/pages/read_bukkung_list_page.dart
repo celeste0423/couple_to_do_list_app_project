@@ -62,7 +62,7 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
                 child: Text(
                   "수정하기",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 14,
                     letterSpacing: 1.5,
                     color: CustomColors.darkGrey,
                   ),
