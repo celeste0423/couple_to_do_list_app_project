@@ -323,16 +323,16 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               controller.currentType.value!,
             ),
             builder: (BuildContext context,
-                AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
-              if (!bukkungLists.hasData) {
+                AsyncSnapshot<List<BukkungListModel>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child:
                       CircularProgressIndicator(color: CustomColors.mainPink),
                 );
-              } else if (bukkungLists.hasError) {
+              } else if (snapshot.hasError) {
                 openAlertDialog(title: '에러 발생');
-              } else {
-                final list = bukkungLists.data!;
+              } else if (snapshot.hasData) {
+                final list = snapshot.data!;
                 // print('리스트 출력(buk page)${list.length}');
                 if (list.isNotEmpty) {
                   return ListView(
