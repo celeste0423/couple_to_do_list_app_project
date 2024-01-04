@@ -289,4 +289,11 @@ class ListSuggestionPageController extends GetxController
       bukkungListModel.listId!,
     );
   }
+
+  void addViewCount(BukkungListModel selectedList) {
+    ListSuggestionRepository().updateViewCount(
+      selectedList.listId!,
+      selectedList.viewCount! + 1,
+    );
+  }
 }

@@ -629,4 +629,11 @@ class UploadBukkungListController extends GetxController {
     );
     NotificationRepository().setNotification(buddyUid!, notificationModel);
   }
+
+  void addViewCount(BukkungListModel selectedList) {
+    ListSuggestionRepository().updateViewCount(
+      selectedList.listId!,
+      selectedList.viewCount! + 1,
+    );
+  }
 }

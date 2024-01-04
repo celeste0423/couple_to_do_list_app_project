@@ -1,4 +1,5 @@
 import 'package:couple_to_do_list_app/features/list_suggestion/controller/list_suggestion_page_controller.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/pages/read_suggestion_list_page.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
@@ -130,7 +131,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             ),
             Obx(() {
               if (controller.isSearchResult.value) {
-                print('출력물 ${controller.isSearchResult.value}');
+                // print('출력물 ${controller.isSearchResult.value}');
                 return GetBuilder<ListSuggestionPageController>(
                   id: 'searchResult',
                   builder: (ListSuggestionPageController) {
@@ -196,6 +197,12 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       child: GestureDetector(
         onTap: () {
           //상세 페이지 이동
+          Get.to(
+            () => ReadSuggestionListPage(),
+            arguments: bukkungListModel,
+            transition: Transition.fadeIn,
+            duration: Duration(milliseconds: 500),
+          );
         },
         child: Container(
           height: 85,
@@ -573,7 +580,14 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: CupertinoButton(
         onPressed: () {
+          controller.addViewCount(bukkungListModel);
           //세부 페이지 이동
+          Get.to(
+            () => ReadSuggestionListPage(),
+            arguments: bukkungListModel,
+            transition: Transition.fadeIn,
+            duration: Duration(milliseconds: 500),
+          );
         },
         padding: EdgeInsets.zero,
         child: Stack(
