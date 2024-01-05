@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:couple_to_do_list_app/constants/enum.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/read_suggestion_list_page.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
+import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -285,13 +286,14 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: CupertinoButton(
         onPressed: () {
-          controller.addViewCount(bukkungListModel);
           openAlertDialog(
             title: '리스트 불러오기',
             content: '현재까지 작성된 내용은 저장되지 않습니다',
             btnText: '불러오기',
             secondButtonText: '취소',
             mainfunction: () {
+              controller.addViewCount(bukkungListModel);
+              Analytics().logEvent('copy_bukkunglist_from_upload_page', null);
               Get.back();
               Get.off(
                 () => ReadSuggestionListPage(),

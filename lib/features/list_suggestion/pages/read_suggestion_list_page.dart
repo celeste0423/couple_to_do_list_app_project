@@ -469,6 +469,7 @@ class ReadSuggestionListPage extends GetView<ReadSuggestionListPageController> {
                           .isEmpty) {
                         openAlertDialog(title: '댓글을 입력하세요');
                       } else {
+                        Analytics().logEvent('add_comment', null);
                         await controller.setComment();
                       }
                     },
