@@ -19,6 +19,7 @@ import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
@@ -493,19 +494,21 @@ class ReadSuggestionListPage extends GetView<ReadSuggestionListPageController> {
   @override
   Widget build(BuildContext context) {
     Get.put(ReadSuggestionListPageController());
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: _appBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _detailContent(),
-            SizedBox(height: 10),
-            _commentSection(),
-          ],
+    return KeyboardDismissOnTap(
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: _appBar(),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              _detailContent(),
+              SizedBox(height: 10),
+              _commentSection(),
+            ],
+          ),
         ),
+        // bottomNavigationBar: _commentTextField(),
       ),
-      // bottomNavigationBar: _commentTextField(),
     );
   }
 }

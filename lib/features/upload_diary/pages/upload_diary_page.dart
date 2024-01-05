@@ -246,7 +246,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
     return Obx(
       () => Positioned(
         top:
-            controller.isKeyboard.value ? 30 : 25 + (Get.height - 150) / 11 * 6,
+            controller.isKeyboard.value ? 50 : 25 + (Get.height - 150) / 11 * 6,
         left: Get.width / 2 - 165,
         child: Container(
           width: 330,
@@ -356,76 +356,82 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
       flex: 5,
       child: Container(
         color: CustomColors.backgroundLightGrey,
-        child: Padding(
-          padding:
-              const EdgeInsets.only(left: 20, right: 20, top: 50, bottom: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                controller: controller.contentController,
-                inputFormatters: [
-                  TextInputFormatter.withFunction((oldValue, newValue) {
-                    int newLines = newValue.text.split('\n').length;
-                    if (newLines > 5) {
-                      return oldValue;
-                    } else {
-                      return newValue;
-                    }
-                  }),
-                ],
-                decoration: InputDecoration(
-                  hintText: ' 소감은 어땠나요?',
-                  hintStyle: TextStyle(
-                    color: CustomColors.lightGreyText,
+        child: Obx(
+          () => Padding(
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: controller.isKeyboard.value ? 70 : 50,
+              bottom: 20,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: controller.contentController,
+                  inputFormatters: [
+                    TextInputFormatter.withFunction((oldValue, newValue) {
+                      int newLines = newValue.text.split('\n').length;
+                      if (newLines > 5) {
+                        return oldValue;
+                      } else {
+                        return newValue;
+                      }
+                    }),
+                  ],
+                  decoration: InputDecoration(
+                    hintText: ' 소감은 어땠나요?',
+                    hintStyle: TextStyle(
+                      color: CustomColors.lightGreyText,
+                      fontSize: 18,
+                      fontFamily: 'Bookk_mj',
+                    ),
+                    border: InputBorder.none,
+                    counterText: '',
+                  ),
+                  cursorColor: CustomColors.darkGrey,
+                  cursorHeight: 20,
+                  style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'Bookk_mj',
+                    height: 1.2,
                   ),
-                  border: InputBorder.none,
-                  counterText: '',
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 5,
+                  maxLength: 140,
                 ),
-                cursorColor: CustomColors.darkGrey,
-                cursorHeight: 20,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontFamily: 'Bookk_mj',
-                  height: 1.2,
-                ),
-                keyboardType: TextInputType.multiline,
-                maxLines: 5,
-                maxLength: 140,
-              ),
-              GestureDetector(
-                onTap: () {
-                  controller.datePicker(context);
-                },
-                child: Obx(() {
-                  return Row(
-                    children: [
-                      PngIcon(
-                        iconName: 'calendar',
-                        iconColor: CustomColors.grey.withOpacity(0.5),
-                        iconSize: 25,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        controller.diaryDateTime.value == null
-                            ? '날짜'
-                            : DateFormat('yyyy-MM-dd')
-                                .format(controller.diaryDateTime.value!),
-                        style: TextStyle(
-                          color: controller.diaryDateTime.value == null
-                              ? CustomColors.greyText
-                              : CustomColors.blackText,
-                          fontSize: 18,
+                GestureDetector(
+                  onTap: () {
+                    controller.datePicker(context);
+                  },
+                  child: Obx(() {
+                    return Row(
+                      children: [
+                        PngIcon(
+                          iconName: 'calendar',
+                          iconColor: CustomColors.grey.withOpacity(0.5),
+                          iconSize: 25,
                         ),
-                      ),
-                    ],
-                  );
-                }),
-              ),
-            ],
+                        SizedBox(width: 10),
+                        Text(
+                          controller.diaryDateTime.value == null
+                              ? '날짜'
+                              : DateFormat('yyyy-MM-dd')
+                                  .format(controller.diaryDateTime.value!),
+                          style: TextStyle(
+                            color: controller.diaryDateTime.value == null
+                                ? CustomColors.greyText
+                                : CustomColors.blackText,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+              ],
+            ),
           ),
         ),
       ),
