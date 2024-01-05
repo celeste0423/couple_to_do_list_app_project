@@ -1,4 +1,5 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/pages/read_suggestion_list_page.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
@@ -7,6 +8,7 @@ import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/models/notification_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
 import 'package:couple_to_do_list_app/repository/diary_repository.dart';
+import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:couple_to_do_list_app/repository/notification_repository.dart';
 import 'package:get/get.dart';
 
@@ -60,6 +62,11 @@ class NotificationPageController extends GetxController {
         BukkungListModel? sendedBukkungList = await BukkungListRepository()
             .getBukkungList(notification.contentId!);
         Get.off(() => ReadBukkungListPage(), arguments: sendedBukkungList);
+        break;
+      case 'comment':
+        BukkungListModel? sendedBukkungList = await ListSuggestionRepository()
+            .getSuggestionListById(notification.contentId!);
+        Get.off(() => ReadSuggestionListPage(), arguments: sendedBukkungList);
         break;
       default:
         openAlertDialog(title: '알림을 열 수 없습니다.');

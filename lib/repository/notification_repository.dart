@@ -79,7 +79,7 @@ class NotificationRepository {
               .collection('users')
               .doc(uid)
               .collection('notification')
-              .where('isChecked', isEqualTo: false)
+              .where('is_checked', isEqualTo: false)
               .limit(1) // 하나 이상이 필요하지 않으므로 최대 1개만 가져옴
               .get();
 

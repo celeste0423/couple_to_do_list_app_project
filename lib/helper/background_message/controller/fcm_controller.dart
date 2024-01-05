@@ -1,10 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:couple_to_do_list_app/features/list_suggestion/pages/read_suggestion_list_page.dart';
+import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
+import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/helper/background_message/repository/fcm_repository.dart';
+import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/device_token_model.dart';
+import 'package:couple_to_do_list_app/models/diary_model.dart';
+import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
+import 'package:couple_to_do_list_app/repository/diary_repository.dart';
+import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
@@ -226,5 +235,51 @@ class FCMController {
       print(error);
       return error.message;
     }
+  }
+
+  //알림 수신 관련
+  Future<void> setupInteractedMessage() async {
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+    // print('메시지 받아보는중');
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+      // print('메시지 받아왔어용(auth cont) ${initialMessage.data['data_content']}');
+    }
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    String dataType = message.data['data_type'];
+    Future.delayed(Duration(milliseconds: 500), () async {
+      switch (dataType) {
+        case 'diary':
+          {
+            DiaryModel? receivedDiary =
+                await DiaryRepository().getDiary(message.data['data_content']);
+            Get.to(() => ReadDiaryPage(), arguments: receivedDiary);
+            break;
+          }
+        case 'bukkunglist':
+          {
+            BukkungListModel? receivedBukkunglist =
+                await BukkungListRepository()
+                    .getBukkungList(message.data['data_content']);
+            Get.to(() => ReadBukkungListPage(), arguments: receivedBukkunglist);
+            break;
+          }
+        case 'comment':
+          {
+            BukkungListModel? receivedBukkunglist =
+                await ListSuggestionRepository()
+                    .getSuggestionListById(message.data['data_content']);
+            Get.to(() => ReadSuggestionListPage(),
+                arguments: receivedBukkunglist);
+            break;
+          }
+        default:
+          break;
+      }
+    });
   }
 }

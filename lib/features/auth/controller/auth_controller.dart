@@ -2,22 +2,17 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
-import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
-import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/helper/background_message/controller/fcm_controller.dart';
 import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
-import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/models/group_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/repository/bukkung_list_repository.dart';
-import 'package:couple_to_do_list_app/repository/diary_repository.dart';
 import 'package:couple_to_do_list_app/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -161,7 +156,7 @@ class AuthController extends GetxController {
       FCMController().uploadDeviceToken(deviceToken, uid);
 
       //fcm 수신
-      setupInteractedMessage();
+      FCMController().setupInteractedMessage();
 
       //신규 유저일 경우 userData에 false값 반환됨, error났을떄는 null 반환됨
       if (userData != null && userData != false) {
@@ -426,41 +421,5 @@ class AuthController extends GetxController {
     loginType = null;
     group(GroupModel());
     user(UserModel());
-  }
-
-  Future<void> setupInteractedMessage() async {
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-    print('메시지 받아보는중');
-    if (initialMessage != null) {
-      _handleMessage(initialMessage);
-      print('메시지 받아왔어용(auth cont) ${initialMessage.data['data_content']}');
-    }
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-  }
-
-  void _handleMessage(RemoteMessage message) {
-    String dataType = message.data['data_type'];
-    Future.delayed(Duration(milliseconds: 500), () async {
-      switch (dataType) {
-        case 'diary':
-          {
-            DiaryModel? receivedDiary =
-                await DiaryRepository().getDiary(message.data['data_content']);
-            Get.to(() => ReadDiaryPage(), arguments: receivedDiary);
-            break;
-          }
-        case 'bukkunglist':
-          {
-            BukkungListModel? receivedBukkunglist =
-                await BukkungListRepository()
-                    .getBukkungList(message.data['data_content']);
-            Get.to(() => ReadBukkungListPage(), arguments: receivedBukkunglist);
-            break;
-          }
-        default:
-          break;
-      }
-    });
   }
 }

@@ -48,26 +48,26 @@ class ReadSuggestionListPage extends GetView<ReadSuggestionListPageController> {
       // title: TitleText(
       //   text: '상세보기',
       // ),
-      actions: [
-        CupertinoButton(
-          padding: EdgeInsets.only(right: 15, left: 15),
-          child: Text(
-            '가져오기',
-            style: TextStyle(
-              fontSize: 20,
-              color: CustomColors.blackText,
-            ),
-          ),
-          onPressed: () {
-            Analytics().logEvent('copy_bukkunglist', null);
-            controller.setCopyCount();
-            Get.off(
-              () => UploadBukkungListPage(),
-              arguments: [controller.bukkungListModel, true],
-            );
-          },
-        ),
-      ],
+      // actions: [
+      //   CupertinoButton(
+      //     padding: EdgeInsets.only(right: 15, left: 15),
+      //     child: Text(
+      //       '가져오기',
+      //       style: TextStyle(
+      //         fontSize: 20,
+      //         color: CustomColors.blackText,
+      //       ),
+      //     ),
+      //     onPressed: () {
+      //       Analytics().logEvent('copy_bukkunglist', null);
+      //       controller.setCopyCount();
+      //       Get.off(
+      //         () => UploadBukkungListPage(),
+      //         arguments: [controller.bukkungListModel, true],
+      //       );
+      //     },
+      //   ),
+      // ],
     );
   }
 
@@ -157,14 +157,14 @@ class ReadSuggestionListPage extends GetView<ReadSuggestionListPageController> {
                             children: [
                               PngIcon(
                                 iconName: 'location-pin',
-                                iconSize: 30,
+                                iconSize: 20,
                               ),
                               FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: BkText(
                                   controller.bukkungListModel.location!,
                                   style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 18,
                                     color: CustomColors.blackText,
                                   ),
                                   softWrap: true,
@@ -194,9 +194,10 @@ class ReadSuggestionListPage extends GetView<ReadSuggestionListPageController> {
                   ),
                   SizedBox(height: 20),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 30,
+                    padding: const EdgeInsets.only(
+                      top: 10,
+                      left: 30,
+                      right: 30,
                     ),
                     child: Align(
                       alignment: Alignment.topLeft,
@@ -210,6 +211,7 @@ class ReadSuggestionListPage extends GetView<ReadSuggestionListPageController> {
                       ),
                     ),
                   ),
+                  _copyButton()
                 ],
               ),
             ),
@@ -239,6 +241,38 @@ class ReadSuggestionListPage extends GetView<ReadSuggestionListPageController> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _copyButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+      child: GestureDetector(
+        onTap: () {
+          Analytics().logEvent('copy_bukkunglist', null);
+          controller.setCopyCount();
+          Get.off(
+            () => UploadBukkungListPage(),
+            arguments: [controller.bukkungListModel, true],
+          );
+        },
+        child: Container(
+          height: 45,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: CustomColors.mainPink,
+          ),
+          child: Center(
+            child: Text(
+              '내 리스트로 양식 가져오기',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -292,11 +326,11 @@ class ReadSuggestionListPage extends GetView<ReadSuggestionListPageController> {
   }
 
   Widget _comment(CommentModel commentData, int index) {
-    print('${commentData.uid} ${controller.bukkungListModel.userId}');
+    // print('${commentData.uid} ${controller.bukkungListModel.userId}');
     return Container(
       height: 80,
       color: index % 2 == 1 ? CustomColors.backgroundLightGrey : Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 15),
+      padding: EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -360,7 +394,6 @@ class ReadSuggestionListPage extends GetView<ReadSuggestionListPageController> {
           Text(
             commentData.comment,
             style: TextStyle(
-              fontWeight: FontWeight.bold,
               fontSize: 14,
               color: Colors.black,
             ),
@@ -461,6 +494,7 @@ class ReadSuggestionListPage extends GetView<ReadSuggestionListPageController> {
   Widget build(BuildContext context) {
     Get.put(ReadSuggestionListPageController());
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: _appBar(),
       body: SingleChildScrollView(
         child: Column(
@@ -471,6 +505,7 @@ class ReadSuggestionListPage extends GetView<ReadSuggestionListPageController> {
           ],
         ),
       ),
+      // bottomNavigationBar: _commentTextField(),
     );
   }
 }

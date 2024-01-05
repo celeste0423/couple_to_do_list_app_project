@@ -1,14 +1,14 @@
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
+import 'package:couple_to_do_list_app/helper/background_message/controller/fcm_controller.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/models/comment_model.dart';
 import 'package:couple_to_do_list_app/models/copy_count_model.dart';
-import 'package:couple_to_do_list_app/models/diary_model.dart';
+import 'package:couple_to_do_list_app/models/notification_model.dart';
 import 'package:couple_to_do_list_app/models/user_model.dart';
 import 'package:couple_to_do_list_app/repository/comment_repository.dart';
 import 'package:couple_to_do_list_app/repository/copy_count_repository.dart';
-import 'package:couple_to_do_list_app/repository/list_completed_repository.dart';
 import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart';
+import 'package:couple_to_do_list_app/repository/notification_repository.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -55,6 +55,10 @@ class ReadSuggestionListPageController extends GetxController {
       createdAt: DateTime.now(),
     );
     await CommentRepository().setComment(bukkungListModel.listId!, commentData);
+    //제작자한테 알림 보내기
+    if (bukkungListModel.userId != AuthController.to.user.value.uid) {
+      await sendCommentMessageToCreator(commentTextController.text);
+    }
     commentTextController.clear();
     isCommentUploading(false);
   }
@@ -77,5 +81,34 @@ class ReadSuggestionListPageController extends GetxController {
     );
     CopyCountRepository().uploadCopyCount(copyCountData);
     ListSuggestionRepository().addCopyCount(bukkungListModel.listId!);
+  }
+
+  Future<void> sendCommentMessageToCreator(String comment) async {
+    final String creatorUid = bukkungListModel.userId!;
+    final userTokenData = await FCMController().getDeviceTokenByUid(creatorUid);
+    if (userTokenData != null) {
+      print('유저 토큰 존재');
+      FCMController().sendMessageController(
+        userToken: userTokenData.deviceToken!,
+        title: "내 버꿍리스트에 댓글이 달렸어요",
+        body: comment,
+        dataType: 'comment',
+        dataContent: bukkungListModel.listId,
+      );
+    }
+    //notification page에 업로드
+    Uuid uuid = Uuid();
+    String notificationId = uuid.v1();
+    NotificationModel notificationModel = NotificationModel(
+      notificationId: notificationId,
+      type: 'comment',
+      title: '내 버꿍리스트에 댓글이 달렸어요',
+      content: comment,
+      contentId: bukkungListModel.listId,
+      isChecked: false,
+      createdAt: DateTime.now(),
+    );
+    print('메시지 보냄');
+    NotificationRepository().setNotification(creatorUid, notificationModel);
   }
 }

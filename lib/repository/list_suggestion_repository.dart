@@ -478,4 +478,17 @@ class ListSuggestionRepository {
     }
     return bukkungLists;
   }
+
+  Future<BukkungListModel?> getSuggestionListById(String bukkungListId) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('bukkungLists')
+        .doc(bukkungListId)
+        .get();
+    if (snapshot.exists) {
+      return BukkungListModel.fromJson(snapshot.data() as Map<String, dynamic>);
+    } else {
+      openAlertDialog(title: '해당 버꿍리스트가 존재하지 않습니다.');
+      return null;
+    }
+  }
 }
