@@ -243,106 +243,109 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
   }
 
   Widget _contentRow() {
-    return Positioned(
-      top: 25 + (Get.height - 150) / 11 * 6,
-      left: Get.width / 2 - 165,
-      child: Container(
-        width: 330,
-        height: 60,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(35),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              spreadRadius: 0,
-              offset: Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            SizedBox(width: 20),
-            Row(
-              children: [
-                PngIcon(
-                  iconName: 'location-pin',
-                  iconSize: 30,
-                ),
-                SizedBox(width: 5),
-                SizedBox(
-                  width: 120,
-                  child: TextField(
-                    controller: controller.locationController,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 1,
-                    onChanged: (value) {},
-                    cursorColor: CustomColors.darkGrey,
-                    cursorHeight: 20,
-                    style: TextStyle(
-                      color: CustomColors.blackText,
-                      fontSize: 18,
-                      // decoration: TextDecoration.underline,
-                    ),
-                    maxLength: 20,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      counterText: '',
-                      hintText: '장소',
-                      hintStyle: TextStyle(
-                        color: CustomColors.greyText,
+    return Obx(
+      () => Positioned(
+        top:
+            controller.isKeyboard.value ? 30 : 25 + (Get.height - 150) / 11 * 6,
+        left: Get.width / 2 - 165,
+        child: Container(
+          width: 330,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(35),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                spreadRadius: 0,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              SizedBox(width: 20),
+              Row(
+                children: [
+                  PngIcon(
+                    iconName: 'location-pin',
+                    iconSize: 30,
+                  ),
+                  SizedBox(width: 5),
+                  SizedBox(
+                    width: 120,
+                    child: TextField(
+                      controller: controller.locationController,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 1,
+                      onChanged: (value) {},
+                      cursorColor: CustomColors.darkGrey,
+                      cursorHeight: 20,
+                      style: TextStyle(
+                        color: CustomColors.blackText,
                         fontSize: 18,
+                        // decoration: TextDecoration.underline,
+                      ),
+                      maxLength: 20,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        counterText: '',
+                        hintText: '장소',
+                        hintStyle: TextStyle(
+                          color: CustomColors.greyText,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                PngIcon(
-                  iconName: 'category',
-                  iconSize: 30,
-                  iconColor: CustomColors.grey.withOpacity(0.5),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    Get.dialog(_categoryDialog());
-                  },
-                  child: Obx(() {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CategoryIcon(
-                          category: controller.diaryCategory.value ?? '',
-                          size: 35,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          controller.categoryToString[
-                                  controller.diaryCategory.value] ??
-                              '카테고리',
-                          style: TextStyle(
-                            color: controller.categoryToString[
-                                        controller.diaryCategory.value] ==
-                                    null
-                                ? CustomColors.greyText
-                                : CustomColors.blackText,
-                            fontSize: 18,
+                ],
+              ),
+              Row(
+                children: [
+                  PngIcon(
+                    iconName: 'category',
+                    iconSize: 30,
+                    iconColor: CustomColors.grey.withOpacity(0.5),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      Get.dialog(_categoryDialog());
+                    },
+                    child: Obx(() {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CategoryIcon(
+                            category: controller.diaryCategory.value ?? '',
+                            size: 35,
                           ),
-                        ),
-                      ],
-                    );
-                  }),
-                ),
-              ],
-            ),
-          ],
+                          SizedBox(width: 5),
+                          Text(
+                            controller.categoryToString[
+                                    controller.diaryCategory.value] ??
+                                '카테고리',
+                            style: TextStyle(
+                              color: controller.categoryToString[
+                                          controller.diaryCategory.value] ==
+                                      null
+                                  ? CustomColors.greyText
+                                  : CustomColors.blackText,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -577,9 +580,7 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                 _contentTextField(context),
               ],
             ),
-            Obx(
-              () => controller.isKeyboard.value ? Container() : _contentRow(),
-            ),
+            _contentRow(),
             Obx(
               () => controller.isUploading.value
                   ? Container(
