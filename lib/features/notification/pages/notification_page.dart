@@ -37,7 +37,7 @@ class NotificationPage extends GetView<NotificationPageController> {
         preferredSize: Size.fromHeight(2.0), // 하단 선의 높이 조절
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: customDivider(),
+          child: CustomDivider(),
         ),
       ),
     );

@@ -307,7 +307,8 @@ class ReadSuggestionListPage extends GetView<ReadSuggestionListPageController> {
                       ),
                     ),
                   ),
-                  customDivider(),
+                  CustomDivider(
+                      padding: EdgeInsets.only(top: 10, left: 20, right: 20)),
                   _comments(comments),
                   _commentTextField(),
                 ],

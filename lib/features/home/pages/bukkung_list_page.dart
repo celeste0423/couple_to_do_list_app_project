@@ -624,7 +624,9 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           _listTypeSelector(),
-          customDivider(),
+          CustomDivider(
+            key: controller.bukkungListKey,
+          ),
           _bukkungListView(),
         ],
       ),

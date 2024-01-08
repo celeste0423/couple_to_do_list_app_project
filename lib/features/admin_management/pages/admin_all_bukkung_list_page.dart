@@ -274,7 +274,7 @@ class AdminBukkungListPage extends GetView<AdminBukkungListPageController> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           // _listTypeSelector(),
-          // customDivider(),
+          // CustomDivider(),
           _bukkungListView(),
         ],
       ),

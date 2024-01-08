@@ -200,8 +200,8 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                           ? controller.searchBukkungLists != null
                               ? height == 0
                                   ? 0
-                                  : height < 85
-                                      ? 85
+                                  : height < 105
+                                      ? 105
                                       : height > 260
                                           ? 260
                                           : height
@@ -992,7 +992,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                   children: [
                     // _titleTextField(),
                     SizedBox(height: 70),
-                    customDivider(),
+                    CustomDivider(),
                     Expanded(
                       child: SingleChildScrollView(
                         controller: controller.contentScrollController,

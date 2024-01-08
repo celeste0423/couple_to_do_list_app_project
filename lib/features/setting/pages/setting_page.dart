@@ -328,7 +328,7 @@ class SettingPage extends GetView<SettingPageController> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            customDivider(),
+            CustomDivider(),
             Hero(tag: 'addButton', child: accountListTile()),
             _notificationSetting(imageWidth),
             _appSetting(imageWidth, context),
