@@ -27,8 +27,9 @@ class BukkungListPageController extends GetxController {
   Rx<String?> currentType = "category".obs;
   Map<String, String> typetoString = {
     "category": "카테고리 별",
-    "date": "최신 순",
-    "redate": "이전 순",
+    "created_at": "리스트 추가순",
+    "date": "최신 날짜순",
+    "redate": "이전 날짜순",
   };
 
   @override
@@ -85,6 +86,8 @@ class BukkungListPageController extends GetxController {
     // print('현재 유저 (buk page cont)${myGroup.value.uid}');
 
     switch (type) {
+      case 'created_at':
+        return BukkungListRepository().getGroupBukkungListByCreatedAt();
       case 'date':
         return BukkungListRepository().getGroupBukkungListByDate();
       case 'redate':

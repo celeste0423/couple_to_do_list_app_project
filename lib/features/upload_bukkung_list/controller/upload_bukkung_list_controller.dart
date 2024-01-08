@@ -386,8 +386,8 @@ class UploadBukkungListController extends GetxController {
       madeBy: AuthController.to.user.value.nickname,
       userId: AuthController.to.user.value.uid,
       groupId: AuthController.to.user.value.groupId,
-      createdAt: selectedBukkungListModel!.createdAt,
-      updatedAt: DateTime.now(),
+      createdAt: DateTime.now(),
+      updatedAt: null,
       // likedUsers: null,
     );
     //케이스 분리

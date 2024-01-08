@@ -71,6 +71,32 @@ class AdminPage extends StatelessWidget {
     }
   }
 
+  void updateNullImgUrls() async {
+    try {
+      // Firestore 인스턴스 생성
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // bukkungLists 컬렉션 그룹 쿼리
+      QuerySnapshot<Map<String, dynamic>> snapshot =
+          await firestore.collectionGroup('bukkungLists').get();
+
+      int imageCount = 0;
+      // imgUrl이 null인 문서에 대한 업데이트
+      for (QueryDocumentSnapshot<Map<String, dynamic>> document
+          in snapshot.docs) {
+        if (document.data()['imgUrl'] == null) {
+          // 업데이트 수행
+          imageCount++;
+          await document.reference.update({'imgUrl': Constants.baseImageUrl});
+        }
+      }
+      print('업데이트 완료');
+      openAlertDialog(title: '${imageCount}개 이미지 업데이트 완료');
+    } catch (e) {
+      print('에러 발생: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,6 +177,13 @@ class AdminPage extends StatelessWidget {
                 buttonColor: Colors.grey,
                 onTap: () {
                   Get.to(() => AdminDiaryPage());
+                },
+              ),
+              MainButton(
+                buttonText: 'null 이미지 오류 처리',
+                buttonColor: Colors.grey,
+                onTap: () {
+                  updateNullImgUrls();
                 },
               ),
               MainButton(

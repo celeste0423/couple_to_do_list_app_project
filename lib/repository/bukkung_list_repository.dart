@@ -36,6 +36,22 @@ class BukkungListRepository {
     });
   }
 
+  Stream<List<BukkungListModel>> getGroupBukkungListByCreatedAt() {
+    return FirebaseFirestore.instance
+        .collection('groups')
+        .doc(AuthController.to.group.value.uid)
+        .collection('bukkungLists')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((event) {
+      List<BukkungListModel> bukkungLists = [];
+      for (var bukkungList in event.docs) {
+        bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+      }
+      return bukkungLists;
+    });
+  }
+
   Stream<List<BukkungListModel>> getGroupBukkungListByDate() {
     return FirebaseFirestore.instance
         .collection('groups')
@@ -146,17 +162,17 @@ class BukkungListRepository {
     }
   }
 
-  Stream<List<BukkungListModel>> getBukkungListByCreatedAt() {
-    return FirebaseFirestore.instance
-        .collectionGroup('bukkungLists')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((event) {
-      List<BukkungListModel> bukkungLists = [];
-      for (var bukkungList in event.docs) {
-        bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-      }
-      return bukkungLists;
-    });
-  }
+  // Stream<List<BukkungListModel>> getBukkungListByCreatedAt() {
+  //   return FirebaseFirestore.instance
+  //       .collectionGroup('bukkungLists')
+  //       .orderBy('createdAt', descending: true)
+  //       .snapshots()
+  //       .map((event) {
+  //     List<BukkungListModel> bukkungLists = [];
+  //     for (var bukkungList in event.docs) {
+  //       bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
+  //     }
+  //     return bukkungLists;
+  //   });
+  // }
 }

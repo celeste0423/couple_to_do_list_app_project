@@ -165,9 +165,20 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                 ),
               ),
               PopupMenuItem(
+                value: "created_at",
+                child: Text(
+                  "리스트 추가순",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontFamily: 'Nanum',
+                    color: CustomColors.darkGrey,
+                  ),
+                ),
+              ),
+              PopupMenuItem(
                 value: "date",
                 child: Text(
-                  "최신 순",
+                  "최신 날짜순",
                   style: TextStyle(
                     fontSize: 15,
                     fontFamily: 'Nanum',
@@ -178,7 +189,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               PopupMenuItem(
                 value: "redate",
                 child: Text(
-                  "이전 순",
+                  "이전 날짜순",
                   style: TextStyle(
                     fontSize: 15,
                     fontFamily: 'Nanum',
