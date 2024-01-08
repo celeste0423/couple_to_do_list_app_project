@@ -31,6 +31,16 @@ class AuthDeletePageController extends GetxController {
           String? groupId = AuthController.to.user.value.groupId;
           String? myGender = AuthController.to.user.value.gender;
 
+          //CopyCount 삭제
+          CopyCountRepository().deleteCopyCountByUid(uid!);
+          //DeviceToken 삭제
+          DeviceTokenModel? deviceToken =
+              await FCMRepository().getDeviceTokenByUid(uid);
+          if (deviceToken != null) {
+            FCMRepository().deleteDeviceToken(deviceToken.tid!);
+          }
+          _uploadFeedback();
+
           String loginType = await UserRepository.getLoginType();
           if (loginType == 'google') {
             final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -113,17 +123,6 @@ class AuthDeletePageController extends GetxController {
           } else {
             //       print('null반환');
           }
-
-          //CopyCount 삭제
-          CopyCountRepository().deleteCopyCountByUid(uid!);
-          //DeviceToken 삭제
-          DeviceTokenModel? deviceToken =
-              await FCMRepository().getDeviceTokenByUid(uid);
-          if (deviceToken != null) {
-            FCMRepository().deleteDeviceToken(deviceToken.tid!);
-          }
-
-          _uploadFeedback();
           //로그아웃
           await UserRepository.signOut();
           await openAlertDialog(
