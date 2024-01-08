@@ -62,6 +62,7 @@ class AuthDeletePageController extends GetxController {
             //로그인 타입 설정
             // AuthController.loginType = 'apple';
           }
+
           //auth에서 삭제
           await FirebaseAuth.instance.currentUser!.delete();
           //  print('auth 삭제뒤');
@@ -73,23 +74,23 @@ class AuthDeletePageController extends GetxController {
           //  print('store 삭제뒤');
 
           //짝꿍의 user data가 파이어스토어에 없는지 확인 후 group 삭제 진행
-          final snapshot1 = await FirebaseFirestore.instance
+          final groupSnapshot = await FirebaseFirestore.instance
               .collection('groups')
               .doc(groupId)
               .get();
 
-          Map<String, dynamic>? data = snapshot1.data();
+          Map<String, dynamic>? data = groupSnapshot.data();
           if (data != null) {
             //    print('반환');
             String? femaleUid = data['femaleUid'];
             String? maleUid = data['maleUid'];
-            String? bukkungUid = myGender == 'male' ? femaleUid : maleUid;
-            final snapshot2 = await FirebaseFirestore.instance
+            String? buddyUid = myGender == 'male' ? femaleUid : maleUid;
+            final buddySnapshot = await FirebaseFirestore.instance
                 .collection('users')
-                .doc(bukkungUid)
+                .doc(buddyUid)
                 .get();
             //      print('get');
-            if (!snapshot2.exists) {
+            if (!buddySnapshot.exists) {
               //짝꿍의 user data가 파이어스토어에 없을 떄 (짝꿍이 이미 탈퇴를했을 때) 그룹 삭제진행
 
               //subcollection 모두 없애고
