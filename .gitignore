@@ -10,6 +10,7 @@
 .svn/
 migrate_working_dir/
 인증서/
+pubspec.lock
 # IntelliJ related
 *.iml
 *.ipr

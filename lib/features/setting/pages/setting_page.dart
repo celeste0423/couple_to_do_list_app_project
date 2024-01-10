@@ -259,8 +259,10 @@ class SettingPage extends GetView<SettingPageController> {
             ),
           ),
           GestureDetector(
-            child: SizedBox(
+            child: Container(
               height: 50,
+              color: Colors.transparent,
+              width: double.infinity,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(

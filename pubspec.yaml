@@ -41,7 +41,7 @@ dependencies:
   flutter_native_splash: ^2.2.19
   firebase_auth: ^4.4.2
   cloud_firestore: ^4.5.3
-  uuid: ^3.0.7
+  uuid: ^4.2.2
   launch_review: ^3.0.1
   share_plus: ^7.0.0
   flutter_localizations:
@@ -54,7 +54,7 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   shimmer: ^3.0.0
   path_provider: ^2.0.15
-  package_info_plus: ^4.0.2
+  package_info_plus: ^5.0.1
   url_launcher: ^6.1.11
   http: ^0.13.6
   flutter_web_auth: ^0.5.0
@@ -63,20 +63,20 @@ dependencies:
   cached_network_image: ^3.2.3
   tutorial_coach_mark: ^1.2.9
   shared_preferences: ^2.2.0
-  rename: ^2.1.1
+  rename: ^3.0.1
   firebase_storage: ^11.2.1
   firebase_messaging: ^14.6.4
-  flutter_local_notifications: ^15.1.1
+  flutter_local_notifications: ^16.3.0
   kakao_flutter_sdk_user: ^1.4.3
   sign_in_with_apple: ^5.0.0
   google_sign_in: ^6.1.4
   firebase_analytics: ^10.6.4
   get_storage: ^2.1.1
-  google_mobile_ads: ^3.1.0
+  google_mobile_ads: ^4.0.0
   in_app_review: ^2.0.8
   auto_size_text: ^3.0.0
   purchases_flutter: ^6.5.1
-  flutter_keyboard_visibility: ^5.4.1
+  flutter_keyboard_visibility: ^6.0.0
   grouped_list: ^5.1.2
   intl: ^0.18.1
   timeago: ^3.6.0
@@ -107,7 +107,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
   flutter_launcher_icons: ^0.13.1
 
 # For information on the generic Dart part of this file, see the

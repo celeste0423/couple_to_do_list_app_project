@@ -5,6 +5,7 @@ import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/category_icon.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -304,19 +305,20 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  PngIcon(
-                    iconName: 'category',
-                    iconSize: 30,
-                    iconColor: CustomColors.grey.withOpacity(0.5),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      Get.dialog(_categoryDialog());
-                    },
-                    child: Obx(() {
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  Get.dialog(_categoryDialog());
+                },
+                child: Row(
+                  children: [
+                    PngIcon(
+                      iconName: 'category',
+                      iconSize: 30,
+                      iconColor: CustomColors.grey.withOpacity(0.5),
+                    ),
+                    Obx(() {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -341,8 +343,8 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                         ],
                       );
                     }),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
