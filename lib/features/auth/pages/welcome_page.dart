@@ -48,34 +48,37 @@ class _WelcomePageState extends State<WelcomePage> {
           padding: const EdgeInsets.only(left: 30),
           child: Image.asset('assets/images/title_vertical.png'),
         ),
-        RotatedBox(
-          quarterTurns: 45,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 208, top: 30),
-                child: Divider(
-                  thickness: 1,
-                  color: Colors.white,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: RotatedBox(
+            quarterTurns: 45,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 208, top: 30),
+                  child: Divider(
+                    thickness: 1,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              BkText(
-                '내 짝꿍과 ',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 23,
+                BkText(
+                  '내 짝꿍과 ',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 23,
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              BkText(
-                '이루고 싶은 버킷리스트',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 23,
+                SizedBox(height: 20),
+                BkText(
+                  '이루고 싶은 버킷리스트',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 23,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

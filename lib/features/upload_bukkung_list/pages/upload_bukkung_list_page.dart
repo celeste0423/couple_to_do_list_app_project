@@ -333,8 +333,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                 ),
               ),
               SizedBox(width: 20),
-              SizedBox(
-                width: 200,
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -376,6 +375,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                             '${bukkungListModel.copyCount.toString()}회',
                             false,
                           ),
+                          SizedBox(width: 20)
                         ],
                       ),
                     ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/helper/background_message/repository/fcm_repository.dart';
@@ -145,6 +147,7 @@ class AuthDeletePageController extends GetxController {
           Get.back();
         });
     SystemNavigator.pop();
+    exit(0);
   }
 
   void _uploadFeedback() {

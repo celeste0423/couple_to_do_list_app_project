@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/features/auth/root/root.dart';
 import 'package:couple_to_do_list_app/firebase_options.dart';
@@ -17,6 +19,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 //백그라운드 메시지
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await initializeNotification();
   print("백그라운드 메시지 처리 ${message.messageId}");
 }
 
@@ -35,11 +39,11 @@ Future<void> _showFlutterNotification(RemoteMessage message) async {
   RemoteNotification? notification = message.notification;
   AndroidNotification? android = message.notification?.android;
   if (notification != null && android != null) {
-    // 안드로이드이고, 알림이 있는경우
     flutterLocalNotificationsPlugin.show(
       notification.hashCode,
       notification.title,
       notification.body,
+      payload: jsonEncode(message.data),
       NotificationDetails(
         android: AndroidNotificationDetails(
           channel.id,
@@ -54,25 +58,7 @@ Future<void> _showFlutterNotification(RemoteMessage message) async {
   }
 }
 
-void initializeNotification() async {
-  //foreground 수신 처리
-  FirebaseMessaging.onMessage.listen(_showFlutterNotification);
-  //background 수신 처리
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-//안드로이드 푸시 알림
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-  await flutterLocalNotificationsPlugin.initialize(const InitializationSettings(
-    android: AndroidInitializationSettings("@mipmap/ic_launcher"),
-  ));
-  //IOS foreground 권한 체크
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
+Future<void> initializeNotification() async {
   // IOS background 권한 체킹 , 요청
   await FirebaseMessaging.instance.requestPermission(
     alert: true,
@@ -83,6 +69,40 @@ void initializeNotification() async {
     provisional: false,
     sound: true,
   );
+
+  await flutterLocalNotificationsPlugin.initialize(
+    InitializationSettings(
+      android: AndroidInitializationSettings("@mipmap/ic_launcher"),
+      iOS: DarwinInitializationSettings(
+        requestSoundPermission: true,
+        requestBadgePermission: true,
+        requestAlertPermission: true,
+      ),
+    ),
+    onDidReceiveBackgroundNotificationResponse: onSelectNotification,
+    onDidReceiveNotificationResponse: onSelectNotification,
+  );
+
+  //안드로이드 푸시 알림
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+
+  //IOS foreground 권한 체크
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+}
+
+onSelectNotification(NotificationResponse details) async {
+  if (details.payload != null) {
+    print('알림 누름');
+    // Map<String, dynamic> data = jsonDecode(details.payload ?? "");
+    // Get.toNamed(data.keys.first, arguments: int.parse(data.values.first));
+  }
 }
 
 void main() async {
@@ -95,7 +115,11 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool? notificationEnabled = prefs.getBool('notificationEnabled');
   if (notificationEnabled == null || notificationEnabled) {
-    initializeNotification();
+    //foreground 수신 처리
+    FirebaseMessaging.onMessage.listen(_showFlutterNotification);
+    //background, off 수신 처리
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   }
   //스플래시 이미지
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -143,7 +167,8 @@ class MyApp extends StatelessWidget {
       home: Root(),
       builder: (context, child) {
         return MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(1.0)),
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: TextScaler.linear(1.0)),
           child: child!,
         );
       },
