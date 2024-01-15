@@ -159,6 +159,10 @@ class FCMController {
                 "category": "Message Category",
                 "content-available": 1,
                 "sound": "default",
+                "alert" : {
+                  "title" : title,
+                  "body"  : dataContent,
+                }
               }
             }
           },

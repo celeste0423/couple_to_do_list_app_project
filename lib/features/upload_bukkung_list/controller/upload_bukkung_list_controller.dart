@@ -111,7 +111,13 @@ class UploadBukkungListController extends GetxController {
       }
       contentController.text = selectedBukkungListModel!.content!;
       isPublic(false);
-      if (selectedBukkungListModel!.imgUrl == Constants.baseImageUrl) {
+      print(selectedBukkungListModel!.imgUrl);
+      if (selectedBukkungListModel!.imgUrl!
+          .startsWith("https://firebasestorage.googleapis.com/v0/b/bukkunglist.appspot.com/o/custom_app_image")||
+      selectedBukkungListModel!.imgUrl == Constants.baseImageUrl ||
+          selectedBukkungListModel!.imgUrl == Constants.baseImageUrl2 ||
+          selectedBukkungListModel!.imgUrl == Constants.baseImageUrl3 ||
+          selectedBukkungListModel!.imgUrl == null) {
         //사진이 기본 이미지
         print('기본 이미지');
         imageType(ImageType.baseImage);
@@ -393,7 +399,7 @@ class UploadBukkungListController extends GetxController {
     //케이스 분리
     switch (imageType.value) {
       case ImageType.storageOnlineImage:
-        //직접 올린 이미지를 받아왔을 경우
+        //직접 올린 이미지를 받아왔을 경우기
         print('이미지 옮기기 시작');
         String sourcePath = '${selectedBukkungListModel!.imgId}.jpg';
         String destinationPath =

@@ -1,6 +1,5 @@
 import UIKit
 import Flutter
-import flutter_local_notifications
 import Firebase
 
 @UIApplicationMain
@@ -10,12 +9,6 @@ import Firebase
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     FirebaseApp.configure()
-
-    // This is required to make any communication available in the action isolate.
-    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
-        GeneratedPluginRegistrant.register(with: registry)
-    }
-
     if #available(iOS 10.0, *){
         UNUserNotificationCenter.current().delegate = self
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]

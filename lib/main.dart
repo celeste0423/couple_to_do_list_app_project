@@ -36,6 +36,7 @@ final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 //로컬 알림 보이기(foreground)
 Future<void> _showFlutterNotification(RemoteMessage message) async {
+  print('알림왔오');
   RemoteNotification? notification = message.notification;
   AndroidNotification? android = message.notification?.android;
   if (notification != null && android != null) {
@@ -98,6 +99,7 @@ Future<void> initializeNotification() async {
 }
 
 onSelectNotification(NotificationResponse details) async {
+  print('alert');
   if (details.payload != null) {
     print('알림 누름');
     // Map<String, dynamic> data = jsonDecode(details.payload ?? "");
