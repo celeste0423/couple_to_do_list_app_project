@@ -1,14 +1,18 @@
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/repository/group_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+
 // import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
+import 'open_alert_dialog.dart';
 
-class PurchaseApi{
-  static const _apiKey ='sk_ypUPLcxTrNazkrXednZTxUwJywjnJ';
+class PurchaseApi {
+  static const _apiKey = 'sk_ypUPLcxTrNazkrXednZTxUwJywjnJ';
 
-  static Future init()async{
+  static Future init() async {
     await Purchases.setDebugLogsEnabled(true);
 
     PurchasesConfiguration configuration = PurchasesConfiguration(_apiKey);
@@ -16,24 +20,23 @@ class PurchaseApi{
   }
 
   static Future<List<Offering>> fetchOffers() async {
-    try{
+    try {
       final offerings = await Purchases.getOfferings();
       final current = offerings.current;
       return current == null ? [] : [current];
-    }on PlatformException catch(e){
+    } on PlatformException catch (e) {
       return [];
     }
   }
 
-  static Future<bool> purchasePackage(Package package)async{
-    try{
+  static Future<bool> purchasePackage(Package package) async {
+    try {
       await Purchases.purchasePackage(package);
       return true;
-    }catch(e){
+    } catch (e) {
       return false;
     }
   }
-
 }
 
 Future fetchOffers(context) async {
@@ -43,9 +46,12 @@ Future fetchOffers(context) async {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text('Error error error')));
   } else {
-    final packages = offerings.map((offer) => offer.availablePackages).expand((pair) => pair).toList();
+    final packages = offerings
+        .map((offer) => offer.availablePackages)
+        .expand((pair) => pair)
+        .toList();
 
-    PaywallWidget(int packagenumber){
+    PaywallWidget(int packagenumber) {
       return Container(
         height: 200,
         alignment: Alignment.center,
@@ -60,22 +66,29 @@ Future fetchOffers(context) async {
             ),
           ],
           color: Colors.white.withOpacity(0.75),
-          borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20),
+              topLeft: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10)),
         ),
         child: ListTile(
           trailing: Text(packages[packagenumber].storeProduct.priceString),
-          leading: Image.asset('assets/images/diamond.png', width: 40,),
-          title:  Text(packages[packagenumber].storeProduct.title,
-            style: const TextStyle(
-            ),
+          leading: Image.asset(
+            'assets/images/diamond.png',
+            width: 40,
+          ),
+          title: Text(
+            packages[packagenumber].storeProduct.title,
+            style: const TextStyle(),
           ),
           subtitle: Text(packages[packagenumber].storeProduct.description),
-          onTap: () async{
+          onTap: () async {
             await PurchaseApi.purchasePackage(packages[packagenumber]);
             //todo: 오류방지위한 주석. 여기서 토큰을 주면 됨.
             GroupRepository.upgradePremium();
 
-          //  Provider.of<RevenueCatProvider>(context, listen: false).refreshhasAccess();
+            //  Provider.of<RevenueCatProvider>(context, listen: false).refreshhasAccess();
 
             Navigator.pop(context);
           },
@@ -92,25 +105,39 @@ Future fetchOffers(context) async {
     print(packages);
     print(packages.runtimeType);
     print('offer: $offer');
-
   }
-
 }
 
-
 //유료화 하고 싶으면 아래 comment만 다시 살리고 bool _hasAccess = false; 로 두면됨 !!!!!
-class RevenueCatProvider extends ChangeNotifier{
+class RevenueCatProvider extends ChangeNotifier {
   bool _hasAccess = true;
+
   bool get hasAccess => _hasAccess;
 
-  refreshhasAccess(){
+  refreshhasAccess() {
     init();
   }
+
 //유료화 하고 싶으면 아래 comment만 다시 살리고 bool _hasAccess = false; 로 두면됨 !!!!!
 
-  Future init()async{
+  Future init() async {
     // CustomerInfo customerInfo = await Purchases.getCustomerInfo();
     // _hasAccess = customerInfo.entitlements.all['all_subjects']!.isActive;
     // notifyListeners();
   }
+}
+
+Widget button(context) {
+  return ElevatedButton(
+    onPressed: () {
+      bool isPremium =
+          AuthController.to.group.value.isPremium == true ? true : false;
+      if (isPremium) {
+        openAlertDialog(title: '이미 프리미엄 버전을 보유하고 계십니다');
+      } else {
+        fetchOffers(context);
+      }
+    },
+    child: Text('프리미엄 업그레이드 버튼'),
+  );
 }
