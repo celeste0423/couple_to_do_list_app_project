@@ -5,7 +5,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 
 
 class PurchaseApi{
-  static const _apiKey ='';
+  static const _apiKey ='sk_ypUPLcxTrNazkrXednZTxUwJywjnJ';
 
   static Future init()async{
     await Purchases.setDebugLogsEnabled(true);
@@ -63,7 +63,7 @@ Future fetchOffers(context) async {
         ),
         child: ListTile(
           trailing: Text(packages[packagenumber].storeProduct.priceString),
-          leading: Image.asset('img/diamond.png', width: 40,),
+          leading: Image.asset('assets/images/diamond.png', width: 40,),
           title:  Text(packages[packagenumber].storeProduct.title,
             style: const TextStyle(
             ),
@@ -71,7 +71,7 @@ Future fetchOffers(context) async {
           subtitle: Text(packages[packagenumber].storeProduct.description),
           onTap: () async{
             await PurchaseApi.purchasePackage(packages[packagenumber]);
-            //todo: 오류방지위한 주석
+            //todo: 오류방지위한 주석. 여기서 토큰을 주면 됨.
           //  Provider.of<RevenueCatProvider>(context, listen: false).refreshhasAccess();
 
             Navigator.pop(context);
