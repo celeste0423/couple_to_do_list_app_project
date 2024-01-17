@@ -55,6 +55,16 @@ class GroupRepository {
         .doc(groupId)
         .update({'dayMet': selectedDate});
   }
+  static upgradePremium() async {
+    String groupId = AuthController.to.group.value.uid!;
+
+    await FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
+        .update({'isPremium': true});
+
+    AuthController.to.group.value.copyWith(isPremium: true);
+  }
 
   Future<GroupModel?> updateSoloGroup(
     UserModel noGroupUserData,

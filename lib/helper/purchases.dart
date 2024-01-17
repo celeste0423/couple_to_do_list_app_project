@@ -1,3 +1,4 @@
+import 'package:couple_to_do_list_app/repository/group_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:provider/provider.dart';
@@ -72,6 +73,8 @@ Future fetchOffers(context) async {
           onTap: () async{
             await PurchaseApi.purchasePackage(packages[packagenumber]);
             //todo: 오류방지위한 주석. 여기서 토큰을 주면 됨.
+            GroupRepository.upgradePremium();
+
           //  Provider.of<RevenueCatProvider>(context, listen: false).refreshhasAccess();
 
             Navigator.pop(context);
