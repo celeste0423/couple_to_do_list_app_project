@@ -43,6 +43,7 @@ class FCMController {
   Future<void> uploadDeviceToken(
     String? deviceToken,
     String? uid,
+    String platform,
   ) async {
     DeviceTokenModel? isDeviceToken =
         await FCMRepository().getDeviceTokenByUid(uid!);
@@ -55,6 +56,7 @@ class FCMController {
         tid: tid,
         uid: uid,
         deviceToken: deviceToken,
+        platform: platform,
         createdAt: DateTime.now(),
       );
 
@@ -64,6 +66,7 @@ class FCMController {
         tid: isDeviceToken.tid,
         uid: uid,
         deviceToken: deviceToken,
+        platform: platform,
         createdAt: DateTime.now(),
       );
 
@@ -73,6 +76,7 @@ class FCMController {
 
   Future<void> sendMessageController({
     required String userToken,
+    required String platform,
     required String title,
     required String body,
     String? dataType,
@@ -99,6 +103,10 @@ class FCMController {
       print('User granted provisional permission');
     } else {
       print('User declined or has not accepted permission');
+    }
+
+    if (platform == 'ios') {
+      userToken = await convertApnsToFCMToken(userToken);
     }
 
     try {
@@ -159,9 +167,9 @@ class FCMController {
                 "category": "Message Category",
                 "content-available": 1,
                 "sound": "default",
-                "alert" : {
-                  "title" : title,
-                  "body"  : dataContent,
+                "alert": {
+                  "title": title,
+                  "body": dataContent,
                 }
               }
             }
@@ -238,6 +246,33 @@ class FCMController {
     } on HttpException catch (error) {
       print(error);
       return error.message;
+    }
+  }
+
+  Future<String> convertApnsToFCMToken(String apnsToken) async {
+    const String yourServerKey =
+        'AAAAXAfR3tg:APA91bGcuXLBYeTnasJULQUnpVTGbFipzfZ1badsIxXgMymNNwRPffH3XDPytHqO8mvpfn-fBuPeLiyiy28YjOWgZ_HBqQE4rQmDZVu7eHlYTJHh7z5dWu06zyC4-P_0qm4h4hQegGwi'; // FCM Console에서 얻은 서버 키로 대체
+    const String url = 'https://iid.googleapis.com/iid/v1:batchImport';
+    final Map<String, dynamic> requestBody = {
+      "application": "com.example.coupleToDoListApp",
+      "sandbox": true,
+      "apns_tokens": [apnsToken]
+    };
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'key=$yourServerKey'
+    };
+    final http.Response response = await http.post(Uri.parse(url),
+        headers: headers, body: jsonEncode(requestBody));
+    print('변환중 ${response.body}');
+    if (response.statusCode == 200) {
+      final dynamic responseData = jsonDecode(response.body);
+      final String registrationToken =
+          responseData['results'][0]['registration_token'];
+      return registrationToken;
+    } else {
+      throw Exception(
+          'Failed to convert APNS to FCM token. ${response.statusCode}');
     }
   }
 

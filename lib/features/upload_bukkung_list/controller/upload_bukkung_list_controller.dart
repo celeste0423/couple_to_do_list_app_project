@@ -112,9 +112,9 @@ class UploadBukkungListController extends GetxController {
       contentController.text = selectedBukkungListModel!.content!;
       isPublic(false);
       print(selectedBukkungListModel!.imgUrl);
-      if (selectedBukkungListModel!.imgUrl!
-          .startsWith("https://firebasestorage.googleapis.com/v0/b/bukkunglist.appspot.com/o/custom_app_image")||
-      selectedBukkungListModel!.imgUrl == Constants.baseImageUrl ||
+      if (selectedBukkungListModel!.imgUrl!.startsWith(
+              "https://firebasestorage.googleapis.com/v0/b/bukkunglist.appspot.com/o/custom_app_image") ||
+          selectedBukkungListModel!.imgUrl == Constants.baseImageUrl ||
           selectedBukkungListModel!.imgUrl == Constants.baseImageUrl2 ||
           selectedBukkungListModel!.imgUrl == Constants.baseImageUrl3 ||
           selectedBukkungListModel!.imgUrl == null) {
@@ -602,6 +602,7 @@ class UploadBukkungListController extends GetxController {
           //추천 리스트에서 가져온 경우
           FCMController().sendMessageController(
             userToken: userTokenData.deviceToken!,
+            platform: userTokenData.platform,
             title: "${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!",
             body: selectedBukkungListModel!.title!,
             dataType: 'bukkunglist',
@@ -611,6 +612,7 @@ class UploadBukkungListController extends GetxController {
           //리스트를 완전히 새로 만든 경우
           FCMController().sendMessageController(
             userToken: userTokenData.deviceToken!,
+            platform: userTokenData.platform,
             title: "${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!",
             body: titleController.text,
             dataType: 'bukkunglist',

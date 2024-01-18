@@ -99,20 +99,22 @@ class AdminPage extends StatelessWidget {
     }
   }
 
-  void testNotification() {
+  void testNotification() async {
     try {
-      FCMController().sendMessageController(
+      await FCMController().sendMessageController(
         userToken:
             'cEg0PMzhQsGl2DWOAx63TA:APA91bGtCmV7uWZKyeBSl7fyMMcxtVmJ__VUSwPvgEoXO_-fUWKz5SAOBCzokBjWl0drGWz3TfXyJVv2MFaL7x_Hs6LIH6g6knywNT7Wdybl0nfXo-EUd4s6RpixeIRG6tKQe7zmcpik',
+        platform: 'android',
         title: "${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!",
         body: 'body',
         dataType: 'bukkunglist',
         dataContent: 'newListId',
       );
       print('하나 보냄');
-      FCMController().sendMessageController(
+      await FCMController().sendMessageController(
         userToken:
             '03D6A633D84F72AC70899B4604F3C5EDFEE3EE9F810C7A0F8A7CAA9D472C7143',
+        platform: 'ios',
         title: "${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!",
         body: 'body',
         dataType: 'bukkunglist',

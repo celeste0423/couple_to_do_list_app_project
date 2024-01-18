@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/constants/constants.dart';
@@ -153,7 +154,13 @@ class AuthController extends GetxController {
       //fcm 세팅(클라우드 메시지)
       var deviceToken = await FCMController().getMyDeviceToken();
       print('디바이스 토큰 (auth cont) $deviceToken');
-      FCMController().uploadDeviceToken(deviceToken, uid);
+      String platform = 'unknown';
+      if (Platform.isAndroid) {
+        platform = 'android';
+      } else if (Platform.isIOS) {
+        platform = 'ios';
+      }
+      FCMController().uploadDeviceToken(deviceToken, uid, platform);
 
       //fcm 수신
       FCMController().setupInteractedMessage();

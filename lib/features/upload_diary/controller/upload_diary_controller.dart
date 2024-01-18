@@ -340,6 +340,7 @@ class UploadDiaryController extends GetxController {
       if (selectedDiaryModel == null) {
         FCMController().sendMessageController(
           userToken: userTokenData.deviceToken!,
+          platform: userTokenData.platform,
           title: "${AuthController.to.user.value.nickname}님이 다이어리를 작성했어요!",
           body: '지금 바로 소감을 작성해보세요📝',
           dataType: 'diary',
@@ -348,6 +349,7 @@ class UploadDiaryController extends GetxController {
       } else {
         FCMController().sendMessageController(
           userToken: userTokenData.deviceToken!,
+          platform: userTokenData.platform,
           title: "${AuthController.to.user.value.nickname}님이 다이어리에 소감을 작성했어요!",
           body: '지금 바로 확인해보세요',
           dataType: 'diary',

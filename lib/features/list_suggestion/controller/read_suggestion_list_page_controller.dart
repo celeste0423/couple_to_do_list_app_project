@@ -90,6 +90,7 @@ class ReadSuggestionListPageController extends GetxController {
       print('유저 토큰 존재');
       FCMController().sendMessageController(
         userToken: userTokenData.deviceToken!,
+        platform: userTokenData.platform,
         title: "내 버꿍리스트에 댓글이 달렸어요",
         body: comment,
         dataType: 'comment',
