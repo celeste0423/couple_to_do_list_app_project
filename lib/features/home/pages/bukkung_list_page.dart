@@ -56,27 +56,25 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               //   size: 28,
               // ),
             ),
-            Obx(
-              () {
-                return controller.isNotification.value
-                    ? Positioned(
-                        top: controller.isAnimated.value ? 17 : 18,
-                        right: controller.isAnimated.value ? 24 : 25,
-                        child: AnimatedContainer(
-                          duration: Duration(milliseconds: 50),
-                          width: controller.isAnimated.value ? 9 : 7,
-                          height: controller.isAnimated.value ? 9 : 7,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(25),
-                            ),
+            Obx(() {
+              return controller.isNotification.value
+                  ? Positioned(
+                      top: controller.isAnimated.value ? 17 : 18,
+                      right: controller.isAnimated.value ? 24 : 25,
+                      child: AnimatedContainer(
+                        duration: Duration(milliseconds: 50),
+                        width: controller.isAnimated.value ? 9 : 7,
+                        height: controller.isAnimated.value ? 9 : 7,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(25),
                           ),
                         ),
-                      )
-                    : Container();
-              },
-            ),
+                      ),
+                    )
+                  : Container();
+            },),
           ],
         )
       ],
@@ -335,16 +333,16 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               controller.currentType.value!,
             ),
             builder: (BuildContext context,
-                AsyncSnapshot<List<BukkungListModel>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+                AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+              if (!bukkungLists.hasData) {
                 return Center(
                   child:
                       CircularProgressIndicator(color: CustomColors.mainPink),
                 );
-              } else if (snapshot.hasError) {
+              } else if (bukkungLists.hasError) {
                 openAlertDialog(title: '에러 발생');
-              } else if (snapshot.hasData) {
-                final list = snapshot.data!;
+              } else {
+                final list = bukkungLists.data!;
                 // print('리스트 출력(buk page)${list.length}');
                 if (list.isNotEmpty) {
                   return ListView(
@@ -475,7 +473,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                             image: CustomCachedNetworkImage(
-                                bukkungListModel.imgUrl),
+                                bukkungListModel.imgUrl!),
                             fit: BoxFit.cover),
                         borderRadius: BorderRadius.circular(20),
                       ),
