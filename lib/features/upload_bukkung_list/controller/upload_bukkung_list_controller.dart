@@ -375,6 +375,7 @@ class UploadBukkungListController extends GetxController {
   Future<void> _copyBukkungList() async {
     var uuid = Uuid();
     String listId = uuid.v1();
+    newListId = listId;
     String imageId = uuid.v4();
     var filename = '$imageId.jpg';
     var copyBukkungList = BukkungListModel(
@@ -606,7 +607,7 @@ class UploadBukkungListController extends GetxController {
             title: "${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!",
             body: selectedBukkungListModel!.title!,
             dataType: 'bukkunglist',
-            dataContent: selectedBukkungListModel!.listId,
+            dataContent: newListId,
           );
         } else {
           //리스트를 완전히 새로 만든 경우
