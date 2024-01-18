@@ -70,7 +70,6 @@ Future<void> initializeNotification() async {
     provisional: false,
     sound: true,
   );
-
   await flutterLocalNotificationsPlugin.initialize(
     InitializationSettings(
       android: AndroidInitializationSettings("@mipmap/ic_launcher"),
@@ -83,13 +82,11 @@ Future<void> initializeNotification() async {
     onDidReceiveBackgroundNotificationResponse: onSelectNotification,
     onDidReceiveNotificationResponse: onSelectNotification,
   );
-
   //안드로이드 푸시 알림
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
-
   //IOS foreground 권한 체크
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
@@ -121,7 +118,6 @@ void main() async {
     FirebaseMessaging.onMessage.listen(_showFlutterNotification);
     //background, off 수신 처리
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
   }
   //스플래시 이미지
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);

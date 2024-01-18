@@ -3,6 +3,8 @@ import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/admin_management/pages/admin_all_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/admin_management/pages/admin_diary_page.dart';
 import 'package:couple_to_do_list_app/features/admin_management/pages/admin_list_suggestion_page.dart';
+import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/helper/background_message/controller/fcm_controller.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/widgets/main_button.dart';
@@ -97,6 +99,31 @@ class AdminPage extends StatelessWidget {
     }
   }
 
+  void testNotification() {
+    try {
+      FCMController().sendMessageController(
+        userToken:
+            'cEg0PMzhQsGl2DWOAx63TA:APA91bGtCmV7uWZKyeBSl7fyMMcxtVmJ__VUSwPvgEoXO_-fUWKz5SAOBCzokBjWl0drGWz3TfXyJVv2MFaL7x_Hs6LIH6g6knywNT7Wdybl0nfXo-EUd4s6RpixeIRG6tKQe7zmcpik',
+        title: "${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!",
+        body: 'body',
+        dataType: 'bukkunglist',
+        dataContent: 'newListId',
+      );
+      print('하나 보냄');
+      FCMController().sendMessageController(
+        userToken:
+            '03D6A633D84F72AC70899B4604F3C5EDFEE3EE9F810C7A0F8A7CAA9D472C7143',
+        title: "${AuthController.to.user.value.nickname}님이 새 버꿍리스트를 추가했어요!",
+        body: 'body',
+        dataType: 'bukkunglist',
+        dataContent: 'newListId',
+      );
+      print('둘 보냄');
+    } catch (e) {
+      openAlertDialog(title: '오류 발생', content: e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,6 +211,13 @@ class AdminPage extends StatelessWidget {
                 buttonColor: Colors.grey,
                 onTap: () {
                   updateNullImgUrls();
+                },
+              ),
+              MainButton(
+                buttonText: '알림 보내기',
+                buttonColor: Colors.grey,
+                onTap: () {
+                  testNotification();
                 },
               ),
               MainButton(
