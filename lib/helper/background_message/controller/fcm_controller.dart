@@ -304,6 +304,7 @@ class FCMController {
             BukkungListModel? receivedBukkunglist =
                 await BukkungListRepository()
                     .getBukkungList(message.data['data_content']);
+            print('data: ${message.data['data_content']}');
             Get.to(() => ReadBukkungListPage(), arguments: receivedBukkunglist);
             break;
           }
