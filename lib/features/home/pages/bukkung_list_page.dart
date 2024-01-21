@@ -592,7 +592,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
 
   Widget _listAddButton() {
     return FloatingActionButton(
-      key: controller.listSuggestionKey,
+      key: controller.listAddKey,
       onPressed: () {
         // Analytics().logEvent('list_suggestion_page_open', null);
         // Get.to(

@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class BukkungListPageController extends GetxController {
   static BukkungListPageController get to => Get.find();
 
-  GlobalKey listSuggestionKey = GlobalKey();
+  GlobalKey listAddKey = GlobalKey();
   GlobalKey bukkungListKey = GlobalKey();
 
   // Rx<GroupModel> myGroup = GroupModel().obs;
