@@ -80,6 +80,7 @@ dependencies:
   grouped_list: ^5.1.2
   intl: ^0.18.1
   timeago: ^3.6.0
+  recaptcha_enterprise_flutter: ^18.4.0
 
 
 flutter_launcher_icons:
