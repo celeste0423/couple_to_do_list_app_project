@@ -2,6 +2,7 @@ import 'package:couple_to_do_list_app/constants/constants.dart';
 import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/features/home/controller/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
+import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
@@ -106,7 +107,7 @@ class DiaryPage extends GetView<DiaryPageController> {
             controller: controller.listScrollController,
             itemBuilder: (BuildContext context, int index) {
               if (index != controller.diaryList[tabIndex].length) {
-                return diaryTile(controller.diaryList[tabIndex][index]);
+                return _diaryCard(controller.diaryList[tabIndex][index]);
               } else {
                 return SizedBox(
                     height: 270); //마지막 index 에서는 tabview때문에 height 준거
@@ -115,7 +116,7 @@ class DiaryPage extends GetView<DiaryPageController> {
           );
   }
 
-  Widget diaryTile(DiaryModel diaryModel) {
+  Widget _diaryCard(DiaryModel diaryModel) {
     String dateString = DateFormat('yyyy-MM-dd').format(diaryModel.date!);
     return Stack(
       children: [
@@ -124,6 +125,7 @@ class DiaryPage extends GetView<DiaryPageController> {
             controller.indexSelection(diaryModel);
           },
           onDoubleTap: () {
+            Analytics().logEvent('diary_read', null);
             controller.indexSelection(diaryModel);
             controller.diaryListTileNavigation();
           },
@@ -348,6 +350,7 @@ class DiaryPage extends GetView<DiaryPageController> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: IconButton(
               onPressed: () {
+                Analytics().logEvent('diary_created', null);
                 Get.to(() => UploadDiaryPage(), arguments: null);
               },
               icon: Image.asset(
@@ -523,6 +526,7 @@ class SliverPersistentDelegate extends SliverPersistentHeaderDelegate {
           child: CustomIconButton(
             onTap: () {
               if (controller.diaryList[tabIndex].isNotEmpty) {
+                Analytics().logEvent('diary_read', null);
                 controller.diaryListTileNavigation();
               } else {
                 openAlertDialog(title: '다이어리를 추가해주세요');

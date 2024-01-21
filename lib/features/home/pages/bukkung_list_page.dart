@@ -1,8 +1,7 @@
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
-import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
-import 'package:couple_to_do_list_app/features/list_suggestion/pages/old_list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/notification/pages/notification_page.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
+import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
@@ -56,25 +55,27 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               //   size: 28,
               // ),
             ),
-            Obx(() {
-              return controller.isNotification.value
-                  ? Positioned(
-                      top: controller.isAnimated.value ? 17 : 18,
-                      right: controller.isAnimated.value ? 24 : 25,
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 50),
-                        width: controller.isAnimated.value ? 9 : 7,
-                        height: controller.isAnimated.value ? 9 : 7,
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(25),
+            Obx(
+              () {
+                return controller.isNotification.value
+                    ? Positioned(
+                        top: controller.isAnimated.value ? 17 : 18,
+                        right: controller.isAnimated.value ? 24 : 25,
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 50),
+                          width: controller.isAnimated.value ? 9 : 7,
+                          height: controller.isAnimated.value ? 9 : 7,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(25),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  : Container();
-            },),
+                      )
+                    : Container();
+              },
+            ),
           ],
         )
       ],
@@ -449,6 +450,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     return CupertinoButton(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       onPressed: () {
+        Analytics().logEvent('group_bukkunglist_read', null);
         Get.to(() => ReadBukkungListPage(), arguments: bukkungListModel);
       },
       child: Row(
@@ -592,17 +594,14 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     return FloatingActionButton(
       key: controller.listSuggestionKey,
       onPressed: () {
-        Analytics().logEvent('list_suggestion_page_open', null);
+        // Analytics().logEvent('list_suggestion_page_open', null);
         // Get.to(
-        //   () => OldListSuggestionPage(),
+        //   () => ListSuggestionPage(),
         //   transition: Transition.fadeIn,
         //   duration: Duration(milliseconds: 500),
         // );
-        Get.to(
-          () => ListSuggestionPage(),
-          transition: Transition.fadeIn,
-          duration: Duration(milliseconds: 500),
-        );
+        Analytics().logEvent('made_new_bukkunglist', null);
+        Get.to(() => UploadBukkungListPage(), arguments: [null, true]);
       },
       backgroundColor: CustomColors.mainPink,
       child: Icon(

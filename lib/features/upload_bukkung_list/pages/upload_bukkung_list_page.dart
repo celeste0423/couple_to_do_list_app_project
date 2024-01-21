@@ -292,8 +292,9 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
             btnText: '불러오기',
             secondButtonText: '취소',
             mainfunction: () {
-              controller.addViewCount(bukkungListModel);
+              Analytics().logEvent('suggestion_bukkunglist_read', null);
               Analytics().logEvent('copy_bukkunglist_from_upload_page', null);
+              controller.addViewCount(bukkungListModel);
               Get.back();
               Get.off(
                 () => ReadSuggestionListPage(),

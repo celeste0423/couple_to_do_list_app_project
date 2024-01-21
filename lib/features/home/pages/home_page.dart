@@ -2,9 +2,9 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/home/pages/bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/diary_page.dart';
-import 'package:couple_to_do_list_app/features/home/pages/ggomul_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/my_page.dart';
 import 'package:couple_to_do_list_app/features/home/widgets/circle_tab_indicator.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/tutorial_coach_mark/pages/coachmark_desc.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/dialog/level_up_dialog.dart';
@@ -224,7 +224,7 @@ class _HomePageState extends State<HomePage>
           Tab(
             key: diaryTabKey,
             child: Image.asset(
-              'assets/icons/note.png',
+              'assets/icons/book.png',
               width: 50,
               color: _tabController.index == 1
                   ? Colors.white
@@ -235,7 +235,7 @@ class _HomePageState extends State<HomePage>
           Tab(
             key: ggomulTabKey,
             child: Image.asset(
-              'assets/icons/pets.png',
+              'assets/icons/note.png',
               width: 50,
               color: _tabController.index == 2
                   ? Colors.white
@@ -273,7 +273,8 @@ class _HomePageState extends State<HomePage>
         children: const [
           BukkungListPage(),
           DiaryPage(),
-          GgomulPage(),
+          // GgomulPage(),
+          ListSuggestionPage(),
           MyPage(),
         ],
       ),
