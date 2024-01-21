@@ -6,6 +6,7 @@ import 'package:couple_to_do_list_app/features/home/pages/my_page.dart';
 import 'package:couple_to_do_list_app/features/home/widgets/circle_tab_indicator.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/tutorial_coach_mark/pages/coachmark_desc.dart';
+import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/dialog/level_up_dialog.dart';
 import 'package:flutter/material.dart';
@@ -278,6 +279,16 @@ class _HomePageState extends State<HomePage>
         ],
         onTap: (index) {
           setState(() {});
+          switch (index) {
+            case 1:
+              Analytics().logEvent('list_suggestion_page_open', null);
+              break;
+            case 2:
+              Analytics().logEvent('diary_page_open', null);
+              break;
+            default:
+              break;
+          }
         },
       ),
     );
