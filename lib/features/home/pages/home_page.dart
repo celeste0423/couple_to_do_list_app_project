@@ -224,7 +224,7 @@ class _HomePageState extends State<HomePage>
           Tab(
             key: diaryTabKey,
             child: Image.asset(
-              'assets/icons/book.png',
+              'assets/icons/note.png',
               width: 50,
               color: _tabController.index == 1
                   ? Colors.white
@@ -235,7 +235,7 @@ class _HomePageState extends State<HomePage>
           Tab(
             key: ggomulTabKey,
             child: Image.asset(
-              'assets/icons/note.png',
+              'assets/icons/book.png',
               width: 50,
               color: _tabController.index == 2
                   ? Colors.white
@@ -272,9 +272,9 @@ class _HomePageState extends State<HomePage>
         viewportFraction: 1,
         children: const [
           BukkungListPage(),
-          DiaryPage(),
           // GgomulPage(),
           ListSuggestionPage(),
+          DiaryPage(),
           MyPage(),
         ],
       ),

@@ -22,15 +22,18 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   PreferredSizeWidget _appBar() {
     return AppBar(
       backgroundColor: CustomColors.mainPink,
-      leading: IconButton(
-        onPressed: () {
-          Get.back();
-        },
-        icon: Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: Colors.white,
-          size: 30,
-        ),
+      // leading: IconButton(
+      //   onPressed: () {
+      //     Get.back();
+      //   },
+      //   icon: Icon(
+      //     Icons.arrow_back_ios_new_rounded,
+      //     color: Colors.white,
+      //     size: 30,
+      //   ),
+      // ),
+      leading: SizedBox(
+        width: 30,
       ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -805,7 +808,10 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             _searchBar(),
           ],
         ),
-        floatingActionButton: _listAddButton(),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 90, right: 10),
+          child: _listAddButton(),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
