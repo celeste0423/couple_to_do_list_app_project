@@ -1,8 +1,7 @@
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
-import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
-import 'package:couple_to_do_list_app/features/list_suggestion/pages/old_list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/notification/pages/notification_page.dart';
 import 'package:couple_to_do_list_app/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
+import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
@@ -335,16 +334,16 @@ class BukkungListPage extends GetView<BukkungListPageController> {
               controller.currentType.value!,
             ),
             builder: (BuildContext context,
-                AsyncSnapshot<List<BukkungListModel>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+                AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+              if (!bukkungLists.hasData) {
                 return Center(
                   child:
                       CircularProgressIndicator(color: CustomColors.mainPink),
                 );
-              } else if (snapshot.hasError) {
+              } else if (bukkungLists.hasError) {
                 openAlertDialog(title: '에러 발생');
-              } else if (snapshot.hasData) {
-                final list = snapshot.data!;
+              } else {
+                final list = bukkungLists.data!;
                 // print('리스트 출력(buk page)${list.length}');
                 if (list.isNotEmpty) {
                   return ListView(
@@ -451,6 +450,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     return CupertinoButton(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       onPressed: () {
+        Analytics().logEvent('group_bukkunglist_read', null);
         Get.to(() => ReadBukkungListPage(), arguments: bukkungListModel);
       },
       child: Row(
@@ -475,7 +475,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                             image: CustomCachedNetworkImage(
-                                bukkungListModel.imgUrl),
+                                bukkungListModel.imgUrl!),
                             fit: BoxFit.cover),
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -592,19 +592,16 @@ class BukkungListPage extends GetView<BukkungListPageController> {
 
   Widget _listAddButton() {
     return FloatingActionButton(
-      key: controller.listSuggestionKey,
+      key: controller.listAddKey,
       onPressed: () {
-        Analytics().logEvent('list_suggestion_page_open', null);
+        // Analytics().logEvent('list_suggestion_page_open', null);
         // Get.to(
-        //   () => OldListSuggestionPage(),
+        //   () => ListSuggestionPage(),
         //   transition: Transition.fadeIn,
         //   duration: Duration(milliseconds: 500),
         // );
-        Get.to(
-          () => ListSuggestionPage(),
-          transition: Transition.fadeIn,
-          duration: Duration(milliseconds: 500),
-        );
+        Analytics().logEvent('made_new_bukkunglist', null);
+        Get.to(() => UploadBukkungListPage(), arguments: [null, true]);
       },
       backgroundColor: CustomColors.mainPink,
       child: Icon(

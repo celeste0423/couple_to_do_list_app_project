@@ -2,10 +2,11 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/features/home/controller/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/home/pages/bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/diary_page.dart';
-import 'package:couple_to_do_list_app/features/home/pages/ggomul_page.dart';
 import 'package:couple_to_do_list_app/features/home/pages/my_page.dart';
 import 'package:couple_to_do_list_app/features/home/widgets/circle_tab_indicator.dart';
+import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/tutorial_coach_mark/pages/coachmark_desc.dart';
+import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/dialog/level_up_dialog.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,9 @@ class _HomePageState extends State<HomePage>
   List<TargetFocus> targets = [];
 
   GlobalKey bukkungTabKey = GlobalKey();
+  GlobalKey suggestionListTabKey = GlobalKey();
   GlobalKey diaryTabKey = GlobalKey();
-  GlobalKey ggomulTabKey = GlobalKey();
+  // GlobalKey ggomulTabKey = GlobalKey();
   GlobalKey myTabKey = GlobalKey();
 
   late final TabController _tabController =
@@ -101,14 +103,14 @@ class _HomePageState extends State<HomePage>
     targets = [
       TargetFocus(
         identify: "list_suggestion_key",
-        keyTarget: BukkungListPageController.to.listSuggestionKey,
+        keyTarget: BukkungListPageController.to.listAddKey,
         shape: ShapeLightFocus.Circle,
         contents: [
           TargetContent(
             align: ContentAlign.top,
             builder: (context, controller) {
               return CoachmarkDesc(
-                text: "여기서 버꿍리스트를 새로 만들거나 추천 버꿍리스트를 가져올 수 있습니다",
+                text: "여기서 버꿍리스트를 새로 만들 수 있습니다",
                 onNext: () {
                   controller.next();
                 },
@@ -121,7 +123,7 @@ class _HomePageState extends State<HomePage>
         ],
       ),
       TargetFocus(
-        identify: "bukkung-list-key",
+        identify: "bukkung_list_key",
         keyTarget: BukkungListPageController.to.bukkungListKey,
         shape: ShapeLightFocus.RRect,
         contents: [
@@ -142,7 +144,7 @@ class _HomePageState extends State<HomePage>
         ],
       ),
       TargetFocus(
-        identify: "diary-tab-key",
+        identify: "diary_tab_key",
         keyTarget: diaryTabKey,
         contents: [
           TargetContent(
@@ -150,6 +152,26 @@ class _HomePageState extends State<HomePage>
             builder: (context, controller) {
               return CoachmarkDesc(
                 text: "완료한 버꿍리스트는 여기 다이어리탭에 서로의 소감과 함께 저장할 수 있습니다",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+      TargetFocus(
+        identify: "suggestionList_tab_key",
+        keyTarget: suggestionListTabKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text: "여기서 추천 버꿍리스트들을 구경하거나 복사해올 수 있습니다.",
                 onNext: () {
                   controller.next();
                 },
@@ -222,7 +244,7 @@ class _HomePageState extends State<HomePage>
             ),
           ),
           Tab(
-            key: diaryTabKey,
+            key: suggestionListTabKey,
             child: Image.asset(
               'assets/icons/note.png',
               width: 50,
@@ -233,9 +255,9 @@ class _HomePageState extends State<HomePage>
             ),
           ),
           Tab(
-            key: ggomulTabKey,
+            key: diaryTabKey,
             child: Image.asset(
-              'assets/icons/pets.png',
+              'assets/icons/book.png',
               width: 50,
               color: _tabController.index == 2
                   ? Colors.white
@@ -257,6 +279,16 @@ class _HomePageState extends State<HomePage>
         ],
         onTap: (index) {
           setState(() {});
+          switch (index) {
+            case 1:
+              Analytics().logEvent('list_suggestion_page_open', null);
+              break;
+            case 2:
+              Analytics().logEvent('diary_page_open', null);
+              break;
+            default:
+              break;
+          }
         },
       ),
     );
@@ -272,8 +304,9 @@ class _HomePageState extends State<HomePage>
         viewportFraction: 1,
         children: const [
           BukkungListPage(),
+          // GgomulPage(),
+          ListSuggestionPage(),
           DiaryPage(),
-          GgomulPage(),
           MyPage(),
         ],
       ),

@@ -8,15 +8,13 @@ import 'package:couple_to_do_list_app/repository/list_suggestion_repository.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class ListSuggestionPageController extends GetxController
     with GetTickerProviderStateMixin {
   static ListSuggestionPageController get to => Get.find();
 
-  final BuildContext context;
-  ListSuggestionPageController(this.context);
+  ListSuggestionPageController();
   TutorialCoachMark? tutorialCoachMark;
   List<TargetFocus> targets = [];
   //튜토리얼 위치 키
@@ -108,9 +106,9 @@ class ListSuggestionPageController extends GetxController
         loadMoreBukkungLists('view');
       }
     });
-    Future.delayed(const Duration(seconds: 1), () {
-      _showTutorialCoachMark();
-    });
+    // Future.delayed(const Duration(seconds: 1), () {
+    //   _showTutorialCoachMark();
+    // });
   }
 
   @override
@@ -138,24 +136,24 @@ class ListSuggestionPageController extends GetxController
     listByViewStreamController.close();
   }
 
-  void _showTutorialCoachMark() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool hasShownSuggestionTutorial =
-        prefs.getBool('hasShownSuggestionTutorial') ?? false;
-    if (hasShownSuggestionTutorial) {
-      //이미 튜토리얼을 진행했으면 튜토리얼 종료
-      return;
-    }
-    _initTarget(); //타겟 더하기
-    if (context.mounted) {
-      tutorialCoachMark = TutorialCoachMark(
-        targets: targets,
-        hideSkip: true,
-        onClickTarget: (target) {},
-      )..show(context: context);
-      await prefs.setBool('hasShownSuggestionTutorial', true);
-    }
-  }
+  // void _showTutorialCoachMark() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   bool hasShownSuggestionTutorial =
+  //       prefs.getBool('hasShownSuggestionTutorial') ?? false;
+  //   if (hasShownSuggestionTutorial) {
+  //     //이미 튜토리얼을 진행했으면 튜토리얼 종료
+  //     return;
+  //   }
+  //   _initTarget(); //타겟 더하기
+  //   if (context.mounted) {
+  //     tutorialCoachMark = TutorialCoachMark(
+  //       targets: targets,
+  //       hideSkip: true,
+  //       onClickTarget: (target) {},
+  //     )..show(context: context);
+  //     await prefs.setBool('hasShownSuggestionTutorial', true);
+  //   }
+  // }
 
   void _initTarget() {
     targets = [

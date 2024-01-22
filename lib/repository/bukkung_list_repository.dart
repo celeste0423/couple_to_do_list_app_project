@@ -91,6 +91,7 @@ class BukkungListRepository {
         .collection('bukkungLists')
         .doc(bukkungListId)
         .get();
+      print('list exist? ${snapshot.exists}');
     if (snapshot.exists) {
       return BukkungListModel.fromJson(snapshot.data() as Map<String, dynamic>);
     } else {

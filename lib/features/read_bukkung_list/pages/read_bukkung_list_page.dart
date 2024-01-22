@@ -1,6 +1,7 @@
 import 'package:couple_to_do_list_app/features/read_bukkung_list/controller/read_bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/pages/upload_diary_page.dart';
+import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/diary_model.dart';
 import 'package:couple_to_do_list_app/utils/category_to_text.dart';
@@ -244,6 +245,7 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
             },
             mainfunction: () async {
               Get.back(); //다이알로드 꺼지고,
+              Analytics().logEvent('group_bukkunglist_completed', null);
               DiaryModel updatedDiaryModel =
                   await controller.listCompleted(); //완료리스트 올라가고
               bool ismainButtonClicked = await openBoolAlertDialog(
@@ -253,7 +255,7 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
                 secondButtonText: '아니요',
               );
               if (ismainButtonClicked) {
-                // Main button was clicked
+                Analytics().logEvent('diary_created', null);
                 Get.off(() => UploadDiaryPage(), arguments: updatedDiaryModel);
               } else {
                 Get.back();

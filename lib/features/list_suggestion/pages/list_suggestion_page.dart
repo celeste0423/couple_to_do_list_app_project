@@ -22,15 +22,18 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
   PreferredSizeWidget _appBar() {
     return AppBar(
       backgroundColor: CustomColors.mainPink,
-      leading: IconButton(
-        onPressed: () {
-          Get.back();
-        },
-        icon: Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: Colors.white,
-          size: 30,
-        ),
+      // leading: IconButton(
+      //   onPressed: () {
+      //     Get.back();
+      //   },
+      //   icon: Icon(
+      //     Icons.arrow_back_ios_new_rounded,
+      //     color: Colors.white,
+      //     size: 30,
+      //   ),
+      // ),
+      leading: SizedBox(
+        width: 30,
       ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -197,6 +200,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       child: GestureDetector(
         onTap: () {
           //상세 페이지 이동
+          Analytics().logEvent('suggestion_searched_bukkunglist_read', null);
           Get.to(
             () => ReadSuggestionListPage(),
             arguments: bukkungListModel,
@@ -344,8 +348,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 ),
               ),
               tabs: const [
-                Tab(text: '인기'),
                 Tab(text: '최신'),
+                Tab(text: '인기'),
                 Tab(text: '조회수'),
                 Tab(text: '내 리스트'),
               ],
@@ -429,8 +433,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             : TabBarView(
                 controller: controller.suggestionListTabController,
                 children: [
-                  _listByCopy(),
                   _listByDate(),
+                  _listByCopy(),
                   _listByView(),
                   _suggestionMyList(),
                 ],
@@ -580,6 +584,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: CupertinoButton(
         onPressed: () {
+          Analytics().logEvent('suggestion_bukkunglist_read', null);
           controller.addViewCount(bukkungListModel);
           //세부 페이지 이동
           Get.to(
@@ -589,11 +594,10 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             duration: Duration(milliseconds: 500),
           );
         },
-        padding: EdgeInsets.zero,
+        padding: EdgeInsets.symmetric(vertical: 5),
         child: Stack(
           children: [
             Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
               padding: EdgeInsets.only(left: 110, right: 30),
               height: 85,
               decoration: BoxDecoration(
@@ -643,8 +647,8 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               ),
             ),
             Container(
-              width: 100,
-              height: 100,
+              width: 85,
+              height: 85,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: [
@@ -774,7 +778,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       },
       backgroundColor: CustomColors.mainPink,
       child: Icon(
-        key: controller.addKey,
+        // key: controller.addKey,
         Icons.add,
         color: Colors.white,
         size: 35,
@@ -784,7 +788,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ListSuggestionPageController(context));
+    Get.put(ListSuggestionPageController());
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -804,7 +808,10 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
             _searchBar(),
           ],
         ),
-        floatingActionButton: _listAddButton(),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 90, right: 10),
+          child: _listAddButton(),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );

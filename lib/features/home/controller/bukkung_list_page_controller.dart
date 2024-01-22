@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class BukkungListPageController extends GetxController {
   static BukkungListPageController get to => Get.find();
 
-  GlobalKey listSuggestionKey = GlobalKey();
+  GlobalKey listAddKey = GlobalKey();
   GlobalKey bukkungListKey = GlobalKey();
 
   // Rx<GroupModel> myGroup = GroupModel().obs;
@@ -102,6 +102,9 @@ class BukkungListPageController extends GetxController {
       BukkungListModel bukkungListModel, bool isDeleteImage) async {
     if (isDeleteImage) {
       if (Constants.baseImageUrl != bukkungListModel.imgUrl &&
+          null != bukkungListModel.imgUrl &&
+          !bukkungListModel.imgUrl!.startsWith(
+              "https://firebasestorage.googleapis.com/v0/b/bukkunglist.appspot.com/o/custom_app_image") &&
           bukkungListModel.imgUrl!.startsWith('https://firebasestorage')) {
         await BukkungListRepository()
             .deleteListImage('${bukkungListModel.imgId}.jpg');

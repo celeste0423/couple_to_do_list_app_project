@@ -73,6 +73,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
       print('유저 토큰 존재');
       FCMController().sendMessageController(
         userToken: userTokenData.deviceToken!,
+        platform: userTokenData.platform,
         title: "${AuthController.to.user.value.nickname}님이 다이어리 소감 작성을 요청했어요!",
         body: '지금 바로 작성해보세요',
         dataType: 'diary',
