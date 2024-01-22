@@ -1017,18 +1017,18 @@ packages:
     dependency: transitive
     description:
       name: pointycastle
-      sha256: "7c1e5f0d23c9016c5bbd8b1473d0d3fb3fc851b876046039509e18e0c7485f2c"
+      sha256: "43ac87de6e10afabc85c445745a7b799e04de84cebaa4fd7bf55a5e1e9604d29"
       url: "https://pub.dev"
     source: hosted
-    version: "3.7.3"
+    version: "3.7.4"
   purchases_flutter:
     dependency: "direct main"
     description:
       name: purchases_flutter
-      sha256: "8a0131c917c55e520723ae267ca60bea7e5f980108320d9b6349b7f332941129"
+      sha256: aeb91fc59e815da7144ba4c936a06634b1b76369fa3023d522ac59970d6a4108
       url: "https://pub.dev"
     source: hosted
-    version: "6.15.0"
+    version: "6.16.0"
   rename:
     dependency: "direct main"
     description:
@@ -1422,10 +1422,10 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter_wkwebview
-      sha256: "4d062ad505390ecef1c4bfb6001cd857a51e00912cc9dfb66edb1886a9ebd80c"
+      sha256: e732400c99a86978a8b9a95b485bacb1c94700bcfa17b27c20a8458457d2f47e
       url: "https://pub.dev"
     source: hosted
-    version: "3.10.2"
+    version: "3.10.3"
   win32:
     dependency: transitive
     description:
@@ -1459,5 +1459,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <4.0.0"
-  flutter: ">=3.16.0"
+  dart: ">=3.2.3 <4.0.0"
+  flutter: ">=3.16.6"
