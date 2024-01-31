@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:couple_to_do_list_app/constants/enum.dart';
@@ -76,7 +77,8 @@ class UploadBukkungListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    AdHelper.createInterstitialAd();
+    if (Platform.isAndroid) {
+    AdHelper.createInterstitialAd();}
 
     _checkIsBukkungListSelected();
     _checkCompleted();

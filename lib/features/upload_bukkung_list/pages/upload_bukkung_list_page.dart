@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:couple_to_do_list_app/constants/enum.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/read_suggestion_list_page.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
+import 'package:couple_to_do_list_app/helper/ad_helper.dart';
 import 'package:couple_to_do_list_app/helper/firebase_analytics.dart';
 import 'package:couple_to_do_list_app/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/models/bukkung_list_model.dart';
@@ -915,6 +918,9 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                 controller.isUploading.value = true;
                 controller.sendCompletedMessageToBuddy();
                 await controller.uploadBukkungList();
+                if (Platform.isAndroid) {
+                  AdHelper.showInterstitialAd();
+                }
                 Get.back();
                 Get.back();
               }

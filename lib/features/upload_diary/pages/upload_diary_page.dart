@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:couple_to_do_list_app/features/read_diary/pages/read_diary_page.dart';
 import 'package:couple_to_do_list_app/features/upload_diary/controller/upload_diary_controller.dart';
 import 'package:couple_to_do_list_app/helper/ad_helper.dart';
@@ -47,7 +49,9 @@ class UploadDiaryPage extends GetView<UploadDiaryController> {
                   DiaryModel updatedDiary = await controller.uploadDiary();
                   //소감 작성하라는 메시지 전송
                   await controller.sendCompletedMessageToBuddy();
-                  AdHelper.showInterstitialAd();
+                  if (Platform.isAndroid) {
+                    AdHelper.showInterstitialAd();
+                  }
                   Get.off(() => ReadDiaryPage(), arguments: updatedDiary);
                 } else {
                   if (controller.titleController.text == '') {

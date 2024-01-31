@@ -62,7 +62,8 @@ class UploadDiaryController extends GetxController {
   void onInit() {
     super.onInit();
     _checkIsDiarySelected();
-    AdHelper.createInterstitialAd();
+    if (Platform.isAndroid) {
+      AdHelper.createInterstitialAd();}
     contentScrollController.addListener(scrollToContent);
     var keyboardVisibilityController = KeyboardVisibilityController();
     keyboardSubscription =
