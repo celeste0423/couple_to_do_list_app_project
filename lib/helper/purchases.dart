@@ -2,15 +2,25 @@ import 'package:couple_to_do_list_app/features/auth/controller/auth_controller.d
 import 'package:couple_to_do_list_app/repository/group_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-
+import 'dart:io';
 // import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 import 'open_alert_dialog.dart';
 
 class PurchaseApi {
-  static const _apiKey = 'sk_ypUPLcxTrNazkrXednZTxUwJywjnJ';
+
+  static String get _apiKey {
+    if (Platform.isAndroid) {
+       return 'sk_ypUPLcxTrNazkrXednZTxUwJywjnJ';
+    } else if (Platform.isIOS) {
+      // return iOS API key
+      return 'your_ios_api_key';
+    } else {
+      // return a default API key for other platforms if needed
+      return 'sk_ypUPLcxTrNazkrXednZTxUwJywjnJ';
+    }
+  }
 
   static Future init() async {
     await Purchases.setDebugLogsEnabled(true);
@@ -109,23 +119,23 @@ Future fetchOffers(context) async {
 }
 
 //유료화 하고 싶으면 아래 comment만 다시 살리고 bool _hasAccess = false; 로 두면됨 !!!!!
-class RevenueCatProvider extends ChangeNotifier {
-  bool _hasAccess = true;
-
-  bool get hasAccess => _hasAccess;
-
-  refreshhasAccess() {
-    init();
-  }
-
-//유료화 하고 싶으면 아래 comment만 다시 살리고 bool _hasAccess = false; 로 두면됨 !!!!!
-
-  Future init() async {
-    // CustomerInfo customerInfo = await Purchases.getCustomerInfo();
-    // _hasAccess = customerInfo.entitlements.all['all_subjects']!.isActive;
-    // notifyListeners();
-  }
-}
+// class RevenueCatProvider extends ChangeNotifier {
+//   bool _hasAccess = true;
+//
+//   bool get hasAccess => _hasAccess;
+//
+//   refreshhasAccess() {
+//     init();
+//   }
+//
+// //유료화 하고 싶으면 아래 comment만 다시 살리고 bool _hasAccess = false; 로 두면됨 !!!!!
+//
+//   Future init() async {
+//     // CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+//     // _hasAccess = customerInfo.entitlements.all['all_subjects']!.isActive;
+//     // notifyListeners();
+//   }
+// }
 
 Widget button(context) {
   return ElevatedButton(

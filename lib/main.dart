@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:couple_to_do_list_app/binding/init_binding.dart';
 import 'package:couple_to_do_list_app/features/auth/root/root.dart';
@@ -108,7 +109,9 @@ onSelectNotification(NotificationResponse details) async {
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   //앱결제
-  await PurchaseApi.init();
+  if (Platform.isAndroid) {
+    await PurchaseApi.init();
+  }
 //파이어베이스 설정
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
