@@ -40,6 +40,7 @@ class NotificationRepository {
               .collection('users')
               .doc(uid)
               .collection('notification')
+              .orderBy('created_at')
               .get();
       List<NotificationModel> notifications = querySnapshot.docs
           .map((QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
