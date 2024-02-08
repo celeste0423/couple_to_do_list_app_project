@@ -38,7 +38,7 @@ android {
     namespace "com.example.couple_to_do_list_app"
     compileSdkVersion 34
 //    compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    ndkVersion "25.1.8937393"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

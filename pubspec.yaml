@@ -81,6 +81,7 @@ dependencies:
   intl: ^0.18.1
   timeago: ^3.6.0
   recaptcha_enterprise_flutter: ^18.4.0
+  rive: ^0.12.4
 
 
 flutter_launcher_icons:
@@ -127,6 +128,7 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/gifs/
+    - assets/rivs/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
