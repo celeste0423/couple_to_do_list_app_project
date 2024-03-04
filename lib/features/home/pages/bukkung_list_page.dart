@@ -247,7 +247,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                   return ListView(
                     physics: AlwaysScrollableScrollPhysics(),
                     children: [
-                      _characterBox(),
+                      // _characterBox(),
                       Column(
                         children: List.generate(list.length, (index) {
                           final bukkungList = list[index];
@@ -351,7 +351,7 @@ class BukkungListPage extends GetView<BukkungListPageController> {
                   return ListView(
                     physics: AlwaysScrollableScrollPhysics(),
                     children: [
-                      _characterBox(),
+                      // _characterBox(),
                       Column(
                         children: List.generate(list.length, (index) {
                           final bukkungList = list[index];
