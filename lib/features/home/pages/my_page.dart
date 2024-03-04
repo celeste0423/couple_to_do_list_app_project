@@ -4,6 +4,7 @@ import 'package:couple_to_do_list_app/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/features/home/controller/my_page_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/list_suggestion_page.dart';
 import 'package:couple_to_do_list_app/features/setting/pages/setting_page.dart';
+import 'package:couple_to_do_list_app/features/store/pages/store.dart';
 import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/title_text.dart';
@@ -19,6 +20,12 @@ class MyPage extends GetView<MyPageController> {
       backgroundColor: CustomColors.backgroundLightGrey,
       title: TitleText(text: '내 정보'),
       actions: [
+        // IconButton(
+        //   onPressed: () {
+        //     Get.to(() => StorePage());
+        //   },
+        //   icon: Icon(Icons.local_grocery_store_outlined, size: 35, weight: 10,)
+        // ),
         IconButton(
           onPressed: () {
             Get.to(() => SettingPage());
