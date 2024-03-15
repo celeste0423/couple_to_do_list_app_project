@@ -929,6 +929,8 @@ PODS:
   - RevenueCat (4.32.0)
   - RevenueCatUI (4.32.0):
     - RevenueCat (= 4.32.0)
+  - rive_common (0.0.1):
+    - Flutter
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -966,6 +968,7 @@ DEPENDENCIES:
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - purchases_flutter (from `.symlinks/plugins/purchases_flutter/ios`)
   - recaptcha_enterprise_flutter (from `.symlinks/plugins/recaptcha_enterprise_flutter/ios`)
+  - rive_common (from `.symlinks/plugins/rive_common/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
@@ -1055,6 +1058,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/purchases_flutter/ios"
   recaptcha_enterprise_flutter:
     :path: ".symlinks/plugins/recaptcha_enterprise_flutter/ios"
+  rive_common:
+    :path: ".symlinks/plugins/rive_common/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
@@ -1126,6 +1131,7 @@ SPEC CHECKSUMS:
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   RevenueCat: 2d99a5ebabd33955c3a38dfdfa9d3efe77c5db0c
   RevenueCatUI: fa6b619083afb967facc20ecdc7ae53a4c512d10
+  rive_common: 3a4c254c6e4db7e4b9e05daeb3d1f47ae4f7bf76
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
