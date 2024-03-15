@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../widgets/title_text.dart';
 import '../controller/store_page_controller.dart';
 
 class StorePage extends StatefulWidget {
@@ -18,6 +19,7 @@ class _StorePageState extends State<StorePage> {
   final CarouselController carouselController = CarouselController();
   final StorePageController _controller = Get.put(StorePageController());
   int activeIndex = 0;
+
   myAppBar(){
     return AppBar(
       leading: IconButton(
@@ -29,14 +31,18 @@ class _StorePageState extends State<StorePage> {
           color: CustomColors.mainPink,
         ),
       ),
-      title: Text('상점'),
+      title: TitleText(text: '상점',),
       actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Icon(Icons.add),
-            Text('${_controller.seedNumber.value}'),
-          ],
+        Container(
+         // color: Colors.green,
+          width: 100,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(Icons.ac_unit, size: 25,),
+              Text('${_controller.seedNumber.value}', style: TextStyle(fontSize:20, fontWeight: FontWeight.bold, color: Colors.black),),
+            ],
+          ),
         ),
       ],
     );
@@ -86,16 +92,17 @@ class _StorePageState extends State<StorePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Title',
+                        'COZY HOUSE$index',
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'asdgasdghasd',
-                        style: TextStyle(fontSize: 16),
+                        '마음 깊은 곳까지 포근한 느낌이 드는 버꿍이의 베이직 하우스',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 13),
                       ),
                       Text(
                         '05/12',
-                        style: TextStyle(fontSize: 14),
+                        style: TextStyle(fontSize: 10),
                       ),
                     ],
                   ),
@@ -109,9 +116,9 @@ class _StorePageState extends State<StorePage> {
 
     }
     return Expanded(
-      flex: 1,
+      flex: 5,
       child: Container(
-        color: Colors.blue,
+        //color: Colors.blue,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -123,31 +130,34 @@ class _StorePageState extends State<StorePage> {
               ),
             ),
             Expanded(
-              child: CarouselSlider.builder(
-                carouselController: carouselController,
-                itemCount: 5,
-                itemBuilder: (ctx, index, realIndex) {
-                  return cardWidget(index);
-                },
-                options: CarouselOptions(
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      activeIndex = index;
-                    });
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CarouselSlider.builder(
+                  carouselController: carouselController,
+                  itemCount: 5,
+                  itemBuilder: (ctx, index, realIndex) {
+                    return cardWidget(index);
                   },
-                  // enlargeStrategy: CenterPageEnlargeStrategy.height,
-                  aspectRatio: 14/9,
-                  viewportFraction: 0.8,
-                  initialPage: 0,
-                  enableInfiniteScroll: true,
-                  reverse: false,
-                  autoPlay: true,
-                  autoPlayInterval: Duration(seconds: 6),
-                  autoPlayAnimationDuration: Duration(milliseconds: 800),
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  enlargeCenterPage: true,
-                  enlargeFactor: 0.4,
-                  scrollDirection: Axis.horizontal,
+                  options: CarouselOptions(
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        activeIndex = index;
+                      });
+                    },
+                    // enlargeStrategy: CenterPageEnlargeStrategy.height,
+                    aspectRatio: 14/9,
+                    viewportFraction: 0.8,
+                    initialPage: 0,
+                    enableInfiniteScroll: true,
+                    reverse: false,
+                    autoPlay: true,
+                    autoPlayInterval: Duration(seconds: 6),
+                    autoPlayAnimationDuration: Duration(milliseconds: 800),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    enlargeCenterPage: true,
+                    enlargeFactor: 0.4,
+                    scrollDirection: Axis.horizontal,
+                  ),
                 ),
               ),
             ),
@@ -195,7 +205,7 @@ class _StorePageState extends State<StorePage> {
           ],
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             // Add your Column children here
             Image.asset(
@@ -205,7 +215,7 @@ class _StorePageState extends State<StorePage> {
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text('소파'),
+                Text('소파$index'),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -220,9 +230,9 @@ class _StorePageState extends State<StorePage> {
       );
     }
     return Expanded(
-      flex: 1,
+      flex: 4,
       child: Container(
-        color: Colors.green,
+        //color: Colors.green,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -237,7 +247,7 @@ class _StorePageState extends State<StorePage> {
               child: GridView.count(
                 crossAxisCount: 3, // 3 items per row
                 childAspectRatio: 1, // Aspect ratio of each grid item
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.only(right: 10, left: 10, bottom: 10, top: 0),
                 children: List.generate(
                   6, // Total number of grid items (3x2 grid)
                   (index) {
@@ -256,9 +266,9 @@ class _StorePageState extends State<StorePage> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Container(
-        height: 80, // Set a specific height for the banner container
+        height: 55, // Set a specific height for the banner container
         decoration: BoxDecoration(
-          color: CustomColors.mainPink,
+          color:Color(0xFFFAA7A7),
           borderRadius: BorderRadius.circular(20), // Round edges
           boxShadow: [
             BoxShadow(
@@ -272,9 +282,9 @@ class _StorePageState extends State<StorePage> {
         padding: EdgeInsets.all(16), // Add padding
         child: Center(
           child: Text(
-            '무료충전소',
+            ' 해바라기씨 무료충전소',
             style: TextStyle(
-              fontSize: 30,
+              fontSize: 20,
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
