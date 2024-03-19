@@ -224,7 +224,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
                 height: 84,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
+                      image: NetworkImage(bukkungListModel.imgUrl!),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [

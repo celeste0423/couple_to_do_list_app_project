@@ -18,7 +18,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:rive/rive.dart';
 
 class BukkungListPage extends GetView<BukkungListPageController> {
   const BukkungListPage({Key? key}) : super(key: key);
@@ -383,26 +382,26 @@ class BukkungListPage extends GetView<BukkungListPageController> {
     });
   }
 
-  Widget _characterBox() {
-    return Container(
-      width: 300,
-      height: 300,
-      margin: EdgeInsets.symmetric(horizontal: 30),
-      decoration: BoxDecoration(
-        // color: CustomColors.lightGrey,
-        borderRadius: BorderRadius.circular(150),
-      ),
-      child: CupertinoButton(
-        padding: EdgeInsets.zero,
-        onPressed: () {},
-        child: RiveAnimation.asset(
-          'assets/rivs/bukkung.riv',
-          stateMachines: ["bukkung"],
-          // onInit: controller.onRiveInit,
-        ),
-      ),
-    );
-  }
+  // Widget _characterBox() {
+  //   return Container(
+  //     width: 300,
+  //     height: 300,
+  //     margin: EdgeInsets.symmetric(horizontal: 30),
+  //     decoration: BoxDecoration(
+  //       // color: CustomColors.lightGrey,
+  //       borderRadius: BorderRadius.circular(150),
+  //     ),
+  //     child: CupertinoButton(
+  //       padding: EdgeInsets.zero,
+  //       onPressed: () {},
+  //       child: RiveAnimation.asset(
+  //         'assets/rivs/bukkung.riv',
+  //         stateMachines: ["bukkung"],
+  //         // onInit: controller.onRiveInit,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _categoryDivider(int categoryNumber) {
     switch (categoryNumber) {
