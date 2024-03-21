@@ -41,46 +41,17 @@ class ListSuggestionPageController extends GetxController
   };
 
   List<
-      PagingController<DocumentSnapshot<Map<String, dynamic>>?,
-          QueryDocumentSnapshot<Map<String, dynamic>>>> listPagingController = [
-    PagingController(firstPageKey: null),
-    PagingController(firstPageKey: null),
-    PagingController(firstPageKey: null),
-    PagingController(firstPageKey: null),
-  ];
-  List<ScrollController> listScrollController = [
-    ScrollController(),
-    ScrollController(),
-    ScrollController(),
-    ScrollController(),
-  ];
-  final _scrollOffset = [
-    0.0.obs,
-    0.0.obs,
-    0.0.obs,
-    0.0.obs,
-  ];
+          PagingController<DocumentSnapshot<Map<String, dynamic>>?,
+              QueryDocumentSnapshot<Map<String, dynamic>>>>
+      listPagingController = List < PagingController(firstPageKey: null);
+  ScrollController listScrollController = ScrollController();
+  final _scrollOffset = 0.0.obs;
 
-  List<double> get scrollOffset => [
-        _scrollOffset[0].value,
-        _scrollOffset[1].value,
-        _scrollOffset[2].value,
-        _scrollOffset[3].value,
-      ];
-  final _suggestionList = [
-    Rx<List<QueryDocumentSnapshot<BukkungListModel>>>([]),
-    Rx<List<QueryDocumentSnapshot<BukkungListModel>>>([]),
-    Rx<List<QueryDocumentSnapshot<BukkungListModel>>>([]),
-    Rx<List<QueryDocumentSnapshot<BukkungListModel>>>([]),
-  ];
+  double get scrollOffset => _scrollOffset.value;
+  final _suggestionList = Rx<List<QueryDocumentSnapshot<BukkungListModel>>>([]);
 
-  List<List<QueryDocumentSnapshot<BukkungListModel>>> get suggestionList => [
-        _suggestionList[0].value,
-        _suggestionList[1].value,
-        _suggestionList[2].value,
-        _suggestionList[3].value,
-      ];
-
+  List<QueryDocumentSnapshot<BukkungListModel>> get suggestionList =>
+      _suggestionList.value;
   final int _pageSize = 10;
 
   @override
@@ -100,30 +71,10 @@ class ListSuggestionPageController extends GetxController
   }
 
   void _initPagination() {
-    listScrollController[0].addListener(() {
-      _scrollOffset[0].value = listScrollController[0].offset;
+    listScrollController.addListener(() {
+      _scrollOffset.value = listScrollController.offset;
     });
-    listPagingController[0].addPageRequestListener((pageKey) {
-      fetchSuggestionList(pageKey);
-    });
-
-    listScrollController[1].addListener(() {
-      _scrollOffset[1].value = listScrollController[1].offset;
-    });
-    listPagingController[1].addPageRequestListener((pageKey) {
-      fetchSuggestionList(pageKey);
-    });
-
-    listScrollController[2].addListener(() {
-      _scrollOffset[2].value = listScrollController[2].offset;
-    });
-    listPagingController[2].addPageRequestListener((pageKey) {
-      fetchSuggestionList(pageKey);
-    });
-    listScrollController[3].addListener(() {
-      _scrollOffset[3].value = listScrollController[3].offset;
-    });
-    listPagingController[3].addPageRequestListener((pageKey) {
+    listPagingController.addPageRequestListener((pageKey) {
       fetchSuggestionList(pageKey);
     });
   }
