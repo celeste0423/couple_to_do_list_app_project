@@ -40,46 +40,41 @@ class ListSuggestionPageController extends GetxController
     "6etc": "기타",
   };
 
-  List<
-      PagingController<DocumentSnapshot<Map<String, dynamic>>?,
-          QueryDocumentSnapshot<Map<String, dynamic>>>> listPagingController = [
-    PagingController(firstPageKey: null),
-    PagingController(firstPageKey: null),
-    PagingController(firstPageKey: null),
-    PagingController(firstPageKey: null),
-  ];
-  List<ScrollController> listScrollController = [
-    ScrollController(),
-    ScrollController(),
-    ScrollController(),
-    ScrollController(),
-  ];
-  final _scrollOffset = [
-    0.0.obs,
-    0.0.obs,
-    0.0.obs,
-    0.0.obs,
-  ];
+  PagingController<DocumentSnapshot<Map<String, dynamic>>?,
+          QueryDocumentSnapshot<Map<String, dynamic>>>
+      listPagingControllerByDate = PagingController(firstPageKey: null);
+  PagingController<DocumentSnapshot<Map<String, dynamic>>?,
+          QueryDocumentSnapshot<Map<String, dynamic>>>
+      listPagingControllerByCopy = PagingController(firstPageKey: null);
+  PagingController<DocumentSnapshot<Map<String, dynamic>>?,
+          QueryDocumentSnapshot<Map<String, dynamic>>> listPagingControllerMy =
+      PagingController(firstPageKey: null);
 
-  List<double> get scrollOffset => [
-        _scrollOffset[0].value,
-        _scrollOffset[1].value,
-        _scrollOffset[2].value,
-        _scrollOffset[3].value,
-      ];
-  final _suggestionList = [
-    Rx<List<QueryDocumentSnapshot<BukkungListModel>>>([]),
-    Rx<List<QueryDocumentSnapshot<BukkungListModel>>>([]),
-    Rx<List<QueryDocumentSnapshot<BukkungListModel>>>([]),
-    Rx<List<QueryDocumentSnapshot<BukkungListModel>>>([]),
-  ];
+  ScrollController listScrollControllerByDate = ScrollController();
+  ScrollController listScrollControllerByCopy = ScrollController();
+  ScrollController listScrollControllerMy = ScrollController();
 
-  List<List<QueryDocumentSnapshot<BukkungListModel>>> get suggestionList => [
-        _suggestionList[0].value,
-        _suggestionList[1].value,
-        _suggestionList[2].value,
-        _suggestionList[3].value,
-      ];
+  final _scrollOffsetByDate = 0.0.obs;
+  final _scrollOffsetByCopy = 0.0.obs;
+  final _scrollOffsetMy = 0.0.obs;
+
+  double get scrollOffsetByDate => _scrollOffsetByDate.value;
+  double get scrollOffsetByCopy => _scrollOffsetByCopy.value;
+  double get scrollOffsetMy => _scrollOffsetMy.value;
+
+  final _suggestionListByDate =
+      Rx<List<QueryDocumentSnapshot<BukkungListModel>>>([]);
+  final _suggestionListByCopy =
+      Rx<List<QueryDocumentSnapshot<BukkungListModel>>>([]);
+  final _suggestionListMy =
+      Rx<List<QueryDocumentSnapshot<BukkungListModel>>>([]);
+
+  List<QueryDocumentSnapshot<BukkungListModel>> get suggestionListByDate =>
+      _suggestionListByDate.value;
+  List<QueryDocumentSnapshot<BukkungListModel>> get suggestionListByCopy =>
+      _suggestionListByCopy.value;
+  List<QueryDocumentSnapshot<BukkungListModel>> get suggestionListMy =>
+      _suggestionListMy.value;
 
   final int _pageSize = 10;
 
@@ -94,37 +89,31 @@ class ListSuggestionPageController extends GetxController
   void _tabControllerInit() {
     suggestionListTabController = TabController(
       initialIndex: initialTabIndex,
-      length: 4,
+      length: 3,
       vsync: this,
     );
   }
 
   void _initPagination() {
-    listScrollController[0].addListener(() {
-      _scrollOffset[0].value = listScrollController[0].offset;
+    listScrollControllerByDate.addListener(() {
+      _scrollOffsetByCopy.value = listScrollControllerByDate.offset;
     });
-    listPagingController[0].addPageRequestListener((pageKey) {
-      fetchSuggestionList(pageKey);
-    });
-
-    listScrollController[1].addListener(() {
-      _scrollOffset[1].value = listScrollController[1].offset;
-    });
-    listPagingController[1].addPageRequestListener((pageKey) {
-      fetchSuggestionList(pageKey);
+    listPagingControllerByDate.addPageRequestListener((pageKey) {
+      fetchDateSuggestionList(pageKey);
     });
 
-    listScrollController[2].addListener(() {
-      _scrollOffset[2].value = listScrollController[2].offset;
+    listScrollControllerByCopy.addListener(() {
+      _scrollOffsetByCopy.value = listScrollControllerByCopy.offset;
     });
-    listPagingController[2].addPageRequestListener((pageKey) {
-      fetchSuggestionList(pageKey);
+    listPagingControllerByCopy.addPageRequestListener((pageKey) {
+      fetchCopySuggestionList(pageKey);
     });
-    listScrollController[3].addListener(() {
-      _scrollOffset[3].value = listScrollController[3].offset;
+
+    listScrollControllerMy.addListener(() {
+      _scrollOffsetMy.value = listScrollControllerMy.offset;
     });
-    listPagingController[3].addPageRequestListener((pageKey) {
-      fetchSuggestionList(pageKey);
+    listPagingControllerMy.addPageRequestListener((pageKey) {
+      fetchMySuggestionList(pageKey);
     });
   }
 
@@ -141,7 +130,7 @@ class ListSuggestionPageController extends GetxController
     return ListSuggestionRepository().getSearchedBukkungList(_searchWord);
   }
 
-  void fetchSuggestionList(DocumentSnapshot<Object?>? pageKey) async {
+  void fetchDateSuggestionList(DocumentSnapshot<Object?>? pageKey) async {
     QuerySnapshot<Map<String, dynamic>> loadedSuggestionList;
     loadedSuggestionList =
         await ListSuggestionRepository().getSuggestionListByDate(
@@ -150,10 +139,46 @@ class ListSuggestionPageController extends GetxController
     );
     final isLastPage = loadedSuggestionList.docs.length < _pageSize;
     if (isLastPage) {
-      listPagingController.appendLastPage(loadedSuggestionList.docs);
+      listPagingControllerByDate.appendLastPage(loadedSuggestionList.docs);
     } else {
       final nextPageKey = loadedSuggestionList.docs.last;
-      listPagingController.appendPage(loadedSuggestionList.docs, nextPageKey);
+      listPagingControllerByDate.appendPage(
+          loadedSuggestionList.docs, nextPageKey);
+    }
+  }
+
+  void fetchCopySuggestionList(DocumentSnapshot<Object?>? pageKey) async {
+    QuerySnapshot<Map<String, dynamic>> loadedSuggestionList;
+    loadedSuggestionList =
+        await ListSuggestionRepository().getSuggestionListByCopy(
+      pageKey,
+      _pageSize,
+    );
+    print('펫치 ${loadedSuggestionList.docs.length}');
+    final isLastPage = loadedSuggestionList.docs.length < _pageSize;
+    if (isLastPage) {
+      print('마지막');
+      listPagingControllerByCopy.appendLastPage(loadedSuggestionList.docs);
+    } else {
+      print('아님');
+      final nextPageKey = loadedSuggestionList.docs.last;
+      listPagingControllerByCopy.appendPage(
+          loadedSuggestionList.docs, nextPageKey);
+    }
+  }
+
+  void fetchMySuggestionList(DocumentSnapshot<Object?>? pageKey) async {
+    QuerySnapshot<Map<String, dynamic>> loadedSuggestionList;
+    loadedSuggestionList = await ListSuggestionRepository().getSuggestionListMy(
+      pageKey,
+      _pageSize,
+    );
+    final isLastPage = loadedSuggestionList.docs.length < _pageSize;
+    if (isLastPage) {
+      listPagingControllerMy.appendLastPage(loadedSuggestionList.docs);
+    } else {
+      final nextPageKey = loadedSuggestionList.docs.last;
+      listPagingControllerMy.appendPage(loadedSuggestionList.docs, nextPageKey);
     }
   }
 
@@ -178,7 +203,12 @@ class ListSuggestionPageController extends GetxController
   @override
   void onClose() {
     searchBarController.dispose();
-    listScrollController.dispose();
+    listScrollControllerByDate.dispose();
+    listScrollControllerByCopy.dispose();
+    listScrollControllerMy.dispose();
+    listPagingControllerByDate.dispose();
+    listPagingControllerByCopy.dispose();
+    listPagingControllerMy.dispose();
     super.onClose(); // 부모 클래스의 onClose 메서드를 호출
   }
 }

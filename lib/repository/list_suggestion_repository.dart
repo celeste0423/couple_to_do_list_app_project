@@ -242,6 +242,52 @@ class ListSuggestionRepository {
     }
   }
 
+  Future<QuerySnapshot<Map<String, dynamic>>> getSuggestionListByCopy(
+    DocumentSnapshot<Object?>? pageKey,
+    int pageSize,
+  ) async {
+    if (pageKey == null) {
+      return FirebaseFirestore.instance
+          .collection('bukkungLists')
+          .orderBy('copyCount', descending: true)
+          .orderBy('viewCount', descending: true)
+          .limit(pageSize)
+          .get();
+    } else {
+      return FirebaseFirestore.instance
+          .collection('bukkungLists')
+          .orderBy('copyCount', descending: true)
+          .orderBy('viewCount', descending: true)
+          .startAfterDocument(pageKey)
+          .limit(pageSize)
+          .get();
+    }
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getSuggestionListMy(
+    DocumentSnapshot<Object?>? pageKey,
+    int pageSize,
+  ) async {
+    if (pageKey == null) {
+      return FirebaseFirestore.instance
+          .collection('bukkungLists')
+          .where('userId', isEqualTo: AuthController.to.user.value.uid)
+          .orderBy('copyCount', descending: true)
+          .orderBy('viewCount', descending: true)
+          .limit(pageSize)
+          .get();
+    } else {
+      return FirebaseFirestore.instance
+          .collection('bukkungLists')
+          .where('userId', isEqualTo: AuthController.to.user.value.uid)
+          .orderBy('copyCount', descending: true)
+          .orderBy('viewCount', descending: true)
+          .startAfterDocument(pageKey)
+          .limit(pageSize)
+          .get();
+    }
+  }
+
   // Future<List<BukkungListModel>> getNewListByLike(
   //   int pageSize,
   //   List<String> selectedCategories,

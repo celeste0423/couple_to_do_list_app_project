@@ -351,7 +351,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
               tabs: const [
                 Tab(text: '최신'),
                 Tab(text: '인기'),
-                Tab(text: '조회수'),
+                // Tab(text: '조회수'),
                 Tab(text: '내 리스트'),
               ],
             ),
@@ -425,30 +425,87 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     return Expanded(
       child: TabBarView(
         controller: controller.suggestionListTabController,
-        children: _listView(),
+        children: [
+          _listViewByDate(),
+          _listViewByCopy(),
+          _listViewMy(),
+        ],
       ),
     );
   }
 
-  List<Widget> _listView() {
-    return List.generate(
-      4,
-      (tabIndex) {
-        return PagedListView(
-          scrollController: controller.listScrollController,
-          pagingController: controller.listPagingController,
-          builderDelegate: PagedChildBuilderDelegate<
-              QueryDocumentSnapshot<Map<String, dynamic>>>(
-            itemBuilder: (context, suggestionListMap, index) {
-              return _suggestionListCard(
-                BukkungListModel.fromJson(suggestionListMap.data()),
-                index,
-                tabIndex == 3,
-              );
-            },
-          ),
-        );
-      },
+  // List<Widget> _listView() {
+  //   return List.generate(
+  //     3,
+  //     (tabIndex) {
+  //       print('탭이야 ${tabIndex}')
+  //       return PagedListView(
+  //         scrollController: controller.listScrollController[tabIndex],
+  //         pagingController: controller.listPagingController[tabIndex],
+  //         builderDelegate: PagedChildBuilderDelegate<
+  //             QueryDocumentSnapshot<Map<String, dynamic>>>(
+  //           itemBuilder: (context, suggestionListMap, index) {
+  //             print('인덱스 ${tabIndex} 길이 ${index}');
+  //             return _suggestionListCard(
+  //               BukkungListModel.fromJson(suggestionListMap.data()),
+  //               index,
+  //               tabIndex == 2,
+  //             );
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+  Widget _listViewByDate() {
+    return PagedListView(
+      scrollController: controller.listScrollControllerByDate,
+      pagingController: controller.listPagingControllerByDate,
+      builderDelegate: PagedChildBuilderDelegate<
+          QueryDocumentSnapshot<Map<String, dynamic>>>(
+        itemBuilder: (context, suggestionListMap, index) {
+          return _suggestionListCard(
+            BukkungListModel.fromJson(suggestionListMap.data()),
+            index,
+            false,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _listViewByCopy() {
+    return PagedListView(
+      scrollController: controller.listScrollControllerByCopy,
+      pagingController: controller.listPagingControllerByCopy,
+      builderDelegate: PagedChildBuilderDelegate<
+          QueryDocumentSnapshot<Map<String, dynamic>>>(
+        itemBuilder: (context, suggestionListMap, index) {
+          return _suggestionListCard(
+            BukkungListModel.fromJson(suggestionListMap.data()),
+            index,
+            false,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _listViewMy() {
+    return PagedListView(
+      scrollController: controller.listScrollControllerMy,
+      pagingController: controller.listPagingControllerMy,
+      builderDelegate: PagedChildBuilderDelegate<
+          QueryDocumentSnapshot<Map<String, dynamic>>>(
+        itemBuilder: (context, suggestionListMap, index) {
+          return _suggestionListCard(
+            BukkungListModel.fromJson(suggestionListMap.data()),
+            index,
+            true,
+          );
+        },
+      ),
     );
   }
 
@@ -457,6 +514,7 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     int index,
     bool isDelete,
   ) {
+    // print('이름 ${bukkungListModel.title}');
     int? viewCount = bukkungListModel.viewCount;
     NumberFormat formatter = NumberFormat.compact(locale: "ko_KR");
     String formattedViewCount = formatter.format(viewCount);
