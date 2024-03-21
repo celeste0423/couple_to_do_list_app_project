@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/controller/list_suggestion_page_controller.dart';
 import 'package:couple_to_do_list_app/features/list_suggestion/pages/read_suggestion_list_page.dart';
 import 'package:couple_to_do_list_app/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
@@ -8,12 +9,12 @@ import 'package:couple_to_do_list_app/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/widgets/custom_cached_networkImage.dart';
 import 'package:couple_to_do_list_app/widgets/custom_icon_button.dart';
 import 'package:couple_to_do_list_app/widgets/marquee_able_text.dart';
-import 'package:couple_to_do_list_app/widgets/png_icons.dart';
 import 'package:couple_to_do_list_app/widgets/text/BkText.dart';
 import 'package:couple_to_do_list_app/widgets/text/PcText.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 
 class ListSuggestionPage extends GetView<ListSuggestionPageController> {
@@ -297,32 +298,32 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return _categorySelectDialog();
-                },
-              );
-            },
-            child: Container(
-              width: 35,
-              height: 35,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 3, bottom: 5),
-                child: PngIcon(
-                  iconName: 'category',
-                  iconColor: Colors.black.withOpacity(0.6),
-                  iconSize: 25,
-                ),
-              ),
-            ),
-          ),
+          // GestureDetector(
+          //   onTap: () {
+          //     showDialog(
+          //       context: context,
+          //       builder: (BuildContext context) {
+          //         return _categorySelectDialog();
+          //       },
+          //     );
+          //   },
+          //   child: Container(
+          //     width: 35,
+          //     height: 35,
+          //     decoration: BoxDecoration(
+          //       color: Colors.white,
+          //       borderRadius: BorderRadius.circular(25),
+          //     ),
+          //     child: Padding(
+          //       padding: const EdgeInsets.only(top: 3, bottom: 5),
+          //       child: PngIcon(
+          //         iconName: 'category',
+          //         iconColor: Colors.black.withOpacity(0.6),
+          //         iconSize: 25,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Expanded(
             child: TabBar(
               isScrollable: false,
@@ -360,223 +361,102 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
-  Widget _categorySelectDialog() {
-    return AlertDialog(
-      title: Text('카테고리를 선택해주세요'),
-      content: SingleChildScrollView(
-        child: Obx(
-          () => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: controller.categories.map((item) {
-              //print(controller.selectedCategories);
-              return CheckboxListTile(
-                title: Text(controller.categoryToString[item]!),
-                value: controller.selectedCategories.contains(item),
-                activeColor: CustomColors.mainPink,
-                onChanged: (bool? value) {
-                  if (value!) {
-                    controller.selectedCategories.add(item);
-                  } else {
-                    controller.selectedCategories.remove(item);
-                  }
-                },
-              );
-            }).toList(),
-          ),
-        ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () {
-            controller.selectedCategories.clear();
-            Get.back();
-          },
-          child: Text(
-            '취소',
-            style: TextStyle(
-              color: CustomColors.blackText,
-            ),
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            controller.listByLikePrevList!.clear();
-            controller.listByDatePrevList!.clear();
-            controller.listByViewPrevList!.clear();
-            controller.loadNewBukkungLists('like');
-            controller.loadNewBukkungLists('date');
-            controller.loadNewBukkungLists('view');
-            controller.loadNewBukkungLists('favorite');
-            Get.back();
-          },
-          child: Text(
-            '확인',
-            style: TextStyle(
-              color: CustomColors.mainPink,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _categorySelectDialog() {
+  //   return AlertDialog(
+  //     title: Text('카테고리를 선택해주세요'),
+  //     content: SingleChildScrollView(
+  //       child: Obx(
+  //         () => Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: controller.categories.map((item) {
+  //             //print(controller.selectedCategories);
+  //             return CheckboxListTile(
+  //               title: Text(controller.categoryToString[item]!),
+  //               value: controller.selectedCategories.contains(item),
+  //               activeColor: CustomColors.mainPink,
+  //               onChanged: (bool? value) {
+  //                 if (value!) {
+  //                   controller.selectedCategories.add(item);
+  //                 } else {
+  //                   controller.selectedCategories.remove(item);
+  //                 }
+  //               },
+  //             );
+  //           }).toList(),
+  //         ),
+  //       ),
+  //     ),
+  //     actions: <Widget>[
+  //       TextButton(
+  //         onPressed: () {
+  //           controller.selectedCategories.clear();
+  //           Get.back();
+  //         },
+  //         child: Text(
+  //           '취소',
+  //           style: TextStyle(
+  //             color: CustomColors.blackText,
+  //           ),
+  //         ),
+  //       ),
+  //       TextButton(
+  //         onPressed: () {
+  //           controller.listByLikePrevList!.clear();
+  //           controller.listByDatePrevList!.clear();
+  //           controller.listByViewPrevList!.clear();
+  //           controller.loadNewBukkungLists('like');
+  //           controller.loadNewBukkungLists('date');
+  //           controller.loadNewBukkungLists('view');
+  //           controller.loadNewBukkungLists('favorite');
+  //           Get.back();
+  //         },
+  //         child: Text(
+  //           '확인',
+  //           style: TextStyle(
+  //             color: CustomColors.mainPink,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _suggestionListTabView() {
     return Expanded(
-      child: Obx(() {
-        return controller.noMyList.value
-            ? Center(
-                child: Text(
-                  '나만의 버꿍리스트를 만들어보세요',
-                  style: TextStyle(color: CustomColors.blackText),
-                ),
-              )
-            : TabBarView(
-                controller: controller.suggestionListTabController,
-                children: [
-                  _listByDate(),
-                  _listByCopy(),
-                  _listByView(),
-                  _suggestionMyList(),
-                ],
+      child: TabBarView(
+        controller: controller.suggestionListTabController,
+        children: _listView(),
+      ),
+    );
+  }
+
+  List<Widget> _listView() {
+    return List.generate(
+      4,
+      (tabIndex) {
+        return PagedListView(
+          scrollController: controller.listScrollController,
+          pagingController: controller.listPagingController,
+          builderDelegate: PagedChildBuilderDelegate<
+              QueryDocumentSnapshot<Map<String, dynamic>>>(
+            itemBuilder: (context, suggestionListMap, index) {
+              return _suggestionListCard(
+                BukkungListModel.fromJson(suggestionListMap.data()),
+                index,
+                tabIndex == 3,
               );
-      }),
-    );
-  }
-
-  Widget _listByCopy() {
-    return StreamBuilder(
-      stream: controller.listByLikeStreamController.stream,
-      builder: (BuildContext context,
-          AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
-        if (!bukkungLists.hasData) {
-          return Center(
-            child: CircularProgressIndicator(color: CustomColors.mainPink),
-          );
-        } else if (bukkungLists.hasError) {
-          openAlertDialog(title: '에러 발생');
-        } else {
-          final list = bukkungLists.data!;
-          return Scrollbar(
-            controller: controller.listByLikeScrollController,
-            thickness: 5,
-            thumbVisibility: true,
-            radius: Radius.circular(25),
-            child: ListView(
-              physics: AlwaysScrollableScrollPhysics(),
-              controller: controller.listByLikeScrollController,
-              children: [
-                Column(
-                  children: List.generate(list.length, (index) {
-                    final bukkungList = list[index];
-                    return _suggestionListCard(bukkungList, index, false);
-                  }),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Center(
-                    child:
-                        CircularProgressIndicator(color: CustomColors.mainPink),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-        return Center(child: Text('아직 추천리스트가 없습니다'));
-      },
-    );
-  }
-
-  Widget _listByDate() {
-    return StreamBuilder(
-      stream: controller.listByDateStreamController.stream,
-      builder: (BuildContext context,
-          AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
-        if (!bukkungLists.hasData) {
-          return Center(
-            child: CircularProgressIndicator(color: CustomColors.mainPink),
-          );
-        } else if (bukkungLists.hasError) {
-          openAlertDialog(title: '에러 발생');
-        } else {
-          final list = bukkungLists.data!;
-          return Scrollbar(
-            controller: controller.listByDateScrollController,
-            thickness: 5,
-            thumbVisibility: true,
-            radius: Radius.circular(25),
-            child: ListView(
-              physics: AlwaysScrollableScrollPhysics(),
-              controller: controller.listByDateScrollController,
-              children: [
-                Column(
-                  children: List.generate(list.length, (index) {
-                    final bukkungList = list[index];
-                    return _suggestionListCard(bukkungList, index, false);
-                  }),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Center(
-                    child:
-                        CircularProgressIndicator(color: CustomColors.mainPink),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-        return Center(child: Text('아직 추천리스트가 없습니다'));
-      },
-    );
-  }
-
-  Widget _listByView() {
-    return StreamBuilder(
-      stream: controller.listByViewStreamController.stream,
-      builder: (BuildContext context,
-          AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
-        if (!bukkungLists.hasData) {
-          return Center(
-            child: CircularProgressIndicator(color: CustomColors.mainPink),
-          );
-        } else if (bukkungLists.hasError) {
-          openAlertDialog(title: '에러 발생');
-        } else {
-          final list = bukkungLists.data!;
-          return Scrollbar(
-            controller: controller.listByViewScrollController,
-            thickness: 5,
-            thumbVisibility: true,
-            radius: Radius.circular(25),
-            child: ListView(
-              physics: AlwaysScrollableScrollPhysics(),
-              controller: controller.listByViewScrollController,
-              children: [
-                Column(
-                  children: List.generate(list.length, (index) {
-                    final bukkungList = list[index];
-                    return _suggestionListCard(bukkungList, index, false);
-                  }),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Center(
-                    child:
-                        CircularProgressIndicator(color: CustomColors.mainPink),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-        return Center(child: Text('아직 추천리스트가 없습니다'));
+            },
+          ),
+        );
       },
     );
   }
 
   Widget _suggestionListCard(
-      BukkungListModel bukkungListModel, int index, bool isDelete) {
+    BukkungListModel bukkungListModel,
+    int index,
+    bool isDelete,
+  ) {
     int? viewCount = bukkungListModel.viewCount;
     NumberFormat formatter = NumberFormat.compact(locale: "ko_KR");
     String formattedViewCount = formatter.format(viewCount);
@@ -738,37 +618,37 @@ class ListSuggestionPage extends GetView<ListSuggestionPageController> {
     );
   }
 
-  Widget _suggestionMyList() {
-    return StreamBuilder(
-      stream: controller.getSuggestionMyBukkungList(),
-      builder: (BuildContext context,
-          AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
-        if (!bukkungLists.hasData) {
-          return Center(
-            child: CircularProgressIndicator(color: CustomColors.mainPink),
-          );
-        } else if (bukkungLists.hasError) {
-          openAlertDialog(title: '에러 발생');
-        } else {
-          final list = bukkungLists.data!;
-          return ListView(
-            physics: AlwaysScrollableScrollPhysics(),
-            children: [
-              SizedBox(height: 50),
-              Column(
-                children: List.generate(list.length, (index) {
-                  final bukkungList = list[index];
-                  return _suggestionListCard(bukkungList, index, true);
-                }),
-              ),
-              SizedBox(height: 20),
-            ],
-          );
-        }
-        return Center(child: Text('아직 버꿍리스트가 없습니다'));
-      },
-    );
-  }
+  // Widget _suggestionMyList() {
+  //   return StreamBuilder(
+  //     stream: controller.getSuggestionMyBukkungList(),
+  //     builder: (BuildContext context,
+  //         AsyncSnapshot<List<BukkungListModel>> bukkungLists) {
+  //       if (!bukkungLists.hasData) {
+  //         return Center(
+  //           child: CircularProgressIndicator(color: CustomColors.mainPink),
+  //         );
+  //       } else if (bukkungLists.hasError) {
+  //         openAlertDialog(title: '에러 발생');
+  //       } else {
+  //         final list = bukkungLists.data!;
+  //         return ListView(
+  //           physics: AlwaysScrollableScrollPhysics(),
+  //           children: [
+  //             SizedBox(height: 50),
+  //             Column(
+  //               children: List.generate(list.length, (index) {
+  //                 final bukkungList = list[index];
+  //                 return _suggestionListCard(bukkungList, index, true);
+  //               }),
+  //             ),
+  //             SizedBox(height: 20),
+  //           ],
+  //         );
+  //       }
+  //       return Center(child: Text('아직 버꿍리스트가 없습니다'));
+  //     },
+  //   );
+  // }
 
   Widget _listAddButton() {
     return FloatingActionButton(
