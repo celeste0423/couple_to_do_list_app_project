@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:couple_to_do_list_app/binding/init_binding.dart';
-import 'package:couple_to_do_list_app/features/auth/root/root.dart';
 import 'package:couple_to_do_list_app/firebase_options.dart';
-import 'package:couple_to_do_list_app/theme/base_theme.dart';
+import 'package:couple_to_do_list_app/src/binding/init_binding.dart';
+import 'package:couple_to_do_list_app/src/root.dart';
+import 'package:couple_to_do_list_app/src/theme/base_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
