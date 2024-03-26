@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/src/constants/constants.dart';
 import 'package:couple_to_do_list_app/src/helper/background_message/controller/fcm_controller.dart';
-import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/src/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/src/models/group_model.dart';
 import 'package:couple_to_do_list_app/src/models/user_model.dart';
@@ -127,57 +126,35 @@ class AuthController extends GetxController {
     return expLikeViewCount;
   }
 
-  signup(UserModel signupUser) async {
-    //회원가입 버튼에 사용
-    bool result = await UserRepository.firestoreSignup(signupUser);
-    //user 정보를 firebase에 저장하고, result가 true면 유저정보가 firebase database를 넣었고 아니면 에러임
-    if (result) {
-      //유저정보를 파베에 넣고나서 할일
-      //  print("싸인업 : 유저에 ${signupUser.nickname} 넣음");
-      user(signupUser);
-    } else {
-      //   print("error: firestoreSignup");
-    }
+  Future<void> signup(UserModel userData) async {
+    await UserRepository.firestoreSignup(userData);
+    await loginUser(userData.uid!);
   }
 
 //로그인
   Future<UserModel?> loginUser(String uid) async {
-    try {
-      UserModel? userData = await UserRepository.loginUserByUid(uid);
+    UserModel? userData = await UserRepository.getUserData(uid);
 
-      //fcm 세팅
-      fcmInit(uid);
+    //fcm 세팅
+    fcmInit(uid);
 
-      //신규 유저일 경우 userData에 false값 반환됨, error났을떄는 null 반환됨
-      if (userData != null && userData != false) {
-        //신규유저가 아닐경우 컨트롤러에 유저정보를 전달해 놓는다
-        //   print('서버의 유저 데이터 (cont) ${userData.toJson()}');
-        user(userData);
-        var groupData = await GroupRepository.groupLogin(userData.groupId);
-        if (groupData != null) {
-          //   print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
-          group(groupData);
-          //  print('그룹 정보(auth cont)${group.value.uid}');
+    if (userData != null) {
+      //   print('서버의 유저 데이터 (cont) ${userData.toJson()}');
+      user(userData);
+      var groupData = await GroupRepository.groupLogin(userData.groupId);
+      if (groupData != null) {
+        //   print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
+        group(groupData);
+        //  print('그룹 정보(auth cont)${group.value.uid}');
 
-          int expPoint = (await getExpPoint())[0];
-          UserModel updatedData = user.value.copyWith(
-            expPoint: expPoint,
-          );
-          user(updatedData);
-        }
-        return userData;
-      } else if (userData == false) {
-        //  print('loginUser false');
-        return null;
-      } else {
-        //  print('loginUser error');
-        return null;
+        int expPoint = (await getExpPoint())[0];
+        UserModel updatedData = user.value.copyWith(
+          expPoint: expPoint,
+        );
+        user(updatedData);
       }
-    } catch (e) {
-      // print('loginUser 오류(cont)$e');
-      openAlertDialog(title: '로그인 오류${e.toString()}');
-      return null;
     }
+    return userData;
   }
 
   void fcmInit(String uid) async {
