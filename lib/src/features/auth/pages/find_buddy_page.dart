@@ -299,8 +299,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
           // InitBinding().refreshControllers();
 
           //AuthController오류 해결
-          FirebaseAuth.instance.reactive;
-          Get.off(() => App());
+          // FirebaseAuth.instance.reactive;
+          // Get.off(() => App());
         }
       },
       width: 150,
@@ -366,8 +366,8 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
             ],
           ),
         ),
-        floatingActionButton: _refreshButton(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        // floatingActionButton: _refreshButton(),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }

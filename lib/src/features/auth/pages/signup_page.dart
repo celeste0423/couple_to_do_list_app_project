@@ -1,6 +1,5 @@
 import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:couple_to_do_list_app/src/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/src/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/src/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/src/models/user_model.dart';
@@ -274,9 +273,9 @@ class SignupPageState extends State<SignupPage> {
             birthday: birthdayDateTime,
           );
           await AuthController.to.signup(userData);
-          Get.off(() => FindBuddyPage(
-                email: widget.email,
-              ));
+          // Get.off(() => FindBuddyPage(
+          //       email: widget.email,
+          //     ));
         }
       },
     );
