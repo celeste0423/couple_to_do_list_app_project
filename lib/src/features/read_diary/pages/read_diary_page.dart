@@ -14,7 +14,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ReadDiaryPage extends StatefulWidget {
   const ReadDiaryPage({super.key});
-
+  //h
   @override
   State<ReadDiaryPage> createState() => _ReadDiaryPageState();
 }
