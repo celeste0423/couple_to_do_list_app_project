@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 
 class AuthDeletePage extends GetView<AuthDeletePageController> {
   const AuthDeletePage({Key? key}) : super(key: key);
-//asdas
 
   Widget _surveySelector() {
     return Obx(
