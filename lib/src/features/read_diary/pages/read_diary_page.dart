@@ -14,7 +14,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ReadDiaryPage extends StatefulWidget {
   const ReadDiaryPage({super.key});
-  //h
+
   @override
   State<ReadDiaryPage> createState() => _ReadDiaryPageState();
 }
@@ -28,7 +28,7 @@ class _ReadDiaryPageState extends State<ReadDiaryPage> {
   String? myComment;
   String? bukkungComment;
 
-  getSogam() {
+  void getSogam() {
     if (AuthController.to.user.value.uid == selectedDiaryModel.creatorUserID) {
       myComment = selectedDiaryModel.creatorSogam;
       bukkungComment = selectedDiaryModel.bukkungSogam;
