@@ -6,21 +6,21 @@ import 'package:couple_to_do_list_app/src/repository/user_repository.dart';
 import 'package:get/get.dart';
 
 class ReadDiaryPageController extends GetxController {
-  RxInt activeIndex = 0.obs;
+  int activeIndex = 0;
   final DiaryModel selectedDiaryModel = Get.arguments;
-  RxInt? tabIndex;
-  Rx<String?>? myNickname;
-  Rx<String?>? buddyNickname;
-  Rx<String?>? myComment;
-  Rx<String?>? bukkungComment;
+  int? tabIndex;
+  String? myNickname;
+  String? buddyNickname;
+  String? myComment;
+  String? bukkungComment;
 
   void getSogam() {
     if (AuthController.to.user.value.uid == selectedDiaryModel.creatorUserID) {
-      myComment = selectedDiaryModel.creatorSogam.obs;
-      bukkungComment = selectedDiaryModel.bukkungSogam.obs;
+      myComment = selectedDiaryModel.creatorSogam;
+      bukkungComment = selectedDiaryModel.bukkungSogam;
     } else {
-      bukkungComment = selectedDiaryModel.creatorSogam.obs;
-      myComment = selectedDiaryModel.bukkungSogam.obs;
+      bukkungComment = selectedDiaryModel.creatorSogam;
+      myComment = selectedDiaryModel.bukkungSogam;
     }
   }
 
@@ -28,13 +28,13 @@ class ReadDiaryPageController extends GetxController {
     if (AuthController.to.user.value.gender == 'male') {
       UserModel? buddyData = await UserRepository.getUserDataByUid(
           AuthController.to.group.value.femaleUid!);
-      myNickname = AuthController.to.user.value.nickname.obs;
-      buddyNickname = buddyData!.nickname.obs;
+      myNickname = AuthController.to.user.value.nickname;
+      buddyNickname = buddyData!.nickname;
     } else {
       UserModel? buddyData = await UserRepository.getUserDataByUid(
           AuthController.to.group.value.maleUid!);
-      myNickname = AuthController.to.user.value.nickname.obs;
-      buddyNickname = buddyData!.nickname.obs;
+      myNickname = AuthController.to.user.value.nickname;
+      buddyNickname = buddyData!.nickname;
     }
     print('짝꿍 닉네임 $buddyNickname');
   }
@@ -60,17 +60,19 @@ class ReadDiaryPageController extends GetxController {
 
   @override
   void onInit() {
-    tabIndex = 0.obs;
+    tabIndex = 0;
     getSogam();
     getNickname();
     super.onInit();
   }
 
   void setActiveIndex(int index) {
-    activeIndex.value = index;
+    activeIndex=index;
+    update();
   }
 
   void setTabIndex(int index) {
-    tabIndex!.value = index;
+    tabIndex= index;
+    update();
   }
 }
