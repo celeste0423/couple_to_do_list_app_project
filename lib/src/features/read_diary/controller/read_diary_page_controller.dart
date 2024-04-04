@@ -6,20 +6,31 @@ import 'package:couple_to_do_list_app/src/repository/user_repository.dart';
 import 'package:get/get.dart';
 
 class ReadDiaryPageController extends GetxController {
-  int activeIndex = 0;
   final DiaryModel selectedDiaryModel = Get.arguments;
+
+  int activeIndex = 0;
   int? tabIndex;
+
   String? myNickname;
   String? buddyNickname;
-  String? myComment;
-  String? bukkungComment;
 
-  void getSogam() {
+  String? myComment;
+  String? buddyComment;
+
+  @override
+  void onInit() {
+    tabIndex = 0;
+    getComment();
+    getNickname();
+    super.onInit();
+  }
+
+  void getComment() {
     if (AuthController.to.user.value.uid == selectedDiaryModel.creatorUserID) {
       myComment = selectedDiaryModel.creatorSogam;
-      bukkungComment = selectedDiaryModel.bukkungSogam;
+      buddyComment = selectedDiaryModel.bukkungSogam;
     } else {
-      bukkungComment = selectedDiaryModel.creatorSogam;
+      buddyComment = selectedDiaryModel.creatorSogam;
       myComment = selectedDiaryModel.bukkungSogam;
     }
   }
@@ -38,6 +49,7 @@ class ReadDiaryPageController extends GetxController {
     }
     print('짝꿍 닉네임 $buddyNickname');
   }
+  //init
 
   Future<void> sendCompletedMessageToBuddy() async {
     final buddyUid = AuthController.to.user.value.gender == 'male'
@@ -58,21 +70,13 @@ class ReadDiaryPageController extends GetxController {
     }
   }
 
-  @override
-  void onInit() {
-    tabIndex = 0;
-    getSogam();
-    getNickname();
-    super.onInit();
-  }
-
   void setActiveIndex(int index) {
-    activeIndex=index;
+    activeIndex = index;
     update();
   }
 
   void setTabIndex(int index) {
-    tabIndex= index;
+    tabIndex = index;
     update();
   }
 }

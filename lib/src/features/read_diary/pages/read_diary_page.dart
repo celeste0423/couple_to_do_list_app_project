@@ -10,33 +10,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class ReadDiaryPage extends GetView<ReadDiaryPageController> {
   const ReadDiaryPage({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _customAppBar(controller.selectedDiaryModel.title),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _divider(),
-            _animatedSmoothIndicator(),
-            _imgContainer(),
-            SizedBox(height: 5),
-            _dateText(controller.selectedDiaryModel.date),
-            SizedBox(height: 5),
-            Obx(() {
-              return controller.tabIndex == 0
-                  ? _diaryTab(0)
-                  : _diaryTab(1);
-            }),
-          ],
-        ),
-      ),
-    );
-  }
-
   PreferredSizeWidget _customAppBar(String? title) {
     return AppBar(
       backgroundColor: CustomColors.backgroundLightGrey,
@@ -236,18 +209,19 @@ class ReadDiaryPage extends GetView<ReadDiaryPageController> {
                         padding: EdgeInsets.symmetric(vertical: 15.0),
                         child: controller.myComment != null
                             ? Text(
-                          controller.myComment!,
-                          style: TextStyle(color: CustomColors.greyText),
-                        )
+                                controller.myComment!,
+                                style: TextStyle(color: CustomColors.greyText),
+                              )
                             : GestureDetector(
-                          onTap: () async {
-                            await Get.toNamed('/writeDiary');
-                          },
-                          child: Text(
-                            '이야기를 작성해주세요',
-                            style: TextStyle(color: CustomColors.greyText),
-                          ),
-                        ),
+                                onTap: () async {
+                                  await Get.toNamed('/writeDiary');
+                                },
+                                child: Text(
+                                  '이야기를 작성해주세요',
+                                  style:
+                                      TextStyle(color: CustomColors.greyText),
+                                ),
+                              ),
                       ),
                     ),
                   ],
@@ -319,20 +293,21 @@ class ReadDiaryPage extends GetView<ReadDiaryPageController> {
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 15.0),
-                        child: controller.bukkungComment != null
+                        child: controller.buddyComment != null
                             ? Text(
-                          controller.bukkungComment!,
-                          style: TextStyle(color: CustomColors.greyText),
-                        )
+                                controller.buddyComment!,
+                                style: TextStyle(color: CustomColors.greyText),
+                              )
                             : GestureDetector(
-                          onTap: () async {
-                            await Get.toNamed('/writeDiary');
-                          },
-                          child: Text(
-                            '이야기를 작성해주세요',
-                            style: TextStyle(color: CustomColors.greyText),
-                          ),
-                        ),
+                                onTap: () async {
+                                  await Get.toNamed('/writeDiary');
+                                },
+                                child: Text(
+                                  '이야기를 작성해주세요',
+                                  style:
+                                      TextStyle(color: CustomColors.greyText),
+                                ),
+                              ),
                       ),
                     ),
                   ],
@@ -343,5 +318,30 @@ class ReadDiaryPage extends GetView<ReadDiaryPageController> {
         ),
       );
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _customAppBar(controller.selectedDiaryModel.title),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _divider(),
+            _animatedSmoothIndicator(),
+            _imgContainer(),
+            SizedBox(height: 5),
+            _dateText(controller.selectedDiaryModel.date),
+            SizedBox(height: 5),
+            Obx(() {
+              return controller.tabIndex == 0 ? _diaryTab(0) : _diaryTab(1);
+            }),
+          ],
+        ),
+      ),
+    );
   }
 }
