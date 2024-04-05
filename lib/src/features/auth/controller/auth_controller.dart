@@ -11,6 +11,7 @@ import 'package:couple_to_do_list_app/src/repository/bukkung_list_repository.dar
 import 'package:couple_to_do_list_app/src/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/src/repository/suggestion_list_repository.dart';
 import 'package:couple_to_do_list_app/src/repository/user_repository.dart';
+import 'package:couple_to_do_list_app/src/utils/group_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:get/get.dart';
@@ -157,6 +158,10 @@ class AuthController extends GetxController {
     return userData;
   }
 
+  void setUserData(UserModel updatedUserModel) {
+    user(updatedUserModel);
+  }
+
   void fcmInit(String uid) async {
     //fcm 세팅(클라우드 메시지)
     var deviceToken = await FCMController().getMyDeviceToken();
@@ -186,7 +191,7 @@ class AuthController extends GetxController {
       return GroupIdStatus.noData;
     } else if (buddyData.groupId != null) {
       //상대 그룹 아이디가 존재
-      if (buddyData.groupId!.startsWith("solo")) {
+      if (GroupUtil().isSoloGroup(buddyData.groupId!)) {
         if (myData.groupId == null) {
           //내가 뉴비 상대는 solo그룹 => 그룹 만들고 하나만 옮기기
           return createSoloGroup(myData, buddyData, groupId);

@@ -258,13 +258,26 @@ class UserRepository {
         .get();
 
     if (data.size == 0) {
-      //아직 회원가입이 안되었기 때문에 파이어스토어에 추가해야함
-      print('uid 일치 데이터 없음(repo)');
+      // print('uid 일치 데이터 없음(repo)');
       return null;
     } else {
-      print('가입 이력 존재(repo)${data.docs.first.data().toString()}');
+      // print('가입 이력 존재(repo)${data.docs.first.data().toString()}');
       return UserModel.fromJson(data.docs.first.data());
     }
+  }
+
+  static Stream<UserModel?> getUserStream(String uid) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: uid)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isEmpty) {
+        return null;
+      } else {
+        return UserModel.fromJson(snapshot.docs.first.data());
+      }
+    });
   }
 
   static Future<bool> firestoreSignup(UserModel user) async {

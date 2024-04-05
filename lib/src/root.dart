@@ -55,24 +55,6 @@ class Root extends GetView<AuthController> {
                     );
                   }
                 });
-                // if (!snapshot.hasData) {
-                //   //일단 controller에 uid와 email처음 저장
-                //   controller.user(
-                //       UserModel(uid: user.data!.uid, email: user.data!.email));
-                //   return SignupPage(
-                //     uid: user.data!.uid,
-                //     email: user.data!.email ?? '',
-                //   );
-                // } else {
-                //   if (user.data!.email == 'bukkunglist@gmail.com') {
-                //     return AdminPage();
-                //   } else if (controller.user.value.groupId == null) {
-                //     return FindBuddyPage(email: user.data!.email ?? '');
-                //   } else {
-                //     InitBinding.additionalBinding();
-                //     return App();
-                //   }
-                // }
               }
             },
           );
