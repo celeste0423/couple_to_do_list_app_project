@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/src/features/read_suggestion_list/pages/read_suggestion_list_page.dart';
 import 'package:couple_to_do_list_app/src/features/suggestion_list/controller/suggestion_list_page_controller.dart';
@@ -597,10 +599,16 @@ class SuggestionListPage extends GetView<SuggestionListPageController> {
                     offset: Offset(5, 5), // Offset(수평, 수직)
                   ),
                 ],
-                image: DecorationImage(
-                  image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
-                  fit: BoxFit.cover,
-                ),
+                image: Platform.isAndroid
+                    ? DecorationImage(
+                        image:
+                            CustomCachedNetworkImage(bukkungListModel.imgUrl!),
+                        fit: BoxFit.cover,
+                      )
+                    : DecorationImage(
+                        image: CustomCachedNetworkImage(null),
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             if (isDelete)
