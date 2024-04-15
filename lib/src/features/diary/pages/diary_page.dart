@@ -2,7 +2,7 @@ import 'package:couple_to_do_list_app/src/constants/constants.dart';
 import 'package:couple_to_do_list_app/src/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/src/features/diary/controllers/diary_page_controller.dart';
 import 'package:couple_to_do_list_app/src/features/upload_diary/pages/upload_diary_page.dart';
-import 'package:couple_to_do_list_app/src/helper/firebase_analytics.dart';
+import 'package:couple_to_do_list_app/src/helper/analytics.dart';
 import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/src/models/diary_model.dart';
 import 'package:couple_to_do_list_app/src/utils/custom_color.dart';

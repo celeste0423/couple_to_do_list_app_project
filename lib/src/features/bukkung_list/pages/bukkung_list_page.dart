@@ -2,7 +2,7 @@ import 'package:couple_to_do_list_app/src/features/bukkung_list/controllers/bukk
 import 'package:couple_to_do_list_app/src/features/notification/pages/notification_page.dart';
 import 'package:couple_to_do_list_app/src/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
 import 'package:couple_to_do_list_app/src/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
-import 'package:couple_to_do_list_app/src/helper/firebase_analytics.dart';
+import 'package:couple_to_do_list_app/src/helper/analytics.dart';
 import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/src/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/src/utils/custom_color.dart';

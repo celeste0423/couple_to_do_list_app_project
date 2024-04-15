@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -9,45 +9,18 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../features/auth/controller/auth_controller.dart';
 
 class AdHelper {
-  //아건 테스트용
-  static String get bannerAdUnitId {
-    if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111';
-    } else if (Platform.isIOS) {
-      return 'ca-app-pub-3940256099942544/2934735716';
-    } else {
-      throw UnsupportedError('Unsupported platform');
-    }
-  }
-
   static String get interstitialAdUnitId {
     if (kReleaseMode) {
-      // Use your real ad unit ID for production
       if (Platform.isAndroid) {
-        return "ca-app-pub-4931645834499771/2322423348";
-      } else if (Platform.isIOS) {
-        return "ca-app-pub-4931645834499771/2303114183";
+        return dotenv.env['ANDROID_AD_UNIT_ID'] ?? '';
       } else {
-        throw PlatformException(
-          code: "Unsupported platform",
-          message: "Unsupported platform",
-          details: null,
-          stacktrace: null,
-        );
+        return dotenv.env['IOS_AD_UNIT_ID'] ?? '';
       }
     } else {
-      // Use the test ad unit ID for debugging
       if (Platform.isAndroid) {
         return "ca-app-pub-8108254432581538/5301001597"; // Test ad unit ID for Android
-      } else if (Platform.isIOS) {
-        return "ca-app-pub-8108254432581538/1158027865"; // Test ad unit ID for iOS
       } else {
-        throw PlatformException(
-          code: "Unsupported platform",
-          message: "Unsupported platform",
-          details: null,
-          stacktrace: null,
-        );
+        return "ca-app-pub-8108254432581538/1158027865"; // Test ad unit ID for iOS
       }
     }
   }
