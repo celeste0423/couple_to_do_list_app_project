@@ -7,7 +7,7 @@ class Analytics {
 
   static FirebaseAnalytics googleAnalytics = FirebaseAnalytics.instance;
   static Amplitude amplitudeAnalytics =
-      Amplitude.getInstance(instanceName: "gonggeom");
+      Amplitude.getInstance(instanceName: "project");
 
   Future<void> init() async {
     googleAnalytics.setAnalyticsCollectionEnabled(true);
@@ -25,6 +25,7 @@ class Analytics {
     );
     //aa
     await amplitudeAnalytics.logEvent(name, eventProperties: parameters);
+    print('log 전송');
   }
 
   Future<void> logAppOpen() async {

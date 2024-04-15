@@ -85,6 +85,7 @@ dependencies:
   infinite_scroll_pagination: ^4.0.0
   amplitude_flutter: ^3.16.2
   flutter_dotenv: ^5.1.0
+  firebase_crashlytics: ^3.4.18
 
 
 flutter_launcher_icons:
@@ -132,6 +133,7 @@ flutter:
     - assets/images/
     - assets/gifs/
     - assets/rivs/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
