@@ -175,6 +175,7 @@ class UploadBukkungListController extends GetxController {
 
   void changeCategory(String category) {
     listCategory(category);
+    Get.back();
   }
 
   // void placeAutocomplete(String query) async {

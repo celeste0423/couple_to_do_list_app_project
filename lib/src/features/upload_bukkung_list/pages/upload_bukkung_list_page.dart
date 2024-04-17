@@ -517,7 +517,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
     return GestureDetector(
       onTap: () {
         controller.changeCategory(category);
-        Get.back();
+
       },
       child: Container(
         width: Get.width * 0.3,
