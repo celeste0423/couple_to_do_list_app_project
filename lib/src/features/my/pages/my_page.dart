@@ -406,8 +406,8 @@ class MyPage extends GetView<MyPageController> {
                                 controller.bukkungListCount.value.toString()),
                             _achievementDetail(
                                 '조회수', controller.viewCount.value.toString()),
-                            _achievementDetail('받은 좋아요',
-                                controller.likeCount.value.toString()),
+                            // _achievementDetail('받은 좋아요',
+                            //     controller.likeCount.value.toString()),
                           ],
                         ),
                       ),

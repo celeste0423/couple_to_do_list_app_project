@@ -272,11 +272,6 @@ class SuggestionListPage extends GetView<SuggestionListPageController> {
                             false,
                           ),
                           _iconText(
-                            'likeCount',
-                            '${bukkungListModel.likeCount.toString()}개',
-                            false,
-                          ),
-                          _iconText(
                             'copyCount',
                             '${bukkungListModel.copyCount.toString()}회',
                             false,
