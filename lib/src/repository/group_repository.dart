@@ -42,7 +42,7 @@ class GroupRepository {
     var snapshot =
         await FirebaseFirestore.instance.collection('groups').doc(uid).get();
     if (!snapshot.exists) {
-      print('에러 그룹 없음(gro repo)');
+      print('그룹 없음(gro repo)');
       return null;
     }
     return GroupModel.fromJson(snapshot.data()!);

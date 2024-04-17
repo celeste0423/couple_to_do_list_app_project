@@ -1,31 +1,19 @@
 import 'package:colorful_safe_area/colorful_safe_area.dart';
-import 'package:couple_to_do_list_app/src/app.dart';
-import 'package:couple_to_do_list_app/src/features/auth/controller/auth_controller.dart';
+import 'package:couple_to_do_list_app/src/features/auth/controller/find_buddy_page_controller.dart';
 import 'package:couple_to_do_list_app/src/features/auth/widgets/registration_stage.dart';
-import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
-import 'package:couple_to_do_list_app/src/models/group_model.dart';
 import 'package:couple_to_do_list_app/src/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/src/widgets/text/PcText.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:marquee/marquee.dart';
 
 import '../../../widgets/main_button.dart';
 
-class FindBuddyPage extends StatefulWidget {
-  const FindBuddyPage({Key? key, required this.email}) : super(key: key);
-  final String email;
-
-  @override
-  State<FindBuddyPage> createState() => _FindBuddyPageState();
-}
-
-class _FindBuddyPageState extends State<FindBuddyPage> {
-  final AuthController authController = AuthController.to;
-  TextEditingController emailController = TextEditingController();
-  FocusNode emailFocusNode = FocusNode();
+class FindBuddyPage extends GetView<FindBuddyPageController> {
+  String email;
+  FindBuddyPage({super.key, required this.email});
 
   Widget _appBar() {
     return Padding(
@@ -73,8 +61,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
 
   Widget _backgroundBottom() {
     return Container(
-      height:
-          Get.height * 1 / 2 - MediaQuery.of(context).viewInsets.bottom * 1 / 2,
+      height: Get.height * 1 / 2 - 50,
       width: Get.width,
       decoration: const BoxDecoration(
         color: CustomColors.redbrown,
@@ -87,7 +74,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
   }
 
   Widget _emailCopyButton() {
-    final String useremail = widget.email;
+    final String useremail = email;
     // print(useremail);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -141,7 +128,7 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                emailFocusNode.hasFocus
+                controller.emailFocusNode.hasFocus
                     ? SizedBox()
                     : Image.asset(
                         'assets/images/email.png',
@@ -178,47 +165,90 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
                     fontSize: 9,
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 30),
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: _emailTextField(),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    if (AuthController.to.group.value.uid == null) {
-                      await authController.soloGroupCreation(widget.email);
-                    }
-                    FirebaseAuth.instance.reactive;
-                    Get.off(() => App());
-                  },
-                  child: Text(
-                    '나중에 짝꿍 추가하기',
-                    style: TextStyle(decoration: TextDecoration.underline),
-                  ),
-                ),
+                _emailTextField(),
+                _soloGroupButton(),
                 SizedBox(height: 15),
               ],
             ),
           ),
         ),
         Positioned(bottom: 135 - 25, child: _startButton()),
-        Positioned(bottom: 0, child: _myEmail()),
+        Positioned(bottom: 0, child: _emailBox()),
       ],
     );
   }
 
-  Widget _myEmail() {
-    final String useremail = widget.email;
+  Widget _emailTextField() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 30),
+      height: 40,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+      ),
+      child: TextField(
+        controller: controller.emailController,
+        focusNode: controller.emailFocusNode,
+        style: TextStyle(
+          fontSize: 13,
+          fontFamily: 'Pyeongchang',
+        ),
+        decoration: InputDecoration(
+          hintText: 'ex) Bukkung@google.com',
+          hintStyle: TextStyle(
+            fontSize: 13,
+            fontFamily: 'Pyeongchang',
+          ),
+          prefixIcon: Icon(
+            Icons.email,
+            color: CustomColors.greyText,
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(
+              Icons.clear,
+              size: 20,
+              color: CustomColors.greyText,
+            ),
+            onPressed: () {
+              return controller.emailController.clear();
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _soloGroupButton() {
+    return GestureDetector(
+      onTap: () async {
+        controller.soloGroupButton(email);
+      },
+      child: Text(
+        '나중에 짝꿍 추가하기',
+        style: TextStyle(decoration: TextDecoration.underline),
+      ),
+    );
+  }
+
+  Widget _startButton() {
+    return MainButton(
+      buttonText: '찾기',
+      onTap: () async {
+        controller.startButton(email);
+      },
+      width: 150,
+      buttonColor: CustomColors.mainPink,
+    );
+  }
+
+  Widget _emailBox() {
+    final String userEmail = email;
     return GestureDetector(
       onTap: () {
         Clipboard.setData(
-          ClipboardData(text: useremail),
+          ClipboardData(text: userEmail),
         ).then(
           (_) {
             Get.snackbar(
@@ -250,99 +280,39 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
     );
   }
 
-  Widget _emailTextField() {
-    return TextField(
-      controller: emailController,
-      focusNode: emailFocusNode,
-      style: TextStyle(
-        fontSize: 13,
-        fontFamily: 'Pyeongchang',
-      ),
-      decoration: InputDecoration(
-        hintText: 'ex) Bukkung@google.com',
-        hintStyle: TextStyle(
-          fontSize: 13,
-          fontFamily: 'Pyeongchang',
-        ),
-        prefixIcon: Icon(
-          Icons.email,
-          color: CustomColors.greyText,
-        ),
-        suffixIcon: IconButton(
-          icon: Icon(
-            Icons.clear,
-            size: 20,
-            color: CustomColors.greyText,
-          ),
-          onPressed: () {
-            return emailController.clear();
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _startButton() {
-    return MainButton(
-      buttonText: '찾기',
-      onTap: () async {
-        GroupIdStatus groupIdStatus = await authController.groupCreation(
-            widget.email, emailController.text);
-        if (groupIdStatus == GroupIdStatus.noData) {
-          openAlertDialog(
-              title: '올바른 메일주소를 입력하였는지,\n짝꿍이 회원가입을 완료 하였는지 확인해주세요.');
-        } else if (groupIdStatus == GroupIdStatus.hasGroup) {
-          openAlertDialog(title: '상대방이 이미 짝꿍이 있습니다.\n올바른 메일주소를 입력하였는지 확인해주세요.');
-        } else {
-          //BukkungListPageController initbinding을 여기다 해야 할 거 같음
-          //InitBinding.additionalBinding();
-          // InitBinding().refreshControllers();
-
-          //AuthController오류 해결
-          FirebaseAuth.instance.reactive;
-          Get.off(() => App());
-        }
-      },
-      width: 150,
-      buttonColor: CustomColors.mainPink,
-    );
-  }
-
-  Widget _refreshButton() {
-    return AnimatedOpacity(
-      //키보드 올라온 것에 따른 투명도 조절
-      opacity: MediaQuery.of(context).viewInsets.bottom == 0 ? 1.0 : 0.0,
-      duration: Duration(milliseconds: 200),
-      child: FloatingActionButton(
-        elevation: 0,
-        onPressed: () async {
-          //  print('리프레시 버튼 이메일${widget.email}');
-          //   print('그룹 찾기${await authController.getGroupModel(widget.email)}');
-          GroupModel? group = await authController.getGroupModel(widget.email);
-          if (group != null) {
-            authController.group(group);
-
-            FirebaseAuth.instance.reactive;
-            Get.off(() => App());
-          } else {
-            // print('그룹아이디 못찾음');
-          }
-        },
-        child: Icon(
-          Icons.refresh,
-          color: CustomColors.mainPink,
-          size: 35,
-        ),
-      ),
-    );
-  }
+  // Widget _refreshButton() {
+  //   return AnimatedOpacity(
+  //     //키보드 올라온 것에 따른 투명도 조절
+  //     opacity: MediaQuery.of(context).viewInsets.bottom == 0 ? 1.0 : 0.0,
+  //     duration: Duration(milliseconds: 200),
+  //     child: FloatingActionButton(
+  //       elevation: 0,
+  //       onPressed: () async {
+  //         //  print('리프레시 버튼 이메일${widget.email}');
+  //         //   print('그룹 찾기${await authController.getGroupModel(widget.email)}');
+  //         GroupModel? group = await authController.getGroupModel(widget.email);
+  //         if (group != null) {
+  //           authController.group(group);
+  //
+  //           FirebaseAuth.instance.reactive;
+  //           Get.off(() => App());
+  //         } else {
+  //           // print('그룹아이디 못찾음');
+  //         }
+  //       },
+  //       child: Icon(
+  //         Icons.refresh,
+  //         color: CustomColors.mainPink,
+  //         size: 35,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
+    Get.put(FindBuddyPageController());
+    return KeyboardDismissOnTap(
       child: Scaffold(
         // resizeToAvoidBottomInset: false,
         backgroundColor: CustomColors.mainPink,
@@ -362,12 +332,15 @@ class _FindBuddyPageState extends State<FindBuddyPage> {
               Align(
                   alignment: Alignment.bottomCenter,
                   child: _backgroundBottom()),
-              Align(alignment: Alignment.center, child: _floatingContainer()),
+              Align(
+                alignment: Alignment.center,
+                child: _floatingContainer(),
+              ),
             ],
           ),
         ),
-        floatingActionButton: _refreshButton(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        // floatingActionButton: _refreshButton(),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }

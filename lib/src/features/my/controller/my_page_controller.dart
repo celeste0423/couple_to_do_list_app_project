@@ -27,7 +27,7 @@ class MyPageController extends GetxController {
 
   Rx<int> bukkungListCount = 0.obs;
   Rx<int> viewCount = 0.obs;
-  Rx<int> likeCount = 0.obs;
+  // Rx<int> likeCount = 0.obs;
   Rx<int> expPoint = 0.obs;
 
   @override
@@ -90,10 +90,10 @@ class MyPageController extends GetxController {
     // if()
     // expPoint(AuthController.to.user.value.expPoint);
 
-    List<int> listExpViewLikeCount = await AuthController().getExpPoint();
-    expPoint(listExpViewLikeCount[0]);
-    viewCount(listExpViewLikeCount[1]);
-    likeCount(listExpViewLikeCount[2]);
+    // List<int> listExpViewLikeCount = await AuthController().getExpPoint();
+    // expPoint(listExpViewLikeCount[0]);
+    // viewCount(listExpViewLikeCount[1]);
+    // likeCount(listExpViewLikeCount[2]);
 
     List<BukkungListModel> bukkungLists =
         await SuggestionListRepository().getFutureMyBukkungList();

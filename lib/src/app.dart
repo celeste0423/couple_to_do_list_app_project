@@ -6,7 +6,7 @@ import 'package:couple_to_do_list_app/src/features/my/pages/my_page.dart';
 import 'package:couple_to_do_list_app/src/features/my/widgets/circle_tab_indicator.dart';
 import 'package:couple_to_do_list_app/src/features/suggestion_list/pages/suggestion_list_page.dart';
 import 'package:couple_to_do_list_app/src/features/tutorial_coach_mark/pages/coachmark_desc.dart';
-import 'package:couple_to_do_list_app/src/helper/firebase_analytics.dart';
+import 'package:couple_to_do_list_app/src/helper/analytics.dart';
 import 'package:couple_to_do_list_app/src/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/src/widgets/dialog/level_up_dialog.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
 import 'package:couple_to_do_list_app/src/app.dart';
-import 'package:couple_to_do_list_app/src/binding/init_binding.dart';
+import 'package:couple_to_do_list_app/src/constants/admin_email.dart';
 import 'package:couple_to_do_list_app/src/features/admin_management/pages/admin_management.dart';
 import 'package:couple_to_do_list_app/src/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/src/features/auth/pages/find_buddy_page.dart';
@@ -39,24 +39,22 @@ class Root extends GetView<AuthController> {
               } else if (snapshot.hasError) {
                 return loadingContainer();
               } else {
-                if (!snapshot.hasData) {
-                  //일단 controller에 uid와 email처음 저장
-                  controller.user(
-                      UserModel(uid: user.data!.uid, email: user.data!.email));
-                  return SignupPage(
-                    uid: user.data!.uid,
-                    email: user.data!.email ?? '',
-                  );
-                } else {
-                  if (user.data!.email == 'bukkunglist@gmail.com') {
-                    return AdminPage();
-                  } else if (controller.user.value.groupId == null) {
-                    return FindBuddyPage(email: user.data!.email ?? '');
+                return Obx(() {
+                  if (controller.user.value.uid != null) {
+                    if (user.data!.email == AdminEmail.adminEmail) {
+                      return const AdminPage();
+                    } else if (controller.user.value.groupId == null) {
+                      return FindBuddyPage(email: user.data!.email!);
+                    } else {
+                      return App();
+                    }
                   } else {
-                    InitBinding.additionalBinding();
-                    return App();
+                    return SignupPage(
+                      uid: user.data!.uid,
+                      email: user.data!.email!,
+                    );
                   }
-                }
+                });
               }
             },
           );

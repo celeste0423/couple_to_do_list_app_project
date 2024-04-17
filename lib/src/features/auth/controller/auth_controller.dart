@@ -2,20 +2,17 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:couple_to_do_list_app/src/constants/constants.dart';
 import 'package:couple_to_do_list_app/src/helper/background_message/controller/fcm_controller.dart';
-import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/src/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/src/models/group_model.dart';
 import 'package:couple_to_do_list_app/src/models/user_model.dart';
 import 'package:couple_to_do_list_app/src/repository/bukkung_list_repository.dart';
 import 'package:couple_to_do_list_app/src/repository/group_repository.dart';
-import 'package:couple_to_do_list_app/src/repository/suggestion_list_repository.dart';
 import 'package:couple_to_do_list_app/src/repository/user_repository.dart';
+import 'package:couple_to_do_list_app/src/utils/group_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 
@@ -33,35 +30,6 @@ class AuthController extends GetxController {
   int globalPreviousLevel = 0;
   int globalCurrentLevel = 0;
   bool isLevelDialog = false;
-
-  // StreamController<UserModel> streamUserController =
-  //     StreamController<UserModel>();
-  // late Stream<UserModel> streamUser = streamUserController.stream;
-  // StreamController<GroupModel> streamGroupController =
-  //     StreamController<GroupModel>();
-  // late Stream<GroupModel> streamGroup = streamGroupController.stream;
-  //
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  //   _initUserData();
-  //   _initGroupData();
-  // }
-  //
-  // void _initUserData() {
-  //   streamUser = UserRepository.streamUserDataByUid(user.value.uid!);
-  // }
-  //
-  // void _initGroupData() {
-  //   streamGroup = GroupRepository.streamGroupDataByUid(group.value.uid!);
-  // }
-  //
-  // @override
-  // void onClose() {
-  //   super.onClose();
-  //   streamUserController.close();
-  //   streamGroupController.close();
-  // }
 
   //이메일 비밀번호 로그인
   Future signInWithEmailAndPassword(String email, String password) async {
@@ -96,88 +64,67 @@ class AuthController extends GetxController {
   }
 
   //expPoint계산 해주는 함수
-  Future<List<int>> getExpPoint() async {
-    //0번이 exp
-    //1번이 view
-    //2번이 like
-    List<int> expLikeViewCount = List<int>.filled(3, 0);
-    List<BukkungListModel> bukkungLists =
-        await SuggestionListRepository().getFutureMyBukkungList();
-
-    for (BukkungListModel bukkunglist in bukkungLists) {
-      expLikeViewCount[1] += bukkunglist.viewCount!.toInt();
-      expLikeViewCount[2] += bukkunglist.likeCount!.toInt();
-    }
-    //조회수는 1점, 좋아요는 5점
-    expLikeViewCount[0] = expLikeViewCount[1] * 1 + expLikeViewCount[2] * 5;
-    //  print('exp계산중(auth cont) 총 ${expLikeViewCount[0]}점');
-
-    //이전 exp와 비교하여 레벨이 올랐을 시 level up dialog 표시
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? previousLevel = prefs.getInt('user_level');
-    print('previous Level $previousLevel');
-    print('지금 레벨 ${expLikeViewCount[0] ~/ 100}');
-    if (previousLevel != null && previousLevel != expLikeViewCount[0] ~/ 100) {
-      globalPreviousLevel = previousLevel;
-      globalCurrentLevel = expLikeViewCount[0] ~/ 100;
-      isLevelDialog = true;
-    }
-    await prefs.setInt('user_level', expLikeViewCount[0] ~/ 100);
-
-    return expLikeViewCount;
-  }
-
-  signup(UserModel signupUser) async {
-    //회원가입 버튼에 사용
-    bool result = await UserRepository.firestoreSignup(signupUser);
-    //user 정보를 firebase에 저장하고, result가 true면 유저정보가 firebase database를 넣었고 아니면 에러임
-    if (result) {
-      //유저정보를 파베에 넣고나서 할일
-      //  print("싸인업 : 유저에 ${signupUser.nickname} 넣음");
-      user(signupUser);
-    } else {
-      //   print("error: firestoreSignup");
-    }
+  // Future<List<int>> getExpPoint() async {
+  //   //0번이 exp
+  //   //1번이 view
+  //   //2번이 like
+  //   List<int> expLikeViewCount = List<int>.filled(3, 0);
+  //   List<BukkungListModel> bukkungLists =
+  //       await SuggestionListRepository().getFutureMyBukkungList();
+  //
+  //   for (BukkungListModel bukkunglist in bukkungLists) {
+  //     expLikeViewCount[1] += bukkunglist.viewCount!.toInt();
+  //     // expLikeViewCount[2] += bukkunglist.likeCount!.toInt();
+  //   }
+  //   //조회수는 1점, 좋아요는 5점
+  //   expLikeViewCount[0] = expLikeViewCount[1] * 1 + expLikeViewCount[2] * 5;
+  //   //  print('exp계산중(auth cont) 총 ${expLikeViewCount[0]}점');
+  //
+  //   //이전 exp와 비교하여 레벨이 올랐을 시 level up dialog 표시
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   int? previousLevel = prefs.getInt('user_level');
+  //   print('previous Level $previousLevel');
+  //   print('지금 레벨 ${expLikeViewCount[0] ~/ 100}');
+  //   if (previousLevel != null && previousLevel != expLikeViewCount[0] ~/ 100) {
+  //     globalPreviousLevel = previousLevel;
+  //     globalCurrentLevel = expLikeViewCount[0] ~/ 100;
+  //     isLevelDialog = true;
+  //   }
+  //   await prefs.setInt('user_level', expLikeViewCount[0] ~/ 100);
+  //
+  //   return expLikeViewCount;
+  // }
+  //
+  Future<void> signup(UserModel userData) async {
+    await UserRepository.firestoreSignup(userData);
+    await loginUser(userData.uid!);
   }
 
 //로그인
   Future<UserModel?> loginUser(String uid) async {
-    try {
-      UserModel? userData = await UserRepository.loginUserByUid(uid);
+    UserModel? userData = await UserRepository.getUserData(uid);
 
-      //fcm 세팅
-      fcmInit(uid);
+    //fcm 세팅
+    fcmInit(uid);
 
-      //신규 유저일 경우 userData에 false값 반환됨, error났을떄는 null 반환됨
-      if (userData != null && userData != false) {
-        //신규유저가 아닐경우 컨트롤러에 유저정보를 전달해 놓는다
-        //   print('서버의 유저 데이터 (cont) ${userData.toJson()}');
-        user(userData);
-        var groupData = await GroupRepository.groupLogin(userData.groupId);
-        if (groupData != null) {
-          //   print('서버의 그룹 데이터(auth cont)${groupData.toJson()}');
-          group(groupData);
-          //  print('그룹 정보(auth cont)${group.value.uid}');
+    if (userData != null) {
+      user(userData);
+      var groupData = await GroupRepository.groupLogin(userData.groupId);
+      if (groupData != null) {
+        group(groupData);
 
-          int expPoint = (await getExpPoint())[0];
-          UserModel updatedData = user.value.copyWith(
-            expPoint: expPoint,
-          );
-          user(updatedData);
-        }
-        return userData;
-      } else if (userData == false) {
-        //  print('loginUser false');
-        return null;
-      } else {
-        //  print('loginUser error');
-        return null;
+        // int expPoint = (await getExpPoint())[0];
+        // UserModel updatedData = user.value.copyWith(
+        //   expPoint: expPoint,
+        // );
+        // user(updatedData);
       }
-    } catch (e) {
-      // print('loginUser 오류(cont)$e');
-      openAlertDialog(title: '로그인 오류${e.toString()}');
-      return null;
     }
+    return userData;
+  }
+
+  void setUserData(UserModel updatedUserModel) {
+    user(updatedUserModel);
   }
 
   void fcmInit(String uid) async {
@@ -209,7 +156,7 @@ class AuthController extends GetxController {
       return GroupIdStatus.noData;
     } else if (buddyData.groupId != null) {
       //상대 그룹 아이디가 존재
-      if (buddyData.groupId!.startsWith("solo")) {
+      if (GroupUtil().isSoloGroup(buddyData.groupId!)) {
         if (myData.groupId == null) {
           //내가 뉴비 상대는 solo그룹 => 그룹 만들고 하나만 옮기기
           return createSoloGroup(myData, buddyData, groupId);
@@ -359,14 +306,23 @@ class AuthController extends GetxController {
     user(user1.copyWith(groupId: groupId));
 
     // 기본 버꿍리스트 업로드
-    BukkungListModel initialModel = BukkungListModel.init(user.value);
-    BukkungListModel initialBukkungList = initialModel.copyWith(
-      title: '함께 버꿍리스트 앱 설치하기',
+    BukkungListModel initialBukkungList = BukkungListModel(
       listId: 'initial$groupId',
       category: '6etc',
-      location: '버꿍리스트 앱',
-      content: '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자...',
-      imgUrl: Constants.baseImageUrl,
+      title: '함께 버꿍리스트 앱 설치하기',
+      content:
+          '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자,\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
+      location: '버꿍리스트',
+      imgUrl: null,
+      imgId: null,
+      viewCount: 0,
+      copyCount: 0,
+      date: DateTime.now(),
+      madeBy: AuthController.to.user.value.uid,
+      groupId: groupId,
+      isCompleted: false,
+      createdAt: DateTime.now(),
+      updatedAt: null,
     );
     await BukkungListRepository.setGroupBukkungList(
         initialBukkungList, 'initial$groupId');
@@ -402,17 +358,24 @@ class AuthController extends GetxController {
     user(myData.copyWith(groupId: groupId));
 
     //기본 버꿍리스트 업로드
-    BukkungListModel initialModel = BukkungListModel.init(user.value);
-    BukkungListModel initialBukkungList = initialModel.copyWith(
-      title: '함께 버꿍리스트 앱 설치하기',
+    BukkungListModel initialBukkungList = BukkungListModel(
       listId: 'initial$groupId',
       category: '6etc',
-      location: '버꿍리스트 앱',
+      title: '함께 버꿍리스트 앱 설치하기',
       content:
           '우리 함께 꿈꾸던 버킷리스트들을 하나 둘 실천해보자,\n\n사진과 함께 예쁜 다이어리도 만들고\n행복한 추억을 차곡차곡 쌓아나가자!❤️',
-      imgUrl: Constants.baseImageUrl,
+      location: '버꿍리스트',
+      imgUrl: null,
+      imgId: null,
+      viewCount: 0,
+      copyCount: 0,
+      date: DateTime.now(),
+      madeBy: AuthController.to.user.value.uid,
+      groupId: groupId,
+      isCompleted: false,
+      createdAt: DateTime.now(),
+      updatedAt: null,
     );
-    // print('(auth cont) 기본 버꿍리스트 업로드 시작');
     await BukkungListRepository.setGroupBukkungList(
         initialBukkungList, 'initial$groupId');
     return GroupIdStatus.createdGroupId;

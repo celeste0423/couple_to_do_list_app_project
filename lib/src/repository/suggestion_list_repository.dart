@@ -170,8 +170,8 @@ class SuggestionListRepository {
         .map((event) {
       List<int> likeViewCount = List<int>.filled(2, 0);
       for (var bukkungList in event.docs) {
-        likeViewCount[0] +=
-            BukkungListModel.fromJson(bukkungList.data()).likeCount!;
+        // likeViewCount[0] +=
+        //     BukkungListModel.fromJson(bukkungList.data()).likeCount!;
         likeViewCount[1] +=
             BukkungListModel.fromJson(bukkungList.data()).viewCount!;
       }

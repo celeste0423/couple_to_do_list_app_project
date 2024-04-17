@@ -1,9 +1,8 @@
 import 'package:couple_to_do_list_app/src/features/bukkung_list/controllers/bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/src/features/notification/pages/notification_page.dart';
 import 'package:couple_to_do_list_app/src/features/read_bukkung_list/pages/read_bukkung_list_page.dart';
-import 'package:couple_to_do_list_app/src/features/store/pages/store.dart';
 import 'package:couple_to_do_list_app/src/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
-import 'package:couple_to_do_list_app/src/helper/firebase_analytics.dart';
+import 'package:couple_to_do_list_app/src/helper/analytics.dart';
 import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/src/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/src/utils/custom_color.dart';
@@ -32,15 +31,16 @@ class BukkungListPage extends GetView<BukkungListPageController> {
       leadingWidth: 190,
       //알림 페이지 버튼
       actions: [
-        IconButton(
-            onPressed: () {
-              Get.to(() => StorePage());
-            },
-            icon: Icon(
-              Icons.shopping_bag_outlined,
-              size: 30,
-              weight: 4,
-            )),
+        // IconButton(
+        //   onPressed: () {
+        //     Get.to(() => StorePage());
+        //   },
+        //   icon: Icon(
+        //     Icons.shopping_bag_outlined,
+        //     size: 30,
+        //     weight: 4,
+        //   ),
+        // ),
         Stack(
           children: [
             CupertinoButton(

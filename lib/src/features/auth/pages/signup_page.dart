@@ -1,6 +1,5 @@
 import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:couple_to_do_list_app/src/features/auth/controller/auth_controller.dart';
-import 'package:couple_to_do_list_app/src/features/auth/pages/find_buddy_page.dart';
 import 'package:couple_to_do_list_app/src/features/auth/widgets/registration_stage.dart';
 import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/src/models/user_model.dart';
@@ -255,30 +254,31 @@ class SignupPageState extends State<SignupPage> {
     }
 
     return MainButton(
-        buttonText: '등록하기',
-        onTap: () async {
-          if (!birthValidation()) {
-            openAlertDialog(title: '생일을 올바르게 작성해주세요');
-          } else if (gender == null) {
-            openAlertDialog(title: '성별을 기입해주세요');
-          } else {
-            DateTime birthdayDateTime = DateTime.parse(
-                '${birthdayController.text.substring(0, 4)}-${birthdayController.text.substring(4, 6)}-${birthdayController.text.substring(6, 8)}');
+      buttonText: '등록하기',
+      onTap: () async {
+        if (!birthValidation()) {
+          openAlertDialog(title: '생일을 올바르게 작성해주세요');
+        } else if (gender == null) {
+          openAlertDialog(title: '성별을 기입해주세요');
+        } else {
+          DateTime birthdayDateTime = DateTime.parse(
+              '${birthdayController.text.substring(0, 4)}-${birthdayController.text.substring(4, 6)}-${birthdayController.text.substring(6, 8)}');
 
-            var signupUser = UserModel(
-              uid: widget.uid,
-              email: widget.email,
-              nickname: nicknameController.text,
-              loginType: AuthController.loginType,
-              gender: gender,
-              birthday: birthdayDateTime,
-            );
-            await AuthController.to.signup(signupUser);
-            Get.off(() => FindBuddyPage(
-                  email: widget.email,
-                ));
-          }
-        });
+          var userData = UserModel(
+            uid: widget.uid,
+            email: widget.email,
+            nickname: nicknameController.text,
+            loginType: AuthController.loginType,
+            gender: gender,
+            birthday: birthdayDateTime,
+          );
+          await AuthController.to.signup(userData);
+          // Get.off(() => FindBuddyPage(
+          //       email: widget.email,
+          //     ));
+        }
+      },
+    );
   }
 
   @override

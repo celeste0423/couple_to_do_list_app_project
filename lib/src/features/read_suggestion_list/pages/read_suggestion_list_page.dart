@@ -1,7 +1,7 @@
 import 'package:couple_to_do_list_app/src/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/src/features/read_suggestion_list/controllers/read_suggestion_list_page_controller.dart';
 import 'package:couple_to_do_list_app/src/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
-import 'package:couple_to_do_list_app/src/helper/firebase_analytics.dart';
+import 'package:couple_to_do_list_app/src/helper/analytics.dart';
 import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/src/models/comment_model.dart';
 import 'package:couple_to_do_list_app/src/utils/category_to_text.dart';

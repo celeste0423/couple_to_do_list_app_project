@@ -2,12 +2,15 @@ import 'dart:convert';
 
 import 'package:couple_to_do_list_app/firebase_options.dart';
 import 'package:couple_to_do_list_app/src/binding/init_binding.dart';
+import 'package:couple_to_do_list_app/src/helper/analytics.dart';
+import 'package:couple_to_do_list_app/src/helper/crashlytics.dart';
 import 'package:couple_to_do_list_app/src/root.dart';
 import 'package:couple_to_do_list_app/src/theme/base_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -106,14 +109,18 @@ onSelectNotification(NotificationResponse details) async {
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  //앱결제
-  // if (Platform.isAndroid) {
-  //   await PurchaseApi.init();
-  // }
-//파이어베이스 설정
+  //.env init
+  await dotenv.load(fileName: ".env");
+  //파이어베이스 설정
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  //analytics
+  Analytics().init();
+  //crashlytics
+  Crashlytics.init();
+  //앱결제
+  //   await PurchaseApi.init();
   //푸쉬 알림
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool? notificationEnabled = prefs.getBool('notificationEnabled');

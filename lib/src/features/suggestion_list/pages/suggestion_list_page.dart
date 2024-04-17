@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/src/features/read_suggestion_list/pages/read_suggestion_list_page.dart';
 import 'package:couple_to_do_list_app/src/features/suggestion_list/controller/suggestion_list_page_controller.dart';
 import 'package:couple_to_do_list_app/src/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
-import 'package:couple_to_do_list_app/src/helper/firebase_analytics.dart';
+import 'package:couple_to_do_list_app/src/helper/analytics.dart';
 import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/src/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/src/utils/custom_color.dart';
@@ -267,11 +269,6 @@ class SuggestionListPage extends GetView<SuggestionListPageController> {
                           _iconText(
                             'preview.png',
                             '$formattedViewCount회',
-                            false,
-                          ),
-                          _iconText(
-                            'likeCount',
-                            '${bukkungListModel.likeCount.toString()}개',
                             false,
                           ),
                           _iconText(
@@ -597,10 +594,16 @@ class SuggestionListPage extends GetView<SuggestionListPageController> {
                     offset: Offset(5, 5), // Offset(수평, 수직)
                   ),
                 ],
-                image: DecorationImage(
-                  image: CustomCachedNetworkImage(bukkungListModel.imgUrl!),
-                  fit: BoxFit.cover,
-                ),
+                image: Platform.isAndroid
+                    ? DecorationImage(
+                        image:
+                            CustomCachedNetworkImage(bukkungListModel.imgUrl!),
+                        fit: BoxFit.cover,
+                      )
+                    : DecorationImage(
+                        image: CustomCachedNetworkImage(null),
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             if (isDelete)
