@@ -667,4 +667,159 @@ class UploadBukkungListController extends GetxController {
       },
     );
   }
+
+  void pressBottombar() {
+    isCompleted.value == true
+        ? () async {
+      // print('업로드 시작(upl page)');
+      isUploading.value = true;
+      sendCompletedMessageToBuddy();
+      await uploadBukkungList();
+      AdHelper.showInterstitialAd();
+      Get.back();
+      Get.back();
+    }
+        : () {
+      if (titleController.text == '') {
+        openAlertDialog(title: '제목을 입력해 주세요');
+      } else if (listCategory.value == '') {
+        openAlertDialog(title: '카테고리를 선택해주세요');
+      } else if (locationController.text == '') {
+        openAlertDialog(title: '위치를 작성해주세요');
+      }
+      // else if (controller.listDateTime.value == null) {
+      //   openAlertDialog(title: '날짜를 선택해주세요');
+      // }
+      else if (contentController == '') {
+        openAlertDialog(title: '세부 계획을 작성해주세요');
+      }
+    };
+  }
+
+  void openCategoryDialog() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    Get.dialog(_categoryDialog());
+  }
+
+  Widget _categoryCard(String icon, String text, Color color, String category) {
+    return GestureDetector(
+      onTap: () {
+        changeCategory(category);
+      },
+      child: Container(
+        width: Get.width * 0.3,
+        height: Get.width * 0.3,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: color,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/icons/$icon.png',
+              width: 60,
+            ),
+            SizedBox(height: 10),
+            Text(
+              text,
+              style: TextStyle(fontSize: 15, color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _categoryDialog() {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Get.width < 350 || Get.height < 550
+          ? SizedBox(
+        width: Get.width - 40,
+        height: 500,
+        //화면이 너무 작을 때만 작동하는 예외처리 UI
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: GridView.count(
+            crossAxisCount: 2,
+            crossAxisSpacing: 15.0,
+            mainAxisSpacing: 15.0,
+            childAspectRatio: 2.0,
+            shrinkWrap: true,
+            children: [
+              _categoryCard(
+                  'airplane', '여행', CustomColors.travel, '1travel'),
+              _categoryCard(
+                  'running', '액티비티', CustomColors.activity, '3activity'),
+              _categoryCard(
+                  'study', '자기계발', CustomColors.study, '5study'),
+              _categoryCard('food', '식사', CustomColors.meal, '2meal'),
+              _categoryCard(
+                  'singer', '문화활동', CustomColors.culture, '4culture'),
+              _categoryCard(
+                  'filter-file', '기타', CustomColors.etc, '6etc'),
+            ],
+          ),
+        ),
+      )
+          : SizedBox(
+        height: 550,
+        width: 350,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '카테고리',
+                  style: TextStyle(fontSize: 25),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 450,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _categoryCard('airplane', '여행',
+                              CustomColors.travel, '1travel'),
+                          _categoryCard('running', '액티비티',
+                              CustomColors.activity, '3activity'),
+                          _categoryCard('study', '자기계발',
+                              CustomColors.study, '5study'),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    SizedBox(
+                      height: 450,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _categoryCard(
+                              'food', '식사', CustomColors.meal, '2meal'),
+                          _categoryCard('singer', '문화활동',
+                              CustomColors.culture, '4culture'),
+                          _categoryCard('filter-file', '기타',
+                              CustomColors.etc, '6etc'),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
