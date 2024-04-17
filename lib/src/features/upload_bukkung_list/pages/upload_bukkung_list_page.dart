@@ -524,7 +524,6 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                           ? GestureDetector(
                               onTap: () {
                                 controller.listDateTime.value = null;
-                                //    print(controller.listDateTime.value);
                               },
                               child: Padding(
                                 padding:
