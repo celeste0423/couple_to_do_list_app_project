@@ -322,6 +322,7 @@ class ReadDiaryPage extends GetView<ReadDiaryPageController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(ReadDiaryPageController());
     return Scaffold(
       appBar: _customAppBar(controller.selectedDiaryModel.title),
       body: Padding(
@@ -336,9 +337,7 @@ class ReadDiaryPage extends GetView<ReadDiaryPageController> {
             SizedBox(height: 5),
             _dateText(controller.selectedDiaryModel.date),
             SizedBox(height: 5),
-            Obx(() {
-              return controller.tabIndex == 0 ? _diaryTab(0) : _diaryTab(1);
-            }),
+            controller.tabIndex == 0 ? _diaryTab(0) : _diaryTab(1),
           ],
         ),
       ),
