@@ -8,20 +8,20 @@ import 'package:get/get.dart';
 class ReadDiaryPageController extends GetxController {
   final DiaryModel selectedDiaryModel = Get.arguments;
 
-  int activeIndex = 0;
-  int? tabIndex;
+  Rx<int> activeIndex = 0.obs;
+  // int? tabIndex;
+  Rx<bool> isMyComment = true.obs;
 
-  String? myNickname;
-  String? buddyNickname;
+  Rx<String> myNickname = ''.obs;
+  Rx<String> buddyNickname = ''.obs;
 
   String? myComment;
   String? buddyComment;
 
   @override
-  void onInit() {
-    tabIndex = 0;
+  void onInit() async {
     getComment();
-    getNickname();
+    await getNickname();
     super.onInit();
   }
 
@@ -39,13 +39,13 @@ class ReadDiaryPageController extends GetxController {
     if (AuthController.to.user.value.gender == 'male') {
       UserModel? buddyData = await UserRepository.getUserDataByUid(
           AuthController.to.group.value.femaleUid!);
-      myNickname = AuthController.to.user.value.nickname;
-      buddyNickname = buddyData!.nickname;
+      myNickname.value = AuthController.to.user.value.nickname!;
+      buddyNickname.value = buddyData!.nickname!;
     } else {
       UserModel? buddyData = await UserRepository.getUserDataByUid(
           AuthController.to.group.value.maleUid!);
-      myNickname = AuthController.to.user.value.nickname;
-      buddyNickname = buddyData!.nickname;
+      myNickname.value = AuthController.to.user.value.nickname!;
+      buddyNickname.value = buddyData!.nickname!;
     }
     print('짝꿍 닉네임 $buddyNickname');
   }
@@ -71,12 +71,10 @@ class ReadDiaryPageController extends GetxController {
   }
 
   void setActiveIndex(int index) {
-    activeIndex = index;
-    update();
+    activeIndex(index);
   }
 
-  void setTabIndex(int index) {
-    tabIndex = index;
-    update();
+  void tabViewButton() {
+    isMyComment(!isMyComment.value);
   }
 }

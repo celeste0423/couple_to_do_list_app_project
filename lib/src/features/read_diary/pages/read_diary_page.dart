@@ -35,22 +35,21 @@ class ReadDiaryPage extends GetView<ReadDiaryPageController> {
   }
 
   Widget _animatedSmoothIndicator() {
-    if (controller.selectedDiaryModel.imgUrlList!.isEmpty ||
-        controller.selectedDiaryModel.imgUrlList!.length == 1) {
-      return SizedBox(
-        height: 20,
-      );
-    } else {
-      return AnimatedSmoothIndicator(
-        activeIndex: controller.activeIndex,
-        count: controller.selectedDiaryModel.imgUrlList!.length,
-        effect: JumpingDotEffect(
-          activeDotColor: CustomColors.redbrown,
-          dotHeight: 8,
-          dotWidth: 8,
+    return Visibility(
+      visible: controller.selectedDiaryModel.imgUrlList!.isNotEmpty &&
+          controller.selectedDiaryModel.imgUrlList!.length != 1,
+      child: Obx(
+        () => AnimatedSmoothIndicator(
+          activeIndex: controller.activeIndex.value,
+          count: controller.selectedDiaryModel.imgUrlList!.length,
+          effect: JumpingDotEffect(
+            activeDotColor: CustomColors.black,
+            dotHeight: 8,
+            dotWidth: 8,
+          ),
         ),
-      );
-    }
+      ),
+    );
   }
 
   Widget _imgContainer() {
@@ -119,7 +118,7 @@ class ReadDiaryPage extends GetView<ReadDiaryPageController> {
     );
   }
 
-  Widget circleHolesColumn() {
+  Widget _circleHolesColumn() {
     double holediameter = 13;
     circleHole() {
       return Container(
@@ -144,180 +143,183 @@ class ReadDiaryPage extends GetView<ReadDiaryPageController> {
     );
   }
 
-  Widget _diaryTab(int index) {
-    if (index == 0) {
-      return SizedBox(
-        height: 260,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            GestureDetector(
-              onTap: () {
-                controller.setTabIndex(1);
-              },
+  Widget _myCommentSection() {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        GestureDetector(
+          onTap: () {
+            controller.tabViewButton();
+          },
+          child: Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
+              decoration: BoxDecoration(
+                color: CustomColors.lightPink,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(700),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              width: Get.width * 15 / 32,
+              height: 45,
               child: Align(
                 alignment: Alignment.topRight,
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
-                  decoration: BoxDecoration(
-                    color: CustomColors.lightPink,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(700),
-                      topRight: Radius.circular(30),
-                    ),
-                  ),
-                  width: Get.width * 15 / 32,
-                  height: 45,
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: Text('${controller.buddyNickname} 소감'),
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
-                decoration: BoxDecoration(
-                  color: CustomColors.mainPink,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(700),
-                  ),
-                ),
-                width: Get.width * 15 / 32,
-                height: 45,
-                child: Text('${controller.myNickname} 소감'),
-              ),
-            ),
-            Positioned(
-              top: 35,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                ),
-                height: 170,
-                width: Get.width - 60,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    circleHolesColumn(),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 15.0),
-                        child: controller.myComment != null
-                            ? Text(
-                                controller.myComment!,
-                                style: TextStyle(color: CustomColors.greyText),
-                              )
-                            : GestureDetector(
-                                onTap: () async {
-                                  await Get.toNamed('/writeDiary');
-                                },
-                                child: Text(
-                                  '이야기를 작성해주세요',
-                                  style:
-                                      TextStyle(color: CustomColors.greyText),
-                                ),
-                              ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return SizedBox(
-        height: 260,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            GestureDetector(
-              onTap: () {
-                controller.setTabIndex(0);
-              },
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
-                  decoration: BoxDecoration(
-                    color: CustomColors.mainPink,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(700),
-                    ),
-                  ),
-                  width: Get.width * 15 / 32,
-                  height: 45,
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text('${controller.myNickname} 소감'),
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
-                decoration: BoxDecoration(
-                  color: CustomColors.lightPink,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(700),
-                    topRight: Radius.circular(30),
-                  ),
-                ),
-                width: Get.width * 15 / 32,
-                height: 45,
                 child: Text('${controller.buddyNickname} 소감'),
               ),
             ),
-            Positioned(
-              top: 35,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                ),
-                height: 170,
-                width: Get.width - 60,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    circleHolesColumn(),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 15.0),
-                        child: controller.buddyComment != null
-                            ? Text(
-                                controller.buddyComment!,
-                                style: TextStyle(color: CustomColors.greyText),
-                              )
-                            : GestureDetector(
-                                onTap: () async {
-                                  await Get.toNamed('/writeDiary');
-                                },
-                                child: Text(
-                                  '이야기를 작성해주세요',
-                                  style:
-                                      TextStyle(color: CustomColors.greyText),
-                                ),
-                              ),
-                      ),
-                    ),
-                  ],
-                ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
+            decoration: BoxDecoration(
+              color: CustomColors.mainPink,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(700),
               ),
             ),
-          ],
+            width: Get.width * 15 / 32,
+            height: 45,
+            child: Text('${controller.myNickname} 소감'),
+          ),
         ),
-      );
-    }
+        Positioned(
+          top: 35,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            height: 170,
+            width: Get.width - 60,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _circleHolesColumn(),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 15.0),
+                    child: controller.myComment != null
+                        ? Text(
+                            controller.myComment!,
+                            style: TextStyle(color: CustomColors.greyText),
+                          )
+                        : GestureDetector(
+                            onTap: () async {
+                              await Get.toNamed('/writeDiary');
+                            },
+                            child: Text(
+                              '이야기를 작성해주세요',
+                              style: TextStyle(color: CustomColors.greyText),
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buddyCommentSection() {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        GestureDetector(
+          onTap: () {
+            controller.tabViewButton();
+          },
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
+              decoration: BoxDecoration(
+                color: CustomColors.mainPink,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(700),
+                ),
+              ),
+              width: Get.width * 15 / 32,
+              height: 45,
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text('${controller.myNickname} 소감'),
+              ),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 40),
+            decoration: BoxDecoration(
+              color: CustomColors.lightPink,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(700),
+                topRight: Radius.circular(30),
+              ),
+            ),
+            width: Get.width * 15 / 32,
+            height: 45,
+            child: Text('${controller.buddyNickname} 소감'),
+          ),
+        ),
+        Positioned(
+          top: 35,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            height: 170,
+            width: Get.width - 60,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _circleHolesColumn(),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 15.0),
+                    child: controller.buddyComment != null
+                        ? Text(
+                            controller.buddyComment!,
+                            style: TextStyle(color: CustomColors.greyText),
+                          )
+                        : GestureDetector(
+                            onTap: () async {
+                              await Get.toNamed('/writeDiary');
+                            },
+                            child: Text(
+                              '이야기를 작성해주세요',
+                              style: TextStyle(color: CustomColors.greyText),
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _diaryTabView() {
+    return SizedBox(
+      height: 260,
+      child: Obx(
+        () => controller.isMyComment.value
+            ? _myCommentSection()
+            : _buddyCommentSection(),
+      ),
+    );
   }
 
   @override
@@ -334,10 +336,10 @@ class ReadDiaryPage extends GetView<ReadDiaryPageController> {
             _divider(),
             _animatedSmoothIndicator(),
             _imgContainer(),
-            SizedBox(height: 5),
+            SizedBox(height: 10),
             _dateText(controller.selectedDiaryModel.date),
-            SizedBox(height: 5),
-            controller.tabIndex == 0 ? _diaryTab(0) : _diaryTab(1),
+            SizedBox(height: 10),
+            _diaryTabView(),
           ],
         ),
       ),
