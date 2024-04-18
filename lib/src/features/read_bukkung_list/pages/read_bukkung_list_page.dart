@@ -1,9 +1,5 @@
 import 'package:couple_to_do_list_app/src/features/read_bukkung_list/controller/read_bukkung_list_page_controller.dart';
 import 'package:couple_to_do_list_app/src/features/upload_bukkung_list/pages/upload_bukkung_list_page.dart';
-import 'package:couple_to_do_list_app/src/features/upload_diary/pages/upload_diary_page.dart';
-import 'package:couple_to_do_list_app/src/helper/analytics.dart';
-import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
-import 'package:couple_to_do_list_app/src/models/diary_model.dart';
 import 'package:couple_to_do_list_app/src/utils/category_to_text.dart';
 import 'package:couple_to_do_list_app/src/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/src/widgets/category_icon.dart';
@@ -236,43 +232,26 @@ class ReadBukkungListPage extends GetView<ReadBukkungListPageController> {
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: GestureDetector(
         onTap: () {
-          openAlertDialog(
-            title: '버꿍리스트를 완료하셨나요?',
-            btnText: '네',
-            secondButtonText: '아니요',
-            secondfunction: () {
-              Get.back(); //dialog back
-            },
-            mainfunction: () async {
-              Get.back(); //다이알로드 꺼지고,
-              Analytics().logEvent('group_bukkunglist_completed', null);
-              DiaryModel updatedDiaryModel =
-                  await controller.listCompleted(); //완료리스트 올라가고
-              bool ismainButtonClicked = await openBoolAlertDialog(
-                title: '다이어리를 작성하시겠어요?',
-                btnText: '네',
-                content: '버꿍이 진척도가 올라갔어요!',
-                secondButtonText: '아니요',
-              );
-              if (ismainButtonClicked) {
-                Analytics().logEvent('diary_created', null);
-                Get.off(() => UploadDiaryPage(), arguments: updatedDiaryModel);
-              } else {
-                Get.back();
-              }
-            },
-          );
+          controller.listCompletedButton();
         },
         child: Container(
           width: 140,
           height: 45,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
-            color: CustomColors.mainPink,
+            color: controller.bukkungListModel.isCompleted == null
+                ? CustomColors.mainPink
+                : controller.bukkungListModel.isCompleted!
+                    ? CustomColors.grey
+                    : CustomColors.mainPink,
           ),
           child: Center(
             child: Text(
-              '리스트 완료',
+              controller.bukkungListModel.isCompleted == null
+                  ? '리스트 완료'
+                  : controller.bukkungListModel.isCompleted!
+                      ? '리스트 완료 취소'
+                      : '리스트 완료',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,

@@ -4,7 +4,7 @@ import 'package:couple_to_do_list_app/src/constants/constants.dart';
 import 'package:couple_to_do_list_app/src/features/auth/controller/auth_controller.dart';
 import 'package:couple_to_do_list_app/src/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/src/models/group_model.dart';
-import 'package:couple_to_do_list_app/src/repository/bukkung_list_repository.dart';
+import 'package:couple_to_do_list_app/src/repository/bukkunglist_repository.dart';
 import 'package:couple_to_do_list_app/src/repository/notification_repository.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';

@@ -6,7 +6,7 @@ import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/src/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/src/models/diary_model.dart';
 import 'package:couple_to_do_list_app/src/models/notification_model.dart';
-import 'package:couple_to_do_list_app/src/repository/bukkung_list_repository.dart';
+import 'package:couple_to_do_list_app/src/repository/bukkunglist_repository.dart';
 import 'package:couple_to_do_list_app/src/repository/diary_repository.dart';
 import 'package:couple_to_do_list_app/src/repository/notification_repository.dart';
 import 'package:couple_to_do_list_app/src/repository/suggestion_list_repository.dart';

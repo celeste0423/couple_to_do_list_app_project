@@ -11,7 +11,7 @@ import 'package:couple_to_do_list_app/src/helper/background_message/controller/f
 import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/src/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/src/models/notification_model.dart';
-import 'package:couple_to_do_list_app/src/repository/bukkung_list_repository.dart';
+import 'package:couple_to_do_list_app/src/repository/bukkunglist_repository.dart';
 import 'package:couple_to_do_list_app/src/repository/notification_repository.dart';
 import 'package:couple_to_do_list_app/src/repository/suggestion_list_repository.dart';
 import 'package:couple_to_do_list_app/src/utils/custom_color.dart';
@@ -520,7 +520,7 @@ class UploadBukkungListController extends GetxController {
     bool isSelected,
     bool isStorageImage,
   ) async {
-    await BukkungListRepository.setGroupBukkungList(
+    await BukkungListRepository().setGroupBukkungList(
       bukkungListData,
       null,
     );
@@ -542,22 +542,22 @@ class UploadBukkungListController extends GetxController {
               imgUrl: downloadUrl,
               imgId: imageId,
             );
-            await BukkungListRepository.setSuggestionBukkungList(
-                updatedBukkungList);
+            await BukkungListRepository()
+                .setSuggestionBukkungList(updatedBukkungList);
           }
         });
       } else {
         var updatedNoImgBukkungList = bukkungListData.copyWith(
           listId: suggestionListId,
         );
-        await BukkungListRepository.setSuggestionBukkungList(
-            updatedNoImgBukkungList);
+        await BukkungListRepository()
+            .setSuggestionBukkungList(updatedNoImgBukkungList);
       }
     }
   }
 
   void _updateBukkungList(BukkungListModel bukkungListModel) async {
-    await BukkungListRepository.updateGroupBukkungList(bukkungListModel);
+    await BukkungListRepository().updateGroupBukkungList(bukkungListModel);
   }
 
   Future<String?> getOnlineImage(String searchWords) async {

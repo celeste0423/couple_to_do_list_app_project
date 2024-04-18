@@ -67,23 +67,24 @@ class BukkungListPage extends GetView<BukkungListPageController> {
             ),
             Obx(
               () {
-                return controller.isNotification.value
-                    ? Positioned(
-                        top: controller.isAnimated.value ? 17 : 18,
-                        right: controller.isAnimated.value ? 24 : 25,
-                        child: AnimatedContainer(
-                          duration: Duration(milliseconds: 50),
-                          width: controller.isAnimated.value ? 9 : 7,
-                          height: controller.isAnimated.value ? 9 : 7,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(25),
-                            ),
-                          ),
+                return Visibility(
+                  visible: controller.isNotification.value,
+                  child: Positioned(
+                    top: controller.isAnimated.value ? 17 : 18,
+                    right: controller.isAnimated.value ? 24 : 25,
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 50),
+                      width: controller.isAnimated.value ? 9 : 7,
+                      height: controller.isAnimated.value ? 9 : 7,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(25),
                         ),
-                      )
-                    : Container();
+                      ),
+                    ),
+                  ),
+                );
               },
             ),
           ],
@@ -486,139 +487,146 @@ class BukkungListPage extends GetView<BukkungListPageController> {
         Analytics().logEvent('group_bukkunglist_read', null);
         Get.to(() => ReadBukkungListPage(), arguments: bukkungListModel);
       },
-      child: Row(
-        children: [
-          Expanded(
-            flex: 12,
-            child: Container(
-              height: 75,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomLeft: Radius.circular(20),
+      child: Opacity(
+        opacity: bukkungListModel.isCompleted == null
+            ? 1
+            : bukkungListModel.isCompleted!
+                ? 0.5
+                : 1,
+        child: Row(
+          children: [
+            Expanded(
+              flex: 12,
+              child: Container(
+                height: 75,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
+                  ),
                 ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      width: 150,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: CustomCachedNetworkImage(
-                                bukkungListModel.imgUrl!),
-                            fit: BoxFit.cover),
-                        borderRadius: BorderRadius.circular(20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        width: 150,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: CustomCachedNetworkImage(
+                                  bukkungListModel.imgUrl!),
+                              fit: BoxFit.cover),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    flex: 9,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: PcText(
-                              bukkungListModel.title!,
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: CustomColors.blackText,
+                    SizedBox(width: 10),
+                    Expanded(
+                      flex: 9,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: PcText(
+                                bukkungListModel.title!,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: CustomColors.blackText,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  PngIcon(
-                                    iconName: 'location-pin',
-                                    iconSize: 20,
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 5),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: BkText(
-                                            bukkungListModel.location!,
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: CustomColors.greyText,
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    PngIcon(
+                                      iconName: 'location-pin',
+                                      iconSize: 20,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: BkText(
+                                              bukkungListModel.location!,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color: CustomColors.greyText,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            bukkungListModel.date == null
-                                ? Container()
-                                : Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: BkText(
-                                      DateFormat('yyyy-MM-dd')
-                                          .format(bukkungListModel.date!),
-                                      style: TextStyle(
-                                          color: CustomColors.greyText,
-                                          fontSize: 12),
+                              bukkungListModel.date == null
+                                  ? Container()
+                                  : Padding(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: BkText(
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(bukkungListModel.date!),
+                                        style: TextStyle(
+                                            color: CustomColors.greyText,
+                                            fontSize: 12),
+                                      ),
                                     ),
-                                  ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              height: 75,
-              decoration: BoxDecoration(
-                color: TypeToColor.typeToColor(bukkungListModel.category),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
-              ),
-              width: 20,
-              child: GestureDetector(
-                onTap: () {
-                  openAlertDialog(
-                    title: '정말로 지우시겠습니까?',
-                    secondButtonText: '취소',
-                    mainfunction: () {
-                      controller.deleteBukkungList(bukkungListModel, true);
-                      Get.back();
-                    },
-                  );
-                },
-                child: Icon(
-                  Icons.delete_outline,
-                  size: 20,
-                  color: Colors.white.withOpacity(0.5),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
-          )
-        ],
+            Expanded(
+              flex: 1,
+              child: Container(
+                height: 75,
+                decoration: BoxDecoration(
+                  color: TypeToColor.typeToColor(bukkungListModel.category),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                ),
+                width: 20,
+                child: GestureDetector(
+                  onTap: () {
+                    openAlertDialog(
+                      title: '정말로 지우시겠습니까?',
+                      secondButtonText: '취소',
+                      mainfunction: () {
+                        controller.deleteBukkungList(bukkungListModel, true);
+                        Get.back();
+                      },
+                    );
+                  },
+                  child: Icon(
+                    Icons.delete_outline,
+                    size: 20,
+                    color: Colors.white.withOpacity(0.5),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

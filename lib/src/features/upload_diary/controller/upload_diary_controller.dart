@@ -81,11 +81,12 @@ class UploadDiaryController extends GetxController {
       locationController.text = selectedDiaryModel!.location!;
       if (selectedDiaryModel!.creatorUserID ==
           AuthController.to.user.value.uid) {
-        contentController.text = selectedDiaryModel!.creatorSogam!;
+        contentController.text = selectedDiaryModel!.creatorSogam ?? '';
       } else {
         contentController.text = selectedDiaryModel!.bukkungSogam ?? '';
       }
-      if (selectedDiaryModel!.imgUrlList != []) {
+      if (selectedDiaryModel!.imgUrlList != [] &&
+          selectedDiaryModel!.imgUrlList != null) {
         _addNetworkImgToFile();
       }
     }

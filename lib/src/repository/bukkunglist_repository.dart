@@ -100,15 +100,14 @@ class BukkungListRepository {
     }
   }
 
-  static Future<void> setSuggestionBukkungList(
-      BukkungListModel bukkungLisData) async {
+  Future<void> setSuggestionBukkungList(BukkungListModel bukkungLisData) async {
     await FirebaseFirestore.instance
         .collection('bukkungLists')
         .doc(bukkungLisData.listId)
         .set(bukkungLisData.toJson());
   }
 
-  static Future<void> setGroupBukkungList(
+  Future<void> setGroupBukkungList(
     BukkungListModel bukkungListData,
     String? groupId,
   ) async {
@@ -120,8 +119,7 @@ class BukkungListRepository {
         .set(bukkungListData.toJson());
   }
 
-  static Future<void> updateGroupBukkungList(
-      BukkungListModel bukkungListModel) async {
+  Future<void> updateGroupBukkungList(BukkungListModel bukkungListModel) async {
     await FirebaseFirestore.instance
         .collection('groups')
         .doc(AuthController.to.user.value.groupId)
@@ -162,18 +160,4 @@ class BukkungListRepository {
       openAlertDialog(title: '이미지 삭제 오류 $e');
     }
   }
-
-  // Stream<List<BukkungListModel>> getBukkungListByCreatedAt() {
-  //   return FirebaseFirestore.instance
-  //       .collectionGroup('bukkungLists')
-  //       .orderBy('createdAt', descending: true)
-  //       .snapshots()
-  //       .map((event) {
-  //     List<BukkungListModel> bukkungLists = [];
-  //     for (var bukkungList in event.docs) {
-  //       bukkungLists.add(BukkungListModel.fromJson(bukkungList.data()));
-  //     }
-  //     return bukkungLists;
-  //   });
-  // }
 }

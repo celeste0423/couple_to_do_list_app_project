@@ -6,7 +6,7 @@ import 'package:couple_to_do_list_app/src/helper/background_message/controller/f
 import 'package:couple_to_do_list_app/src/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/src/models/group_model.dart';
 import 'package:couple_to_do_list_app/src/models/user_model.dart';
-import 'package:couple_to_do_list_app/src/repository/bukkung_list_repository.dart';
+import 'package:couple_to_do_list_app/src/repository/bukkunglist_repository.dart';
 import 'package:couple_to_do_list_app/src/repository/group_repository.dart';
 import 'package:couple_to_do_list_app/src/repository/user_repository.dart';
 import 'package:couple_to_do_list_app/src/utils/group_util.dart';
@@ -324,8 +324,8 @@ class AuthController extends GetxController {
       createdAt: DateTime.now(),
       updatedAt: null,
     );
-    await BukkungListRepository.setGroupBukkungList(
-        initialBukkungList, 'initial$groupId');
+    await BukkungListRepository()
+        .setGroupBukkungList(initialBukkungList, 'initial$groupId');
     return GroupIdStatus.createdGroupId;
   }
 
@@ -376,8 +376,8 @@ class AuthController extends GetxController {
       createdAt: DateTime.now(),
       updatedAt: null,
     );
-    await BukkungListRepository.setGroupBukkungList(
-        initialBukkungList, 'initial$groupId');
+    await BukkungListRepository()
+        .setGroupBukkungList(initialBukkungList, 'initial$groupId');
     return GroupIdStatus.createdGroupId;
   }
 

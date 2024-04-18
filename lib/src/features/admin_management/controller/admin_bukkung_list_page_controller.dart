@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:couple_to_do_list_app/src/constants/constants.dart';
 import 'package:couple_to_do_list_app/src/models/bukkung_list_model.dart';
-import 'package:couple_to_do_list_app/src/repository/bukkung_list_repository.dart';
+import 'package:couple_to_do_list_app/src/repository/bukkunglist_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
