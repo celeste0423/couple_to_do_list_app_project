@@ -19,17 +19,9 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class UploadBukkungListPage extends StatefulWidget {
+class UploadBukkungListPage extends GetView<UploadBukkungListController> {
   const UploadBukkungListPage({Key? key}) : super(key: key);
 
-  @override
-  State<UploadBukkungListPage> createState() => _UploadBukkungListPageState();
-}
-
-class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
-  // Create an instance of your controller
-  final UploadBukkungListController controller =
-      Get.put(UploadBukkungListController());
 
   PreferredSizeWidget _appBar() {
     return AppBar(
@@ -81,7 +73,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
     );
   }
 
-  Widget _searchResult() {
+  Widget _searchResult(context) {
     return GetBuilder<UploadBukkungListController>(
         id: 'uploadPageSearchResult',
         builder: (controller) {
@@ -416,10 +408,6 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
       ),
     );
   }
-
-
-
-
 
   Widget _locationTextfield(BuildContext context) {
     return Padding(
@@ -764,6 +752,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(UploadBukkungListController());
     return Stack(
       children: [
         Scaffold(
@@ -795,7 +784,7 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
                     ),
                   ],
                 ),
-                _searchResult(),
+                _searchResult(context),
                 _titleTextField(),
               ],
             ),
@@ -817,9 +806,4 @@ class _UploadBukkungListPageState extends State<UploadBukkungListPage> {
     );
   }
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
 }
