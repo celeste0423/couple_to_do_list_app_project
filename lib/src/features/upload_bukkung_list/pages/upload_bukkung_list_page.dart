@@ -1,8 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:couple_to_do_list_app/src/constants/enum.dart';
 import 'package:couple_to_do_list_app/src/features/upload_bukkung_list/controller/upload_bukkung_list_controller.dart';
-import 'package:couple_to_do_list_app/src/helper/ad_helper.dart';
-import 'package:couple_to_do_list_app/src/helper/open_alert_dialog.dart';
 import 'package:couple_to_do_list_app/src/models/bukkung_list_model.dart';
 import 'package:couple_to_do_list_app/src/utils/custom_color.dart';
 import 'package:couple_to_do_list_app/src/widgets/category_icon.dart';
@@ -749,6 +747,20 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
       ),
     );
   }
+  Widget _progressIndicator() {
+    return Obx(
+          () => controller.isUploading.value
+          ? Container(
+        color: Colors.black.withOpacity(0.5),
+        child: Center(
+          child: CircularProgressIndicator(
+            color: CustomColors.mainPink,
+          ),
+        ),
+      )
+          : Container(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -790,18 +802,7 @@ class UploadBukkungListPage extends GetView<UploadBukkungListController> {
             ),
           ),
         ),
-        Obx(
-          () => controller.isUploading.value
-              ? Container(
-                  color: Colors.black.withOpacity(0.5),
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: CustomColors.mainPink,
-                    ),
-                  ),
-                )
-              : Container(),
-        ),
+        _progressIndicator(),
       ],
     );
   }
